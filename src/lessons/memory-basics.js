@@ -60,6 +60,17 @@
         <div data-m="letconst-ram"></div>
         <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. <code>🏷️ score</code>(let)는 이 이름표를 다른 값으로 <b>옮겨 달 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 옮긴다.</p>
       </div>
+
+      <div class="card" style="background:color-mix(in srgb, #f59e0b 8%, var(--panel));border-color:color-mix(in oklab, #f59e0b 32%, var(--border))">
+        <div class="file-label" style="color:#b45309">💡 토막상식 — 접근용 이름(변수)이 하나도 없으면?</div>
+        <ul class="section-list" style="margin-bottom:0">
+          <li><b>닿을 방법이 없다</b> — 주소는 사람이 못 쓰니(위), 이름표가 없는 값은 사실상 <b>잃어버린 값</b>이다. 다시 꺼낼 손잡이가 없다.</li>
+          <li><b>그럼 JS가 치운다</b> — 아무도 안 가리키는 값은 <b>가비지 컬렉션(GC)</b>이 자동으로 수거해 그 칸을 비운다. 그래서 안 쓰는 메모리를 <b>손으로 안 지워도 된다</b>.</li>
+          <li>예: <code>let box = { … }</code> 뒤 <code>box = null</code> 하면, 그 객체는 이제 이름표가 없어 → 곧 청소된다.</li>
+        </ul>
+        <p class="section-desc" style="margin:8px 0 0">뒤집으면 — <b>값을 계속 쓰려면 이름표를 붙여 둬야 한다</b>. 이름표 = <b>접근 + 생존</b>. (자세힌 뒤 '가비지 컬렉션' 강의에서)</p>
+      </div>
+
       <div class="card">
         <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
         <div data-m="letconst-viz"></div>
