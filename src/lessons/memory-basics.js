@@ -60,7 +60,18 @@
         <div data-m="letconst-ram"></div>
         <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. <code>🏷️ score</code>(let)는 이 이름표를 다른 값으로 <b>옮겨 달 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 옮긴다.</p>
       </div>
+      <div class="card">
+        <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
+        <div data-m="letconst-viz"></div>
+      </div>
+      <div class="card">
+        <div class="file-label">🔬 const를 옮기려 하면? (▶ 실행해서 에러를 직접 보라)</div>
+        <div data-m="letconst"></div>
+      </div>
+      <p class="section-desc">🔑 흔한 오해 — "const는 <b>값</b>을 못 바꾸는 것"? ❌. const가 막는 건 <b>이름표를 옮기는 것(재할당)</b>이지 값의 타입·내용이 아니다. (객체를 const로 잡아도 그 <b>안의 내용</b>은 바뀔 수 있다 — 이름표만 고정. 자세힌 🧠 M4)</p>
 
+      <h3 class="section-title">④ 이름표를 떼면? — <code>null</code> · <code>undefined</code> · <code>""</code> 과 GC</h3>
+      <span class="learn-tag">📎 이름표(변수)가 없어진 값은 못 찾는다 → JS가 자동으로 치운다(가비지 컬렉션). 그리고 null을 넣어도 '슬롯'에 써질 뿐</span>
       <div class="card" style="background:color-mix(in srgb, #f59e0b 8%, var(--panel));border-color:color-mix(in oklab, #f59e0b 32%, var(--border))">
         <div class="file-label" style="color:#b45309">💡 토막상식 — 접근용 이름(변수)이 하나도 없으면?</div>
         <ul class="section-list" style="margin-bottom:0">
@@ -72,16 +83,42 @@
       </div>
 
       <div class="card">
-        <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
-        <div data-m="letconst-viz"></div>
+        <div class="file-label">🔬 그럼 <code>box = null</code>은 어디에 써질까? (▶ — 슬롯엔 null, 힙 객체는 버려짐)</div>
+        <div data-m="boxnull-viz"></div>
+        <p class="section-desc" style="margin:10px 0 0">null이 <b>힙(객체)에 써지는 게 아니다</b> — <b>box 슬롯</b>에 null이 써지고(화살표 끊김), 힙의 객체는 손 안 대고 버려져 GC 대상이 된다. <b>변수(슬롯) ≠ 그가 가리키던 값(힙)</b>.</p>
       </div>
-      <div class="card">
-        <div class="file-label">🔬 const를 옮기려 하면? (▶ 실행해서 에러를 직접 보라)</div>
-        <div data-m="letconst"></div>
+      <p class="section-desc" style="margin-bottom:6px">그리고 <code>box = null</code> · <code>box = undefined</code> · <code>box = ""</code> — <b>객체를 버리는 건 셋 다 똑같다</b>(참조가 끊겨 고아 → GC). 다만 <b>box 슬롯에 남는 값</b>이 다르다:</p>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+          <tr style="text-align:left;color:var(--muted)">
+            <th style="padding:6px 9px;border-bottom:2px solid var(--border)">대입</th>
+            <th style="padding:6px 9px;border-bottom:2px solid var(--border)">box에 남는 값</th>
+            <th style="padding:6px 9px;border-bottom:2px solid var(--border)">typeof</th>
+            <th style="padding:6px 9px;border-bottom:2px solid var(--border)">힙 객체</th>
+          </tr>
+          <tr>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">box = null</td>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border)"><b>null</b> · 일부러 '없음'</td>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">"object" ⚠️</td>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border);color:#dc2626">버려짐 → GC</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">box = undefined</td>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border)"><b>undefined</b> · 값 미정</td>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">"undefined"</td>
+            <td style="padding:6px 9px;border-bottom:1px solid var(--border);color:#dc2626">버려짐 → GC</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 9px;font-family:var(--font-mono)">box = ""</td>
+            <td style="padding:6px 9px"><b>""</b> · 빈 문자열(값은 있음)</td>
+            <td style="padding:6px 9px;font-family:var(--font-mono)">"string"</td>
+            <td style="padding:6px 9px;color:#dc2626">버려짐 → GC</td>
+          </tr>
+        </table>
       </div>
-      <p class="section-desc">🔑 흔한 오해 — "const는 <b>값</b>을 못 바꾸는 것"? ❌. const가 막는 건 <b>이름표를 옮기는 것(재할당)</b>이지 값의 타입·내용이 아니다. (객체를 const로 잡아도 그 <b>안의 내용</b>은 바뀔 수 있다 — 이름표만 고정. 자세힌 🧠 M4)</p>
+      <p class="section-desc">🔑 <b>힙 객체를 버리는 효과는 셋 다 같다</b>(참조가 끊기니까 GC 대상). 차이는 <b>box에 남는 값·타입·의미</b>뿐 — <code>null</code>(일부러 비움) / <code>undefined</code>(값 미정) / <code>""</code>(빈 문자열, 여전히 값 있음). (<code>typeof null === "object"</code>는 JS의 유명한 버그.)</p>
 
-      <h3 class="section-title">④ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
+      <h3 class="section-title">⑤ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
       <span class="learn-tag">📎 RAM = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
       <ul class="section-list">
         <li><b>RAM</b> — 빠르고 넓지만 <b>전원이 꺼지면 싹 지워진다</b>(휘발성). 프로그램이 도는 <b>동안만</b> 값을 둔다.</li>
@@ -89,7 +126,7 @@
         <li>비유: RAM은 지금 펼쳐 놓은 <b>작업 책상</b>(끝나면 치움), 디스크는 <b>서랍/캐비닛</b>(계속 보관).</li>
       </ul>
 
-      <h3 class="section-title">⑤ 이 RAM을 '두 방식'으로 나눠 쓴다</h3>
+      <h3 class="section-title">⑥ 이 RAM을 '두 방식'으로 나눠 쓴다</h3>
       <p class="section-desc">프로그램은 이 메모리를 아무렇게나 쓰지 않고, 성격이 다른 <b>두 방식</b>으로 나눠 쓴다 — <b>스택</b>과 <b>힙</b>.
       다음 두 강의에서 각각 자세히 본다.</p>
       <div class="card">
@@ -181,6 +218,16 @@
           note: '<code>const PI = 3.14</code> — 이름표 <b>PI</b>를 3.14에 붙이고 <b>🔒 잠근다</b>.' },
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }, { name: '🔒 PI', ref: 'v3' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' }, v3: { label: '3.14' }, v4: { label: '3', faded: true } },
           note: '<code>PI = 3</code> → 새 값 3을 두려 해도 <b>🔒 PI는 못 옮겨간다</b>(그래서 3은 회색·버려짐) → <b>❌ 에러</b>. PI는 그대로 3.14. ↔ 위의 score(let)는 옮겨졌던 것과 대비.' },
+      ],
+    }))
+    root.querySelector('[data-m="boxnull-viz"]').append(MemoryModel({
+      title: 'box = null — 슬롯엔 null, 힙 객체는 버려진다',
+      code: ['let box = { name: "민지" }', 'box = null'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
+          note: 'box 슬롯 안엔 <b>주소(화살표)</b> — 힙의 객체를 가리킨다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'box', value: 'null' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }], faded: true } },
+          note: '<code>box = null</code> → <b>box 슬롯에 null</b>이 써진다(화살표 끊김). 힙의 객체는 <b>손 안 대고 그대로</b>지만 아무도 안 가리켜 <b>고아(회색) → GC 수거</b>. null이 힙에 써지는 게 아니다.' },
       ],
     }))
     root.querySelector('[data-m="letconst"]').append(Runner({
