@@ -230,14 +230,18 @@
           if (!l) return
           const row = document.createElement('div')
           row.className = 'toc-item-row'
-          // 체크박스는 현재 모드에 해당하는 항목에만(진도=개념, 연습=실습). 아니면 빈 자리.
-          if (modeApplies(state.checkMode, l) && !l.step) {
+          // 체크박스: 개념 서브내비(step)만 빼고 항상 표시. 각 항목은 '제 종류'의 집계셋에 연결
+          // (개념 강의 → 📖 진도 셋, 실습 문제 → ✏️ 연습 셋). 모드 탭은 진행률 분모만 바꾼다.
+          if (!l.step) {
+            const isPr = kindOf(l) === 'practice'
+            const itemSet = isPr ? state.practice : state.study
+            const itemK = isPr ? 'donePractice' : 'doneStudy'
             const cb = document.createElement('input')
             cb.type = 'checkbox'
             cb.className = 'toc-check'
-            cb.checked = set.has(id)
-            cb.setAttribute('aria-label', `${activeMode().label}: ${l.title}`)
-            cb.onchange = () => { set.has(id) ? set.delete(id) : set.add(id); saveSet(activeMode().k, set); renderProgress() }
+            cb.checked = itemSet.has(id)
+            cb.setAttribute('aria-label', `${isPr ? '✏️ 연습' : '📖 진도'}: ${l.title}`)
+            cb.onchange = () => { itemSet.has(id) ? itemSet.delete(id) : itemSet.add(id); saveSet(itemK, itemSet); renderProgress() }
             row.append(cb)
           } else {
             const blank = document.createElement('span')

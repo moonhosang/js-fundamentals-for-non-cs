@@ -8,6 +8,11 @@
 
 ▶ **라이브 데모**: https://moonhosang.github.io/js-fundamentals-for-non-cs/ (GitHub Pages 자동 배포. `main`에 push하면 갱신된다.)
 
+> **대표 기능 바로 보기** — ▶ 버튼을 눌러 한 단계씩 진행해 보라:
+> - 🌳 [표현식 축약 애니메이션](https://moonhosang.github.io/js-fundamentals-for-non-cs/#3-3) — 긴 한 줄이 값으로 접히는 과정
+> - 📐 [우선순위 눈금 단계별](https://moonhosang.github.io/js-fundamentals-for-non-cs/#3-2) — `factor ‹ term ‹ expression` 이 순서대로 켜진다
+> - 🧠 [메모리 참조 시각화](https://moonhosang.github.io/js-fundamentals-for-non-cs/#ref) — "안 건드린 객체가 왜 같이 바뀌지?"를 스택/힙 화살표로
+
 ## 🚀 실행 — 설치가 필요 없다
 
 Node.js도, 빌드도 필요 없다. 셋 중 아무거나:
