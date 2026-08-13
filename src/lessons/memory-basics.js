@@ -29,7 +29,31 @@
       <p class="section-desc">컴퓨터가 <code>3 + 4</code>를 계산하려면 <b>3</b>과 <b>4</b>를 잠깐 어딘가에 적어둬야 한다. 그 "메모장"이 메모리다.
       변수 <code>let age = 20</code>은 곧 <b>"메모리 한 칸에 20을 적고 age라는 이름을 붙여라"</b>는 뜻이다.</p>
 
-      <h3 class="section-title">② RAM의 모습 — 주소가 붙은 칸들</h3>
+      <h3 class="section-title">② 칸에 이름 붙이기 — let · const · var (변수 vs 상수)</h3>
+      <span class="learn-tag">📎 셋 다 'RAM 칸을 잡고 이름표를 붙인다'. 차이는 값이 아니라 — 이름표를 나중에 옮겨 달 수 있느냐</span>
+      <p class="section-desc">값을 메모리에 두고 이름표를 붙이는 걸 <b>선언</b>이라 한다. 붙이는 방법이 셋 — <b>값이 사는 방식(RAM)은 똑같고</b>, 이름표를 <b>옮길 수 있느냐</b>만 다르다:</p>
+      <ul class="section-list">
+        <li><code>let</code> — <b>변수</b>: 이름표를 나중에 <b>다른 값으로 옮겨 달 수 있다</b>(재할당 O).</li>
+        <li><code>const</code> — <b>상수</b>: 이름표를 한 번 달면 <b>못 옮긴다</b>(재할당 X). "안 바뀔 값"(세율·원주율·설정값)에 쓴다.</li>
+        <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
+      </ul>
+      <div class="falsy-grid">
+        <div class="card" style="margin:0"><div class="file-label" style="color:#16a34a">✅ let — 이름표를 옮길 수 있다</div>
+          <pre class="err-code" style="color:inherit;background:transparent">let score = 10
+score = 20      // 이름표를 20으로 옮김 ✅
+// score → 20</pre></div>
+        <div class="card" style="margin:0"><div class="file-label" style="color:#dc2626">❌ const — 옮기려 하면 에러</div>
+          <pre class="err-code" style="color:inherit;background:transparent">const PI = 3.14
+PI = 3          // 옮기기 금지 ❌
+// TypeError: Assignment to constant</pre></div>
+      </div>
+      <div class="card">
+        <div class="file-label">🔬 const를 옮기려 하면? (▶ 실행해서 에러를 직접 보라)</div>
+        <div data-m="letconst"></div>
+      </div>
+      <p class="section-desc">🔑 흔한 오해 — "const는 <b>값</b>을 못 바꾸는 것"? ❌. const가 막는 건 <b>이름표를 옮기는 것(재할당)</b>이지 값의 타입·내용이 아니다. (객체를 const로 잡아도 그 <b>안의 내용</b>은 바뀔 수 있다 — 이름표만 고정. 자세힌 🧠 M4)</p>
+
+      <h3 class="section-title">③ RAM의 모습 — 주소가 붙은 칸들</h3>
       <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 → 그래서 Random Access</span>
       <div class="card">
         <div class="file-label">📄 변수·객체·배열이 메모리에 놓인 모습 (개념도) — 칸은 <b>수십억 개</b></div>
@@ -37,7 +61,7 @@
         <p class="section-desc" style="margin:10px 0 0">RAM엔 이런 칸이 <b>수십억 개</b>(기가바이트) — <b>⋯</b>는 "끝없이 이어진다"는 뜻. <b>변수·객체·배열</b> 온갖 것이 여기저기 칸에 놓인다. 원시값(<code>age=20</code>)은 작아 <b>한 칸</b>, 객체·배열은 커서 <b>여러 칸</b>을 차지한다. (이 RAM을 <b>스택·힙</b>으로 나눠 쓰는 건 다음 강의)</p>
       </div>
 
-      <h3 class="section-title">③ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
+      <h3 class="section-title">④ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
       <span class="learn-tag">📎 RAM = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
       <ul class="section-list">
         <li><b>RAM</b> — 빠르고 넓지만 <b>전원이 꺼지면 싹 지워진다</b>(휘발성). 프로그램이 도는 <b>동안만</b> 값을 둔다.</li>
@@ -45,7 +69,7 @@
         <li>비유: RAM은 지금 펼쳐 놓은 <b>작업 책상</b>(끝나면 치움), 디스크는 <b>서랍/캐비닛</b>(계속 보관).</li>
       </ul>
 
-      <h3 class="section-title">④ 이 RAM을 '두 방식'으로 나눠 쓴다</h3>
+      <h3 class="section-title">⑤ 이 RAM을 '두 방식'으로 나눠 쓴다</h3>
       <p class="section-desc">프로그램은 이 메모리를 아무렇게나 쓰지 않고, 성격이 다른 <b>두 방식</b>으로 나눠 쓴다 — <b>스택</b>과 <b>힙</b>.
       다음 두 강의에서 각각 자세히 본다.</p>
       <div class="card">
@@ -98,6 +122,14 @@
       wrap.append(dots())
       grid.append(wrap)
     }
+    root.querySelector('[data-m="letconst"]').append(Runner({
+      showBox: false,
+      code: [
+        'const rate = 0.1     // 세율 — 안 바뀔 값이라 const(상수)',
+        'rate = 0.2           // 이름표를 옮기려 하면?',
+        '// ▶ 실행하면 "Assignment to constant variable" 에러 — const가 막는다',
+      ].join('\n'),
+    }))
     wireCTA(root)
   }
 
