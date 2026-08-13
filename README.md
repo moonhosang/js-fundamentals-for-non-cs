@@ -41,4 +41,4 @@ Node.js도, 빌드도 필요 없다. 셋 중 아무거나:
 
 ## ⚙️ 배포 (GitHub Pages)
 
-`.github/workflows/deploy.yml` 이 `main` push마다 정적 파일을 Pages로 올린다. **최초 1회**, 저장소 **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 지정해야 한다(워크플로가 자동 활성화를 시도하지만, 조직 설정에 따라 수동 지정이 필요할 수 있다).
+빌드가 없으니 CI(빌드 로봇)도 필요 없다. 저장소 **Settings → Pages → Build and deployment → Source** 를 **Deploy from a branch**, 브랜치는 **`main` / `(root)`** 로 지정하면 끝이다. 이후 `main`에 push할 때마다 GitHub가 정적 파일을 그대로 다시 게시한다. (`.nojekyll` 파일이 있어 Jekyll 처리 없이 원본 그대로 서빙된다.)
