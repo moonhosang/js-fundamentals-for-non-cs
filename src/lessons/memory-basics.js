@@ -37,6 +37,16 @@
         <p class="section-desc" style="margin:10px 0 0">RAM엔 이런 칸이 <b>수십억 개</b>(기가바이트) — <b>⋯</b>는 "끝없이 이어진다"는 뜻. <b>변수·객체·배열</b> 온갖 것이 여기저기 칸에 놓인다. 원시값(<code>age=20</code>)은 작아 <b>한 칸</b>, 객체·배열은 커서 <b>여러 칸</b>을 차지한다. (이 RAM을 <b>스택·힙</b>으로 나눠 쓰는 건 다음 강의)</p>
       </div>
 
+      <div class="card" style="background:color-mix(in srgb, #f59e0b 8%, var(--panel));border-color:color-mix(in oklab, #f59e0b 32%, var(--border))">
+        <div class="file-label" style="color:#b45309">💡 토막상식 — 왜 변수가 순서대로 가지런히 안 놓일까?</div>
+        <ul class="section-list" style="margin-bottom:0">
+          <li><b>빈 자리에 아무 데나</b> — 값이 생겼다 사라지길 반복하면 칸 사이사이 <b>빈틈</b>이 생긴다(<b>파편화</b>, fragmentation). 새 값은 '들어갈 만한 빈 곳'에 놓인다. 주소는 우리가 고르는 게 아니라 <b>메모리 관리자(할당자)</b>가 정한다.</li>
+          <li><b>스택은 사실 가지런하다</b> — 착착 쌓이는 <b>스택</b>(다음 강의)의 지역변수는 순서대로다. 흩어지는 건 주로 <b>힙</b>(객체·배열) — 크기가 제각각이라 빈 곳에 끼워 넣는다.</li>
+          <li><b>일부러 무작위로도</b> — 요즘 시스템은 보안상 위치를 <b>랜덤</b>하게 흩뿌린다(<b>ASLR</b>) — 해커가 "그 값이 어디 있는지" 못 찍게.</li>
+        </ul>
+        <p class="section-desc" style="margin:8px 0 0">그래서 이 그림은 <b>개념도</b>일 뿐 — 진짜 주소는 <b>실행할 때마다 다르다</b>.</p>
+      </div>
+
       <h3 class="section-title">③ 칸에 이름 붙이기 — let · const · var (변수 vs 상수)</h3>
       <span class="learn-tag">📎 셋 다 'RAM 칸을 잡고 이름표를 붙인다'. 차이는 값이 아니라 — 이름표를 나중에 옮겨 달 수 있느냐</span>
       <p class="section-desc">방금 본 그 칸에 값을 두고 <b>이름표</b>를 붙이는 걸 <b>선언</b>이라 한다. 붙이는 방법이 셋 — <b>값이 사는 방식(RAM)은 똑같고</b>, 이름표를 <b>옮길 수 있느냐</b>만 다르다:</p>
@@ -46,9 +56,9 @@
         <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
       </ul>
       <div class="card">
-        <div class="file-label">📍 그 RAM 칸에 이름표를 붙인 모습 — 변수 = '주소'에 붙인 별명</div>
+        <div class="file-label">📍 그 RAM 칸에 이름표를 붙인 모습 — 변수 = 주소에 붙인 '접근용 이름'</div>
         <div data-m="letconst-ram"></div>
-        <p class="section-desc" style="margin:10px 0 0">②에서 본 그 칸이다 — 값이 RAM 칸(주소 <code>#0042</code> 등)에 놓이고, 그 위에 <b>이름표</b>가 붙는다. <code>🏷️ score</code>(let)는 이름표를 다른 값으로 <b>옮겨 달 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 옮긴다.</p>
+        <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. <code>🏷️ score</code>(let)는 이 이름표를 다른 값으로 <b>옮겨 달 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 옮긴다.</p>
       </div>
       <div class="card">
         <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
