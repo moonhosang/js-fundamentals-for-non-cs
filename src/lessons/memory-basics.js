@@ -29,14 +29,26 @@
       <p class="section-desc">컴퓨터가 <code>3 + 4</code>를 계산하려면 <b>3</b>과 <b>4</b>를 잠깐 어딘가에 적어둬야 한다. 그 "메모장"이 메모리다.
       변수 <code>let age = 20</code>은 곧 <b>"메모리 한 칸에 20을 적고 age라는 이름을 붙여라"</b>는 뜻이다.</p>
 
-      <h3 class="section-title">② 칸에 이름 붙이기 — let · const · var (변수 vs 상수)</h3>
+      <h3 class="section-title">② RAM의 모습 — 주소가 붙은 칸들</h3>
+      <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 → 그래서 Random Access</span>
+      <div class="card">
+        <div class="file-label">📄 변수·객체·배열이 메모리에 놓인 모습 (개념도) — 칸은 <b>수십억 개</b></div>
+        <div data-m="ramgrid"></div>
+        <p class="section-desc" style="margin:10px 0 0">RAM엔 이런 칸이 <b>수십억 개</b>(기가바이트) — <b>⋯</b>는 "끝없이 이어진다"는 뜻. <b>변수·객체·배열</b> 온갖 것이 여기저기 칸에 놓인다. 원시값(<code>age=20</code>)은 작아 <b>한 칸</b>, 객체·배열은 커서 <b>여러 칸</b>을 차지한다. (이 RAM을 <b>스택·힙</b>으로 나눠 쓰는 건 다음 강의)</p>
+      </div>
+
+      <h3 class="section-title">③ 칸에 이름 붙이기 — let · const · var (변수 vs 상수)</h3>
       <span class="learn-tag">📎 셋 다 'RAM 칸을 잡고 이름표를 붙인다'. 차이는 값이 아니라 — 이름표를 나중에 옮겨 달 수 있느냐</span>
-      <p class="section-desc">값을 메모리에 두고 이름표를 붙이는 걸 <b>선언</b>이라 한다. 붙이는 방법이 셋 — <b>값이 사는 방식(RAM)은 똑같고</b>, 이름표를 <b>옮길 수 있느냐</b>만 다르다:</p>
+      <p class="section-desc">방금 본 그 칸에 값을 두고 <b>이름표</b>를 붙이는 걸 <b>선언</b>이라 한다. 붙이는 방법이 셋 — <b>값이 사는 방식(RAM)은 똑같고</b>, 이름표를 <b>옮길 수 있느냐</b>만 다르다:</p>
       <ul class="section-list">
         <li><code>let</code> — <b>변수</b>: 이름표를 나중에 <b>다른 값으로 옮겨 달 수 있다</b>(재할당 O).</li>
         <li><code>const</code> — <b>상수</b>: 이름표를 한 번 달면 <b>못 옮긴다</b>(재할당 X). "안 바뀔 값"(세율·원주율·설정값)에 쓴다.</li>
         <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
       </ul>
+      <div class="card">
+        <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
+        <div data-m="letconst-viz"></div>
+      </div>
       <div class="falsy-grid">
         <div class="card" style="margin:0"><div class="file-label" style="color:#16a34a">✅ let — 이름표를 옮길 수 있다</div>
           <pre class="err-code" style="color:inherit;background:transparent">let score = 10
@@ -52,14 +64,6 @@ PI = 3          // 옮기기 금지 ❌
         <div data-m="letconst"></div>
       </div>
       <p class="section-desc">🔑 흔한 오해 — "const는 <b>값</b>을 못 바꾸는 것"? ❌. const가 막는 건 <b>이름표를 옮기는 것(재할당)</b>이지 값의 타입·내용이 아니다. (객체를 const로 잡아도 그 <b>안의 내용</b>은 바뀔 수 있다 — 이름표만 고정. 자세힌 🧠 M4)</p>
-
-      <h3 class="section-title">③ RAM의 모습 — 주소가 붙은 칸들</h3>
-      <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 → 그래서 Random Access</span>
-      <div class="card">
-        <div class="file-label">📄 변수·객체·배열이 메모리에 놓인 모습 (개념도) — 칸은 <b>수십억 개</b></div>
-        <div data-m="ramgrid"></div>
-        <p class="section-desc" style="margin:10px 0 0">RAM엔 이런 칸이 <b>수십억 개</b>(기가바이트) — <b>⋯</b>는 "끝없이 이어진다"는 뜻. <b>변수·객체·배열</b> 온갖 것이 여기저기 칸에 놓인다. 원시값(<code>age=20</code>)은 작아 <b>한 칸</b>, 객체·배열은 커서 <b>여러 칸</b>을 차지한다. (이 RAM을 <b>스택·힙</b>으로 나눠 쓰는 건 다음 강의)</p>
-      </div>
 
       <h3 class="section-title">④ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
       <span class="learn-tag">📎 RAM = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
@@ -122,6 +126,21 @@ PI = 3          // 옮기기 금지 ❌
       wrap.append(dots())
       grid.append(wrap)
     }
+    root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
+      title: 'let은 이름표를 옮긴다 · const는 잠근다',
+      stackLabel: '🏷️ 변수 (이름표)', heapLabel: '💎 값',
+      code: ['let score = 10', 'score = 20        // let: 옮기기 OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 옮김'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v1' }] }], heap: { v1: { label: '10' } },
+          note: '<code>let score = 10</code> — 이름표 <b>score</b>를 값 10에 붙인다(화살표).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' } },
+          note: '<code>score = 20</code> → 이름표를 <b>다른 값 20으로 옮겼다</b>(재할당). let이라 가능. 10은 이제 아무도 안 씀(회색).' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }, { name: '🔒 PI', ref: 'v3' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' }, v3: { label: '3.14' } },
+          note: '<code>const PI = 3.14</code> — 이름표 <b>PI</b>를 3.14에 붙이고 <b>🔒 잠근다</b>.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }, { name: '🔒 PI', ref: 'v3' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' }, v3: { label: '3.14' }, v4: { label: '3', faded: true } },
+          note: '<code>PI = 3</code> → 새 값 3을 두려 해도 <b>🔒 PI는 못 옮겨간다</b>(그래서 3은 회색·버려짐) → <b>❌ 에러</b>. PI는 그대로 3.14. ↔ 위의 score(let)는 옮겨졌던 것과 대비.' },
+      ],
+    }))
     root.querySelector('[data-m="letconst"]').append(Runner({
       showBox: false,
       code: [
