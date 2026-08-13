@@ -118,7 +118,8 @@
           </tr>
         </table>
       </div>
-      <p class="section-desc">🔑 <b>힙 객체를 버리는 효과는 셋 다 같다</b>(참조가 끊기니까 GC 대상). 차이는 <b>box에 남는 값·타입·의미</b>뿐 — <code>null</code>(일부러 비움) / <code>undefined</code>(값 미정) / <code>""</code>(빈 문자열, 여전히 값 있음). (<code>typeof null === "object"</code>는 JS의 유명한 버그.)</p>
+      <p class="section-desc">🔑 <b>값 메모리의 객체를 버리는 효과는 셋 다 같다</b>(참조가 끊기니까 GC 대상). 차이는 <b>장부 칸에 남는 값·타입·의미</b>뿐 — <code>null</code>(일부러 비움) / <code>undefined</code>(값 미정) / <code>""</code>(빈 문자열, 여전히 값 있음). (<code>typeof null === "object"</code>는 JS의 유명한 버그.)</p>
+      <p class="section-desc" style="opacity:.85">❓ "그런데 <code>null</code>은 어디 있지? 전역변수 같은 건가?" — <b>아니다.</b> <code>null</code>·<code>undefined</code>는 <b>변수가 아니라 값(리터럴)</b>이다 — <code>5</code>·<code>"hi"</code>처럼 그냥 쓰는 값일 뿐. '전역에 딱 하나 있는 무언가'가 아니라, 대입하면 그 <b>장부 칸에 담기는 원시값</b>이다(그래서 원시값처럼 장부 칸 안에 산다).</p>
 
       <h3 class="section-title">⑤ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
       <span class="learn-tag">📎 RAM = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
@@ -278,6 +279,29 @@
         note: 'welcome도 반환 → <b>pop</b>. name·msg는 <b>사라졌지만</b>, 반환값은 main의 <b>say</b>에 담겼다. <b>프레임은 사라져도 결과는 남는다</b>(return으로 빼냈으니까 — §4의 이유).' },
     ],
   }
+  // ⑤ 스코프 — 전역 장부 vs 함수 장부(프레임), 접근 범위.
+  const SCENARIO_SCOPE = {
+    title: '전역 장부 vs 함수 장부(프레임) — 접근 범위가 다르다', showHeap: false,
+    stackLabel: '📚 스택 (이름표 장부)',
+    code: [
+      'let appName = "메모장"       // 전역변수 (함수 밖)',
+      'function greet(user) {',
+      '  let hi = appName + " · " + user + " 님"   // 지역변수',
+      '  return hi',
+      '}',
+      'greet("민지")',
+    ],
+    steps: [
+      { line: 0, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }], heap: {},
+        note: 'appName은 함수 <b>밖</b>(맨 바깥)에 선언 → <b>전역 장부</b>에 산다. 프로그램 내내 살고 <b>어디서나</b> 접근된다(전역변수).' },
+      { line: 1, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }, { name: 'greet · 함수 장부', slots: [{ name: 'user', value: '"민지"' }] }], heap: {},
+        note: 'greet("민지") 호출 → <b>새 장부(프레임)가 push</b>. 매개변수 <b>user</b>는 이 <b>greet 장부</b>의 지역변수.' },
+      { line: 2, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }, { name: 'greet · 함수 장부', slots: [{ name: 'user', value: '"민지"' }, { name: 'hi', value: '"메모장 · 민지 님"' }] }], heap: {},
+        note: '<b>hi</b>도 greet 장부의 지역변수. 이 안에선 <b>appName(전역)도 보이고</b> user·hi(지역)도 보인다 — 안쪽 장부는 바깥 장부를 <b>참고할 수 있다</b>(스코프).' },
+      { line: 5, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }], heap: {},
+        note: 'greet 끝 → <b>함수 장부 pop</b>. user·hi(지역변수)는 <b>사라진다</b>. 바깥(전역)에선 hi를 <b>못 쓴다</b>(스코프 밖 = 접근 불가). appName(전역)은 그대로.' },
+    ],
+  }
   window.Lessons['stack'] = function render(root) {
     root.innerHTML = `
       <header class="lesson-header">
@@ -326,6 +350,19 @@
       </ul>
       <p class="section-desc">⚠️ <b>딱 하나 예외</b> — 안쪽 함수가 그 지역변수를 <b>붙잡으면</b>(클로저) 안 지워지고 <b>값 메모리(힙)로 옮겨져 살아남는다</b>. 그건 <b>🧠 메모리 심화 · 클로저</b>에서.</p>
 
+      <h3 class="section-title">⑤ 지역변수 vs 전역변수 — 장부에 '층'이 있다</h3>
+      <span class="learn-tag">📎 함수 밖 = 전역 장부(오래·어디서나) · 함수 안 = 그 함수 장부(임시·그 안에서만)</span>
+      <p class="section-desc">스택 장부는 한 층이 아니다. <b>맨 바깥(전역 장부)</b> 위로, 함수를 부를 때마다 <b>함수 장부(프레임)</b>가 층층이 쌓인다. 변수가 <b>어느 장부에</b> 사느냐가 <b>어디서 접근되는지(스코프)</b>를 정한다.</p>
+      <ul class="section-list">
+        <li><b>전역변수</b> — 함수 <b>밖</b>에 선언. <b>전역 장부</b>에 살아 <b>프로그램 내내 · 어디서나</b> 접근. (남용하면 이름 충돌·추적 어려움 → 되도록 적게)</li>
+        <li><b>지역변수</b> — 함수 <b>안</b>에 선언(매개변수 포함). 그 <b>함수 장부</b>에 살아 <b>함수 안에서만</b> 접근. 함수가 끝나면 장부째 <b>사라진다</b>(③).</li>
+      </ul>
+      <div class="card">
+        <div class="file-label">🎬 전역 장부 · 함수 장부 — ▶로 push · 접근 · pop 보기</div>
+        <div data-m="scope"></div>
+      </div>
+      <p class="section-desc">🔑 그래서 좋다 — 함수마다 자기 <b>user</b>를 따로 가져 <b>이름이 안 부딪히고</b>, 지역변수는 함수가 끝나면 <b>자동 정리</b>(스택 pop)돼 안전하다. (<code>{ }</code> 블록도 <code>let·const</code>에 <b>스코프</b>를 만든다 — 자세힌 나중.)</p>
+
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">스택 = M1의 <b>이름표 장부(변수 영역)</b> = 이름표 슬롯이 <b>LIFO</b>로 쌓이는 빠른 공간. 원시값은 장부 칸에 그대로, 객체는 주소만(실체는 값 메모리).
@@ -340,12 +377,14 @@
     root.querySelector('[data-m="stackviz"]').append(StackViz())
     root.querySelector('[data-m="slots"]').append(MemoryModel(SCENARIO_STACK_SLOTS))
     root.querySelector('[data-m="pushpop"]').append(MemoryModel(SCENARIO_PUSHPOP))
+    root.querySelector('[data-m="scope"]').append(MemoryModel(SCENARIO_SCOPE))
     wireCTA(root)
   }
 
   // ══ M3 · 힙 ═════════════════════════════════════════════════
   const SCENARIO_HEAP = {
-    title: '묶음은 힙에, 슬롯엔 주소만',
+    title: '묶음은 값 메모리(힙)에, 장부 칸엔 주소만',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['let age = 20', 'let tags = ["신상", "세일"]', 'let card = { name: "민지" }'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '원시값 age는 스택 슬롯에 그대로.', engine: 'SMI 태깅.' },
@@ -355,6 +394,7 @@
   }
   const SCENARIO_STACK_FAIL = {
     title: '❌ 만약 묶음(객체)을 스택 칸에 뒀다면?',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['function makeCard() {', '  return { name: "민지" }', '}', 'let c = makeCard()'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'makeCard', slots: [{ name: '(객체)', value: '{ name: "민지" }' }] }], heap: {}, note: '<b>상상</b>: 객체를 힙이 아니라 <b>makeCard 칸(스택) 안</b>에 통째로 뒀다.' },
@@ -364,7 +404,8 @@
   }
   // 거꾸로 — 원시값이 힙에 사는 경우(객체 속성). 같은 20이 스택(age)과 힙(card.age)에.
   const SCENARIO_PRIM_IN_HEAP = {
-    title: '같은 20인데 — age는 스택, card.age는 힙',
+    title: '같은 20인데 — age는 스택 장부, card.age는 값 메모리',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['let age = 20', 'let card = { age: 20, name: "민지" }'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '독립 변수 age의 20은 <b>스택 슬롯</b>에 직접.' },
@@ -378,19 +419,24 @@
     root.innerHTML = `
       <header class="lesson-header">
         <span class="badge">🧠 M3</span>
-        <h2>힙 — 큰 묶음을 두는 창고</h2>
-        <p>메모리를 쓰는 두 번째 방식. <b>크고 변하는 묶음</b>(객체·배열)을 두는 자유로운 창고다. 슬롯엔 <b>주소</b>만 담긴다.</p>
+        <h2>힙 — 값 메모리, 큰 묶음을 두는 창고</h2>
+        <p>M1에서 나눈 <b>🗄️ 값 메모리</b> — M2에서 "객체는 장부에 <b>주소만</b> 두고 여길 가리킨다"던 <b>바로 그곳</b>이 힙이다. <b>크고 변하는 묶음</b>(객체·배열)의 실체가 여기 산다.</p>
       </header>
 
-      <h3 class="section-title">① 힙이란 — 자유로운 창고</h3>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🔗 M1·M2에서 이어집니다</div>
+        <p class="section-desc" style="margin:0">M1 두 구역 중 <b>🗄️ 값 메모리 = 힙</b>. M2의 <b>📚 스택(이름표 장부)</b>엔 객체를 못 담아 <b>주소만</b> 뒀는데, 그 객체의 <b>실체가 사는 곳</b>이 여기다. (M1 <code>box = null</code>에서 본 <code>{ name:"민지" }</code>도 여기 살았다.)</p>
+      </div>
+
+      <h3 class="section-title">① 힙(값 메모리)이란 — 자유로운 창고</h3>
       <ul class="section-list">
         <li>스택처럼 순서대로 쌓는 게 아니라, <b>빈자리에 자유롭게</b> 둔다.</li>
-        <li>객체·배열처럼 <b>크거나 변하는</b> 것을 여기 둔다. 스택 슬롯엔 그 <b>주소</b>만 적는다.</li>
-        <li>스택 칸과 달리, 힙 물건은 <b>아무도 안 가리킬 때까지</b> 산다(함수가 끝나도 살아남음 — 청소는 GC · 심화).</li>
+        <li>객체·배열처럼 <b>크거나 변하는</b> 것을 여기 둔다. 스택의 <b>장부 칸엔 그 주소</b>만 적는다.</li>
+        <li>스택 장부 칸과 달리, 값 메모리의 물건은 <b>아무도 안 가리킬 때까지</b> 산다(함수가 끝나도 살아남음 — 청소는 GC · 심화).</li>
       </ul>
 
-      <h3 class="section-title">② 눈으로 — 묶음은 힙, 슬롯엔 주소</h3>
-      <span class="learn-tag">📎 슬롯 → 힙 화살표가 곧 '주소를 가리킨다'는 뜻</span>
+      <h3 class="section-title">② 눈으로 — 묶음은 값 메모리, 장부 칸엔 주소</h3>
+      <span class="learn-tag">📎 장부 칸 → 값 메모리 화살표가 곧 '주소를 가리킨다'는 뜻</span>
       <div data-m="heap"></div>
 
       <h3 class="section-title">③ 무엇이 어디로 — 분류</h3>
