@@ -28,8 +28,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       # 빌드 단계 없음 — 바닐라 JS라 리포지토리 루트를 그대로 올린다(index.html 진입).
       - name: Upload static site
