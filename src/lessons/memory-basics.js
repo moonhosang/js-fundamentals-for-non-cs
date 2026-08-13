@@ -32,9 +32,11 @@
       <h3 class="section-title">② RAM의 모습 — 주소가 붙은 칸들</h3>
       <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 → 그래서 Random Access</span>
       <div class="card">
-        <div class="file-label">📄 변수·객체·배열이 메모리에 놓인 모습 (개념도) — 칸은 <b>수십억 개</b></div>
+        <div class="file-label">📄 같은 RAM인데 — 쓰임이 둘로 갈린다 (변수 영역 · 값 메모리 영역)</div>
         <div data-m="ramgrid"></div>
-        <p class="section-desc" style="margin:10px 0 0">RAM엔 이런 칸이 <b>수십억 개</b>(기가바이트) — <b>⋯</b>는 "끝없이 이어진다"는 뜻. <b>변수·객체·배열</b> 온갖 것이 여기저기 칸에 놓인다. 원시값(<code>age=20</code>)은 작아 <b>한 칸</b>, 객체·배열은 커서 <b>여러 칸</b>을 차지한다. (이 RAM을 <b>스택·힙</b>으로 나눠 쓰는 건 다음 강의)</p>
+        <p class="section-desc" style="margin:10px 0 0">RAM은 <b>수십억 칸</b>(⋯ = 끝없이 이어짐). 프로그램은 이걸 <b>두 구역</b>으로 나눠 쓴다 —
+        <b>📇 변수 영역</b>(이름표 장부)엔 <b>원시값 변수가 값째로</b>(age=20), <b>🗄️ 값 메모리 영역</b>(힙)엔 <b>객체·배열의 실체</b>가 놓인다.
+        객체 변수는 장부엔 <b>주소만</b> 두고 값 메모리를 가리킨다. (두 구역 = 스택·힙, 자세힌 다음 강의)</p>
       </div>
 
       <div class="card" style="background:color-mix(in srgb, #f59e0b 8%, var(--panel));border-color:color-mix(in oklab, #f59e0b 32%, var(--border))">
@@ -48,20 +50,20 @@
       </div>
 
       <h3 class="section-title">③ 칸에 이름 붙이기 — let · const · var (변수 vs 상수)</h3>
-      <span class="learn-tag">📎 셋 다 'RAM 칸을 잡고 이름표를 붙인다'. 차이는 값이 아니라 — 이름표를 나중에 옮겨 달 수 있느냐</span>
-      <p class="section-desc">방금 본 그 칸에 값을 두고 <b>이름표</b>를 붙이는 걸 <b>선언</b>이라 한다. 붙이는 방법이 셋 — <b>값이 사는 방식(RAM)은 똑같고</b>, 이름표를 <b>옮길 수 있느냐</b>만 다르다:</p>
+      <span class="learn-tag">📎 셋 다 '장부에 이름을 올린다'. 차이는 값 종류가 아니라 — 장부 칸에 <b>담긴 것</b>을 나중에 바꿀 수 있느냐</span>
+      <p class="section-desc">이름을 <b>장부(변수 관리 영역)</b>에 올리는 걸 <b>선언</b>이라 한다. 장부 칸에 담기는 것은 <b>원시값이면 값 자체, 객체면 주소</b>. 올리는 방법이 셋 — 담긴 것을 <b>나중에 바꿀 수 있느냐</b>만 다르다:</p>
       <ul class="section-list">
-        <li><code>let</code> — <b>변수</b>: 이름표를 나중에 <b>다른 값으로 옮겨 달 수 있다</b>(재할당 O).</li>
-        <li><code>const</code> — <b>상수</b>: 이름표를 한 번 달면 <b>못 옮긴다</b>(재할당 X). "안 바뀔 값"(세율·원주율·설정값)에 쓴다.</li>
+        <li><code>let</code> — <b>변수</b>: 장부 칸에 <b>담긴 것을 나중에 바꿀 수 있다</b>(재할당 O).</li>
+        <li><code>const</code> — <b>상수</b>: 장부 칸에 <b>담긴 것을 한 번 정하면 못 바꾼다</b>(재할당 X). "안 바뀔 값"(세율·원주율·설정값)에 쓴다.</li>
         <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
       </ul>
       <div class="card">
         <div class="file-label">📍 그 RAM 칸에 이름표를 붙인 모습 — 변수 = 주소에 붙인 '접근용 이름'</div>
         <div data-m="letconst-ram"></div>
-        <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. <code>🏷️ score</code>(let)는 이 이름표를 다른 값으로 <b>옮겨 달 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 옮긴다.</p>
+        <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. (이 둘은 원시값이라 값이 <b>변수 영역 칸 안에</b> 있다.) <code>🏷️ score</code>(let)는 이 칸의 <b>값을 바꿀 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 바꾼다.</p>
       </div>
       <div class="card">
-        <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
+        <div class="file-label">🎬 눈으로 — 원시값은 장부 안에, let은 값을 바꾸고 const는 잠근다 (▶ 한 단계씩)</div>
         <div data-m="letconst-viz"></div>
       </div>
       <div class="card">
@@ -83,9 +85,9 @@
       </div>
 
       <div class="card">
-        <div class="file-label">🔬 그럼 <code>box = null</code>은 어디에 써질까? (▶ — 슬롯엔 null, 힙 객체는 버려짐)</div>
+        <div class="file-label">🔬 그럼 <code>box = null</code>은 어디에 써질까? (▶ — 장부 칸엔 null, 값 메모리 객체는 버려짐)</div>
         <div data-m="boxnull-viz"></div>
-        <p class="section-desc" style="margin:10px 0 0">null이 <b>힙(객체)에 써지는 게 아니다</b> — <b>box 슬롯</b>에 null이 써지고(화살표 끊김), 힙의 객체는 손 안 대고 버려져 GC 대상이 된다. <b>변수(슬롯) ≠ 그가 가리키던 값(힙)</b>.</p>
+        <p class="section-desc" style="margin:10px 0 0">null이 <b>값 메모리(객체)에 써지는 게 아니다</b> — <b>장부의 box 칸</b>에 null이 써지고(화살표 끊김), 값 메모리의 객체는 손 안 대고 버려져 GC 대상이 된다. <b>변수(장부 칸) ≠ 그가 가리키던 값(값 메모리)</b>.</p>
       </div>
       <p class="section-desc" style="margin-bottom:6px">그리고 <code>box = null</code> · <code>box = undefined</code> · <code>box = ""</code> — <b>객체를 버리는 건 셋 다 똑같다</b>(참조가 끊겨 고아 → GC). 다만 <b>box 슬롯에 남는 값</b>이 다르다:</p>
       <div style="overflow-x:auto">
@@ -148,36 +150,36 @@
         <button class="chip on" data-goto="stack">🧠 M2 · 스택 →</button>
       </div>
     `
-    // RAM 격자 — 칸이 수십억 개임을 느끼게, 작은 칸을 잔뜩 + 양끝 ⋯.
-    // 변수·객체·배열 등 온갖 것이 여기저기 칸에 놓인다.
+    // RAM을 두 구역으로 — 📇 변수 영역(원시값 값째로) / 🗄️ 값 메모리 영역(객체·배열 실체).
     const grid = root.querySelector('[data-m="ramgrid"]')
     if (grid) {
-      const wrap = document.createElement('div')
-      wrap.className = 'ram-grid'
       const dots = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
-      const items = {
-        16: { lbl: '🏷️ 변수 age', val: '20', c: '#16a34a' },
-        30: { lbl: '🔤 문자열', val: '"안녕"', c: '#0891b2' },
-        58: { lbl: '📦 객체', val: '{ name: "민지", age: 24 }', c: '#6366f1' },
-        96: { lbl: '📚 배열', val: '[1, 2, 3]', c: '#7c3aed' },
+      const hiCell = (it) => {
+        const hi = document.createElement('div'); hi.className = 'ram-hi'
+        hi.innerHTML = `<span class="lbl" style="color:${it.c}">${it.lbl}</span><span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${it.val.replace(/</g, '&lt;')}</span>`
+        return hi
       }
-      const N = 120
-      wrap.append(dots())
-      for (let i = 0; i < N; i++) {
-        const it = items[i]
-        if (it) {
-          const hi = document.createElement('div')
-          hi.className = 'ram-hi'
-          hi.innerHTML = `<span class="lbl" style="color:${it.c}">${it.lbl}</span><span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${it.val.replace(/</g, '&lt;')}</span>`
-          wrap.append(hi)
-        } else {
-          const c = document.createElement('div')
-          c.className = 'ram-c'
-          wrap.append(c)
+      const zone = (labelHtml, items, N) => {
+        const z = document.createElement('div'); z.className = 'ram-zone'
+        const h = document.createElement('div'); h.className = 'ram-zone-label'; h.innerHTML = labelHtml; z.append(h)
+        const w = document.createElement('div'); w.className = 'ram-grid'
+        w.append(dots())
+        for (let i = 0; i < N; i++) {
+          const it = items[i]
+          if (it) { w.append(hiCell(it)) }
+          else { const c = document.createElement('div'); c.className = 'ram-c'; w.append(c) }
         }
+        w.append(dots())
+        z.append(w); return z
       }
-      wrap.append(dots())
-      grid.append(wrap)
+      grid.append(zone('📇 <b>변수 영역</b> (스택) — 이름표 장부 · 원시값이 <b>값째로</b>', {
+        3: { lbl: '🏷️ age', val: '20', c: '#16a34a' },
+        13: { lbl: '🏷️ done', val: 'true', c: '#0891b2' },
+      }, 30))
+      grid.append(zone('🗄️ <b>값 메모리 영역</b> (힙) — 객체·배열의 <b>실체</b> (흩어져 놓인다)', {
+        4: { lbl: '📦 객체', val: '{ name: "민지", age: 24 }', c: '#6366f1' },
+        22: { lbl: '📚 배열', val: '[1, 2, 3]', c: '#7c3aed' },
+      }, 30))
     }
     // ③ RAM 칸에 이름표 붙이기 — score(let)·PI(const)를 주소 붙은 칸으로 (②와 같은 물리 그리드)
     const g2 = root.querySelector('[data-m="letconst-ram"]')
@@ -206,28 +208,29 @@
       g2.append(w)
     }
     root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
-      title: 'let은 이름표를 옮긴다 · const는 잠근다',
-      stackLabel: '🏷️ 변수 (이름표)', heapLabel: '💎 값',
-      code: ['let score = 10', 'score = 20        // let: 옮기기 OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 옮김'],
+      title: 'let은 장부의 값을 바꾼다 · const는 잠근다 (원시값은 장부 안에)',
+      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+      code: ['let score = 10', 'score = 20        // let: 값 바꾸기 OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 바꿈'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v1' }] }], heap: { v1: { label: '10' } },
-          note: '<code>let score = 10</code> — 이름표 <b>score</b>를 값 10에 붙인다(화살표).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' } },
-          note: '<code>score = 20</code> → 이름표를 <b>다른 값 20으로 옮겼다</b>(재할당). let이라 가능. 10은 이제 아무도 안 씀(회색).' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }, { name: '🔒 PI', ref: 'v3' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' }, v3: { label: '3.14' } },
-          note: '<code>const PI = 3.14</code> — 이름표 <b>PI</b>를 3.14에 붙이고 <b>🔒 잠근다</b>.' },
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'v2' }, { name: '🔒 PI', ref: 'v3' }] }], heap: { v1: { label: '10', faded: true }, v2: { label: '20' }, v3: { label: '3.14' }, v4: { label: '3', faded: true } },
-          note: '<code>PI = 3</code> → 새 값 3을 두려 해도 <b>🔒 PI는 못 옮겨간다</b>(그래서 3은 회색·버려짐) → <b>❌ 에러</b>. PI는 그대로 3.14. ↔ 위의 score(let)는 옮겨졌던 것과 대비.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', value: '10' }] }], heap: {},
+          note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 담긴 것 = <b>값 10 자체</b>(원시값이라 값이 장부 안에 산다). 오른쪽 <b>값 메모리(힙)는 안 쓴다</b>.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }] }], heap: {},
+          note: '<code>score = 20</code> → 장부의 <b>그 칸 값이 10 → 20</b>으로 바뀐다(재할당). let이라 가능. (힙은 여전히 안 씀)' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
+          note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 값 3.14. 이 칸은 <b>🔒 잠긴다</b>.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
+          note: '<code>PI = 3</code> → 잠긴 칸이라 <b>못 바꾼다 → ❌ 에러</b>. PI는 그대로 3.14. (score(let)는 바뀌었지만 PI(const)는 못 바꾼다.) — 그리고 <b>값 메모리(오른쪽)가 내내 비었죠?</b> 원시값은 장부 안에 살아서 힙을 안 씁니다.' },
       ],
     }))
     root.querySelector('[data-m="boxnull-viz"]').append(MemoryModel({
-      title: 'box = null — 슬롯엔 null, 힙 객체는 버려진다',
+      title: 'box = null — 장부 칸엔 null, 값 메모리의 객체는 버려진다',
+      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
       code: ['let box = { name: "민지" }', 'box = null'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
-          note: 'box 슬롯 안엔 <b>주소(화살표)</b> — 힙의 객체를 가리킨다.' },
+          note: '<code>box = { … }</code> — 객체라 실체는 <b>값 메모리(힙)</b>에. 장부의 box 칸엔 <b>주소(화살표)</b>만 담긴다. (원시값과 달리 값이 장부 밖에 있다)' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'box', value: 'null' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }], faded: true } },
-          note: '<code>box = null</code> → <b>box 슬롯에 null</b>이 써진다(화살표 끊김). 힙의 객체는 <b>손 안 대고 그대로</b>지만 아무도 안 가리켜 <b>고아(회색) → GC 수거</b>. null이 힙에 써지는 게 아니다.' },
+          note: '<code>box = null</code> → <b>장부의 box 칸에 null</b>이 써진다(화살표 끊김). <b>값 메모리의 객체는 손 안 대고 그대로</b> — 다만 아무도 안 가리켜 <b>고아(회색) → 나중에 GC 수거</b>. null이 값 메모리에 써지는 게 아니다.' },
       ],
     }))
     root.querySelector('[data-m="letconst"]').append(Runner({

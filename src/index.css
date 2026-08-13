@@ -1795,3 +1795,9 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
   font-family: var(--font-sans); font-size: 9px; font-weight: 700; color: var(--green); white-space: nowrap;
 }
 .sep-inline { color: var(--green); font-family: var(--font-mono); font-weight: 900; padding: 0 2px; }
+
+/* RAM 2구역 (변수 영역 / 값 메모리 영역) — M1 ② */
+.ram-zone { margin: 8px 0; padding: 8px 10px; border: 1px dashed var(--border); border-radius: 10px; background: color-mix(in srgb, var(--brand-soft) 18%, var(--panel)); }
+.ram-zone + .ram-zone { margin-top: 10px; }
+.ram-zone-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.ram-zone-label b { color: var(--brand); }
