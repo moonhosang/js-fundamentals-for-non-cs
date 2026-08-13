@@ -46,18 +46,13 @@
         <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
       </ul>
       <div class="card">
+        <div class="file-label">📍 그 RAM 칸에 이름표를 붙인 모습 — 변수 = '주소'에 붙인 별명</div>
+        <div data-m="letconst-ram"></div>
+        <p class="section-desc" style="margin:10px 0 0">②에서 본 그 칸이다 — 값이 RAM 칸(주소 <code>#0042</code> 등)에 놓이고, 그 위에 <b>이름표</b>가 붙는다. <code>🏷️ score</code>(let)는 이름표를 다른 값으로 <b>옮겨 달 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 옮긴다.</p>
+      </div>
+      <div class="card">
         <div class="file-label">🎬 눈으로 — 이름표가 값에 붙고, let은 옮겨지고 const는 잠긴다 (▶ 한 단계씩)</div>
         <div data-m="letconst-viz"></div>
-      </div>
-      <div class="falsy-grid">
-        <div class="card" style="margin:0"><div class="file-label" style="color:#16a34a">✅ let — 이름표를 옮길 수 있다</div>
-          <pre class="err-code" style="color:inherit;background:transparent">let score = 10
-score = 20      // 이름표를 20으로 옮김 ✅
-// score → 20</pre></div>
-        <div class="card" style="margin:0"><div class="file-label" style="color:#dc2626">❌ const — 옮기려 하면 에러</div>
-          <pre class="err-code" style="color:inherit;background:transparent">const PI = 3.14
-PI = 3          // 옮기기 금지 ❌
-// TypeError: Assignment to constant</pre></div>
       </div>
       <div class="card">
         <div class="file-label">🔬 const를 옮기려 하면? (▶ 실행해서 에러를 직접 보라)</div>
@@ -125,6 +120,32 @@ PI = 3          // 옮기기 금지 ❌
       }
       wrap.append(dots())
       grid.append(wrap)
+    }
+    // ③ RAM 칸에 이름표 붙이기 — score(let)·PI(const)를 주소 붙은 칸으로 (②와 같은 물리 그리드)
+    const g2 = root.querySelector('[data-m="letconst-ram"]')
+    if (g2) {
+      const w = document.createElement('div')
+      w.className = 'ram-grid'
+      const dots2 = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
+      const items2 = {
+        9: { lbl: '🏷️ score · let', val: '20', c: '#16a34a', adr: '#0042' },
+        26: { lbl: '🔒 PI · const', val: '3.14', c: '#dc2626', adr: '#0043' },
+      }
+      const N2 = 42
+      w.append(dots2())
+      for (let i = 0; i < N2; i++) {
+        const it = items2[i]
+        if (it) {
+          const hi = document.createElement('div')
+          hi.className = 'ram-hi'
+          hi.innerHTML = `<span class="lbl" style="color:${it.c}">${it.lbl}</span><span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${it.val}</span><span class="adr">${it.adr}</span>`
+          w.append(hi)
+        } else {
+          const c = document.createElement('div'); c.className = 'ram-c'; w.append(c)
+        }
+      }
+      w.append(dots2())
+      g2.append(w)
     }
     root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
       title: 'let은 이름표를 옮긴다 · const는 잠근다',
