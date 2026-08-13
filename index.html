@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IT 전공자가 아닌 사람을 위한 JS 입문</title>
+    <!-- 본문: Pretendard(jsdelivr) · 코드(고정폭): 나눔고딕코딩(Google Fonts) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="src/index.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- 빌드 없음: 스크립트를 순서대로 불러온다. (재사용 위젯 → 레슨들 → 앱 껍데기) -->
+    <script src="src/lib/runner.js"></script>
+    <script src="src/lib/drill.js"></script>
+    <script src="src/lib/memory-model.js"></script>
+    <script src="src/lib/stackviz.js"></script>
+    <script src="src/lib/exprreduce.js"></script>
+    <script src="src/lessons/variables.js"></script>
+    <script src="src/lessons/memory-basics.js"></script>
+    <script src="src/lessons/memory-advanced.js"></script>
+    <script src="src/lessons/calc-strings.js"></script>
+    <script src="src/lessons/expressions.js"></script>
+    <script src="src/lessons/conditions.js"></script>
+    <script src="src/lessons/arrays.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+// 1강 · 변수 — 값에 이름 붙이기
+// 완전 처음이라 가정. 'Figma 컬러 스타일 이름'·'연락처 이름 저장' 같은 일상 비유로 연다.
+// window.Lessons[1] 에 render 함수를 등록한다. (app.js가 불러 화면에 그린다)
+
+;(function () {
+  window.Lessons = window.Lessons || {}
+  window.Practices = window.Practices || {}
+
+  // 단계별 실습 데이터 — 사이드바의 '📝 1강 실습' 항목에서 stepped 드릴로 쓴다.
+  window.Practices[1] = {
+    pattern: '유형: let 이름 = ____  로 이름표를 값에 붙여 print(이름)이 나오게 하기',
+    memViz: true, // 정답 맞히면 '이름표 → 값' 메모리 그림을 보여준다
+    problems: [
+      // ── 기본 유형 1-5 ──
+      { label: 'age 에 24', ask: 'age 에 24를 담아 24가 나오게 하세요.', code: 'let age = ____\nprint(age)', expect: '24', answer: '24', hint: '숫자는 따옴표 없이' },
+      { label: 'name 에 "민지"', ask: 'name 에 "민지"를 담아 "민지"가 나오게 하세요.', code: 'let name = ____\nprint(name)', expect: '"민지"', answer: '"민지"', hint: '글자는 따옴표로 감싼다' },
+      { label: 'color 에 색', ask: 'color 에 "#FF6B6B"을 담으세요.', code: 'let color = ____\nprint(color)', expect: '"#FF6B6B"', answer: '"#FF6B6B"', hint: '색 코드도 글자다 → 따옴표' },
+      { label: 'price 에 12000', ask: 'price 에 12000을 담으세요.', code: 'let price = ____\nprint(price)', expect: '12000', answer: '12000', hint: '숫자' },
+      { label: 'isOpen 에 true', ask: 'isOpen 에 참(true)을 담으세요.', code: 'let isOpen = ____\nprint(isOpen)', expect: 'true', answer: 'true', hint: '참은 true (따옴표 없음)' },
+      // ── 유사한 5개 더 6-10 ──
+      { label: 'score 에 100', ask: 'score 에 100을 담으세요.', code: 'let score = ____\nprint(score)', expect: '100', answer: '100', hint: '숫자' },
+      { label: 'grade 에 "A"', ask: 'grade 에 "A"를 담으세요.', code: 'let grade = ____\nprint(grade)', expect: '"A"', answer: '"A"', hint: '한 글자도 글자 → 따옴표' },
+      { label: 'height 에 175', ask: 'height 에 175를 담으세요.', code: 'let height = ____\nprint(height)', expect: '175', answer: '175', hint: '숫자' },
+      { label: 'nickname 에 "토끼"', ask: 'nickname 에 "토끼"를 담으세요.', code: 'let nickname = ____\nprint(nickname)', expect: '"토끼"', answer: '"토끼"', hint: '따옴표' },
+      { label: 'isDone 에 false', ask: 'isDone 에 거짓(false)을 담으세요.', code: 'let isDone = ____\nprint(isDone)', expect: 'false', answer: 'false', hint: '거짓은 false (따옴표 없음)' },
+    ],
+  }
+
+  window.Lessons[1] = function render(root) {
+    // ── 산문(정적 HTML). 위젯이 들어갈 자리는 data-m 으로 표시해 두고 아래에서 주입한다. ──
+    root.innerHTML = `
+      <header class="lesson-header">
+        <span class="badge">1강</span>
+        <h2>변수 — 값에 이름을 붙이기</h2>
+        <p>숫자·글자 같은 '값'에 이름표를 달아 두면, 이름만 부르면 그 값이 튀어나온다. 코딩의 가장 기본 벽돌이다.</p>
+      </header>
+
+      <div class="lesson-goal">
+        <span class="lesson-goal-tag">🎯 학습 포인트</span>
+        <p><b>값(value)</b>은 다뤄지는 데이터 하나 — <code>3</code>, <code>"안녕"</code>, <code>true</code>.
+        <b> 변수(variable)</b>는 그 값에 붙이는 <b>이름표</b>다. <code>let</code>으로 만들고, <code>=</code>로
+        이름표를 값에 <b>붙인다</b>. 이름을 부르면 그 값이 나온다.</p>
+      </div>
+
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">⚠️ 가장 중요한 오해 — 변수는 '밥통'이 아니다</div>
+        <p class="section-desc" style="margin:0">변수를 "값을 담아 가둬 두는 <b>그릇·밥통</b>"으로 여기면 나중에 <b>참조·별칭·불변</b>에서 전부 무너진다.
+        변수는 <b>값을 가리키는 이름표</b>다 — 값은 메모리에 있고, 변수는 그걸 <b>가진다/가리킨다</b>. 즉 <b>이름표(변수) ≠ 값(데이터)</b>. (🧠 메모리 기초에서 이 경계를 눈으로 확인한다.)</p>
+      </div>
+
+      <h3 class="section-title">① 먼저, '값'이 뭘까</h3>
+      <span class="learn-tag">📎 값은 세 가지부터 — 숫자 · 글자(문자열) · 참/거짓</span>
+      <p class="section-desc">프로그램이 다루는 재료가 <b>값</b>이다. 지금은 세 종류만 알면 된다.
+      아래 <b>▶ 실행</b>을 누르면 <code>print(...)</code>가 값을 글로 찍어 준다.</p>
+      <div class="card">
+        <div class="file-label">🔬 값 세 가지를 찍어 보기</div>
+        <div data-m="v1"></div>
+      </div>
+      <ul class="section-list">
+        <li><b>숫자</b> — <code>3</code>, <code>100</code>, <code>3.5</code>. 따옴표 없이 그냥 쓴다.</li>
+        <li><b>문자열</b>(글자) — <code>"안녕"</code>처럼 <b>따옴표로 감싼다</b>. 그래서 값 칸에 <code>"3"</code>과 <code>3</code>이 다르게 보인다.</li>
+        <li><b>참/거짓</b> — <code>true</code>(참) 또는 <code>false</code>(거짓). 조건을 다룰 때 쓴다(뒤 강의).</li>
+      </ul>
+
+      <h3 class="section-title">② 변수 = 값에 붙이는 '이름표'</h3>
+      <span class="learn-tag">📎 Figma의 '컬러 스타일 이름'처럼 — 값 대신 이름을 부른다</span>
+      <p class="section-desc">디자인 툴을 써봤다면 이미 익숙하다 — Figma에서 <code>#3B82F6</code>을 매번 쓰지 않고 <b>Primary</b>라는
+      스타일 이름을 붙여 두는 것, 그게 바로 변수다. (연락처에 번호 대신 <b>이름</b>을 저장하는 것도 똑같은 원리.) 코드에선 <code>let 이름 = 값</code>으로 만든다.</p>
+      <div class="card">
+        <div class="file-label">🔬 이름을 만들고, 값으로도 화면으로도 꺼내 보기</div>
+        <div data-m="v2"></div>
+      </div>
+      <p class="section-desc">핵심은 <b>한 번 이름표를 달면, 그다음부턴 이름만 부른다</b>는 것. 위에서 <code>primary</code>를
+      값 칸과 화면 배경 <b>두 곳</b>에 썼다. 색을 바꾸고 싶으면 맨 윗줄 하나만 고치면 된다 — 직접 바꿔서 다시 실행해 보라.</p>
+      <div class="card">
+        <div class="file-label">🧠 메모리 그림 — 이름표가 값을 가리킨다 (밥통 아님!)</div>
+        <div data-m="mem"></div>
+      </div>
+
+      <h3 class="section-title">③ <code>=</code> 는 '같다'가 아니라 '이 이름으로 가리켜라'</h3>
+      <span class="learn-tag">📎 수학의 = 와 다르다 — 왼쪽 이름표를 오른쪽 값에 붙이라는 '동작'</span>
+      <div class="card">
+        <div class="file-label">📄 읽는 법</div>
+        <pre class="err-code">let score = 10
+  │     │      └─ 가리킬 값 (오른쪽)
+  │     └─ 이름표
+  └─ "새 이름표를 만든다"는 신호
+
+읽기: "score 라는 이름표를 10에 붙여라(10을 가리켜라)"  (10 = score 아님!)</pre>
+      </div>
+      <div class="card">
+        <div class="file-label">🔬 붙이고 → 옮겨 붙이기</div>
+        <div data-m="v3"></div>
+      </div>
+      <ul class="section-list">
+        <li>처음 만들 때만 <code>let</code>을 붙인다. 다시 가리킬 땐 <code>score = 25</code>처럼 이름만.</li>
+        <li><b>이름을 부르면 '지금 가리키는 값'</b>이 나온다 — 마지막으로 붙인 값.</li>
+      </ul>
+
+      <h3 class="section-title">④ 바꾸면 안 되는 값 — <code>const</code></h3>
+      <span class="learn-tag">📎 let = 바꿀 수 있는 이름표 · const = 고정된 이름표</span>
+      <p class="section-desc">한 번 정하면 안 바뀌는 값(예: 세율, 로고 색)은 <code>const</code>로 만든다. 다시 담으려 하면 <b>일부러 에러</b>가 난다 —
+      실수로 바꾸는 걸 막아 준다. 아래를 실행해 에러를 직접 만나 보라.</p>
+      <div class="card">
+        <div class="file-label">🔬 const에 다시 담으면?</div>
+        <div data-m="v4"></div>
+      </div>
+      <p class="section-desc" style="margin-top:-2px">규칙: <b>바뀌지 않을 값이면 <code>const</code>, 바뀔 값이면 <code>let</code></b>.
+      실무에선 대부분 const로 시작하고, 꼭 바꿔야 할 때만 let으로 바꾼다.</p>
+
+      <div class="practice-cta">
+        <span>🎯 개념은 여기까지. 이제 <b>단계별 실습</b>으로 손에 붙일 차례예요 — 같은 유형 5문제.</span>
+        <button class="chip on" data-goto="1-1">📝 1강 실습 시작 (1-1) →</button>
+      </div>
+
+      <div class="concept">
+        <p class="concept-lead">📖 한 줄 요약</p>
+        <p class="section-desc" style="margin-top:0"><b>값</b>(숫자·글자·참거짓)에 <code>let 이름 = 값</code>으로 <b>이름표</b>를 붙인다.
+        <b>변수는 밥통이 아니라 이름표</b> — <code>=</code>는 '이 이름으로 가리켜라'. 바뀔 값은 <code>let</code>, 안 바뀔 값은 <code>const</code>. 이름을 부르면 그 값이 나온다.</p>
+      </div>
+    `
+
+    // ── 위젯 주입 ──
+    root.querySelector('[data-m="v1"]').append(Runner({
+      showBox: false,
+      code: 'print(3)          // 숫자\nprint("안녕")      // 글자 (문자열 — 따옴표로 감싼다)\nprint(true)       // 참/거짓 (true 아니면 false)',
+    }))
+
+    root.querySelector('[data-m="v2"]').append(Runner({
+      code: [
+        'let primary = "#3B82F6"    // primary 이름표를 이 색에 붙인다',
+        'let title = "안녕, 반가워"',
+        '',
+        'print(primary)             // 이름이 가리키는 값 → 왼쪽에 글자로',
+        'print(title)',
+        '',
+        '// 화면(box)으로도 꺼내 보자 — 이름이 가리키는 값을 그대로 쓴다',
+        'box.textContent = title',
+        'box.style.background = primary',
+        'box.style.color = "white"',
+        'box.style.padding = "16px"',
+        'box.style.borderRadius = "10px"',
+      ].join('\n'),
+    }))
+
+    root.querySelector('[data-m="v3"]').append(Runner({
+      showBox: false,
+      code: 'let score = 10\nprint(score)        // 10\n\nscore = 25          // 같은 이름표를 다른 값(25)으로 옮겨 붙인다 (let은 OK)\nprint(score)        // 25 — 방금 가리킨 값으로 바뀜',
+    }))
+
+    root.querySelector('[data-m="v4"]').append(Runner({
+      showBox: false,
+      code: 'const TAX = 0.1\nprint(TAX)      // 0.1\n\nTAX = 0.2       // ❌ 여기서 에러가 난다 (const는 다른 값으로 옮겨 붙이기 금지)\nprint(TAX)',
+    }))
+
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: '🧠 메모리 모델 — 스택(Stack)과 힙(Heap), 값이 사는 두 방',
+      code: ['let primary = "#3B82F6"', 'let title = "안녕, 반가워"', 'let card = { name: "명함" }'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }] }], heap: {}, note: '변수 primary는 <b>스택(Stack)</b>에 산다 — 왼쪽이 스택, 오른쪽이 <b>힙(Heap)</b>. 이 <b>두 방</b>이 곧 "메모리 모델"이다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }] }], heap: {}, note: '숫자·글자 같은 <b>작은 값</b>은 이렇게 <b>스택</b>에 놓인다. 힙은 아직 비어 있다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }, { name: 'card', ref: 'h1' }] }], heap: { h1: { label: '{ name: "명함" }' } }, note: '<b>큰 묶음</b>(객체 <code>{ }</code> 같은 것)은 <b>힙</b>에 산다 — card는 스택에서 힙을 <b>가리킨다</b>(화살표). 스택·힙을 각각 자세힌 🧠 메모리 기초에서.' },
+      ],
+    }))
+
+    const cta = root.querySelector('[data-goto]')
+    if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+  }
+})()
