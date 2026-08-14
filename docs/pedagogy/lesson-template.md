@@ -55,8 +55,9 @@
 
 ## 4. 시각 자산 (재사용)
 안 보이는 것을 보이게 — [../architecture/components.md](../architecture/components.md) 참고:
-- **MemoryModel** — 스택/힙/참조/사람카드/배열/값셀. 대부분 여기로 해결.
+- **MemoryModel** — 이름표 장부 │ 값 메모리(모든 값이 셀, 변수는 화살표 · 참조/별칭/사람카드/배열). 대부분 여기로 해결. (표기 규칙: [ADR 0007](../decisions/0007-all-values-in-value-memory-model-b.md))
 - **StackViz** — 스택 LIFO 접시더미.
+- **ExprReduce** — 표현식 축약(reduction) 단계 애니.
 - **Runner** — 라이브 JS 실행(값 print + 화면 box).
 - **Drill** — 빈칸 유형 드릴.
 

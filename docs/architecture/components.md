@@ -4,7 +4,7 @@
 
 ---
 
-## 🧠 MemoryModel — 스택/힙 시뮬레이터 (핵심 자산)
+## 🧠 MemoryModel — 메모리 시뮬레이터 · 이름표 장부 │ 값 메모리 (핵심 자산)
 `src/lib/memory-model.js` · `MemoryModel(config) → <memory-model>` (왜 별도 웹컴포넌트: [../decisions/0003-reusable-memory-model-web-component.md](../decisions/0003-reusable-memory-model-web-component.md))
 
 값이 메모리에서 어떻게 사는지 **단계별로** 보여준다. 참조·별칭·전달·객체그래프·트리·순환·불변 등 십수 개 개념을 이 하나로 시각화했다.
@@ -65,6 +65,10 @@
 ## 🔬 Runner — 라이브 JS 실행기
 `src/lib/runner.js` · `Runner({ code, showBox?, editable?, autorun?, rows? }) → div`
 결과를 두 가지로: `print(...)`(값·콘솔) + `box`(화면 DOM). 시각(눈)으로 확인하는 값·화면 균형. 그 자리서 고쳐 ▶실행.
+
+## 🔽 ExprReduce — 표현식 축약(reduction) 애니
+`src/lib/exprreduce.js` · `ExprReduce({ title, steps:[{code, mark, note}], onStep? }) → div`
+표현식이 **한 번에 한 redex씩** 값으로 줄어드는 걸 단계별로. `mark` = 이번에 계산되는 부분 하이라이트. 3강 표현식(식 vs 문·우선순위·중첩)에서 씀. (`onStep(i, step)`로 외부 훅 — 예: 우선순위 눈금 tier 점등.)
 
 ## 🎯 Drill — 빈칸 유형 드릴
 `src/lib/drill.js` · `Drill({ pattern, problems, stepped?, hideHead?, onSolved? }) → div`

@@ -16,13 +16,17 @@ src/
 ├─ lib/             # 재사용 위젯 (→ components.md)
 │  ├─ runner.js         # Runner — 라이브 JS 실행기 (print + box)
 │  ├─ drill.js          # Drill — 빈칸 유형 드릴
-│  ├─ memory-model.js   # <memory-model> — 스택/힙 시뮬레이터 (핵심 자산)
-│  └─ stackviz.js       # StackViz — 스택 LIFO 접시더미
+│  ├─ memory-model.js   # <memory-model> — 메모리 시뮬레이터 (이름표 장부 │ 값 메모리, 핵심 자산)
+│  ├─ stackviz.js       # StackViz — 스택 LIFO 접시더미
+│  └─ exprreduce.js     # ExprReduce — 표현식 축약(reduction) 애니
 └─ lessons/         # 강의 (순수 .js — 배우는 언어와 일치)
-   ├─ variables.js         # 1강 변수
-   ├─ memory-basics.js     # 메모리 기초 + 객체 그래프 챕터
-   ├─ memory-advanced.js   # 메모리 심화 (콜스택 등)
-   └─ calc-strings.js      # 2강 계산과 문자열
+   ├─ variables.js         # 1강 값·타입·변수
+   ├─ calc-strings.js      # 2강 계산과 문자열
+   ├─ expressions.js       # 3강 표현식 (3-1…3-6 단계)
+   ├─ conditions.js        # 4강 조건
+   ├─ arrays.js            # 5강 배열
+   ├─ memory-basics.js     # 메모리 기초(M1~M7) + 객체 그래프 챕터(G1~G4)
+   └─ memory-advanced.js   # 메모리 심화 (콜스택·클로저·GC)
 ```
 
 ## 로드 순서 (index.html)
