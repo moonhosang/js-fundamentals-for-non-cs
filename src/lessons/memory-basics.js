@@ -85,8 +85,16 @@
 
       <div class="card" style="background:color-mix(in srgb, var(--muted) 6%, var(--panel));border-style:dashed">
         <p class="section-desc" style="margin:0;font-size:13px">ℹ️ <b>안내 — 입문자를 위해 단순화했습니다.</b> 우리는 값이 사는 곳을 그냥 "<b>메모리</b>"라 부르지만(주로 <b>RAM</b>), 실제 메모리는
-        <b>CPU 캐시(L1·L2·L3) → RAM → 디스크 스왑</b>으로 이어진 <b>여러 층(메모리 계층)</b>입니다. 여기선 값이 '<b>어디에</b> 사는지'의 감을 위해 <b>RAM 한 층으로 뭉뚱그렸고</b>, CPU 캐시·디스크 스왑은 <b>의도적으로 뺐습니다</b>. 스택·힙도 <b>개념 모델</b>이고요.
-        더 깊이: <a href="https://ko.wikipedia.org/wiki/메모리_계층_구조" target="_blank" rel="noopener noreferrer">메모리 계층 구조 — 위키백과 ↗</a></p>
+        <b>CPU 캐시(L1·L2·L3) → RAM → 디스크 스왑</b>으로 이어진 <b>여러 층(메모리 계층)</b>입니다. 여기선 값이 '<b>어디에</b> 사는지'의 감을 위해 <b>RAM 한 층으로 뭉뚱그렸고</b>, CPU 캐시·디스크 스왑은 <b>의도적으로 뺐습니다</b>. 스택·힙도 <b>개념 모델</b>이고요.</p>
+        <p class="section-desc" style="margin:8px 0 0;font-size:12.5px">📚 <b>더 깊이 (선택) — 우리가 단순화한 것들의 진짜 이름:</b></p>
+        <ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.9;color:var(--muted)">
+          <li><b>전체 그림</b> → <a href="https://ko.wikipedia.org/wiki/메모리_계층_구조" target="_blank" rel="noopener noreferrer">메모리 계층 구조 ↗</a></li>
+          <li><b>우리가 "메모리"라 부른 것</b> → <a href="https://ko.wikipedia.org/wiki/랜덤_액세스_메모리" target="_blank" rel="noopener noreferrer">랜덤 액세스 메모리(RAM) ↗</a></li>
+          <li><b>뺀 층 ①</b> CPU 옆 초고속 임시저장 → <a href="https://ko.wikipedia.org/wiki/CPU_캐시" target="_blank" rel="noopener noreferrer">CPU 캐시 ↗</a></li>
+          <li><b>뺀 층 ②</b> RAM이 모자라면 디스크를 빌려 씀 → <a href="https://ko.wikipedia.org/wiki/가상_메모리" target="_blank" rel="noopener noreferrer">가상 메모리(디스크 스왑) ↗</a></li>
+          <li><b>이름표 장부 쪽</b> 함수가 쌓였다 사라지는 구조 → <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a></li>
+          <li><b>값 메모리(힙) 쪽</b> 객체가 사는 곳의 관리 방식 → <a href="https://ko.wikipedia.org/wiki/동적_메모리_할당" target="_blank" rel="noopener noreferrer">동적 메모리 할당 ↗</a></li>
+        </ul>
       </div>
 
       <h3 class="section-title">① 왜 메모리가 필요한가</h3>
