@@ -1816,3 +1816,14 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
 .nm-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 12%, transparent); }
 .nm-arrows { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 3; }
 .nm-ram .ram-grid { gap: 4px; }
+
+/* 🔮 Quiz — 예측 미니 퀴즈 (design-principles §5) */
+.quiz { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 12px 0; background: color-mix(in oklab, var(--brand) 4%, var(--panel)); }
+.quiz-q { font-weight: 700; margin-bottom: 10px; line-height: 1.5; }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt { text-align: left; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 9px; background: var(--panel); color: inherit; font: inherit; cursor: pointer; transition: border-color .15s, background .15s; }
+.quiz-opt:hover:not(.answered) { border-color: var(--brand); }
+.quiz-opt.answered { cursor: default; }
+.quiz-opt.ok { border-color: #16a34a; background: rgba(22, 163, 74, .12); font-weight: 700; }
+.quiz-opt.no { border-color: var(--red, #dc2626); background: rgba(220, 38, 38, .08); }
+.quiz-explain { margin-top: 10px; padding: 10px 13px; border-radius: 8px; background: var(--panel); border-left: 3px solid var(--brand); font-size: 13.5px; line-height: 1.6; }

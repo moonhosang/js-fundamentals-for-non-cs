@@ -78,6 +78,7 @@
       <h3 class="section-title">① 반복의 고통 — 복붙한 코드</h3>
       <span class="learn-tag">📎 세율(0.1)이 세 줄에 흩어져 있다 — 바꾸려면 세 곳을 다 고쳐야</span>
       <div class="card"><div class="file-label">🔬 같은 식이 세 번</div><div data-m="before"></div></div>
+      <div data-m="qz"></div>
 
       <h3 class="section-title">② 함수로 묶기 — 상자 하나로</h3>
       <span class="learn-tag">📎 '세금 포함 가격' 상자 하나 → 세율은 함수 안 한 곳에만</span>
@@ -98,6 +99,12 @@
 
       ${nav(5, 1, '5-2', '5-2 · 정의 & 호출 →')}
     `
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '세율을 <code>0.1 → 0.15</code>로 바꾸려면, 위 <b>복붙 코드</b>에서 몇 줄을 고쳐야 할까?',
+      options: ['1줄만', '3줄 다', '안 고쳐도 됨'],
+      answer: 1,
+      explain: '세 줄에 <code>0.1</code>이 흩어져 있어 <b>3곳 다</b> — 하나라도 빠뜨리면 버그다. 함수로 묶으면? <b>함수 안 1곳만</b>(아래에서 확인). 이게 함수를 쓰는 첫 이유.',
+    }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
       title: 'withTax(10000) — 함수를 부르면 프레임이 잠깐 생긴다',
       stackLabel: '📚 스택 (이름표 장부)',
@@ -134,6 +141,7 @@
     root.innerHTML = `
       ${stepHeader('5-2 · 정의 & 호출', '상자를 만들고(정의), 부른다(호출)', '이름 뒤 ( )가 "지금 실행해!" 신호')}
       <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/서브루틴" target="_blank" rel="noopener noreferrer">서브루틴(함수·호출) ↗</a></p>
+      <div data-m="qz"></div>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "함수를 정의하면 바로 실행된다"</div>
         <p class="section-desc" style="margin:0"><code>function greet() { … }</code>는 상자를 <b>만들어 둘</b> 뿐 — 이 줄만으론 <b>아무 일도 안 난다</b>. <code>greet()</code>처럼 <b>이름 뒤에 ( )를 붙여 불러야</b> 비로소 안이 실행된다.</p>
@@ -153,6 +161,12 @@
 
       ${nav('5-1', 2, '5-3', '5-3 · 매개변수 vs 인수 →')}
     `
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '<code>function greet(){ return "안녕!" }</code> 다음에 <code>greet</code>라고 <b>( ) 없이</b> 쓰면 "안녕!"이 나올까?',
+      options: ['나온다 — "안녕!"', '안 나온다 — 함수 자체를 가리킬 뿐(실행 X)', '에러가 난다'],
+      answer: 1,
+      explain: '<b>( )가 "지금 실행" 신호</b>다. <code>greet</code>는 상자 <b>자체</b>를 가리킬 뿐(안 돎), <code>greet()</code>라야 안이 실행돼 "안녕!"이 나온다.',
+    }))
     root.querySelector('[data-m="def"]').append(Runner({ showBox: false, code: [
       'function greet() {          // 정의: "greet라는 상자를 만든다" (아직 안 돎)',
       '  return "안녕!"',
@@ -220,6 +234,7 @@
     root.innerHTML = `
       ${stepHeader('5-4 · return', "값을 '돌려준다' — print와 다르다!", '돌려받아 담고, 또 다른 계산에 쓴다')}
       <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/반환문" target="_blank" rel="noopener noreferrer">반환문(return) ↗</a></p>
+      <div data-m="qz"></div>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "return과 print가 같다"</div>
         <p class="section-desc" style="margin:0"><b>다르다.</b> <code>return</code>은 결과를 <b>호출한 자리로 돌려줘</b> 변수에 담거나 다시 쓸 수 있다. <code>print</code>는 <b>화면에 찍기만</b> 하고 값을 <b>못 돌려준다</b>. return이 없으면 함수는 <code>undefined</code>를 돌려준다.</p>
@@ -235,6 +250,12 @@
 
       ${nav('5-3', 4, '5-5', '5-5 · 🧠 프레임 →')}
     `
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '<code>function f(x){ let y = x*2 }</code> — <b>return이 없다</b>. <code>print(f(5))</code>는 뭘 찍을까?',
+      options: ['10', 'undefined (돌려준 게 없다)', '0', '에러'],
+      answer: 1,
+      explain: '함수 안에서 계산은 했지만 <b>return으로 내보내지 않았다</b> → 함수는 <b>undefined</b>를 돌려준다. "계산했으니 10이 나오겠지"가 최대 착각. return이 있어야 값이 밖으로 나온다.',
+    }))
     root.querySelector('[data-m="ret"]').append(Runner({ showBox: false, code: [
       'function add(a, b) {',
       '  return a + b            // 결과를 "돌려준다"',
@@ -280,17 +301,20 @@
       <span class="learn-tag">📎 ▶ — return 7이 add 프레임에서 나와 sum에 담기고, 프레임은 pop</span>
       <div data-m="f1"></div>
 
-      <h3 class="section-title">② 없음 — return이 없으면 undefined</h3>
+      <h3 class="section-title">② 없음 — return이 없으면?</h3>
+      <div data-m="qz2"></div>
       <span class="learn-tag">📎 계산만 하고 안 돌려주면? 함수는 자동으로 undefined를 내놓는다</span>
       <div data-m="f2"></div>
       <div class="card"><div class="file-label">🔬 직접 — 돌려준 게 없으면</div><div data-m="r2"></div></div>
 
-      <h3 class="section-title">③ 조기 반환 — return을 만나면 '즉시' 끝 (아래는 안 돎)</h3>
+      <h3 class="section-title">③ 조기 반환 — return을 먼저 만나면?</h3>
+      <div data-m="qz3"></div>
       <span class="learn-tag">📎 return은 함수를 그 자리에서 끝낸다 — 그 아래 코드는 실행조차 안 된다(dead)</span>
       <div data-m="f3"></div>
       <div class="card"><div class="file-label">🔬 직접 — 0으로 나눌 때 막기(가드)</div><div data-m="r3"></div></div>
 
       <h3 class="section-title">④ 조건부 반환 — 분기마다 다른 return</h3>
+      <div data-m="qz4"></div>
       <span class="learn-tag">📎 점수에 따라 A·B·C 중 하나만 실행 — "있을 수도, 다를 수도"의 정체</span>
       <div data-m="f4"></div>
       <div class="card"><div class="file-label">🔬 직접 — 점수 → 등급</div><div data-m="r4"></div></div>
@@ -301,6 +325,24 @@
       </div>
       ${nav('5-4', 5, '5-6', '5-6 · 스코프 →')}
     `
+    root.querySelector('[data-m="qz2"]').append(Quiz({
+      q: '<code>function shout(x){ let big = x*100 }</code> — return이 없다. <code>let r = shout(5)</code> 뒤 <b>r은?</b>',
+      options: ['500', 'undefined', '0'],
+      answer: 1,
+      explain: 'big=500을 <b>계산은</b> 했지만 <b>return으로 내보내지 않았다</b> → 함수는 undefined를 돌려주고, big(지역)은 사라진다. r엔 <b>undefined</b>.',
+    }))
+    root.querySelector('[data-m="qz3"]').append(Quiz({
+      q: '<code>safeDiv(a,b)</code>가 <code>if(b===0) return "못 나눔"</code> 다음 줄에 <code>return a/b</code>가 있다. <b>safeDiv(10, 0)</b>에서 <code>return a/b</code>가 실행될까?',
+      options: ['실행된다 (10/0 계산)', '실행 안 된다 (위에서 이미 return해 끝남)'],
+      answer: 1,
+      explain: 'b가 0이라 첫 줄 <code>return "못 나눔"</code>에서 <b>함수가 즉시 끝난다</b> — 아래 <code>return a/b</code>는 <b>실행조차 안 됨</b>(dead). return은 값을 내보내며 <b>함수를 종료</b>한다.',
+    }))
+    root.querySelector('[data-m="qz4"]').append(Quiz({
+      q: '<code>grade</code>: <code>if(≥90)return"A"; if(≥80)return"B"; return"C"</code>. <b>grade(85)</b>는?',
+      options: ['"A"', '"B"', '"C"'],
+      answer: 1,
+      explain: '첫 <code>if(≥90)</code>는 거짓(건너뜀), 둘째 <code>if(≥80)</code>는 참 → <b>return "B"</b>에서 끝(셋째 "C"는 안 옴). 점수가 달랐다면 다른 return이 실행됐을 것.',
+    }))
     root.querySelector('[data-m="f1"]').append(MemoryModel({
       title: '① 있음 — return이 값을 밖으로 내보낸다',
       stackLabel: '📚 스택 (이름표 장부)',
@@ -375,6 +417,7 @@
     root.innerHTML = `
       ${stepHeader('5-6 · 스코프', "함수 안 변수는 '지역' — 밖에서 안 보인다", '5-5에서 봤듯 프레임과 함께 생겼다 사라지니까')}
       <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/지역_변수" target="_blank" rel="noopener noreferrer">지역 변수 ↗</a> · <a href="https://ko.wikipedia.org/wiki/전역_변수" target="_blank" rel="noopener noreferrer">전역 변수 ↗</a></p>
+      <div data-m="qz"></div>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "함수 안에서 만든 변수를 밖에서도 쓸 수 있다"</div>
         <p class="section-desc" style="margin:0">못 쓴다. 함수 안 <code>let</code> 변수(<b>지역변수</b>)는 <b>그 함수 안에서만</b> 살고, 함수가 끝나면 <b>프레임과 함께 사라진다</b>(5-5). 밖에서 부르면 에러다.</p>
@@ -390,6 +433,12 @@
 
       ${nav('5-5', 6, '5-7', '5-7 · 화살표 & 요약 →')}
     `
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '함수 <b>안</b>에서 <code>let msg = ...</code>로 만든 변수를, 함수 <b>밖</b>에서 <code>print(msg)</code>하면?',
+      options: ['msg 값이 나온다', 'undefined가 나온다', '에러 — 밖에선 msg가 안 보인다(지역)'],
+      answer: 2,
+      explain: '<b>지역변수</b>는 그 함수 <b>프레임 안에서만</b> 살고, 함수가 끝나면 <b>프레임과 함께 사라진다</b>(5-5). 밖에는 그런 이름이 아예 없어서 <b>에러</b>. 이게 스코프.',
+    }))
     root.querySelector('[data-m="scope"]').append(Runner({ showBox: false, code: [
       'let appName = "메모장"              // 전역 — 어디서나 보인다',
       '',
