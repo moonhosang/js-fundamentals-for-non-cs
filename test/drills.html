@@ -48,6 +48,9 @@
     <script src="../src/lessons/objects.js"></script>
     <script src="../src/lessons/dom.js"></script>
     <script src="../src/lessons/capstone.js"></script>
+    <script src="../src/drills/easy.js"></script>
+    <script src="../src/drills/normal.js"></script>
+    <script src="../src/drills/hard.js"></script>
 
     <script>
       // 진짜 위젯을 구동해 문제 하나를 채점한다 — check()→runFilled()→fmt()→normalize() 전 경로가 real document 로 실행된다.
@@ -70,22 +73,37 @@
       let total = 0, ok = 0
       let n = 0
 
-      for (const base of Object.keys(window.Practices)) {
+      // 채점 대상 수집: ① 난이도 파일(window.Drills.{easy,normal,hard}[base]) ② 아직 이주 안 한 레거시(window.Practices[base]).
+      //   레거시는 Drills 어느 tier에도 없는 base만(이주 완료분 중복 방지).
+      const D = window.Drills || { easy: {}, normal: {}, hard: {} }
+      const sets = [] // { source, problems }
+      for (const tier of ['easy', 'normal', 'hard']) {
+        for (const base of Object.keys(D[tier] || {})) {
+          const cfg = D[tier][base]
+          if (cfg && Array.isArray(cfg.problems)) sets.push({ source: base + ':' + tier, problems: cfg.problems })
+        }
+      }
+      const migrated = new Set([].concat(...['easy', 'normal', 'hard'].map((t) => Object.keys(D[t] || {}))))
+      for (const base of Object.keys(window.Practices || {})) {
+        if (migrated.has(String(base))) continue
         const cfg = window.Practices[base]
-        if (!cfg || !Array.isArray(cfg.problems)) continue
-        cfg.problems.forEach((p) => {
+        if (cfg && Array.isArray(cfg.problems)) sets.push({ source: base + ' (legacy)', problems: cfg.problems })
+      }
+
+      for (const set of sets) {
+        set.problems.forEach((p) => {
           if (p.answer === undefined || p.expect === undefined) return
           total++; n++
           let r
           try { r = verifyProblem(p) } catch (e) { r = { pass: false, text: '⚠️ 예외: ' + (e && e.message || e) } }
           if (r.pass) ok++
-          results.push({ n, base, label: p.label || '', pass: r.pass, text: r.text, expect: p.expect })
+          results.push({ n, base: set.source, label: p.label || '', pass: r.pass, text: r.text, expect: p.expect })
 
           const tr = document.createElement('tr')
           tr.className = r.pass ? 'ok' : 'no'
           tr.innerHTML =
             '<td>' + n + '</td>' +
-            '<td class="tag">' + base + '</td>' +
+            '<td class="tag">' + set.source + '</td>' +
             '<td>' + (p.label || '') + '</td>' +
             '<td>' + (r.pass ? '✅ PASS' : '❌ FAIL') + '</td>' +
             '<td>' + (r.pass ? '' : ('<code>' + (r.text || '').replace(/</g, '&lt;') + '</code> · 기대 <code>' + String(p.expect).replace(/</g, '&lt;') + '</code>')) + '</td>'

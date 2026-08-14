@@ -76,11 +76,32 @@
   // 실습을 '문제마다 별도 항목'으로 펼친다 — 1-1, 1-2, … 1-10 (리액트공부 종합연습 방식).
   // 한 강의 실습 = 동일 유형 5개(1-5) + 유사한 5개 더(6-10).
   // startAt: 실습 항목 번호 시작값(기본 1). 표현식(3강)은 개념이 3-1~3-6을 쓰므로 드릴은 3-7부터(startAt:7).
+  // 난이도 3단계(ADR 0008): 챕터마다 쉬움·보통·어려움 × 5, 난이도별 페이지. 데이터는 window.Drills.{easy,normal,hard}[base].
+  const TIERS = [
+    { key: 'easy', label: '쉬움', badge: '🟢' },
+    { key: 'normal', label: '보통', badge: '🟡' },
+    { key: 'hard', label: '어려움', badge: '🔴' },
+  ]
+  const drillTiersFor = (base) => {
+    const D = window.Drills
+    if (!D) return []
+    const key = String(base)
+    return TIERS
+      .map((t) => ({ t, cfg: D[t.key] && D[t.key][key] }))
+      .filter((x) => x.cfg && x.cfg.problems && x.cfg.problems.length)
+  }
   const practiceItemsFor = (base) => {
+    // ① 난이도 파일(window.Drills)로 이주한 챕터 → 쉬움/보통/어려움 3페이지.
+    const tiers = drillTiersFor(base)
+    if (tiers.length) {
+      return tiers.map(({ t, cfg }) => ({
+        id: base + ':' + t.key, kind: 'practiceset', base, tier: t.key,
+        badge: t.badge, title: t.label, subtitle: cfg.problems.length + '문제',
+      }))
+    }
+    // ② 레거시 폴백 — 아직 난이도 파일로 이주 안 한 챕터(window.Practices). 이주 끝나면 제거.
     const cfg = window.Practices && window.Practices[base]
     if (!cfg) return []
-    // 문자열 id 챕터(메모리·그래프·심화)는 '동일 유형 반복' → 한 페이지에 전부(stepped Drill).
-    // 숫자 강의(1~10강)는 문제별 페이지 유지(기본→유사, 점진). '동일 유형은 한 페이지, 난이도 점진은 분리'.
     if (typeof base === 'string') {
       return [{ id: base + '-drill', kind: 'practiceset', base, badge: '📝', title: 'Practice', subtitle: '동일 유형 ' + cfg.problems.length + '문제' }]
     }
@@ -111,7 +132,10 @@
   const hasContent = (id) => {
     const l = byId[id]
     if (!l) return false
-    if (kindOf(l) === 'practice' || kindOf(l) === 'practiceset') return !!(window.Practices && window.Practices[l.base])
+    if (kindOf(l) === 'practice' || kindOf(l) === 'practiceset') {
+      if (l.tier) return !!(window.Drills && window.Drills[l.tier] && window.Drills[l.tier][String(l.base)])
+      return !!(window.Practices && window.Practices[l.base])
+    }
     return !!(window.Lessons && window.Lessons[id])
   }
   const isPracticeKind = (l) => kindOf(l) === 'practice' || kindOf(l) === 'practiceset'
@@ -352,14 +376,16 @@
   // 실습 세트 페이지 — 동일 유형 문제를 '한 페이지에서 연속 반복'(stepped Drill).
   // (점진 난이도면 페이지를 나누지만, 같은 유형 반복은 한 페이지가 낫다.)
   function renderDrillSet(l) {
-    const cfg = window.Practices[l.base]
+    const tierMeta = l.tier ? TIERS.find((t) => t.key === l.tier) : null
+    const cfg = l.tier ? window.Drills[l.tier][String(l.base)] : window.Practices[l.base]
     const base = byId[l.base]
+    const tierTag = tierMeta ? `${tierMeta.badge} ${tierMeta.label}` : '실습'
     const sec = document.createElement('section')
     sec.innerHTML = `
       <header class="lesson-header">
-        <span class="badge">📝 ${base ? base.badge : ''} · 실습</span>
-        <h2>${base ? base.title : ''} — 실습</h2>
-        <p>${cfg.pattern} · <b>동일 유형 ${cfg.problems.length}문제</b>를 한 페이지에서 (하나 풀면 다음이 열려요).</p>
+        <span class="badge">📝 ${base ? base.badge : ''} · ${tierTag}</span>
+        <h2>${base ? base.title : ''} — ${tierTag} 실습</h2>
+        <p>${cfg.pattern} · <b>${cfg.problems.length}문제</b>를 한 페이지에서 (하나 풀면 다음이 열려요).</p>
       </header>
       <div class="practice-back"><button class="chip" data-back="${l.base}">← ${base ? base.title : '개념'} 다시 보기</button></div>
       <div data-m="drill"></div>

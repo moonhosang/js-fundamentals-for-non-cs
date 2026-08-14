@@ -61,8 +61,8 @@
       </div>
 
       <div class="practice-cta">
-        <span>🎯 이제 <b>단계별 실습</b>으로 — 만들기·꺼내기·중첩·메서드를 손에 붙이자 (10문제).</span>
-        <button class="chip on" data-goto="8-1">📝 8강 실습 시작 (8-1) →</button>
+        <span>🎯 이제 <b>난이도별 실습</b>으로 — 🟢쉬움 → 🟡보통 → 🔴어려움 (각 5문제).</span>
+        <button class="chip on" data-goto="8:easy">📝 8강 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
 
@@ -148,20 +148,5 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
   }
 
-  // 유형 드릴 ×10 — 만들기·꺼내기·넣기·중첩·메서드. 목표 결과에서 도출(답 노출 없음).
-  window.Practices[8] = {
-    pattern: '유형: 목표 출력이 나오도록 빈칸을 채워 ▶확인 (객체 만들기·꺼내기·중첩·메서드)',
-    problems: [
-      { label: '만들기', ask: 'p.name이 "민지"가 되게 객체를 채워라.', code: 'let p = { name: "____" }\nprint(p.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에 민지' },
-      { label: '점으로 꺼내기', ask: 'u의 나이(24)를 꺼내려면 어떤 이름?', code: 'let u = { age: 24 }\nprint(u.____)', expect: '24', answer: 'age', hint: 'u.age' },
-      { label: '속성 추가', ask: 'o에 color 속성을 "빨강"으로 추가해 출력되게.', code: 'let o = {}\no.color = "____"\nprint(o.color)', expect: '"빨강"', answer: '빨강', hint: '따옴표 안에 빨강' },
-      { label: '없는 키', ask: 'u엔 name만 있다. u.age(없는 이름)를 꺼내면? 빈칸에 age를 넣고 ▶확인', code: 'let u = { name: "민지" }\nprint(u.____)', expect: 'undefined', answer: 'age', hint: '없는 키 = undefined' },
-      { label: '값 바꾸기', ask: 'u.hp를 50으로 바꿔 출력되게.', code: 'let u = { hp: 100 }\nu.hp = ____\nprint(u.hp)', expect: '50', answer: '50', hint: 'u.hp = 50' },
-      { label: '중첩', ask: 'me.pet.name이 "콩이"가 되게 안쪽을 채워라.', code: 'let me = { pet: { name: "____" } }\nprint(me.pet.name)', expect: '"콩이"', answer: '콩이', hint: '제일 안쪽 name' },
-      { label: '배열 안 객체', ask: '두 번째 사람의 이름(지훈)을 꺼내려면 어떤 속성?', code: 'let users = [{ name: "민지" }, { name: "지훈" }]\nprint(users[1].____)', expect: '"지훈"', answer: 'name', hint: 'users[1].name' },
-      { label: '대괄호(공백 키)', ask: '"my key"처럼 공백 있는 이름은 대괄호로! 값 7을 꺼내려면 빈칸에?', code: 'let o = { "my key": 7 }\nprint(o[____])', expect: '7', answer: '"my key"', hint: 'o["my key"]' },
-      { label: '메서드 호출', ask: 'dog의 bark 메서드를 불러 "멍"이 나오게 — 빈칸에 메서드 이름?', code: 'let dog = { bark: function () { return "멍" } }\nprint(dog.____())', expect: '"멍"', answer: 'bark', hint: 'dog.bark()' },
-      { label: '키 개수', ask: '객체의 이름(키) 개수 2를 구하려면? (Object.keys의 무엇?)', code: 'let o = { a: 1, b: 2 }\nprint(Object.keys(o).____)', expect: '2', answer: 'length', hint: '.length' },
-    ],
-  }
+  // 드릴은 난이도별 파일로 분리(ADR 0008): src/drills/easy·normal·hard.js 의 window.Drills['8'].
 })()
