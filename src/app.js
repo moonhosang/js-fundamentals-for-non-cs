@@ -7,7 +7,7 @@
   // 없으면 plan(계획)만 있는 '준비 중' 자리로 나온다.
   // 개념 강의(진도). 완성되면 window.Lessons[id] 에 render가 등록된다.
   const LESSONS = [
-    { id: 1, badge: '1강', title: '1강 · 값과 타입, 변수', subtitle: '값 · 타입(원시/객체) · 이름표' },
+    { id: 1, name: '값과 타입, 변수', subtitle: '값 · 타입(원시/객체) · 이름표' },
     // 🧠 메모리 기초 (실습 없는 개념 챕터, 메모리부터 바닥부터). 콜스택·클로저는 함수 필요 → 심화로.
     { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(Memory)', subtitle: '값이 사는 공간 · 주소 · 휘발성 (주로 RAM)' },
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
@@ -28,10 +28,10 @@
       plan: ['콜 스택 복습 — 보통은 프레임이 pop되며 지역변수 소멸', '그런데 안쪽 함수가 바깥 변수를 붙잡으면? → 스코프가 힙에 살아남는다', 'memory-model 시나리오: 카운터 만들기(makeCounter) 단계 시뮬레이션', '왜 유용한가 — 상태를 숨겨 안전하게 보관'] },
     { id: 'gc', badge: '🧠 심화', title: '가비지 컬렉션', subtitle: '힙을 누가 치우나 (선택)',
       plan: ['아무도 안 가리키는 힙 객체는 자동으로 치워진다(GC)', '참조가 남아 있으면 안 치워진다 — 누수(leak)의 개념', 'memory-model: 참조가 끊기는 순간 힙 박스가 사라지는 시뮬레이션'] },
-    { id: 2, badge: '2강', title: '2강 · 계산과 문자열', subtitle: '연산자 · 글자 합치기 · 템플릿',
+    { id: 2, name: '계산과 문자열', subtitle: '연산자 · 글자 합치기 · 템플릿',
       plan: ['숫자 계산: + - * / 와 우선순위', '문자열 합치기와 템플릿 리터럴 `안녕 ${name}`', '값·화면 균형: 계산 결과를 카드에 표시', '유형 드릴 ×10'] },
     // 🌳 3강 표현식 — 개념을 단계로 쪼갬(3-1~3-6, 진도) + 예측 드릴(Practices[3], startAt:7 → 3-7~).
-    { id: 3, badge: '3강', title: '3강 · 표현식', subtitle: '식을 분해하는 눈 (단계로 배웁니다)' },
+    { id: 3, name: '표현식', subtitle: '식을 분해하는 눈 (단계로 배웁니다)' },
     // step:true → 개념 단계(3강의 하위 내비게이션). 별도 체크박스·진도 집계 없이 3강 하나가 진도 단위.
     { id: '3-1', badge: '3-1', title: '3-1 · 식 vs 문', subtitle: '표현식은 값을 낳는다', step: true },
     { id: '3-2', badge: '3-2', title: '3-2 · 우선순위 눈금', subtitle: 'factor ‹ term ‹ expression', step: true },
@@ -39,22 +39,32 @@
     { id: '3-4', badge: '3-4', title: '3-4 · 축약 ②', subtitle: '함수 · 중첩 삼항 · 안쪽부터', step: true },
     { id: '3-5', badge: '3-5', title: '3-5 · 🔒 중첩 함수', subtitle: '좌→우·안쪽 먼저 (5강 함수 후)', step: true },
     { id: '3-6', badge: '3-6', title: '3-6 · 요약', subtitle: '식을 나무로 보는 눈', step: true },
-    { id: 4, badge: '4강', title: '4강 · 조건', subtitle: 'if · 비교 · 참/거짓 · 삼항',
+    { id: 4, name: '조건', subtitle: 'if · 비교 · 참/거짓 · 삼항',
       plan: ['비교 연산자 == vs === · > < >=', 'truthy/falsy — 빈 값의 참·거짓', 'if / else 와 삼항 연산자', '화면: 조건에 따라 배지 색 바꾸기', '유형 드릴 ×10'] },
-    { id: 5, badge: '5강', title: '5강 · 함수', subtitle: '값을 넣으면 값이 나오는 상자',
+    { id: 5, name: '함수', subtitle: '값을 넣으면 값이 나오는 상자',
       plan: ['함수 정의와 호출 · 매개변수/인수', 'return — 값을 돌려주기', '화살표 함수 표기', '유형 드릴 ×10'] },
-    { id: 6, badge: '6강', title: '6강 · 배열', subtitle: '여러 값을 목록으로',
+    { id: 6, name: '배열', subtitle: '여러 값을 목록으로',
       plan: ['배열 만들기 [ ] · 인덱스로 꺼내기', 'length · push 로 추가', '화면: 목록을 여러 칩으로 그리기', '유형 드릴 ×10'] },
-    { id: 7, badge: '7강', title: '7강 · 반복과 map', subtitle: '훑기 · 변환하기',
+    { id: 7, name: '반복과 map', subtitle: '훑기 · 변환하기',
       plan: ['for 로 하나씩 훑기', 'map 으로 목록을 통째로 바꾸기', 'filter 로 거르기', '화면: 데이터 배열 → 카드 목록', '유형 드릴 ×10'] },
-    { id: 8, badge: '8강', title: '8강 · 객체', subtitle: '이름:값 묶음',
+    { id: 8, name: '객체', subtitle: '이름:값 묶음',
       plan: ['객체 { key: value } · 점(.)으로 꺼내기', '배열 안의 객체 (실전 데이터 모양)', '화면: 프로필 카드 만들기', '유형 드릴 ×10'] },
-    { id: 9, badge: '9강', title: '9강 · 화면 조작 (DOM)', subtitle: '선택 · 바꾸기 · 이벤트',
+    { id: 9, name: '화면 조작 (DOM)', subtitle: '선택 · 바꾸기 · 이벤트',
       plan: ['요소 선택 querySelector', 'textContent · style 로 바꾸기', '버튼 클릭에 반응 addEventListener', '유형 드릴 ×10'] },
-    { id: 10, badge: '실전', title: '10강 · 실전 미니앱', subtitle: '배운 걸 합쳐 하나 만들기',
+    { id: 10, name: '실전 미니앱', subtitle: '배운 걸 합쳐 하나 만들기',
       plan: ['컬러 팔레트 생성기 or 디지털 명함 카드', '지금까지의 값·배열·함수·DOM 총동원', '단계별로 조립'] },
   ]
-  LESSONS.forEach((l) => { l.kind = 'lesson' })
+  // 번호(N강)의 단일 출처(SSOT): 숫자 id에서 badge·title을 파생한다.
+  // → 강의를 재배치할 땐 여기 id만 바꾸면 badge·title·목차가 다 따라온다.
+  //   (레슨 파일 헤더의 badge도 renderPage가 이 값으로 덮어써 화면을 강제 일치시킨다.)
+  const chapterBadge = (id) => (id === 10 ? '실전' : id + '강')
+  LESSONS.forEach((l) => {
+    l.kind = 'lesson'
+    if (typeof l.id === 'number' && l.name) {
+      l.badge = chapterBadge(l.id)
+      l.title = l.id + '강 · ' + l.name
+    }
+  })
 
   // 실습을 '문제마다 별도 항목'으로 펼친다 — 1-1, 1-2, … 1-10 (리액트공부 종합연습 방식).
   // 한 강의 실습 = 동일 유형 5개(1-5) + 유사한 5개 더(6-10).
@@ -297,6 +307,9 @@
         else host.append(renderComingSoon(l))
       } else if (hasContent(l.id)) {
         window.Lessons[l.id](host)
+        // 번호 SSOT: 레슨 파일 헤더 badge를 메타(l.badge)로 강제 동기화 — 파일이 옛 번호여도 화면은 정확.
+        const bdg = host.querySelector('.lesson-header .badge')
+        if (bdg && l.badge) bdg.textContent = l.badge
       } else {
         host.append(renderComingSoon(l))
       }
