@@ -16,6 +16,7 @@
 | [0003](0003-reusable-memory-model-web-component.md) | 메모리 모델을 **재사용 웹 컴포넌트**로 | Accepted |
 | [0004](0004-notional-machine-framing.md) | 스택/힙은 **개념 모델(notional machine)** + 실제엔진 토글 | Accepted |
 | [0005](0005-optional-deep-theory-with-skip.md) | 이론 심화는 **선택 + 건너뛰기** | Accepted |
+| [0006](0006-ledger-and-value-memory-value-in-slot.md) | **이름표 장부 │ 값 메모리** 두 칸 + 원시값 **value-in-slot** | Accepted |
 
 ## 새 ADR 템플릿
 ```
