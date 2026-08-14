@@ -91,8 +91,23 @@
         <li><b>조립</b> — 만든 상자를 다른 계산의 <b>부품</b>으로 끼운다(3강 표현식의 그 중첩).</li>
       </ul>
       <p class="section-desc">👉 <b>"같은 코드를 두 번 이상 쓰게 되면 함수를 생각하라."</b> 이 감각이 이 강의 전체의 목적이다. 이제 상자 만드는 법(5-2)으로.</p>
+
+      <h3 class="section-title">④ 눈으로 — withTax를 부르면? (이름표 장부 │ 값 메모리)</h3>
+      <span class="learn-tag">📎 ▶ — 함수로 묶어도, 부를 때마다 그 함수 칸(프레임)이 잠깐 생겼다 사라진다 (자세힌 5-5)</span>
+      <div data-m="mem"></div>
+
       ${nav(5, 1, '5-2', '5-2 · 정의 & 호출 →')}
     `
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: 'withTax(10000) — 함수를 부르면 프레임이 잠깐 생긴다',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function withTax(price) {', '  return price + price * 0.1', '}', 'let a = withTax(10000)'],
+      steps: [
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', value: '(대기)', bad: true }] }], heap: {}, note: '<code>withTax(10000)</code> 호출 직전 — a는 반환을 기다린다(대기).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', value: '(대기)', bad: true }] }, { name: 'withTax', slots: [{ name: 'price', value: '10000' }] }], heap: {}, note: 'withTax 프레임 push — 인수 10000이 매개변수 price에 담긴다. <code>return price+price*0.1</code>이 <b>11000</b>을 만든다.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', value: '11000' }] }], heap: {}, note: '<b>11000</b>을 돌려주고 withTax 프레임은 <b>pop</b>. a에 담긴다. 부를 때마다 이렇게 프레임이 <b>잠깐</b> 생겼다 사라진다.' },
+      ],
+    }))
     root.querySelector('[data-m="before"]').append(Runner({ showBox: false, code: [
       '// 세 상품의 "세금 포함 가격" — 같은 식(+ price*0.1)이 반복된다',
       'let a = 10000 + 10000 * 0.1',
