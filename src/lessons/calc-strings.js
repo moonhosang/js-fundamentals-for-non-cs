@@ -60,7 +60,8 @@
       <p class="section-desc">템플릿 리터럴은 <b>역따옴표</b>(<code>\`</code>, 키보드 숫자 1 왼쪽)로 감싸고, 값을 넣을 자리에
       <code>\${ }</code>를 쓴다. 문장이 길수록 <code>+ " " +</code> 범벅보다 훨씬 읽기 쉽다.</p>
 
-      <h3 class="section-title">③ ⚠️ 형 변환 함정 — <code>"5" + 3</code>은 8이 아니다</h3>
+      <h3 class="section-title">③ ⚠️ 형 변환 함정 — <code>"5" + 3</code>은?</h3>
+      <div data-m="qz"></div>
       <span class="learn-tag">📎 입문자가 자주 밟는 지뢰 — 입력값·API 값은 대개 '글자(문자열)'다</span>
       <p class="section-desc">화면 입력칸에서 온 값은 <b>숫자처럼 보여도 글자</b>인 경우가 많다.
       <code>+</code>는 한쪽이 글자면 <b>둘 다 글자로 만들어 이어붙인다</b>. 아래로 직접 확인하라.</p>
@@ -119,6 +120,12 @@
       ].join('\n'),
     }))
 
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '<code>"5" + 3</code> 의 결과는? (<code>"5"</code>는 따옴표 있는 <b>글자</b>)',
+      options: ['8 (숫자)', '"53" (글자로 이어붙임)', '에러'],
+      answer: 1,
+      explain: '<code>+</code>는 <b>한쪽이 글자면 둘 다 글자로</b> 만들어 <b>이어붙인다</b> → <code>"53"</code>. 입력칸·API 값은 대개 글자라 이 지뢰를 자주 밟는다. (숫자로 더하려면 <code>Number("5")+3</code>.)',
+    }))
     root.querySelector('[data-m="coerce"]').append(Runner({
       showBox: false,
       code: [

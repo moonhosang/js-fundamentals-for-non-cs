@@ -47,6 +47,7 @@
       </div>
 
       <h3 class="section-title">③ truthy / falsy — 값의 '있냐/없냐'</h3>
+      <div data-m="qz"></div>
       <span class="learn-tag">📎 if는 true/false만 받는 게 아니다 — 아무 값이나. 있으면 통과, 없으면 막힘</span>
       <p class="section-desc"><b>문지기</b>라고 생각하라 — 뭔가 들고 있으면(truthy) 통과, 빈손이면(falsy) 막는다.
       그래서 <code>if (name)</code> 은 "이름이 <b>있으면</b>"이란 뜻이 된다.</p>
@@ -115,6 +116,12 @@
       ].join('\n'),
     }))
 
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '<code>if ("0") { print("실행!") }</code> — <code>"0"</code>은 <b>따옴표 있는 글자</b>다. 실행될까?',
+      options: ['실행된다 — 글자라 truthy', '안 된다 — 0이니까 falsy'],
+      answer: 0,
+      explain: 'falsy는 딱 <b>빈 글자 <code>""</code></b>뿐 — <code>"0"</code>은 <b>내용이 있는 글자</b>라 <b>truthy</b>! 숫자 <code>0</code>과 글자 <code>"0"</code>은 다르다. 이게 최대 함정.',
+    }))
     root.querySelector('[data-m="tf"]').append(Runner({
       showBox: false,
       code: [

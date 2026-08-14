@@ -50,6 +50,7 @@
       </div>
 
       <h3 class="section-title">④ 배열은 힙에 산다 — 변수는 참조</h3>
+      <div data-m="qz"></div>
       <span class="learn-tag">📎 배열도 객체 → 힙. 변수는 스택에서 힙을 참조(주소만). (🧠 메모리 기초와 연결)</span>
       <div data-m="heap"></div>
       <p class="section-desc">그래서 배열을 다른 변수에 넣거나 함수에 넘기면 <b>같은 배열</b>을 공유한다(원본이 바뀜). 원본을 지키려면 <b>복사본</b> <code>[...arr]</code>을 쓴다(뒤 강의).</p>
@@ -112,6 +113,12 @@
       ].join('\n'),
     }))
 
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '<code>let a = [1, 2]; let b = a; b.push(9)</code> — 이제 <b>a</b>는?',
+      options: ['[1, 2] — b만 바뀜(복사본)', '[1, 2, 9] — a도 바뀜(같은 배열)'],
+      answer: 1,
+      explain: '<code>let b = a</code>는 배열을 <b>복사하는 게 아니라 같은 배열을 가리킨다</b>(주소만 복사=참조). b·a가 <b>같은 힙 배열</b>이라 <code>b.push(9)</code>가 a에도 보인다 → <code>[1, 2, 9]</code>. 원본을 지키려면 <code>[...a]</code>로 복사. (🧠 M4 별칭)',
+    }))
     root.querySelector('[data-m="heap"]').append(MemoryModel({
       title: '배열은 힙에 산다 — 변수는 참조(주소만)',
       code: ['let nums = [10, 20, 30]', 'nums.push(40)'],

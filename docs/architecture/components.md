@@ -70,6 +70,10 @@
 `src/lib/exprreduce.js` · `ExprReduce({ title, steps:[{code, mark, note}], onStep? }) → div`
 표현식이 **한 번에 한 redex씩** 값으로 줄어드는 걸 단계별로. `mark` = 이번에 계산되는 부분 하이라이트. 3강 표현식(식 vs 문·우선순위·중첩)에서 씀. (`onStep(i, step)`로 외부 훅 — 예: 우선순위 눈금 tier 점등.)
 
+## 🔮 Quiz — 예측 미니 퀴즈 (의문-사슬의 방아쇠)
+`src/lib/quiz.js` · `Quiz({ q, options:[…], answer:idx, explain }) → div`
+객관식 **예측** 퀴즈. 클릭 → 즉시 정답 표시(✅/❌) + 해설. **개념 '직전'** 마찰 큰 이음새에 놓아 declarative 함정을 **experienced**로 바꾼다([design-principles §5](../pedagogy/design-principles.md) Inquiry-Driven Sequencing). Drill(빈칸 타이핑=숙달)과 역할이 다르다 — Quiz는 **마찰 방아쇠**(찍는 순간이 retrieval).
+
 ## 🎯 Drill — 빈칸 유형 드릴
 `src/lib/drill.js` · `Drill({ pattern, problems, stepped?, hideHead?, onSolved? }) → div`
 `____` 빈칸을 채워 실행 → `print` 출력을 정답과 비교(✅/❌). 동일 유형 반복용.

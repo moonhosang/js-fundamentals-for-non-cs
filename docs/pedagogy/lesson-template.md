@@ -59,11 +59,14 @@
 - **StackViz** — 스택 LIFO 접시더미.
 - **ExprReduce** — 표현식 축약(reduction) 단계 애니.
 - **Runner** — 라이브 JS 실행(값 print + 화면 box).
-- **Drill** — 빈칸 유형 드릴.
+- **Quiz** — 🔮 예측 미니 퀴즈(객관식→즉시 ✅/❌+해설). 마찰 큰 이음새에 '개념 직전'.
+- **Drill** — 빈칸 유형 드릴(끝에서 누적 숙달).
 
 ## 5. 검증 (완성 판정)
 - [ ] `node --check src/lessons/<name>.js` (문법)
 - [ ] 예제 코드가 실제로 도는가 — `node -e '…'` (미선언 변수·의사코드 금지)
 - [ ] jsdom 스모크 — 렌더/스텝/드릴 채점
 - [ ] **실브라우저 스크린샷** — 레이아웃·화살표·이모지 눈으로 (Chrome 헤드리스, [overview.md](../architecture/overview.md#시각-검증) 참고)
+- [ ] 📚 **관련 용어(위키) 링크** 있나 — 각 강의·단계에. URL은 실제 200인지 확인(오답 링크 금지)
+- [ ] 🔮 **의문-사슬(§5)** — 마찰 큰 이음새에 예측 퀴즈로 declarative 함정을 experienced로 바꿨나 ([design-principles §5](design-principles.md))
 - [ ] 7 체크리스트를 렌즈로 재검토
