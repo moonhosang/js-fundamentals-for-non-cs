@@ -363,6 +363,8 @@
         <h2>스택 — 이름표 장부가 쌓이는 곳</h2>
         <p>M1에서 메모리를 <b>변수 영역</b>과 <b>값 메모리</b> 둘로 나눴다. 그중 <b>변수 영역(이름표 장부)이 바로 이 스택</b>이다 — 이름표 슬롯을 <b>작고 빠르게</b> 쌓고(push) 뗀다(pop).</p>
       </header>
+
+      <div data-m="qzs"></div>
       <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a> · <a href="https://ko.wikipedia.org/wiki/스택_(자료_구조)" target="_blank" rel="noopener noreferrer">스택(자료구조) ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
@@ -433,6 +435,7 @@
     root.querySelector('[data-m="slots"]').append(MemoryModel(SCENARIO_STACK_SLOTS))
     root.querySelector('[data-m="pushpop"]').append(MemoryModel(SCENARIO_PUSHPOP))
     root.querySelector('[data-m="scope"]').append(MemoryModel(SCENARIO_SCOPE))
+    root.querySelector('[data-m="qzs"]').append(Quiz({ q: '접시를 A → B → C 순서로 쌓았다(push). 먼저 빼는(pop) 건?', options: ['A (맨 먼저 넣은 것)', 'C (맨 마지막 넣은 것)'], answer: 1, explain: '스택은 <b>LIFO</b>(Last In, First Out) — 마지막에 올린 게 먼저 나온다. 접시 더미처럼 맨 위(C)부터.' }))
     wireCTA(root)
   }
 
@@ -477,6 +480,8 @@
         <h2>힙 — 값 메모리, 큰 묶음을 두는 창고</h2>
         <p>M1에서 나눈 <b>🗄️ 값 메모리</b> — M2에서 "객체는 장부에 <b>주소만</b> 두고 여길 가리킨다"던 <b>바로 그곳</b>이 힙이다. <b>크고 변하는 묶음</b>(객체·배열)의 실체가 여기 산다.</p>
       </header>
+
+      <div data-m="qzh"></div>
       <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/동적_메모리_할당" target="_blank" rel="noopener noreferrer">동적 메모리 할당 ↗</a> · <a href="https://ko.wikipedia.org/wiki/메모리_관리" target="_blank" rel="noopener noreferrer">메모리 관리 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
@@ -546,6 +551,7 @@
     root.querySelector('[data-m="heap"]').append(MemoryModel(SCENARIO_HEAP))
     root.querySelector('[data-m="fail"]').append(MemoryModel(SCENARIO_STACK_FAIL))
     root.querySelector('[data-m="priminheap"]').append(MemoryModel(SCENARIO_PRIM_IN_HEAP))
+    root.querySelector('[data-m="qzh"]').append(Quiz({ q: '객체 <code>{ name: "민지" }</code>는 스택에 저장될까, 힙에 저장될까?', options: ['스택', '힙'], answer: 1, explain: '객체·배열 같은 <b>묶음</b>은 크기가 유동적이라 <b>힙</b>에 산다. 스택(이름표 장부)엔 그 힙을 가리키는 <b>주소</b>만.' }))
     wireCTA(root)
   }
 
@@ -724,6 +730,8 @@
         <p>원시값 대입 = <b>값 복사</b>(독립). <code>let y = x</code>는 "같은 10 셀에 같이 붙는" 게 아니라 <b>각자 자기 값 셀을 가리킨다</b>. 객체가 껴도 <b>꺼낸 게 원시값이면 복사</b>다.</p>
       </div>
 
+      <div data-m="qzr1"></div>
+
       <h3 class="section-title">1단계 · 변수는 이름표 — 맞다 (1강 복습)</h3>
       <p class="section-desc">변수는 <b>값에 붙인 이름표</b>. 여기까진 좋다 — <b>ok!</b> 그런데 이 그림을 <b>과하게 밀면</b> 착각이 생긴다. 2단계에서 정면으로 본다.
       <br><span style="opacity:.8">📚 이 챕터가 파고드는 용어: <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형(원시/참조) ↗</a> · <a href="https://ko.wikipedia.org/wiki/불변객체" target="_blank" rel="noopener noreferrer">불변 객체(immutable) ↗</a></span></p>
@@ -836,6 +844,7 @@
     root.querySelector('[data-m="imm-num"]').append(MemoryModel(SCENARIO_IMM_NUM))
     root.querySelector('[data-m="imm-str"]').append(MemoryModel(SCENARIO_IMM_STR))
     root.querySelector('[data-m="imm-bool"]').append(MemoryModel(SCENARIO_IMM_BOOL))
+    root.querySelector('[data-m="qzr1"]').append(Quiz({ q: '<code>let x = 10; let y = x; y = 20</code> — 이제 x는?', options: ['10 (각자 복사)', '20 (같이 바뀜)'], answer: 0, explain: '원시값은 <b>값을 복사</b> → y는 자기 셀. y=20은 y만 바꾼다. x는 그대로 <b>10</b>.' }))
     wireCTA(root)
   }
 
@@ -852,6 +861,8 @@
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>객체 대입 = <b>주소 복사</b>(공유·별칭). <code>let p = obj</code>면 p·obj가 <b>같은 힙 박스</b> → <code>p.n = 9</code>가 <b>obj.n도 9</b>로 보인다. "객체가 끼면 공유"가 아니라 — <b>대입되는 값이 객체 주소</b>일 때 공유.</p>
       </div>
+
+      <div data-m="qzr2"></div>
 
       <h3 class="section-title">① 눈으로 — "안 건드린 obj가 왜 9가 됐나"</h3>
       <span class="learn-tag">📎 마지막 단계에서 정체가 풀린다 — 같은 박스니까</span>
@@ -920,6 +931,7 @@
       ], 20,
     ))
     root.querySelector('[data-m="bundle"]').append(MemoryModel(SCENARIO_BUNDLE))
+    root.querySelector('[data-m="qzr2"]').append(Quiz({ q: '<code>let a = { n: 1 }; let b = a; b.n = 9</code> — a.n은?', options: ['1 (안 바뀜)', '9 (같은 객체 공유)'], answer: 1, explain: '<code>let b = a</code>는 <b>주소 복사</b> → a·b가 <b>같은 객체</b>(별칭). b.n=9가 a.n에도 보인다 → <b>9</b>.' }))
     wireCTA(root)
   }
 
@@ -938,6 +950,8 @@
         그래서 '내 것'과 '건넨 것'은 처음부터 <b>다른 두 장</b>이다. 비유는 <b>복사본</b>(문서를 복사해 주면 상대가 사본에 낙서해도 내 원본은 그대로)이 좋다.</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/값에_의한_호출" target="_blank" rel="noopener noreferrer">평가 전략(값에 의한 호출) ↗</a> · <a href="https://ko.wikipedia.org/wiki/매개변수_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">매개변수 ↗</a></p>
       </div>
+
+      <div data-m="qzpv"></div>
 
       <h3 class="section-title">① 눈으로 — 사본을 찢어도 원본은 안전</h3>
       <span class="learn-tag">📎 공통 스택 그림으로 — 사본 bill을 0으로 만들어도 원본 money는 그대로</span>
@@ -958,6 +972,7 @@
       </div>
     `
     root.querySelector('[data-m="passval"]').append(MemoryModel(SCENARIO_PASSVAL))
+    root.querySelector('[data-m="qzpv"]').append(Quiz({ q: '숫자 money를 함수에 넘겨 함수 안에서 0으로 바꿨다. 원본 money는?', options: ['0으로 바뀐다', '그대로 (복사본이 전달됨)'], answer: 1, explain: '원시값은 <b>복사본</b>이 전달된다. 함수 안에서 아무리 바꿔도 <b>원본은 안전</b>.' }))
     wireCTA(root)
   }
 
@@ -985,6 +1000,8 @@
         <p>객체를 함수에 넘기면 매개변수와 원본이 <b>같은 힙 객체</b>를 가리킨다(별칭). 그래서 함수 안 <code>user.level = ...</code>가 <b>바깥 hero</b>에도 보인다.</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/값에_의한_호출" target="_blank" rel="noopener noreferrer">평가 전략 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
+
+      <div data-m="qzpo"></div>
 
       <h3 class="section-title">① 눈으로 — 함수가 원본을 바꾼다</h3>
       <span class="learn-tag">📎 user와 hero가 같은 객체 → user를 바꾸면 hero도 바뀐다</span>
@@ -1023,6 +1040,7 @@ let strong = levelUpSafe(hero)       // hero는 그대로, strong만 레벨업</
       </div>
     `
     root.querySelector('[data-m="passobj"]').append(MemoryModel(SCENARIO_PASSOBJ))
+    root.querySelector('[data-m="qzpo"]').append(Quiz({ q: '객체를 함수에 넘겨 함수 안에서 <code>obj.x = 9</code>로 바꿨다. 원본은?', options: ['그대로', '바뀐다 (같은 객체를 넘김)'], answer: 1, explain: '객체는 <b>주소(참조)</b>가 전달된다 → 함수 안과 밖이 <b>같은 객체</b>. 원본도 바뀐다.' }))
     wireCTA(root)
   }
 
@@ -1050,6 +1068,8 @@ let strong = levelUpSafe(hero)       // hero는 그대로, strong만 레벨업</
         <p>배열을 넘기면 매개변수와 원본이 <b>같은 배열</b>을 가리킨다. <code>push·sort·splice</code>처럼 <b>원본을 바꾸는</b> 메서드는 바깥 배열도 바꾼다.</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
+
+      <div data-m="qzpa"></div>
 
       <h3 class="section-title">① 눈으로 — 함수가 원본 배열을 늘린다</h3>
       <span class="learn-tag">📎 list와 cart가 같은 배열 → list.push하면 cart도 늘어난다</span>
@@ -1093,6 +1113,7 @@ arr.concat([9])         // 이어붙인 새 배열
       </div>
     `
     root.querySelector('[data-m="passarr"]').append(MemoryModel(SCENARIO_PASSARR))
+    root.querySelector('[data-m="qzpa"]').append(Quiz({ q: '배열을 함수에 넘겨 함수 안에서 <code>arr.push(9)</code>했다. 원본 배열은?', options: ['그대로', '늘어난다 (같은 배열)'], answer: 1, explain: '배열도 객체(참조) → 함수 안팎이 같은 배열. push한 게 <b>원본에도</b> 새어 나간다.' }))
     wireCTA(root)
   }
 
@@ -1154,6 +1175,8 @@ arr.concat([9])         // 이어붙인 새 배열
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">객체 ↗</a> · <a href="https://ko.wikipedia.org/wiki/그래프_(자료_구조)" target="_blank" rel="noopener noreferrer">그래프(자료구조) ↗</a></p>
       </div>
 
+      <div data-m="qzg1"></div>
+
       <h3 class="section-title">① 내 베프가 머리를 자르면? → 효니의 머리는</h3>
       <span class="learn-tag">📎 me.bestFriend 쪽으로 바꾼다 → 효니에도 반영</span>
       <div data-m="hair"></div>
@@ -1207,6 +1230,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
     root.querySelector('[data-m="sameBC"]').append(MemoryModel(SCENARIO_SAME_BC))
     root.querySelector('[data-m="shared"]').append(MemoryModel(SCENARIO_SHARED))
     root.querySelector('[data-m="copy"]').append(MemoryModel(SCENARIO_COPY))
+    root.querySelector('[data-m="qzg1"]').append(Quiz({ q: '<code>me.bestFriend</code>가 효니를 가리킨다. <code>me.bestFriend.hair = "숏컷"</code>하면 효니 본인은?', options: ['안 바뀐다', '숏컷이 된다 (같은 사람)'], answer: 1, explain: 'me.bestFriend와 효니 변수가 <b>같은 사람 객체</b>를 가리킨다. 한쪽으로 바꾸면 다른 쪽으로 봐도 바뀐다.' }))
     wireCTA(root)
   }
 
@@ -1257,6 +1281,8 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
+      <div data-m="qzg2"></div>
+
       <h3 class="section-title">① 눈으로 — 친구 5명, 그리고 참조 증명</h3>
       <span class="learn-tag">📎 me.friends[0]의 속성을 바꾸면 → hyoni도 바뀐다(같은 객체니까)</span>
       <div data-m="friends"></div>
@@ -1274,6 +1300,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       </div>
     `
     root.querySelector('[data-m="friends"]').append(MemoryModel(SCENARIO_FRIENDS))
+    root.querySelector('[data-m="qzg2"]').append(Quiz({ q: '사람 객체가 든 배열 <code>list</code>. <code>list[0].name = "X"</code>로 바꾸면, 원래 그 사람 변수로 봐도?', options: ['안 바뀜', '바뀜 (같은 객체)'], answer: 1, explain: '배열 안엔 사람 객체의 <b>주소(참조)</b>가 들었다. list[0]과 그 변수가 <b>같은 객체</b> → 한쪽 변경이 양쪽에 보인다.' }))
     wireCTA(root)
   }
 
@@ -1343,6 +1370,8 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">객체 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
+      <div data-m="qzg3"></div>
+
       <h3 class="section-title">① 눈으로 — 3대(代)가 이어진다</h3>
       <span class="learn-tag">📎 ▶로 할아버지 → 아빠·삼촌 → 나·동생 트리가 만들어진다</span>
       <div data-m="family"></div>
@@ -1384,6 +1413,7 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     root.querySelector('[data-m="family"]').append(MemoryModel(SCENARIO_FAMILY))
     root.querySelector('[data-m="familyMoney"]').append(MemoryModel(SCENARIO_FAMILY_MONEY))
     root.querySelector('[data-m="primCopy"]').append(MemoryModel(SCENARIO_PRIM_COPY))
+    root.querySelector('[data-m="qzg3"]').append(Quiz({ q: '<code>me.parent</code>는 엄마, 엄마의 <code>parent</code>는 할머니. <code>me.parent.parent</code>는?', options: ['엄마', '할머니', '나'], answer: 1, explain: '화살표를 <b>두 번</b> 따라간다 — me→엄마→할머니. 이게 <b>트리(그래프) 탐색</b>.' }))
     wireCTA(root)
   }
 
@@ -1417,6 +1447,8 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/쓰레기_수집_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">순환 참조와 GC ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
+      <div data-m="qzg4"></div>
+
       <h3 class="section-title">① 눈으로 — 서로 가리키기</h3>
       <span class="learn-tag">📎 ▶로 효니→지민, 지민→효니 화살표가 고리를 이룬다</span>
       <div data-m="cycle"></div>
@@ -1437,6 +1469,7 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
       </div>
     `
     root.querySelector('[data-m="cycle"]').append(MemoryModel(SCENARIO_CYCLE))
+    root.querySelector('[data-m="qzg4"]').append(Quiz({ q: 'A 객체가 B를, B 객체가 다시 A를 가리킨다. 이런 <b>순환</b>이 가능할까?', options: ['불가능 — 에러', '가능 — 서로 주소를 가리킬 뿐'], answer: 1, explain: '객체는 서로의 <b>주소</b>를 담을 뿐이라 <b>순환 참조</b>가 된다. (단, 무한 탐색·GC에서 조심 — 심화.)' }))
     wireCTA(root)
   }
 })()

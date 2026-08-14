@@ -38,6 +38,8 @@
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a> · <a href="https://ko.wikipedia.org/wiki/스택_(자료_구조)" target="_blank" rel="noopener noreferrer">스택(자료구조) ↗</a></p>
       </div>
 
+      <div data-m="qzcs"></div>
+
       <h3 class="section-title">① 눈으로 — push 되고 pop 된다</h3>
       <span class="learn-tag">📎 ▶ 다음 단계로 addTax 프레임이 쌓였다 사라지는 걸 보라</span>
       <div data-m="mem-stack"></div>
@@ -61,6 +63,7 @@
       </div>
     `
     root.querySelector('[data-m="mem-stack"]').append(MemoryModel(SCENARIO_STACK))
+    root.querySelector('[data-m="qzcs"]').append(Quiz({ q: '<code>addTax(1000)</code>를 부르는 순간, 스택엔 프레임이 몇 개?', options: ['1개 (addTax만)', '2개 (main + addTax)'], answer: 1, explain: '프로그램의 <b>main</b> 프레임 위에 <b>addTax</b> 프레임이 쌓인다 → 2개. addTax가 반환하면 pop되어 다시 1개.' }))
     wireGoto(root)
   }
 
@@ -107,6 +110,8 @@
         <h2>클로저 — 사라지지 않는 장부</h2>
         <p>M2에서 "함수가 끝나면 그 장부(프레임)가 pop되며 지역변수가 사라진다" 했다. <b>딱 하나 예외</b> — 안쪽 함수가 그 변수를 <b>붙잡으면</b> 안 사라진다. 그게 클로저.</p>
       </header>
+
+      <div data-m="qzcl"></div>
       <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/클로저_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">클로저 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
@@ -140,6 +145,7 @@
       </div>
     `
     root.querySelector('[data-m="closure"]').append(MemoryModel(SCENARIO_CLOSURE))
+    root.querySelector('[data-m="qzcl"]').append(Quiz({ q: '<code>makeCounter()</code>가 반환된 뒤에도, 그 안에서 세던 <code>count</code>는 살아있을까?', options: ['사라진다 (함수 끝났으니)', '산다 (클로저가 붙잡음)'], answer: 1, explain: '보통은 함수가 끝나면 지역변수가 사라지지만, <b>안쪽 함수가 count를 붙잡으면</b> 스코프가 살아남는다 — 이게 <b>클로저</b>.' }))
     wireGoto(root)
   }
 
@@ -165,6 +171,8 @@
         <h2>가비지 컬렉션 — 값 메모리를 누가 치우나</h2>
         <p>M1에서 "아무도 안 가리키는 값은 자동으로 치워진다" 예고했다. 그 <b>가비지 컬렉션(GC)</b>을 자세히 — <b>값 메모리(힙)</b>의 청소부다.</p>
       </header>
+
+      <div data-m="qzgc"></div>
       <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/쓰레기_수집_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">쓰레기 수집(GC) ↗</a> · <a href="https://ko.wikipedia.org/wiki/메모리_관리" target="_blank" rel="noopener noreferrer">메모리 관리 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
@@ -201,6 +209,7 @@
       </div>
     `
     root.querySelector('[data-m="gc"]').append(MemoryModel(SCENARIO_GC))
+    root.querySelector('[data-m="qzgc"]').append(Quiz({ q: '힙에 있던 객체를 <b>아무 변수도 안 가리키게</b> 되면?', options: ['영원히 남는다', '자동으로 치워진다 (GC)'], answer: 1, explain: '아무도 안 가리키는(도달 불가) 객체는 <b>가비지 컬렉터</b>가 자동으로 메모리에서 치운다.' }))
     wireGoto(root)
   }
 })()

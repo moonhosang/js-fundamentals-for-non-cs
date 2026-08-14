@@ -151,6 +151,7 @@
   window.Lessons['3-2'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('3-2 · 우선순위 눈금', 'factor ‹ term ‹ expression', '무엇이 먼저 묶이나 — 단계로 켜 본다')}
+      <div data-m="qz32"></div>
       <span class="learn-tag">📎 ▶를 누르면 눈금이 아래→위로 하나씩 켜지고, 식이 그 층으로 묶이는 걸 보라</span>
       <p class="section-desc">식이 중첩될 때 <b>어느 조각이 먼저 묶이는지</b>를 정하는 게 우선순위다. 세 층으로 본다(<b>아래로 갈수록 강하게</b> 묶는다):</p>
       <div class="tier">
@@ -192,6 +193,7 @@
         'print(10 - 2 - 3)     // 5    (뺄셈은 왼쪽부터: (10-2)-3)',
       ].join('\n'),
     }))
+    root.querySelector('[data-m="qz32"]').append(Quiz({ q: '<code>2 + 3 * 4</code> 의 값은?', options: ['20 (왼쪽부터)', '14 (곱셈 먼저)', '24'], answer: 1, explain: '<code>*</code>가 <code>+</code>보다 <b>우선순위가 높다</b> → 3*4=12 먼저, 그다음 2+12=<b>14</b>. 왼쪽부터가 아니다.' }))
     wireGoto(root)
   }
 
