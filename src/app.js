@@ -7,7 +7,7 @@
   // 없으면 plan(계획)만 있는 '준비 중' 자리로 나온다.
   // 개념 강의(진도). 완성되면 window.Lessons[id] 에 render가 등록된다.
   const LESSONS = [
-    { id: 1, badge: '1강', title: '1강 · 변수', subtitle: '값에 이름 붙이기' },
+    { id: 1, badge: '1강', title: '1강 · 값과 타입, 변수', subtitle: '값 · 타입(원시/객체) · 이름표' },
     // 🧠 메모리 기초 (실습 없는 개념 챕터, 메모리부터 바닥부터). 콜스택·클로저는 함수 필요 → 심화로.
     { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(Memory)', subtitle: '값이 사는 공간 · 주소 · 휘발성 (주로 RAM)' },
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
@@ -75,7 +75,7 @@
   // 🧠 메모리 챕터는 실습이 없는 개념 전용(tag로 '파트' 대신 아이콘 표시).
   const P = (base) => practiceItemsFor(base).map((pi) => pi.id)
   const CHAPTERS = [
-    { n: '1', title: '값과 변수', items: [1, ...P(1)] },
+    { n: '1', title: '값·타입과 변수', items: [1, ...P(1)] },
     { tag: '🧠', title: '메모리 기초', optional: true, skipTo: 2, items: ['ram', 'stack', 'heap', 'ref', 'ref2', 'passval', 'passobj', 'passarr'] },
     { tag: '🕸️', title: '객체 그래프', optional: true, skipTo: 2, items: ['graph', 'friends', 'family', 'cycle'] },
     // 표현식(3강)은 개념 단계(3, 3-1~3-6) + 드릴(...P(3) = 3-7~). 조건은 4강으로.

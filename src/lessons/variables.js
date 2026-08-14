@@ -31,8 +31,8 @@
     root.innerHTML = `
       <header class="lesson-header">
         <span class="badge">1강</span>
-        <h2>변수 — 값에 이름을 붙이기</h2>
-        <p>숫자·글자 같은 '값'에 이름표를 달아 두면, 이름만 부르면 그 값이 튀어나온다. 코딩의 가장 기본 벽돌이다.</p>
+        <h2>값과 타입, 그리고 변수</h2>
+        <p>프로그램이 다루는 재료가 <b>값</b>이고, 값엔 <b>타입(종류)</b>이 있다. 그리고 값에 <b>이름표(변수)</b>를 달아 부른다 — 코딩의 가장 기본 벽돌 셋.</p>
       </header>
 
       <div class="lesson-goal">
@@ -49,7 +49,7 @@
         변수는 <b>값을 가리키는 이름표</b>다 — 값은 메모리에 있고, 변수는 그걸 <b>가진다/가리킨다</b>. 즉 <b>이름표(변수) ≠ 값(데이터)</b>. (🧠 메모리 기초에서 이 경계를 눈으로 확인한다.)</p>
       </div>
 
-      <h3 class="section-title">① 먼저, '값'이 뭘까</h3>
+      <h3 class="section-title">① 값과 타입 — 재료엔 '종류'가 있다</h3>
       <span class="learn-tag">📎 값은 세 가지부터 — 숫자 · 글자(문자열) · 참/거짓</span>
       <p class="section-desc">프로그램이 다루는 재료가 <b>값</b>이다. 지금은 세 종류만 알면 된다.
       아래 <b>▶ 실행</b>을 누르면 <code>print(...)</code>가 값을 글로 찍어 준다.</p>
@@ -62,6 +62,18 @@
         <li><b>문자열</b>(글자) — <code>"안녕"</code>처럼 <b>따옴표로 감싼다</b>. 그래서 값 칸에 <code>"3"</code>과 <code>3</code>이 다르게 보인다.</li>
         <li><b>참/거짓</b> — <code>true</code>(참) 또는 <code>false</code>(거짓). 조건을 다룰 때 쓴다(뒤 강의).</li>
       </ul>
+
+      <div class="concept">
+        <p class="concept-lead">🧩 값엔 '타입(종류)'이 있다 — 크게 두 부류</p>
+        <p class="section-desc" style="margin-top:0">값의 종류를 <b>타입(type)</b>이라 한다. 종류가 많아 보여도 <b>딱 두 부류</b>로 갈리고, 이 갈림이 <b>뒤 강의 전부</b>(메모리·복제·참조)를 좌우한다.</p>
+        <ul class="section-list">
+          <li><b>원시 타입 — '값 하나'</b>: <code>숫자</code> · <code>문자열</code> · <code>참거짓</code> · <code>null</code>(비었음을 일부러) · <code>undefined</code>(아직 없음). 작고 <b>불변</b>이라, 대입하면 <b>각자 복제</b>(독립).</li>
+          <li><b>객체 타입 — '여러 값을 묶은 것'</b>: <code>객체 {}</code> · <code>배열 []</code> 등. <b>가변</b>이라, 대입하면 <b>같은 걸 공유(참조)</b>. (뒤 M4에서 정면으로)</li>
+        </ul>
+        <p class="section-desc" style="margin:6px 0 0">🔍 <code>typeof</code>로 확인 — <code>typeof 3</code>→"number", <code>typeof "hi"</code>→"string", <code>typeof true</code>→"boolean", <code>typeof {}</code>→"object".
+        <br><b>핵심 훅</b>: <b>원시 = 값 하나 / 객체 = 묶음</b>. 이 한 줄이 힙(M3)·복제vs참조(M4)·GC의 씨앗이다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.8">💡 심화(지금은 몰라도 됨): 원시는 정확힌 7종(<code>symbol</code>·<code>bigint</code> 포함) · JS의 <code>===</code>는 <b>값</b>을 비교(참조 아님) · 문자열 메서드(<code>.length</code>)는 <b>오토박싱</b>(잠깐 래퍼 객체)으로 동작 · <b>Java와 달리 JS 문자열은 객체가 아니라 원시</b>다. <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a></p>
+      </div>
 
       <h3 class="section-title">② 변수 = 값에 붙이는 '이름표'</h3>
       <span class="learn-tag">📎 Figma의 '컬러 스타일 이름'처럼 — 값 대신 이름을 부른다</span>
