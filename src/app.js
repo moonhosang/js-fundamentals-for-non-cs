@@ -8,7 +8,7 @@
   // 개념 강의(진도). 완성되면 window.Lessons[id] 에 render가 등록된다.
   const LESSONS = [
     { id: 1, name: '값과 타입, 변수', subtitle: '값 · 타입(원시/객체) · 이름표' },
-    // 🧠 메모리 기초 (실습 없는 개념 챕터, 메모리부터 바닥부터). 콜스택·클로저는 함수 필요 → 심화로.
+    // 🧠 메모리 기초 (개념 + 실습 드릴 — Practices['ram'] 등). 콜스택·클로저는 함수 필요 → 심화로.
     { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(Memory)', subtitle: '값이 사는 공간 · 주소 · 휘발성 (주로 RAM)' },
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
     { id: 'heap', badge: '🧠 M3', title: 'M3 · 힙', subtitle: '창고 · 주소 · 왜 힙인가 · ❌스택' },
@@ -89,7 +89,7 @@
   const byId = Object.fromEntries([...LESSONS, ...PRACTICE_ITEMS].map((l) => [l.id, l]))
 
   // 사이드바 목차 — 개념 강의 + 그 강의의 실습 문제들을 명시적으로 배치한다.
-  // 🧠 메모리 챕터는 실습이 없는 개념 전용(tag로 '파트' 대신 아이콘 표시).
+  // 🧠 메모리 챕터도 이제 개념 + 실습(드릴) — items에 P()로 실습 항목 전개(tag로 '파트' 대신 아이콘 표시).
   const P = (base) => practiceItemsFor(base).map((pi) => pi.id)
   const CHAPTERS = [
     { n: '1', title: '값·타입과 변수', items: [1, ...P(1)] },
