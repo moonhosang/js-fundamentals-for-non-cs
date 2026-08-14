@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Drill contract test</title>
+    <!--
+      드릴 계약 테스트 (headless 브라우저에서 real document 로 실행)
+      ─ 왜: node DOM 스텁은 실제 브라우저 DOM과 조용히 갈라진다(배열 fmt 드리프트 사례).
+             그래서 '스텁을 흉내내 검증'하지 않고 '진짜 위젯(Drill)을 진짜 document 로 구동'해 계약을 검증한다.
+      ─ 무엇을: 모든 window.Practices 의 각 문제를 Drill({problems:[p]}) 로 렌더 → 입력칸에 p.answer 를
+                 넣고 '확인' 클릭 → .drill-feedback.ok 가 뜨면 PASS. (check→runFilled→fmt→normalize 전 경로 실행)
+      ─ 실행:   브라우저로 열면 표가 보이고, headless(--dump-dom)면 #summary 텍스트로 결과를 긁는다.
+                document.title 에도 "PASS n/n" 을 박는다.
+    -->
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 24px; color: #111; }
+      #summary { font-size: 18px; font-weight: 800; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; }
+      #summary.pass { background: #dcfce7; color: #166534; }
+      #summary.fail { background: #fee2e2; color: #991b1b; }
+      table { border-collapse: collapse; font-size: 13px; }
+      th, td { border: 1px solid #e5e7eb; padding: 4px 8px; text-align: left; vertical-align: top; }
+      tr.ok td { background: #f6fef9; }
+      tr.no td { background: #fef2f2; }
+      .tag { font-family: ui-monospace, monospace; color: #4338ca; }
+      code { font-family: ui-monospace, monospace; }
+    </style>
+  </head>
+  <body>
+    <div id="summary">실행 중…</div>
+    <table id="rows"><thead><tr><th>#</th><th>base</th><th>라벨</th><th>결과</th><th>피드백 / 기대</th></tr></thead><tbody></tbody></table>
+
+    <!-- 실제 위젯 + 레슨(= Practices 등록). 위젯은 로드 시 전역만 만들고, 레슨 IIFE 는 render 를 부르지 않으므로 Drill 하나면 충분하지만, index.html 과 동일 집합을 실어 로드 시점 누락을 막는다. -->
+    <script src="../src/lib/runner.js"></script>
+    <script src="../src/lib/drill.js"></script>
+    <script src="../src/lib/memory-model.js"></script>
+    <script src="../src/lib/stackviz.js"></script>
+    <script src="../src/lib/exprreduce.js"></script>
+    <script src="../src/lib/quiz.js"></script>
+    <script src="../src/lessons/variables.js"></script>
+    <script src="../src/lessons/memory-basics.js"></script>
+    <script src="../src/lessons/memory-advanced.js"></script>
+    <script src="../src/lessons/calc-strings.js"></script>
+    <script src="../src/lessons/expressions.js"></script>
+    <script src="../src/lessons/conditions.js"></script>
+    <script src="../src/lessons/functions.js"></script>
+    <script src="../src/lessons/arrays.js"></script>
+    <script src="../src/lessons/loops.js"></script>
+    <script src="../src/lessons/objects.js"></script>
+    <script src="../src/lessons/dom.js"></script>
+    <script src="../src/lessons/capstone.js"></script>
+
+    <script>
+      // 진짜 위젯을 구동해 문제 하나를 채점한다 — check()→runFilled()→fmt()→normalize() 전 경로가 real document 로 실행된다.
+      function verifyProblem(p) {
+        const node = window.Drill({ problems: [p], hideHead: true })
+        document.body.appendChild(node) // 붙여야 하는 건 아니지만 렌더 경로를 최대한 실제와 맞춘다
+        const input = node.querySelector('.drill-input')
+        const checkBtn = node.querySelector('.button-row .chip.on') // '확인' 버튼(정답 버튼은 .chip)
+        input.value = p.answer
+        checkBtn.click() // onclick=check 를 실제로 발화
+        const fb = node.querySelector('.drill-feedback')
+        const pass = !!node.querySelector('.drill-feedback.ok')
+        const text = fb ? fb.textContent : '(피드백 없음)'
+        node.remove()
+        return { pass, text }
+      }
+
+      const tbody = document.querySelector('#rows tbody')
+      const results = []
+      let total = 0, ok = 0
+      let n = 0
+
+      for (const base of Object.keys(window.Practices)) {
+        const cfg = window.Practices[base]
+        if (!cfg || !Array.isArray(cfg.problems)) continue
+        cfg.problems.forEach((p) => {
+          if (p.answer === undefined || p.expect === undefined) return
+          total++; n++
+          let r
+          try { r = verifyProblem(p) } catch (e) { r = { pass: false, text: '⚠️ 예외: ' + (e && e.message || e) } }
+          if (r.pass) ok++
+          results.push({ n, base, label: p.label || '', pass: r.pass, text: r.text, expect: p.expect })
+
+          const tr = document.createElement('tr')
+          tr.className = r.pass ? 'ok' : 'no'
+          tr.innerHTML =
+            '<td>' + n + '</td>' +
+            '<td class="tag">' + base + '</td>' +
+            '<td>' + (p.label || '') + '</td>' +
+            '<td>' + (r.pass ? '✅ PASS' : '❌ FAIL') + '</td>' +
+            '<td>' + (r.pass ? '' : ('<code>' + (r.text || '').replace(/</g, '&lt;') + '</code> · 기대 <code>' + String(p.expect).replace(/</g, '&lt;') + '</code>')) + '</td>'
+          tbody.appendChild(tr)
+        })
+      }
+
+      const fails = results.filter((r) => !r.pass)
+      const summary = document.querySelector('#summary')
+      const head = 'Drill contract: ' + ok + '/' + total + (fails.length ? ' FAIL' : ' PASS')
+      summary.className = fails.length ? 'fail' : 'pass'
+      summary.textContent = head + (fails.length ? ' — 실패: ' + fails.map((f) => f.base + '/' + f.label).join(', ') : ' — 전부 통과 🎉')
+      document.title = head
+      // headless --dump-dom 로 긁을 수 있게 기계 판독용 한 줄도 남긴다.
+      const marker = document.createElement('pre')
+      marker.id = 'result-json'
+      marker.textContent = JSON.stringify({ ok, total, fails: fails.map((f) => ({ base: f.base, label: f.label, got: f.text, expect: f.expect })) })
+      document.body.appendChild(marker)
+    </script>
+  </body>
+</html>
