@@ -84,7 +84,7 @@
 
       <div class="practice-cta">
         <span>🎯 개념은 여기까지. <b>단계별 실습</b>에서 템플릿 \${ } 끼우기를 5문제로 익혀요.</span>
-        <button class="chip on" data-goto="2-1">📝 2강 실습 시작 (2-1) →</button>
+        <button class="chip on" data-goto="2:easy">📝 2강 실습 시작 (🟢 쉬움) →</button>
       </div>
 
       <div class="concept">

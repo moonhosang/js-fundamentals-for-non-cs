@@ -70,7 +70,7 @@
 
       <div class="practice-cta">
         <span>🎯 이제 <b>단계별 실습</b>으로 — 번호·length·push를 손에 붙이자 (10문제).</span>
-        <button class="chip on" data-goto="6-1">📝 6강 실습 시작 (6-1) →</button>
+        <button class="chip on" data-goto="6:easy">📝 6강 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
 

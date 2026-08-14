@@ -360,13 +360,13 @@
       </div>
 
       <div class="practice-cta">
-        <span>🎯 이제 <b>직접 축약</b>해 보자 — 식을 손으로 접어 결과를 맞히는 드릴 (8문제).</span>
-        <button class="chip on" data-goto="3-7">📝 표현식 실습 시작 (3-7) →</button>
+        <span>🎯 이제 <b>직접 축약</b>해 보자 — 🟢쉬움 → 🟡보통 → 🔴어려움 (각 5문제).</span>
+        <button class="chip on" data-goto="3:easy">📝 표현식 실습 시작 (🟢 쉬움) →</button>
       </div>
       <div class="practice-nav">
         <button class="chip" data-goto="3-5">← 이전</button>
         <span class="practice-nav-dots">스텝 6 / 6 · 개념 끝</span>
-        <button class="chip on" data-goto="3-7">드릴로 →</button>
+        <button class="chip on" data-goto="3:easy">드릴로 →</button>
       </div>
     `
     root.querySelector('[data-m="cap"]').append(ExprReduce({

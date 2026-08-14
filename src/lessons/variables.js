@@ -140,7 +140,7 @@
 
       <div class="practice-cta">
         <span>🎯 개념은 여기까지. 이제 <b>단계별 실습</b>으로 손에 붙일 차례예요 — 같은 유형 5문제.</span>
-        <button class="chip on" data-goto="1-1">📝 1강 실습 시작 (1-1) →</button>
+        <button class="chip on" data-goto="1:easy">📝 1강 실습 시작 (🟢 쉬움) →</button>
       </div>
 
       <div class="concept">

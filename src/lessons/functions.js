@@ -490,8 +490,8 @@
       </div>
 
       <div class="practice-cta">
-        <span>🎯 이제 <b>드릴</b>로 손에 붙이자 — 정의·호출·인수·return (10문제).</span>
-        <button class="chip on" data-goto="5-8">📝 5강 실습 시작 (5-8) →</button>
+        <span>🎯 이제 <b>드릴</b>로 손에 붙이자 — 🟢쉬움 → 🟡보통 → 🔴어려움 (각 5문제).</span>
+        <button class="chip on" data-goto="5:easy">📝 5강 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
     root.querySelector('[data-m="arrow"]').append(Runner({ showBox: false, code: [

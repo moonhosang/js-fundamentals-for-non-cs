@@ -56,7 +56,7 @@
 
       <div class="practice-cta">
         <span>🎯 <b>졸업 실습</b> — 전 강의 조각을 한 문제씩 다시 맞춰보자 (8문제). 다 풀면 완주다.</span>
-        <button class="chip on" data-goto="10-1">🎓 졸업 실습 시작 (10-1) →</button>
+        <button class="chip on" data-goto="10:easy">🎓 졸업 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
 

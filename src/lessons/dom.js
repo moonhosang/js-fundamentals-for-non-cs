@@ -60,7 +60,7 @@
 
       <div class="practice-cta">
         <span>🎯 이제 <b>단계별 실습</b>으로 — 고르기·바꾸기·붙이기·이벤트를 손에 붙이자 (10문제).</span>
-        <button class="chip on" data-goto="9-1">📝 9강 실습 시작 (9-1) →</button>
+        <button class="chip on" data-goto="9:easy">📝 9강 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
 
