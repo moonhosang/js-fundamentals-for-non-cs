@@ -1496,13 +1496,13 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     ],
   }
   window.Practices['ref2'] = {
-    pattern: '유형: 원본을 직접 안 쓰고 "같은 객체를 가리키는 변수(별칭)"로 바꿔 원본도 바뀜을 확인',
+    pattern: '유형: 별칭(같은 객체를 가리키는 변수)으로 바꾼 뒤, 원본이 어떻게 되는지 ▶로 확인한다',
     problems: [
-      { label: '별칭 찾기', ask: 'a.n을 9로 바꾸고 싶다. a를 직접 안 쓰고 — a와 같은 객체를 가리키는 변수는?', code: 'let a = { n: 1 }\nlet b = a\n____.n = 9\nprint(a.n)', expect: '9', answer: 'b', hint: 'b는 a의 별칭' },
-      { label: 'hp 깎기', ask: 'p1.hp를 50으로 깎되 p1을 직접 안 쓰고 — 같은 객체는?', code: 'let p1 = { hp: 100 }\nlet p2 = p1\n____.hp = 50\nprint(p1.hp)', expect: '50', answer: 'p2', hint: 'p2가 별칭' },
-      { label: '배열 별칭', ask: 'arr에 9를 넣되 arr을 직접 안 쓰고 — 같은 배열을 가리키는 건?', code: 'let arr = [1, 2]\nlet copy = arr\n____.push(9)\nprint(arr.length)', expect: '3', answer: 'copy', hint: 'copy는 같은 배열' },
-      { label: '이름 별칭', ask: 'user.name을 바꾸되 user를 직접 안 쓰고 — 같은 객체는?', code: 'let user = { name: "민지" }\nlet ref = user\n____.name = "지훈"\nprint(user.name)', expect: '"지훈"', answer: 'ref', hint: 'ref가 별칭' },
-      { label: '중첩 별칭', ask: 'me.friend의 머리를 바꾸되 f를 활용 — f는 무엇과 같은 객체?', code: 'let me = { friend: { hair: "긴머리" } }\nlet f = me.friend\n____.hair = "숏컷"\nprint(me.friend.hair)', expect: '"숏컷"', answer: 'f', hint: 'f = me.friend' },
+      { label: '별칭으로 바꾸면?', ask: 'b는 a와 같은 객체다(별칭). b.n을 9로 바꾸면 a.n은 어떻게 될까요? 빈칸에 b를 넣고 ▶확인', code: 'let a = { n: 1 }\nlet b = a\n____.n = 9\nprint(a.n)', expect: '9', answer: 'b', hint: '같은 객체라 a.n도 9' },
+      { label: 'p2로 깎으면?', ask: 'p2는 p1과 같은 객체다. p2.hp를 50으로 깎으면 p1.hp는? 빈칸에 p2를 넣고 ▶확인', code: 'let p1 = { hp: 100 }\nlet p2 = p1\n____.hp = 50\nprint(p1.hp)', expect: '50', answer: 'p2', hint: 'p1·p2 같은 객체' },
+      { label: 'copy에 push하면?', ask: 'copy는 arr과 같은 배열이다. copy에 9를 push하면 arr 길이는? 빈칸에 copy를 넣고 ▶확인', code: 'let arr = [1, 2]\nlet copy = arr\n____.push(9)\nprint(arr.length)', expect: '3', answer: 'copy', hint: '같은 배열이라 arr도 늘어남' },
+      { label: 'ref로 바꾸면?', ask: 'ref는 user와 같은 객체다. ref.name을 "지훈"으로 바꾸면 user.name은? 빈칸에 ref를 넣고 ▶확인', code: 'let user = { name: "민지" }\nlet ref = user\n____.name = "지훈"\nprint(user.name)', expect: '"지훈"', answer: 'ref', hint: '같은 객체' },
+      { label: 'f로 바꾸면?', ask: 'f는 me.friend와 같은 객체다. f.hair를 "숏컷"으로 바꾸면 me.friend.hair는? 빈칸에 f를 넣고 ▶확인', code: 'let me = { friend: { hair: "긴머리" } }\nlet f = me.friend\n____.hair = "숏컷"\nprint(me.friend.hair)', expect: '"숏컷"', answer: 'f', hint: 'f = me.friend' },
     ],
   }
   window.Practices['stack'] = {
@@ -1520,7 +1520,7 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     problems: [
       { label: '곱해서', ask: 'obj.x가 6이 되게 — 3에 뭘 곱할까?', code: 'let obj = { x: 3 * ____ }\nprint(obj.x)', expect: '6', answer: '2', hint: '3 * 2' },
       { label: '마지막 인덱스', ask: '마지막 값 30을 꺼내려면 몇 번 인덱스? (0부터!)', code: 'let arr = [10, 20, 30]\nprint(arr[____])', expect: '30', answer: '2', hint: '셋 중 마지막 = 2' },
-      { label: '별칭 변경', ask: 'a.v를 9로 바꾸되 a를 직접 안 쓰고 — 같은 힙 객체는?', code: 'let a = { v: 1 }\nlet b = a\n____.v = 9\nprint(a.v)', expect: '9', answer: 'b', hint: 'b는 별칭' },
+      { label: '별칭으로 바꾸면?', ask: 'b는 a와 같은 힙 객체다. b.v를 9로 바꾸면 a.v는? 빈칸에 b를 넣고 ▶확인', code: 'let a = { v: 1 }\nlet b = a\n____.v = 9\nprint(a.v)', expect: '9', answer: 'b', hint: '같은 객체라 a.v도 9' },
       { label: '이름', ask: 'card.name이 "민지"가 되게.', code: 'let card = { name: "____" }\nprint(card.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에' },
       { label: '중첩 속성', ask: '중첩된 n(7)에 도달하려면 어떤 속성?', code: 'let data = { inner: { n: 7 } }\nprint(data.inner.____)', expect: '7', answer: 'n', hint: 'data.inner.n' },
     ],
@@ -1558,9 +1558,9 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
   window.Practices['graph'] = {
     pattern: '유형: 화살표를 따라가는 "경로"를 채운다 — 같은 객체면 함께 바뀐다',
     problems: [
-      { label: '베프 경로', ask: '효니 머리를 숏컷으로 — 효니를 직접 안 쓰고. me를 통해 효니에 닿는 경로는?', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\n____.hair = "숏컷"\nprint(hyoni.hair)', expect: '"숏컷"', answer: 'me.friend', hint: 'me.friend = 효니' },
+      { label: 'me.friend로 바꾸면?', ask: 'me.friend는 효니를 가리킨다. me.friend.hair를 "숏컷"으로 바꾸면 효니 본인은? 빈칸에 me.friend를 넣고 ▶확인', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\n____.hair = "숏컷"\nprint(hyoni.hair)', expect: '"숏컷"', answer: 'me.friend', hint: 'me.friend = 효니(같은 사람)' },
       { label: '화살표 따라', ask: 'a.next 안의 값 7을 꺼내려면 어떤 속성?', code: 'let a = { next: { val: 7 } }\nprint(a.next.____)', expect: '7', answer: 'val', hint: 'a.next.val' },
-      { label: '참조 경로', ask: 'x.n을 9로 — x를 직접 안 쓰고 y를 통해. x에 닿는 경로는?', code: 'let x = { n: 1 }\nlet y = { ref: x }\n____.n = 9\nprint(x.n)', expect: '9', answer: 'y.ref', hint: 'y.ref = x' },
+      { label: 'y.ref로 바꾸면?', ask: 'y.ref는 x를 가리킨다. y.ref.n을 9로 바꾸면 x.n은? 빈칸에 y.ref를 넣고 ▶확인', code: 'let x = { n: 1 }\nlet y = { ref: x }\n____.n = 9\nprint(x.n)', expect: '9', answer: 'y.ref', hint: 'y.ref = x(같은 객체)' },
       { label: '리더 이름', ask: 'team.leader(=p)의 이름을 꺼내려면?', code: 'let p = { name: "김" }\nlet team = { leader: p }\nprint(team.leader.____)', expect: '"김"', answer: 'name', hint: '.name' },
       { label: '2중 중첩', ask: '2중 중첩 안의 v(3)를 꺼내려면?', code: 'let root = { child: { child: { v: 3 } } }\nprint(root.child.child.____)', expect: '3', answer: 'v', hint: '.v' },
     ],
@@ -1568,9 +1568,9 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
   window.Practices['friends'] = {
     pattern: '유형: 배열 안 사람 객체에 닿는 경로를 채운다 — 같은 객체면 함께 바뀐다',
     problems: [
-      { label: '배열로 변경', ask: 'minji 이름을 바꾸되 minji를 직접 안 쓰고 — 배열로 같은 사람에 닿는 경로는?', code: 'let minji = { name: "민지" }\nlet list = [minji]\n____.name = "X"\nprint(minji.name)', expect: '"X"', answer: 'list[0]', hint: 'list[0] = minji' },
+      { label: 'list[0]으로 바꾸면?', ask: 'list[0]은 minji와 같은 객체다. list[0].name을 "X"로 바꾸면 minji.name은? 빈칸에 list[0]을 넣고 ▶확인', code: 'let minji = { name: "민지" }\nlet list = [minji]\n____.name = "X"\nprint(minji.name)', expect: '"X"', answer: 'list[0]', hint: 'list[0] = minji(같은 객체)' },
       { label: '두 번째 나이', ask: 'people의 두 번째 사람 나이(30)를 꺼내려면?', code: 'let people = [{ age: 20 }, { age: 30 }]\nprint(people[1].____)', expect: '30', answer: 'age', hint: '.age' },
-      { label: 'hp 경로', ask: 'a.hp를 50으로 — a를 직접 안 쓰고 배열로. 같은 객체 경로는?', code: 'let a = { hp: 100 }\nlet arr = [a]\n____.hp = 50\nprint(a.hp)', expect: '50', answer: 'arr[0]', hint: 'arr[0] = a' },
+      { label: 'arr[0]으로 바꾸면?', ask: 'arr[0]은 a와 같은 객체다. arr[0].hp를 50으로 바꾸면 a.hp는? 빈칸에 arr[0]을 넣고 ▶확인', code: 'let a = { hp: 100 }\nlet arr = [a]\n____.hp = 50\nprint(a.hp)', expect: '50', answer: 'arr[0]', hint: 'arr[0] = a(같은 객체)' },
       { label: 'id 찾기', ask: 'id가 2인 사람은 몇 번째? (0부터)', code: 'let users = [{ id: 1 }, { id: 2 }]\nprint(users[____].id)', expect: '2', answer: '1', hint: '두 번째 = 1' },
       { label: '항목', ask: 'cart 0번 객체의 item을 꺼내려면?', code: 'let cart = [{ item: "빵" }]\nprint(cart[0].____)', expect: '"빵"', answer: 'item', hint: '.item' },
     ],
