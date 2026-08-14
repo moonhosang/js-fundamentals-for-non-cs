@@ -381,20 +381,5 @@
     wireGoto(root)
   }
 
-  // ── 드릴 ×8 (3-7~3-14) — 식을 손으로 축약해 결과값을 === 로 맞힌다 (startAt:7) ──
-  window.Practices[3] = {
-    startAt: 7,
-    pattern: '유형: 식을 손으로 축약해 결과값을 빈칸에 쓰면 통과 (=== 로 맞춰본다). 우선순위·안쪽부터!',
-    problems: [
-      { label: '곱셈 먼저', ask: '2 + 3 * 4 는 얼마로 축약될까요? (곱셈 먼저!)', code: 'print((2 + 3 * 4) === ____)', expect: 'true', answer: '14', hint: '3*4=12, +2 → 14' },
-      { label: '괄호가 먼저', ask: '(2 + 3) * 4 는? (괄호가 덧셈을 먼저로)', code: 'print(((2 + 3) * 4) === ____)', expect: 'true', answer: '20', hint: '(5)*4 → 20' },
-      { label: '좌결합', ask: '10 - 2 - 3 은? (뺄셈은 왼쪽부터)', code: 'print((10 - 2 - 3) === ____)', expect: 'true', answer: '5', hint: '(10-2)-3 → 5' },
-      { label: '두 항(term)', ask: '2 * 3 + 4 * 5 는? (곱셈 둘 먼저)', code: 'print((2 * 3 + 4 * 5) === ____)', expect: 'true', answer: '26', hint: '6 + 20 → 26' },
-      { label: '섞인 식', ask: '5 + 2 * 3 은?', code: 'print((5 + 2 * 3) === ____)', expect: 'true', answer: '11', hint: '2*3 먼저 → 5+6' },
-      { label: '문자열 + 괄호', ask: '"n=" + (1 + 2) 는? (괄호 안 먼저, 그다음 이어붙이기)', code: 'print(("n=" + (1 + 2)) === ____)', expect: 'true', answer: '"n=3"', hint: '1+2=3 → "n=" + 3 = "n=3" (따옴표째 입력)' },
-      { label: '인자 안 먼저', ask: 'Math.max(1, 2 * 3) 은? (인자 안 곱셈 먼저)', code: 'print((Math.max(1, 2 * 3)) === ____)', expect: 'true', answer: '6', hint: '2*3=6 → max(1,6)=6' },
-      { label: '삼항도 값', ask: '7 > 3 ? "y" : "n" 은? (삼항은 표현식 → 값)', code: 'print((7 > 3 ? "y" : "n") === ____)', expect: 'true', answer: '"y"', hint: '7>3은 true → "y" (따옴표째 입력)' },
-      { label: '비교·논리도 값', ask: '3-1에서 본 그 식 — true < true && true 는? (< 가 && 보다 먼저!)', code: 'print((true < true && true) === ____)', expect: 'true', answer: 'false', hint: 'true<true=false → false && true = false' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
 })()

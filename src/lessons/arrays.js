@@ -145,20 +145,5 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
   }
 
-  // 유형 드릴 ×10 — 인덱스/length/push. 1-5 기본(만들기·꺼내기·length), 6-10 유사(push·바꾸기·응용).
-  window.Practices[6] = {
-    pattern: '유형: 빈칸을 채워 배열에서 원하는 값·개수가 나오게 하기 (번호는 0부터!)',
-    problems: [
-      { label: '첫째 = a[0]', ask: '[10,20,30]의 첫 번째(10)를 꺼내세요. 번호는?', code: 'let a = [10, 20, 30]\nprint(a[____])', expect: '10', answer: '0', hint: '첫째는 0번' },
-      { label: '둘째 = a[1]', ask: '[10,20,30]의 두 번째(20)를 꺼내세요.', code: 'let a = [10, 20, 30]\nprint(a[____])', expect: '20', answer: '1', hint: '둘째는 1번' },
-      { label: '문자 배열', ask: '["사과","배","귤"]의 마지막(귤)을 번호로 꺼내세요.', code: 'let f = ["사과", "배", "귤"]\nprint(f[____])', expect: '"귤"', answer: '2', hint: '셋 중 마지막 = 2번' },
-      { label: 'length=개수', ask: '[1,2,3,4]의 개수를 구하세요.', code: 'let a = [1, 2, 3, 4]\nprint(a.____)', expect: '4', answer: 'length', hint: '개수: .length' },
-      { label: '빈 배열 length', ask: '빈 배열의 개수는 0. 무엇으로 구하나?', code: 'let a = []\nprint(a.____)', expect: '0', answer: 'length', hint: '.length' },
-      { label: 'push로 추가', ask: '[1,2]에 값을 하나 추가해 개수가 3이 되게. 무슨 메서드?', code: 'let a = [1, 2]\na.____(3)\nprint(a.length)', expect: '3', answer: 'push', hint: '끝에 추가: push' },
-      { label: '칸 바꾸기', ask: '[1,2,3]의 0번 칸을 9로 바꾸세요.', code: 'let a = [1, 2, 3]\na[0] = ____\nprint(a[0])', expect: '9', answer: '9', hint: 'arr[0] = 9' },
-      { label: '마지막 = length-1', ask: '[5,6,7]의 마지막(7)을 length로 꺼내세요.', code: 'let a = [5, 6, 7]\nprint(a[a.length - ____])', expect: '7', answer: '1', hint: '마지막 번호 = length - 1' },
-      { label: '이름 배열', ask: '["민지","지훈","서연"]의 세 번째(서연)를 꺼내세요.', code: 'let names = ["민지", "지훈", "서연"]\nprint(names[____])', expect: '"서연"', answer: '2', hint: '세 번째 = 2번' },
-      { label: 'push 값', ask: '["우유"]에 뭐든 하나 추가해 개수가 2가 되게 빈칸을 채우세요.', code: 'let cart = ["우유"]\ncart.push(____)\nprint(cart.length)', expect: '2', answer: '"빵"', hint: 'push는 뭘 넣어도 개수 +1' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
 })()

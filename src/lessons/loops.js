@@ -155,20 +155,5 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
   }
 
-  // 유형 드릴 ×10 — for·map·filter·reduce. 목표 결과가 나오게 스스로 채운다(정답은 문제에 없음).
-  window.Practices[7] = {
-    pattern: '유형: 목표 출력이 나오도록 빈칸을 채워 ▶확인 (for·map·filter·reduce)',
-    problems: [
-      { label: 'for 조건', ask: '배열을 끝까지 훑으려면 i는 무엇보다 작아야 할까? (개수)', code: 'let a = [1, 2, 3]\nfor (let i = 0; i < a.____; i++) { print(a[i]) }', expect: '1\n2\n3', answer: 'length', hint: '개수 = .length' },
-      { label: 'map ×2', ask: '각 요소를 2배로 만들어 [2,4,6]이 되게.', code: 'let n = [1, 2, 3]\nlet d = n.map(function (x) { return x * ____ })\nprint(d)', expect: '[2,4,6]', answer: '2', hint: 'x * 2' },
-      { label: 'map +1', ask: '각 요소에 1을 더해 [2,3,4]가 되게 — return에 무엇을?', code: 'let n = [1, 2, 3]\nlet d = n.map(function (x) { return ____ })\nprint(d)', expect: '[2,3,4]', answer: 'x + 1', hint: 'x + 1' },
-      { label: 'filter >2', ask: '2보다 큰 것만 남겨 [3,4]가 되게.', code: 'let n = [1, 2, 3, 4]\nlet r = n.filter(function (x) { return x > ____ })\nprint(r)', expect: '[3,4]', answer: '2', hint: 'x > 2' },
-      { label: 'reduce 합', ask: '누적값 acc에 n을 더해 합계 60이 되게 — 무슨 연산?', code: 'let n = [10, 20, 30]\nlet s = n.reduce(function (a, b) { return a ____ b }, 0)\nprint(s)', expect: '60', answer: '+', hint: '더하기' },
-      { label: 'forEach 합', ask: 'sum에 각 x를 더해 6이 되게 — 무슨 연산?', code: 'let nums = [1, 2, 3]\nlet sum = 0\nnums.forEach(function (x) { sum = sum ____ x })\nprint(sum)', expect: '6', answer: '+', hint: 'sum + x' },
-      { label: 'map 원본', ask: 'map을 써도 원본 n의 개수는 그대로 3. 개수를 꺼내려면?', code: 'let n = [1, 2, 3]\nn.map(function (x) { return x * 2 })\nprint(n.____)', expect: '3', answer: 'length', hint: 'map은 원본 안 바꿈' },
-      { label: 'filter 짝수', ask: '짝수만 남기려면 나머지가 무엇과 같아야? [2,4,6]', code: 'let n = [1, 2, 3, 4, 5, 6]\nlet r = n.filter(function (x) { return x % 2 === ____ })\nprint(r)', expect: '[2,4,6]', answer: '0', hint: '짝수 = 나머지 0' },
-      { label: 'reduce 곱', ask: '다 곱해서 24가 되게 — 시작값은? (곱셈의 시작)', code: 'let n = [2, 3, 4]\nlet p = n.reduce(function (a, b) { return a * b }, ____)\nprint(p)', expect: '24', answer: '1', hint: '곱셈 시작값 = 1' },
-      { label: 'map 메서드', ask: '각 글자를 대문자로 바꿔 ["A","B"]가 되게 — 무슨 메서드?', code: 'let names = ["a", "b"]\nlet up = names.map(function (s) { return s.____() })\nprint(up)', expect: '["A","B"]', answer: 'toUpperCase', hint: '대문자 = toUpperCase' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
 })()

@@ -145,18 +145,5 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
   }
 
-  // 졸업 실습 ×8 — 전 강의 조각을 한 문제씩. 목표에서 도출(답 노출 없음).
-  window.Practices[10] = {
-    pattern: '졸업 실습: 지금까지 배운 조각을 한 문제씩 — 목표 출력이 나오게 빈칸을 채워 ▶확인',
-    problems: [
-      { label: '값·문자열 (1·2강)', ask: '변수 name을 인사말에 끼워 "안녕, 민지님"이 나오게.', code: 'let name = "민지"\nprint("안녕, " + ____ + "님")', expect: '"안녕, 민지님"', answer: 'name', hint: '변수 name을 이어붙인다' },
-      { label: '조건 (4강)', ask: '나이 15는 성인이 아니다 — else 쪽 글자를 "청소년"으로.', code: 'let age = 15\nprint(age >= 19 ? "성인" : "____")', expect: '"청소년"', answer: '청소년', hint: '15 < 19 이므로 else 쪽이 나온다' },
-      { label: '함수 반환 (5강)', ask: 'greet("지훈")이 "지훈님 환영!"이 되게 인자를 넣어라.', code: 'function greet(n) { return n + "님 환영!" }\nprint(greet("____"))', expect: '"지훈님 환영!"', answer: '지훈', hint: 'greet에 "지훈"을 넘긴다' },
-      { label: '배열 개수 (6강)', ask: '사람이 몇 명인지(3) 구하려면 배열의 무엇?', code: 'let users = ["민지", "지훈", "서연"]\nprint(users.____)', expect: '3', answer: 'length', hint: '.length' },
-      { label: '변환·꺼내기 (7강)', ask: '나이를 1씩 올린 next에서 20→21을 꺼내려면 몇 번?', code: 'let ages = [10, 20]\nlet next = ages.map(a => a + 1)\nprint(next[____])', expect: '21', answer: '1', hint: '두 번째 = 번호 1' },
-      { label: '객체 속성 (8강)', ask: '"콩이는 3살"이 나오게 나이 속성을 꺼내라.', code: 'let p = { name: "콩이", age: 3 }\nprint(p.name + "는 " + p.____ + "살")', expect: '"콩이는 3살"', answer: 'age', hint: 'p.age' },
-      { label: 'DOM 글자 (9강)', ask: '요소의 글자를 "명함"으로 만들어 출력되게.', code: 'let el = document.createElement("div")\nel.textContent = "____"\nprint(el.textContent)', expect: '"명함"', answer: '명함', hint: 'textContent = "명함"' },
-      { label: '이벤트 (9강)', ask: '버튼을 눌러 clicked가 1이 되게 — 클릭을 흉내내는 함수?', code: 'let clicked = 0\nlet b = document.createElement("button")\nb.addEventListener("click", () => clicked++)\nb.____()\nprint(clicked)', expect: '1', answer: 'click', hint: 'b.click()' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
 })()

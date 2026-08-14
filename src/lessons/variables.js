@@ -4,27 +4,7 @@
 
 ;(function () {
   window.Lessons = window.Lessons || {}
-  window.Practices = window.Practices || {}
-
-  // 단계별 실습 데이터 — 사이드바의 '📝 1강 실습' 항목에서 stepped 드릴로 쓴다.
-  window.Practices[1] = {
-    pattern: '유형: let 이름 = ____  로 이름표를 값에 붙여 print(이름)이 나오게 하기',
-    memViz: true, // 정답 맞히면 '이름표 → 값' 메모리 그림을 보여준다
-    problems: [
-      // ── 기본 유형 1-5 ──
-      { label: 'age 에 24', ask: 'age 에 24를 담아 24가 나오게 하세요.', code: 'let age = ____\nprint(age)', expect: '24', answer: '24', hint: '숫자는 따옴표 없이' },
-      { label: 'name 에 "민지"', ask: 'name 에 "민지"를 담아 "민지"가 나오게 하세요.', code: 'let name = ____\nprint(name)', expect: '"민지"', answer: '"민지"', hint: '글자는 따옴표로 감싼다' },
-      { label: 'color 에 색', ask: 'color 에 "#FF6B6B"을 담으세요.', code: 'let color = ____\nprint(color)', expect: '"#FF6B6B"', answer: '"#FF6B6B"', hint: '색 코드도 글자다 → 따옴표' },
-      { label: 'price 에 12000', ask: 'price 에 12000을 담으세요.', code: 'let price = ____\nprint(price)', expect: '12000', answer: '12000', hint: '숫자' },
-      { label: 'isOpen 에 true', ask: 'isOpen 에 참(true)을 담으세요.', code: 'let isOpen = ____\nprint(isOpen)', expect: 'true', answer: 'true', hint: '참은 true (따옴표 없음)' },
-      // ── 유사한 5개 더 6-10 ──
-      { label: 'score 에 100', ask: 'score 에 100을 담으세요.', code: 'let score = ____\nprint(score)', expect: '100', answer: '100', hint: '숫자' },
-      { label: 'grade 에 "A"', ask: 'grade 에 "A"를 담으세요.', code: 'let grade = ____\nprint(grade)', expect: '"A"', answer: '"A"', hint: '한 글자도 글자 → 따옴표' },
-      { label: 'height 에 175', ask: 'height 에 175를 담으세요.', code: 'let height = ____\nprint(height)', expect: '175', answer: '175', hint: '숫자' },
-      { label: 'nickname 에 "토끼"', ask: 'nickname 에 "토끼"를 담으세요.', code: 'let nickname = ____\nprint(nickname)', expect: '"토끼"', answer: '"토끼"', hint: '따옴표' },
-      { label: 'isDone 에 false', ask: 'isDone 에 거짓(false)을 담으세요.', code: 'let isDone = ____\nprint(isDone)', expect: 'false', answer: 'false', hint: '거짓은 false (따옴표 없음)' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills['1'].
 
   window.Lessons[1] = function render(root) {
     // ── 산문(정적 HTML). 위젯이 들어갈 자리는 data-m 으로 표시해 두고 아래에서 주입한다. ──

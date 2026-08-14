@@ -4,25 +4,7 @@
 
 ;(function () {
   window.Lessons = window.Lessons || {}
-  window.Practices = window.Practices || {}
-
-  window.Practices[2] = {
-    pattern: '유형: 템플릿 리터럴 `...${____}...` 의 빈칸에 ${변수} 를 넣어 문장 완성하기',
-    problems: [
-      // ── 기본 유형 1-5 ──
-      { label: '안녕 ${name}', ask: 'name(="민지")을 넣어 "안녕, 민지님"이 나오게 하세요.', code: 'let name = "민지"\nprint(`안녕, ____님`)', expect: '"안녕, 민지님"', answer: '${name}', hint: '자리에 넣을 땐 ${이름}' },
-      { label: '여기는 ${city}', ask: 'city(="서울")를 넣어 "여기는 서울 입니다"가 나오게.', code: 'let city = "서울"\nprint(`여기는 ____ 입니다`)', expect: '"여기는 서울 입니다"', answer: '${city}', hint: '${city}' },
-      { label: '장바구니 ${count}', ask: 'count(=3)를 넣어 "장바구니에 3개"가 나오게.', code: 'let count = 3\nprint(`장바구니에 ____개`)', expect: '"장바구니에 3개"', answer: '${count}', hint: '숫자도 ${ } 안에 그대로' },
-      { label: '가격 ${price}', ask: 'price(=5000)를 넣어 "가격: 5000원"이 나오게.', code: 'let price = 5000\nprint(`가격: ____원`)', expect: '"가격: 5000원"', answer: '${price}', hint: '${price}' },
-      { label: '${user}님 환영', ask: 'user(="지훈")를 넣어 "지훈님 환영해요"가 나오게.', code: 'let user = "지훈"\nprint(`____님 환영해요`)', expect: '"지훈님 환영해요"', answer: '${user}', hint: '문장 맨 앞에도 ${ }' },
-      // ── 유사한 5개 더 6-10 ──
-      { label: '오늘의 과일 ${fruit}', ask: 'fruit(="사과")를 넣어 "오늘의 과일: 사과"가 나오게.', code: 'let fruit = "사과"\nprint(`오늘의 과일: ____`)', expect: '"오늘의 과일: 사과"', answer: '${fruit}', hint: '${fruit}' },
-      { label: '점수 ${score}', ask: 'score(=95)를 넣어 "점수는 95점"이 나오게.', code: 'let score = 95\nprint(`점수는 ____점`)', expect: '"점수는 95점"', answer: '${score}', hint: '숫자도 ${ } 안에' },
-      { label: '${team}팀', ask: 'team(="파랑")을 넣어 "파랑팀 화이팅"이 나오게.', code: 'let team = "파랑"\nprint(`____팀 화이팅`)', expect: '"파랑팀 화이팅"', answer: '${team}', hint: '문장 맨 앞에도 ${ }' },
-      { label: '남은 자리 ${seat}', ask: 'seat(=7)을 넣어 "남은 자리 7개"가 나오게.', code: 'let seat = 7\nprint(`남은 자리 ____개`)', expect: '"남은 자리 7개"', answer: '${seat}', hint: '${seat}' },
-      { label: '${who} 로그인', ask: 'who(="관리자")를 넣어 "관리자님이 로그인"이 나오게.', code: 'let who = "관리자"\nprint(`____님이 로그인`)', expect: '"관리자님이 로그인"', answer: '${who}', hint: '문장 맨 앞에도 ${ }' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills['2'].
 
   window.Lessons[2] = function render(root) {
     root.innerHTML = `

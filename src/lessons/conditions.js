@@ -159,20 +159,5 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
   }
 
-  // 유형 드릴 ×10 — 빈칸을 채워 참(true)/거짓(false)을 만들기. 1-5 비교, 6-10 truthy/삼항.
-  window.Practices[4] = {
-    pattern: '유형: 빈칸을 채워 print(...)가 기대한 true / false 가 나오게 하기',
-    problems: [
-      { label: '10 __ 5 → true', ask: '10이 5보다 크면 true. 빈칸을 채우세요.', code: 'print(10 ____ 5)', expect: 'true', answer: '>', hint: '크다: >' },
-      { label: '3 __ 3 → true(엄격)', ask: '3과 3이 같으면 true. 엄격한 같음을 쓰세요.', code: 'print(3 ____ 3)', expect: 'true', answer: '===', hint: '값+타입 같음: ===' },
-      { label: '"5" __ 5 → false', ask: '글자 "5"와 숫자 5는 타입이 달라 false가 되게(엄격 비교).', code: 'print("5" ____ 5)', expect: 'false', answer: '===', hint: '===면 타입까지 봐서 false' },
-      { label: '7 __ 10 → true', ask: '7이 10보다 작거나 같으면 true.', code: 'print(7 ____ 10)', expect: 'true', answer: '<=', hint: '작거나 같다: <=' },
-      { label: '9 __ 4 → true(다름)', ask: '9와 4가 다르면 true. 다름을 쓰세요.', code: 'print(9 ____ 4)', expect: 'true', answer: '!==', hint: '다르다: !==' },
-      { label: 'Boolean(__) → false', ask: '빈 문자열은 falsy → false. 빈칸에 빈 문자열을.', code: 'print(Boolean(____))', expect: 'false', answer: '""', hint: '빈 글자: ""' },
-      { label: 'Boolean(__) → false', ask: '숫자 0은 falsy → false.', code: 'print(Boolean(____))', expect: 'false', answer: '0', hint: '0은 falsy' },
-      { label: 'Boolean(__) → true(함정)', ask: '빈 배열은 truthy(함정!) → true.', code: 'print(Boolean(____))', expect: 'true', answer: '[]', hint: '빈 배열 [] 도 "있는 것"' },
-      { label: 'Boolean(__) → true(함정)', ask: '글자 "false"는 truthy → true. (진짜 false 아님)', code: 'print(Boolean(____))', expect: 'true', answer: '"false"', hint: '따옴표 친 글자는 있는 것' },
-      { label: '삼항 → "성인"', ask: '18세 이상이면 "성인"이 나오게 빈칸을 채우세요.', code: 'let age = 20\nprint(age >= 18 ? ____ : "미성년")', expect: '"성인"', answer: '"성인"', hint: '조건 ? 참일때 : 거짓일때' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
 })()

@@ -76,9 +76,8 @@
   })
 
   // 실습을 '문제마다 별도 항목'으로 펼친다 — 1-1, 1-2, … 1-10 (리액트공부 종합연습 방식).
-  // 한 강의 실습 = 동일 유형 5개(1-5) + 유사한 5개 더(6-10).
-  // startAt: 실습 항목 번호 시작값(기본 1). 표현식(3강)은 개념이 3-1~3-6을 쓰므로 드릴은 3-7부터(startAt:7).
-  // 난이도 3단계(ADR 0008): 챕터마다 쉬움·보통·어려움 × 5, 난이도별 페이지. 데이터는 window.Drills.{easy,normal,hard}[base].
+  // 난이도 3단계(ADR 0008): 챕터마다 쉬움·보통·어려움 × 5, 난이도별 페이지(practiceset).
+  // 데이터는 난이도별 파일 window.Drills.{easy,normal,hard}[base] (개념 강의 파일엔 드릴 없음).
   const TIERS = [
     { key: 'easy', label: '쉬움', badge: '🟢' },
     { key: 'normal', label: '보통', badge: '🟡' },
@@ -92,27 +91,12 @@
       .map((t) => ({ t, cfg: D[t.key] && D[t.key][key] }))
       .filter((x) => x.cfg && x.cfg.problems && x.cfg.problems.length)
   }
-  const practiceItemsFor = (base) => {
-    // ① 난이도 파일(window.Drills)로 이주한 챕터 → 쉬움/보통/어려움 3페이지.
-    const tiers = drillTiersFor(base)
-    if (tiers.length) {
-      return tiers.map(({ t, cfg }) => ({
-        id: base + ':' + t.key, kind: 'practiceset', base, tier: t.key,
-        badge: t.badge, title: t.label, subtitle: cfg.problems.length + '문제',
-      }))
-    }
-    // ② 레거시 폴백 — 아직 난이도 파일로 이주 안 한 챕터(window.Practices). 이주 끝나면 제거.
-    const cfg = window.Practices && window.Practices[base]
-    if (!cfg) return []
-    if (typeof base === 'string') {
-      return [{ id: base + '-drill', kind: 'practiceset', base, badge: '📝', title: 'Practice', subtitle: '동일 유형 ' + cfg.problems.length + '문제' }]
-    }
-    const start = cfg.startAt || 1
-    return cfg.problems.map((p, i) => ({
-      id: `${base}-${start + i}`, kind: 'practice', base, idx: i,
-      badge: '실습', title: `${base}-${start + i}`, subtitle: p.label || p.ask,
+  // 챕터 base → 쉬움/보통/어려움 3페이지(있는 난이도만).
+  const practiceItemsFor = (base) =>
+    drillTiersFor(base).map(({ t, cfg }) => ({
+      id: base + ':' + t.key, kind: 'practiceset', base, tier: t.key,
+      badge: t.badge, title: t.label, subtitle: cfg.problems.length + '문제',
     }))
-  }
   const PRACTICE_ITEMS = LESSONS.flatMap((l) => practiceItemsFor(l.id))
   const byId = Object.fromEntries([...LESSONS, ...PRACTICE_ITEMS].map((l) => [l.id, l]))
 
@@ -136,10 +120,7 @@
   const hasContent = (id) => {
     const l = byId[id]
     if (!l) return false
-    if (kindOf(l) === 'practice' || kindOf(l) === 'practiceset') {
-      if (l.tier) return !!(window.Drills && window.Drills[l.tier] && window.Drills[l.tier][String(l.base)])
-      return !!(window.Practices && window.Practices[l.base])
-    }
+    if (kindOf(l) === 'practiceset') return !!(window.Drills && window.Drills[l.tier] && window.Drills[l.tier][String(l.base)])
     return !!(window.Lessons && window.Lessons[id])
   }
   const isPracticeKind = (l) => kindOf(l) === 'practice' || kindOf(l) === 'practiceset'
@@ -343,10 +324,7 @@
     const host = document.createElement('div')
     page.append(host)
     try {
-      if (kindOf(l) === 'practice') {
-        if (hasContent(l.id)) host.append(renderPracticeProblem(l))
-        else host.append(renderComingSoon(l))
-      } else if (kindOf(l) === 'practiceset') {
+      if (kindOf(l) === 'practiceset') {
         host.append(renderDrillSet(l))
       } else if (hasContent(l.id)) {
         window.Lessons[l.id](host)
@@ -377,11 +355,10 @@
     renderToc()
   }
 
-  // 실습 세트 페이지 — 동일 유형 문제를 '한 페이지에서 연속 반복'(stepped Drill).
-  // (점진 난이도면 페이지를 나누지만, 같은 유형 반복은 한 페이지가 낫다.)
+  // 난이도별 실습 페이지 — 그 난이도 5문제를 '한 페이지에서 연속 반복'(stepped Drill).
   function renderDrillSet(l) {
-    const tierMeta = l.tier ? TIERS.find((t) => t.key === l.tier) : null
-    const cfg = l.tier ? window.Drills[l.tier][String(l.base)] : window.Practices[l.base]
+    const tierMeta = TIERS.find((t) => t.key === l.tier)
+    const cfg = window.Drills[l.tier][String(l.base)]
     const base = byId[l.base]
     const tierTag = tierMeta ? `${tierMeta.badge} ${tierMeta.label}` : '실습'
     const sec = document.createElement('section')
@@ -401,57 +378,6 @@
     }))
     const back = sec.querySelector('[data-back]')
     if (back) back.onclick = () => go(l.base)
-    return sec
-  }
-
-  // 단일 실습 문제 페이지 — 문제 하나 + 이전/다음 + 개념으로.
-  function renderPracticeProblem(l) {
-    const cfg = window.Practices[l.base]
-    const p = cfg.problems[l.idx]
-    const base = byId[l.base]
-    const start = cfg.startAt || 1
-    const num = start + l.idx          // 사이드바에 보이는 번호(3-7 …)
-    const pos = l.idx + 1              // 문제 세트 안 위치(1..total)
-    const total = cfg.problems.length
-    const batch = pos <= Math.ceil(total / 2) ? '기본 유형' : '유사 유형 +'
-    const sec = document.createElement('section')
-    sec.innerHTML = `
-      <header class="lesson-header">
-        <span class="badge">📝 ${l.base}-${num} · ${batch}</span>
-        <h2>${base ? base.title.replace(/^\d+강 · /, '') : ''} 실습 · ${pos} / ${total}</h2>
-        <p>${cfg.pattern}</p>
-      </header>
-      <div class="practice-back"><button class="chip" data-back="${l.base}">← ${base ? base.title : '개념'} 다시 보기</button></div>
-      <div data-m="drill"></div>
-      <div data-m="mem" hidden></div>
-      <div class="practice-nav">
-        <button class="chip" data-prev ${l.idx <= 0 ? 'disabled' : ''}>← 이전</button>
-        <span class="practice-nav-dots">${pos} / ${total}</span>
-        <button class="chip on" data-next ${l.idx >= total - 1 ? 'disabled' : ''}>다음 →</button>
-      </div>
-    `
-    // 정답을 맞히면(memViz 강의) '이름표 → 값' 메모리 그림을 드러낸다. (스포일러 방지 — 풀기 전엔 숨김)
-    const memHost = sec.querySelector('[data-m="mem"]')
-    const revealMem = () => {
-      if (!cfg.memViz || !memHost || memHost.dataset.shown) return
-      const m = /(?:let|const)\s+([A-Za-z_$][\w$]*)\s*=/.exec(p.code)
-      const varName = m ? m[1] : 'x'
-      memHost.dataset.shown = '1'
-      memHost.hidden = false
-      memHost.innerHTML = '<div class="card"><div class="file-label">🧠 정답의 메모리 모델 — 이 값은 어디에 사나 (이름표 장부 / 값 메모리)</div><div data-mem-mount></div></div>'
-      memHost.querySelector('[data-mem-mount]').append(MemoryModel({
-        title: `${varName} = ${p.answer} — 이름표 장부에 직접`,
-        code: [`let ${varName} = ${p.answer}`],
-        steps: [{ line: 0, stack: [{ name: 'main', slots: [{ name: varName, value: p.answer }] }], heap: {}, note: `이런 <b>작은 값</b>(원시값)은 변수 ${varName}의 <b>이름표 장부 칸에 직접</b> 산다. <b>값 메모리(힙)</b>는 큰 묶음(객체·배열)용 — 뒤 강의.` }],
-      }))
-    }
-    sec.querySelector('[data-m="drill"]').append(Drill({ problems: [p], hideHead: true, onSolved: () => { markPractice(l.id); revealMem() } }))
-    const back = sec.querySelector('[data-back]')
-    if (back) back.onclick = () => go(l.base)
-    const prev = sec.querySelector('[data-prev]')
-    if (prev && l.idx > 0) prev.onclick = () => go(`${l.base}-${num - 1}`)
-    const next = sec.querySelector('[data-next]')
-    if (next && l.idx < total - 1) next.onclick = () => go(`${l.base}-${num + 1}`)
     return sec
   }
 

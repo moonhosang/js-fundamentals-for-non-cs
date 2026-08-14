@@ -154,20 +154,5 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
   }
 
-  // 유형 드릴 ×10 — 고르기·바꾸기·스타일·만들기·붙이기·이벤트. 목표에서 도출(답 노출 없음).
-  window.Practices[9] = {
-    pattern: '유형: 목표 출력이 나오도록 빈칸을 채워 ▶확인 (요소 만들기·글자/스타일 바꾸기·붙이기·클릭)',
-    problems: [
-      { label: '글자 넣기', ask: 'el의 글자를 "안녕"으로 만들어 출력되게.', code: 'let el = document.createElement("div")\nel.textContent = "____"\nprint(el.textContent)', expect: '"안녕"', answer: '안녕', hint: 'textContent = "안녕"' },
-      { label: 'box 글자', ask: 'box(화면 영역)의 글자를 "완료"로 바꿔 출력되게.', code: 'box.textContent = "____"\nprint(box.textContent)', expect: '"완료"', answer: '완료', hint: 'box.textContent = "완료"' },
-      { label: '색 바꾸기', ask: 'el의 글자색을 "red"로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.style.color = "____"\nprint(el.style.color)', expect: '"red"', answer: 'red', hint: 'style.color = "red"' },
-      { label: '클래스', ask: 'el의 class 이름을 "on"으로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.className = "____"\nprint(el.className)', expect: '"on"', answer: 'on', hint: 'className = "on"' },
-      { label: '아이디', ask: 'el의 id를 "title"로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.id = "____"\nprint(el.id)', expect: '"title"', answer: 'title', hint: 'id = "title"' },
-      { label: '태그 이름', ask: 'tagName이 "BUTTON"(대문자!)이 되려면 어떤 태그로 만들까?', code: 'let el = document.createElement("____")\nprint(el.tagName)', expect: '"BUTTON"', answer: 'button', hint: 'tagName은 항상 대문자로 나온다' },
-      { label: '붙이기', ask: 'c를 box2 안에 붙여 자식 1개가 되게 — 무슨 함수?', code: 'let box2 = document.createElement("div")\nlet c = document.createElement("span")\nbox2.____(c)\nprint(box2.children.length)', expect: '1', answer: 'append', hint: 'box2.append(c)' },
-      { label: '클릭 실행', ask: '버튼을 눌러 n이 1이 되게 — 버튼을 누르는 함수는?', code: 'let n = 0\nlet btn = document.createElement("button")\nbtn.addEventListener("click", function () { n = 1 })\nbtn.____()\nprint(n)', expect: '1', answer: 'click', hint: 'btn.click() 이 클릭을 흉내낸다' },
-      { label: '숫자→글자', ask: '화면 글자를 "90점"으로 만들려면 숫자 자리에 무엇?', code: 'let el = document.createElement("div")\nel.textContent = ____ + "점"\nprint(el.textContent)', expect: '"90점"', answer: '90', hint: '숫자 90은 자동으로 문자가 된다' },
-      { label: '이벤트 종류', ask: '"클릭" 이벤트를 듣게 하려면 첫 칸에 무슨 이름?', code: 'let ok = 0\nlet btn = document.createElement("button")\nbtn.addEventListener("____", function () { ok = 1 })\nbtn.click()\nprint(ok)', expect: '1', answer: 'click', hint: 'addEventListener("click", ...)' },
-    ],
-  }
+  // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
 })()
