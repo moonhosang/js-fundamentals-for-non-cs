@@ -303,4 +303,16 @@
       { label: '재대입 고아', ask: 'x를 새 객체로 바꾸면 옛 것은 고아. 지금 x.n(2)을 꺼내려면?', code: 'let x = { n: 1 }\nx = { n: 2 }\nprint(x.____)', expect: '2', answer: 'n', hint: 'x는 이제 {n:2}' },
     ],
   }
+
+  // ── 🧬 클래스(class) : 인스턴스 독립·메서드+조건·상속·instanceof ──
+  H['class'] = {
+    pattern: '🔴 어려움 · 인스턴스 독립·메서드+조건·extends 상속·instanceof',
+    problems: [
+      { label: '인스턴스 독립', ask: 'a·b는 각자 다른 객체. a.n=9로 바꿔도 b.n은? 빈칸에 n', code: 'class C { constructor() { this.n = 0 } }\nlet a = new C()\nlet b = new C()\na.n = 9\nprint(b.____)', expect: '0', answer: 'n', hint: '각자 힙 객체 → b는 0' },
+      { label: '메서드+조건', ask: 'new P(15).grade()가 "청소년"이 되게 — else 쪽을 채워라.', code: 'class P { constructor(a) { this.age = a } grade() { return this.age >= 19 ? "성인" : "____" } }\nprint(new P(15).grade())', expect: '"청소년"', answer: '청소년', hint: '15 < 19 → else' },
+      { label: '상속(extends)', ask: 'B는 A를 물려받는다. new B()가 A의 hi()를 쓰게 — 메서드 이름?', code: 'class A { hi() { return "A" } }\nclass B extends A {}\nprint(new B().____())', expect: '"A"', answer: 'hi', hint: '물려받은 hi()' },
+      { label: '인스턴스 배열', ask: '두 번째 인스턴스의 이름("나")을 꺼내려면 어떤 속성?', code: 'class D { constructor(n) { this.name = n } }\nlet ds = [new D("가"), new D("나")]\nprint(ds[1].____)', expect: '"나"', answer: 'name', hint: 'ds[1].name' },
+      { label: 'instanceof', ask: 'c가 C의 인스턴스인지 확인해 true가 나오게 — 무슨 연산자?', code: 'class C {}\nlet c = new C()\nprint(c ____ C)', expect: 'true', answer: 'instanceof', hint: 'c instanceof C' },
+    ],
+  }
 })()

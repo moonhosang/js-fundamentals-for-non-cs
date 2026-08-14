@@ -303,4 +303,16 @@
       { label: '큰 데이터 비우기', ask: 'big을 GC 대상으로 만들려면 뭘 담을까?', code: 'let big = { data: 1 }\nbig = ____\nprint(big)', expect: 'null', answer: 'null', hint: 'null' },
     ],
   }
+
+  // ── 🧬 클래스(class) : 틀 만들고 new 로 찍어 속성 꺼내기 ──
+  E['class'] = {
+    pattern: '🟢 쉬움 · constructor·this·new 로 인스턴스 만들고 속성 꺼내기',
+    problems: [
+      { label: '인스턴스 속성', ask: 'new C().n 이 5가 되게 this.n에 담을 값은?', code: 'class C { constructor() { this.n = ____ } }\nprint(new C().n)', expect: '5', answer: '5', hint: 'this.n = 5' },
+      { label: '생성자 인수', ask: '이름을 넘겨 new Dog().name이 "콩이"가 되게.', code: 'class Dog { constructor(name) { this.name = name } }\nprint(new Dog("____").name)', expect: '"콩이"', answer: '콩이', hint: 'new Dog("콩이")' },
+      { label: 'new 키워드', ask: '인스턴스를 만드는 키워드는? 빈칸을 채워라.', code: 'class C { constructor() { this.v = 7 } }\nlet c = ____ C()\nprint(c.v)', expect: '7', answer: 'new', hint: 'new C()' },
+      { label: 'this 속성', ask: 'new P(24)의 나이를 꺼내려면 어떤 속성?', code: 'class P { constructor(a) { this.age = a } }\nprint(new P(24).____)', expect: '24', answer: 'age', hint: '.age' },
+      { label: '기본값', ask: 'c의 hp(100)를 꺼내려면 어떤 속성?', code: 'class C { constructor() { this.hp = 100 } }\nlet c = new C()\nprint(c.____)', expect: '100', answer: 'hp', hint: 'c.hp' },
+    ],
+  }
 })()

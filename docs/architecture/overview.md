@@ -28,10 +28,12 @@ src/
    ├─ arrays.js            # 6강 배열
    ├─ loops.js             # 7강 반복과 map (for·forEach·map·filter·reduce)
    ├─ objects.js           # 8강 객체 ({ key: value }·점/대괄호·중첩·메서드)
+   ├─ classes.js           # 클래스 (선택 심화 · 프로토타입 문법설탕)
    ├─ dom.js               # 9강 화면 조작 (querySelector·textContent·이벤트)
    ├─ capstone.js          # 10강 실전 캡스톤 (디지털 명함 카드 생성기)
    ├─ memory-basics.js     # 메모리 기초(M1~M7) + 객체 그래프 챕터(G1~G4)
    └─ memory-advanced.js   # 메모리 심화 (콜스택·클로저·GC)
+   (드릴은 개념 파일이 아니라 난이도별 파일에: src/drills/{easy,normal,hard}.js — window.Drills, ADR 0008)
 ```
 
 ## 로드 순서 (index.html)

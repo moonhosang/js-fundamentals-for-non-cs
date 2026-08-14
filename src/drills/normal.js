@@ -303,4 +303,16 @@
       { label: '노드 비우기', ask: 'node를 GC 대상으로 만들려면 뭘 담을까?', code: 'let node = { v: 7 }\nnode = ____\nprint(node)', expect: 'null', answer: 'null', hint: 'null' },
     ],
   }
+
+  // ── 🧬 클래스(class) : 메서드·this·여러 인수·속성 변경 ──
+  N['class'] = {
+    pattern: '🟡 보통 · 메서드 호출·this로 자기 속성·여러 인수·인스턴스 변경',
+    problems: [
+      { label: '메서드 호출', ask: 'new Dog()의 bark를 불러 "멍"이 나오게 — 메서드 이름?', code: 'class Dog { bark() { return "멍" } }\nprint(new Dog().____())', expect: '"멍"', answer: 'bark', hint: '.bark()' },
+      { label: 'this 쓰는 메서드', ask: 'hi()가 "hi z"를 돌려주게 — 메서드 이름?', code: 'class P { constructor(n) { this.name = n } hi() { return "hi " + this.name } }\nprint(new P("z").____())', expect: '"hi z"', answer: 'hi', hint: '.hi()' },
+      { label: '속성 변경', ask: 'c.hp를 50으로 바꿔 출력되게.', code: 'class C { constructor() { this.hp = 100 } }\nlet c = new C()\nc.hp = ____\nprint(c.hp)', expect: '50', answer: '50', hint: 'c.hp = 50' },
+      { label: '두 인수', ask: 'new Pt(2,3)의 y(3)를 꺼내려면 어떤 속성?', code: 'class Pt { constructor(x, y) { this.x = x; this.y = y } }\nprint(new Pt(2, 3).____)', expect: '3', answer: 'y', hint: '.y' },
+      { label: '계산 메서드', ask: 'new Box(5)의 값을 2배로 돌려주는 메서드는?', code: 'class Box { constructor(n) { this.n = n } dbl() { return this.n * 2 } }\nprint(new Box(5).____())', expect: '10', answer: 'dbl', hint: '.dbl()' },
+    ],
+  }
 })()
