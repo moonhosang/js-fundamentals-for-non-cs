@@ -24,6 +24,7 @@ src/
    ├─ calc-strings.js      # 2강 계산과 문자열
    ├─ expressions.js       # 3강 표현식 (3-1…3-6 단계)
    ├─ conditions.js        # 4강 조건
+   ├─ functions.js         # 5강 함수
    ├─ arrays.js            # 6강 배열
    ├─ memory-basics.js     # 메모리 기초(M1~M7) + 객체 그래프 챕터(G1~G4)
    └─ memory-advanced.js   # 메모리 심화 (콜스택·클로저·GC)

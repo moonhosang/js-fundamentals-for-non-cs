@@ -1,4 +1,4 @@
-// 4강 · 배열 (만들기 · 인덱스 · length · push · 힙)  ── design-principles 규범
+// 6강 · 배열 (만들기 · 인덱스 · length · push · 힙)  ── design-principles 규범
 // 오해: 인덱스는 1부터?(0부터!) · arr[length]는 마지막?(undefined) · 배열은 스택?(힙·참조)
 // 왜:  0-based=시작에서 몇 칸 떨어졌나 · length=개수, 마지막 인덱스=length-1
 // 대비: arr[0](첫째) vs arr[length-1](마지막) · push(원본 바뀜) vs 새 배열
