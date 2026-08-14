@@ -219,4 +219,88 @@
       { label: '0번 수정', ask: 'double0은 받은 배열의 0번을 2배로. arr[0]이 바뀌게 하려면?', code: 'function double0(a){ a[0] = a[0] * 2 }\nlet arr = [5, 6]\ndouble0(____)\nprint(arr[0])', expect: '10', answer: 'arr', hint: 'arr을 넘긴다' },
     ],
   }
+
+  // ── 🕸️ G1 그래프(graph) : 화살표 경로 따라가기 ──
+  E['graph'] = {
+    pattern: '🟢 쉬움 · 화살표(참조)를 따라 경로로 값에 닿기',
+    problems: [
+      { label: 'me.friend로 바꾸면?', ask: 'me.friend는 효니를 가리킨다. me.friend.hair를 "숏컷"으로 바꾸면 효니 본인은? 빈칸에 me.friend를 넣고 ▶확인', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\n____.hair = "숏컷"\nprint(hyoni.hair)', expect: '"숏컷"', answer: 'me.friend', hint: 'me.friend = 효니(같은 사람)' },
+      { label: '화살표 따라', ask: 'a.next 안의 값 7을 꺼내려면 어떤 속성?', code: 'let a = { next: { val: 7 } }\nprint(a.next.____)', expect: '7', answer: 'val', hint: 'a.next.val' },
+      { label: 'y.ref로 바꾸면?', ask: 'y.ref는 x를 가리킨다. y.ref.n을 9로 바꾸면 x.n은? 빈칸에 y.ref를 넣고 ▶확인', code: 'let x = { n: 1 }\nlet y = { ref: x }\n____.n = 9\nprint(x.n)', expect: '9', answer: 'y.ref', hint: 'y.ref = x(같은 객체)' },
+      { label: '리더 이름', ask: 'team.leader(=p)의 이름을 꺼내려면?', code: 'let p = { name: "김" }\nlet team = { leader: p }\nprint(team.leader.____)', expect: '"김"', answer: 'name', hint: '.name' },
+      { label: '2중 중첩', ask: '2중 중첩 안의 v(3)를 꺼내려면?', code: 'let root = { child: { child: { v: 3 } } }\nprint(root.child.child.____)', expect: '3', answer: 'v', hint: '.v' },
+    ],
+  }
+
+  // ── 🕸️ G2 친구 목록(friends) : 배열 안 사람 객체 ──
+  E['friends'] = {
+    pattern: '🟢 쉬움 · 배열 안 사람 객체에 닿는 경로',
+    problems: [
+      { label: 'list[0]으로 바꾸면?', ask: 'list[0]은 minji와 같은 객체다. list[0].name을 "X"로 바꾸면 minji.name은? 빈칸에 list[0]을 넣고 ▶확인', code: 'let minji = { name: "민지" }\nlet list = [minji]\n____.name = "X"\nprint(minji.name)', expect: '"X"', answer: 'list[0]', hint: 'list[0] = minji(같은 객체)' },
+      { label: '두 번째 나이', ask: 'people의 두 번째 사람 나이(30)를 꺼내려면?', code: 'let people = [{ age: 20 }, { age: 30 }]\nprint(people[1].____)', expect: '30', answer: 'age', hint: '.age' },
+      { label: 'arr[0]으로 바꾸면?', ask: 'arr[0]은 a와 같은 객체다. arr[0].hp를 50으로 바꾸면 a.hp는? 빈칸에 arr[0]을 넣고 ▶확인', code: 'let a = { hp: 100 }\nlet arr = [a]\n____.hp = 50\nprint(a.hp)', expect: '50', answer: 'arr[0]', hint: 'arr[0] = a(같은 객체)' },
+      { label: 'id 찾기', ask: 'id가 2인 사람은 몇 번째? (0부터)', code: 'let users = [{ id: 1 }, { id: 2 }]\nprint(users[____].id)', expect: '2', answer: '1', hint: '두 번째 = 1' },
+      { label: '항목', ask: 'cart 0번 객체의 item을 꺼내려면?', code: 'let cart = [{ item: "빵" }]\nprint(cart[0].____)', expect: '"빵"', answer: 'item', hint: '.item' },
+    ],
+  }
+
+  // ── 🕸️ G3 계통도(family) : 트리 경로 ──
+  E['family'] = {
+    pattern: '🟢 쉬움 · 트리에서 원하는 사람/값에 닿는 경로',
+    problems: [
+      { label: '할머니', ask: 'me → 엄마 → 할머니. 할머니 이름에 닿으려면 me.parent 다음 어떤 속성?', code: 'let grandma = { name: "할머니" }\nlet mom = { parent: grandma }\nlet me = { parent: mom }\nprint(me.parent.____.name)', expect: '"할머니"', answer: 'parent', hint: '엄마의 parent = 할머니' },
+      { label: '손자', ask: '2대 아래 손자 이름을 꺼내려면?', code: 'let a = { child: { child: { name: "손자" } } }\nprint(a.child.child.____)', expect: '"손자"', answer: 'name', hint: '.name' },
+      { label: '왼쪽', ask: 'root의 왼쪽(left) 안 val을 꺼내려면 어떤 속성?', code: 'let root = { left: { val: 5 } }\nprint(root.____.val)', expect: '5', answer: 'left', hint: '.left' },
+      { label: '엄마 이름', ask: 'me.mom의 이름을 꺼내려면?', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.____)', expect: '"엄마"', answer: 'name', hint: '.name' },
+      { label: '깊은 데이터', ask: 'tree.node 다음 한 단계 더 들어가 data에 닿으려면?', code: 'let tree = { node: { node: { data: 7 } } }\nprint(tree.node.____.data)', expect: '7', answer: 'node', hint: 'node를 한 번 더' },
+    ],
+  }
+
+  // ── 🕸️ G4 순환(cycle) : 서로 가리켜도 경로로 도달 ──
+  E['cycle'] = {
+    pattern: '🟢 쉬움 · 순환(서로 가리킴)에서도 경로를 따라가면 도달',
+    problems: [
+      { label: '왕복', ask: 'a.to(=b)의 val을 꺼내려면?', code: 'let a = {}\nlet b = {}\na.to = b\nb.to = a\nb.val = 9\nprint(a.to.____)', expect: '9', answer: 'val', hint: 'a.to = b' },
+      { label: '서로 가리킴', ask: 'x.peer(=y)의 id를 꺼내려면?', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.peer = y\ny.peer = x\nprint(x.peer.____)', expect: '2', answer: 'id', hint: 'x.peer = y' },
+      { label: '자기 순환', ask: 'node.self(=자기 자신)의 v를 꺼내려면?', code: 'let node = {}\nnode.self = node\nnode.v = 7\nprint(node.self.____)', expect: '7', answer: 'v', hint: 'self = node' },
+      { label: '앞뒤 연결', ask: 'b.back(=a)의 n을 꺼내려면?', code: 'let a = { n: 3 }\nlet b = { back: a }\na.fwd = b\nprint(b.back.____)', expect: '3', answer: 'n', hint: 'b.back = a' },
+      { label: '큐 이름', ask: 'p.q(=q)의 name을 꺼내려면?', code: 'let p = {}\nlet q = {}\np.q = q\nq.p = p\nq.name = "큐"\nprint(p.q.____)', expect: '"큐"', answer: 'name', hint: 'p.q = q' },
+    ],
+  }
+
+  // ── 🧠 콜 스택(callstack) : 함수가 함수를 부르는 사슬 ──
+  E['callstack'] = {
+    pattern: '🟢 쉬움 · 함수가 함수를 부를 때 안쪽 반환을 도출',
+    problems: [
+      { label: '2배 사슬', ask: 'a는 b()의 2배를 돌려준다. a()가 10이 되려면 b는 얼마를 돌려줘야?', code: 'function a() { return b() * 2 }\nfunction b() { return ____ }\nprint(a())', expect: '10', answer: '5', hint: '10의 절반' },
+      { label: '+1 사슬', ask: 'outer는 inner()+1을 돌려준다. outer()가 10이 되려면 inner는?', code: 'function outer() { return inner() + 1 }\nfunction inner() { return ____ }\nprint(outer())', expect: '10', answer: '9', hint: '10 - 1' },
+      { label: '세금', ask: 'tax(100)이 110이 되게 — 세율은?', code: 'function tax(p) { return p + p * ____ }\nprint(tax(100))', expect: '110', answer: '0.1', hint: '세금 10 = 100 * ?' },
+      { label: '그대로 전달', ask: 'a는 b()를 그대로 돌려준다. a()가 7이 되려면 b는?', code: 'function a() { return b() }\nfunction b() { return ____ }\nprint(a())', expect: '7', answer: '7', hint: 'b가 7' },
+      { label: '더하는 사슬', ask: 'f는 g()에 얼마를 더해 5가 되게? (g는 4)', code: 'function f() { return g() + ____ }\nfunction g() { return 4 }\nprint(f())', expect: '5', answer: '1', hint: '4 + 1' },
+    ],
+  }
+
+  // ── 🧠 클로저(closure) : 안쪽 함수가 붙잡은 값 ──
+  E['closure'] = {
+    pattern: '🟢 쉬움 · 안쪽 함수가 바깥 값을 붙잡아 쓴다',
+    problems: [
+      { label: '붙잡은 값', ask: 'make 안 c(100)를 안쪽 함수가 붙잡는다. get()이 70이 되려면 얼마를 빼야?', code: 'function make() { let c = 100; return function () { return c - ____ } }\nlet get = make()\nprint(get())', expect: '70', answer: '30', hint: '100 - 70' },
+      { label: '카운터', ask: 'n은 호출 사이 기억된다. next()를 세 번 불러 3이 나오려면 매번 얼마씩?', code: 'function counter() { let n = 0; return function () { n = n + ____; return n } }\nlet next = counter()\nnext()\nnext()\nprint(next())', expect: '3', answer: '1', hint: '1씩 → 1,2,3' },
+      { label: '숨은 잔액', ask: 'bank의 money(100)를 그대로 돌려주게 하려면 뭘 더할까? (그대로)', code: 'function bank() { let money = 100; return function () { return money + ____ } }\nlet balance = bank()\nprint(balance())', expect: '100', answer: '0', hint: '더 안 더함 = 0' },
+      { label: '붙잡아 더하기', ask: 'x(5)를 붙잡아 그대로 돌려주게 하려면 뭘 더할까?', code: 'function make() { let x = 5; return function () { return x + ____ } }\nprint(make()())', expect: '5', answer: '0', hint: '5 + 0' },
+      { label: '붙잡아 곱하기', ask: 'n(10)을 붙잡아 20을 돌려주게 하려면 몇을 곱할까?', code: 'function make() { let n = 10; return function () { return n * ____ } }\nprint(make()())', expect: '20', answer: '2', hint: '10 * 2' },
+    ],
+  }
+
+  // ── 🧠 가비지 컬렉션(gc) : 참조를 끊으면 치워진다 ──
+  E['gc'] = {
+    pattern: '🟢 쉬움 · 참조를 끊거나(=null) 남은 참조로 접근하기',
+    problems: [
+      { label: 'null로 끊기', ask: '큰 객체 a를 더 안 써서 GC가 치우게 — 참조를 끊으려면 뭘 담을까?', code: 'let a = { big: "data" }\na = ____\nprint(a)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
+      { label: '다른 참조', ask: 'data=null이어도 ref가 아직 가리켜 객체는 산다. ref로 v를 꺼내려면?', code: 'let data = { v: 1 }\nlet ref = data\ndata = null\nprint(ref.____)', expect: '1', answer: 'v', hint: 'ref.v' },
+      { label: '고아 만들기', ask: 'x가 가리키던 객체를 고아로 만들려면(참조 끊기) x에 뭘 담을까?', code: 'let x = { n: 5 }\nx = ____\nprint(x)', expect: 'null', answer: 'null', hint: 'null' },
+      { label: '원본 끊어도', ask: 'o=null이어도 r이 가리켜 산다. r로 v(9)를 꺼내려면?', code: 'let o = { v: 9 }\nlet r = o\no = null\nprint(r.____)', expect: '9', answer: 'v', hint: 'r.v' },
+      { label: '큰 데이터 비우기', ask: 'big을 GC 대상으로 만들려면 뭘 담을까?', code: 'let big = { data: 1 }\nbig = ____\nprint(big)', expect: 'null', answer: 'null', hint: 'null' },
+    ],
+  }
 })()

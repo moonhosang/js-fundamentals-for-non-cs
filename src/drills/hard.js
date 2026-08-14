@@ -219,4 +219,88 @@
       { label: '비우기', ask: 'clr은 받은 배열을 비운다. arr의 개수(0)를 구하려면?', code: 'function clr(a) { a.length = 0 }\nlet arr = [1, 2, 3]\nclr(arr)\nprint(arr.____)', expect: '0', answer: 'length', hint: 'arr.length' },
     ],
   }
+
+  // ── 🕸️ G1 그래프(graph) : 공유 노드·긴 경로·배열+객체 ──
+  H['graph'] = {
+    pattern: '🔴 어려움 · 두 갈래가 한 노드를 공유·깊은 경로·경로로 변경',
+    problems: [
+      { label: '공유 노드', ask: 'me.f는 h. me.f.hair를 "숏"으로 바꾸면 h.hair는? 빈칸에 hair', code: 'let h = { hair: "긴" }\nlet me = { f: h }\nme.f.hair = "숏"\nprint(h.____)', expect: '"숏"', answer: 'hair', hint: 'me.f = h(같은 노드)' },
+      { label: '두 갈래 한 노드', ask: 'a.x와 b.y가 같은 n을 가리킨다. a.x.v=9 후 b.y.v는? 빈칸에 v', code: 'let n = { v: 1 }\nlet a = { x: n }\nlet b = { y: n }\na.x.v = 9\nprint(b.y.____)', expect: '9', answer: 'v', hint: 'a.x·b.y 같은 노드' },
+      { label: '4단계 경로', ask: 'r.c.c.c.v(7)에 닿으려면 마지막 속성?', code: 'let r = { c: { c: { c: { v: 7 } } } }\nprint(r.c.c.c.____)', expect: '7', answer: 'v', hint: 'r.c.c.c.v' },
+      { label: '경로로 변경', ask: 'y.ref는 x. y.ref.n=5 후 x.n은? 빈칸에 n', code: 'let x = { n: 1 }\nlet y = { ref: x }\ny.ref.n = 5\nprint(x.____)', expect: '5', answer: 'n', hint: 'y.ref = x' },
+      { label: '배열+객체 경로', ask: 'g.list[1].v(2)에 닿으려면 마지막 속성?', code: 'let g = { list: [{ v: 1 }, { v: 2 }] }\nprint(g.list[1].____)', expect: '2', answer: 'v', hint: 'g.list[1].v' },
+    ],
+  }
+
+  // ── 🕸️ G2 친구 목록(friends) : 공유 변경·map·filter ──
+  H['friends'] = {
+    pattern: '🔴 어려움 · 배열 속 객체 공유 변경·map·filter로 집계',
+    problems: [
+      { label: '공유 변경', ask: 'arr[0]은 a. arr[0].hp=50 후 a.hp는? 빈칸에 hp', code: 'let a = { hp: 100 }\nlet arr = [a]\narr[0].hp = 50\nprint(a.____)', expect: '50', answer: 'hp', hint: 'arr[0] = a' },
+      { label: '이름 바꿔도', ask: 'list[0]은 m. list[0].name="X" 후 m.name은? 빈칸에 name', code: 'let m = { name: "민지" }\nlet list = [m]\nlist[0].name = "X"\nprint(m.____)', expect: '"X"', answer: 'name', hint: 'list[0] = m' },
+      { label: 'map으로 나이', ask: '나이만 뽑은 배열의 개수(2)를 구하려면?', code: 'let ppl = [{ age: 20 }, { age: 30 }]\nprint(ppl.map(p => p.age).____)', expect: '2', answer: 'length', hint: 'map 결과의 .length' },
+      { label: 'filter로 세기', ask: '25살 초과가 몇 명(1)인지 세려면 filter 뒤에?', code: 'let ppl = [{ age: 20 }, { age: 30 }]\nprint(ppl.filter(p => p.age > 25).____)', expect: '1', answer: 'length', hint: 'filter 결과의 .length' },
+      { label: '중첩 배열', ask: 'g.members[0].n("가")에 닿으려면 마지막 속성?', code: 'let g = { members: [{ n: "가" }] }\nprint(g.members[0].____)', expect: '"가"', answer: 'n', hint: 'g.members[0].n' },
+    ],
+  }
+
+  // ── 🕸️ G3 계통도(family) : 3대·좌우·부모 공유 ──
+  H['family'] = {
+    pattern: '🔴 어려움 · 3대 경로·좌우 자식·부모 노드 공유',
+    problems: [
+      { label: '3대', ask: 'me→엄마→할머니. 할머니 이름에 닿으려면 me.parent.parent 다음?', code: 'let g = { name: "할" }\nlet m = { parent: g }\nlet me = { parent: m }\nprint(me.parent.parent.____)', expect: '"할"', answer: 'name', hint: 'me.parent.parent.name' },
+      { label: '깊은 트리', ask: 't.l.l.l.v(7)에 닿으려면 마지막 속성?', code: 'let t = { l: { l: { l: { v: 7 } } } }\nprint(t.l.l.l.____)', expect: '7', answer: 'v', hint: 't.l.l.l.v' },
+      { label: '오른쪽 값', ask: 'r.right.v(2)를 꺼내려면 마지막 속성?', code: 'let r = { left: { v: 1 }, right: { v: 2 } }\nprint(r.right.____)', expect: '2', answer: 'v', hint: 'r.right.v' },
+      { label: '부모 공유', ask: 'a.parent와 b.parent가 같은 dad. a.parent.name="X" 후 b.parent.name은? 빈칸에 name', code: 'let dad = { name: "아빠" }\nlet a = { parent: dad }\nlet b = { parent: dad }\na.parent.name = "X"\nprint(b.parent.____)', expect: '"X"', answer: 'name', hint: '같은 부모 노드' },
+      { label: '자식 배열', ask: 'p.kids[1].name("둘")에 닿으려면 마지막 속성?', code: 'let p = { kids: [{ name: "첫" }, { name: "둘" }] }\nprint(p.kids[1].____)', expect: '"둘"', answer: 'name', hint: 'p.kids[1].name' },
+    ],
+  }
+
+  // ── 🕸️ G4 순환(cycle) : 두 단계 순환·순환 변경 ──
+  H['cycle'] = {
+    pattern: '🔴 어려움 · 순환을 두 단계 따라가기·순환 경로로 변경',
+    problems: [
+      { label: '왕복 두 단계', ask: 'a.to=b, b.to=a. b.to.v(=a.v=1)를 꺼내려면 마지막 속성?', code: 'let a = {}\nlet b = {}\na.to = b\nb.to = a\na.v = 1\nprint(b.to.____)', expect: '1', answer: 'v', hint: 'b.to = a' },
+      { label: '순환 변경', ask: 'x.ref=y, y.ref=x. y.ref.n=9 후 x.n은? 빈칸에 n', code: 'let x = { n: 1 }\nlet y = { ref: x }\nx.ref = y\ny.ref.n = 9\nprint(x.____)', expect: '9', answer: 'n', hint: 'y.ref = x' },
+      { label: '자기순환 두 번', ask: 'n.self=n. n.self.self.v(5)를 꺼내려면 마지막 속성?', code: 'let n = { v: 5 }\nn.self = n\nprint(n.self.self.____)', expect: '5', answer: 'v', hint: 'self.self도 n' },
+      { label: '3자 순환', ask: 'a.next=b, b.next=a. a.next.next(=a)의 id(1)를 꺼내려면?', code: 'let a = { id: 1 }\nlet b = { id: 2 }\na.next = b\nb.next = a\nprint(a.next.next.____)', expect: '1', answer: 'id', hint: 'a.next.next = a' },
+      { label: '서로 이름', ask: 'p.peer=q, q.peer=p. p.peer.peer(=p)의 name("P")을 꺼내려면?', code: 'let p = { name: "P" }\nlet q = { name: "Q" }\np.peer = q\nq.peer = p\nprint(p.peer.peer.____)', expect: '"P"', answer: 'name', hint: 'p.peer.peer = p' },
+    ],
+  }
+
+  // ── 🧠 콜 스택(callstack) : 깊은 사슬·지역 스코프·조기 반환 ──
+  H['callstack'] = {
+    pattern: '🔴 어려움 · 깊은 호출 사슬·사슬 속 지역변수·조기 반환',
+    problems: [
+      { label: '사슬 + 지역', ask: 'a는 지역 x(2)와 b()를 곱한다. a()가 10이 되려면 b는?', code: 'function a() { let x = 2; return b() * x }\nfunction b() { return ____ }\nprint(a())', expect: '10', answer: '5', hint: '5 * 2' },
+      { label: '조건 후 호출', ask: 'chk(1)은 b()를 부른다. 5가 되려면 b는?', code: 'function chk(n) { if (n > 0) return b(); return -1 }\nfunction b() { return ____ }\nprint(chk(1))', expect: '5', answer: '5', hint: 'b가 5' },
+      { label: '깊이 4', ask: 'a→b→c→d. a()가 8이 되려면 d는?', code: 'function a() { return b() }\nfunction b() { return c() }\nfunction c() { return d() }\nfunction d() { return ____ }\nprint(a())', expect: '8', answer: '8', hint: 'd가 8' },
+      { label: '중첩 2배', ask: 'd는 2배. d(d(?))가 12가 되려면 안쪽 인수는?', code: 'function d(n) { return n * 2 }\nprint(d(d(____)))', expect: '12', answer: '3', hint: '3→6→12' },
+      { label: '두 함수 합', ask: 'a()+b()+? 가 10이 되게 (a=3, b=4)', code: 'function a() { return 3 }\nfunction b() { return 4 }\nprint(a() + b() + ____)', expect: '10', answer: '3', hint: '3+4+3' },
+    ],
+  }
+
+  // ── 🧠 클로저(closure) : 인수 붙잡기·누적·독립 인스턴스 ──
+  H['closure'] = {
+    pattern: '🔴 어려움 · 안쪽 인수+붙잡은 값·누적·인스턴스는 독립',
+    problems: [
+      { label: '인수+붙잡기', ask: 'adder(5)의 5를 붙잡고 y도 받는다. add5(3)이 8이 되게 빈칸에 y', code: 'function adder(x) { return function (y) { return x + ____ } }\nlet add5 = adder(5)\nprint(add5(3))', expect: '8', answer: 'y', hint: '5 + 3' },
+      { label: '3회 누적', ask: 'next를 세 번 불러 3이 나오게 매번 얼마씩 더할까?', code: 'function c() { let n = 0; return function () { return n = n + ____ } }\nlet next = c()\nnext()\nnext()\nprint(next())', expect: '3', answer: '1', hint: '1,2,3' },
+      { label: '독립 인스턴스', ask: 'a·b는 별개 카운터. a를 두 번 불러도 b()는 1. b()+? 가 1이 되게 빈칸에 0', code: 'function c() { let n = 0; return function () { n++; return n } }\nlet a = c()\nlet b = c()\na()\na()\nprint(b() + ____)', expect: '1', answer: '0', hint: 'b는 a와 독립 → 1' },
+      { label: '곱셈 팩토리', ask: 'mult(3)의 3을 붙잡는다. triple(4)가 12가 되게 빈칸에 n', code: 'function mult(n) { return function (x) { return x * ____ } }\nlet triple = mult(3)\nprint(triple(4))', expect: '12', answer: 'n', hint: 'x * n' },
+      { label: '누적 합', ask: 'add(10) 뒤 add(20)이 30이 되게 — 인수를 채워라.', code: 'function acc() { let sum = 0; return function (x) { sum = sum + x; return sum } }\nlet add = acc()\nadd(10)\nprint(add(____))', expect: '30', answer: '20', hint: '10 + 20' },
+    ],
+  }
+
+  // ── 🧠 가비지 컬렉션(gc) : 참조 유지 vs 끊김·재대입 고아 ──
+  H['gc'] = {
+    pattern: '🔴 어려움 · 참조가 남으면 산다·중첩 참조 유지·재대입 고아',
+    problems: [
+      { label: '한 참조 남으면', ask: 'a=null이어도 b가 가리켜 산다. b.v(1)를 꺼내려면?', code: 'let a = { v: 1 }\nlet b = a\na = null\nprint(b.____)', expect: '1', answer: 'v', hint: 'b.v' },
+      { label: '둘 중 하나만', ask: 'x·y가 o를 가리킨다. x=null이어도 y로 n(9)을 꺼내려면?', code: 'let o = { n: 9 }\nlet x = o\nlet y = o\nx = null\nprint(y.____)', expect: '9', answer: 'n', hint: 'y가 아직 가리킴' },
+      { label: '배열 요소 참조', ask: 'r이 arr[0]을 붙잡았다. arr=null이어도 r.v(5)를 꺼내려면?', code: 'let arr = [{ v: 5 }]\nlet r = arr[0]\narr = null\nprint(r.____)', expect: '5', answer: 'v', hint: 'r이 그 객체를 가리킴' },
+      { label: '중첩 유지', ask: 'c가 root.child를 붙잡았다. root=null이어도 c.v(3)를 꺼내려면?', code: 'let root = { child: { v: 3 } }\nlet c = root.child\nroot = null\nprint(c.____)', expect: '3', answer: 'v', hint: 'c가 자식을 가리킴' },
+      { label: '재대입 고아', ask: 'x를 새 객체로 바꾸면 옛 것은 고아. 지금 x.n(2)을 꺼내려면?', code: 'let x = { n: 1 }\nx = { n: 2 }\nprint(x.____)', expect: '2', answer: 'n', hint: 'x는 이제 {n:2}' },
+    ],
+  }
 })()
