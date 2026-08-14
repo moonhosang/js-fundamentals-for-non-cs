@@ -94,11 +94,11 @@
   const CHAPTERS = [
     { n: '1', title: '값·타입과 변수', items: [1, ...P(1)] },
     { tag: '🧠', title: '메모리 기초', optional: true, skipTo: 2, items: ['ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
-    { tag: '🕸️', title: '객체 그래프', optional: true, skipTo: 2, items: ['graph', 'friends', 'family', 'cycle'] },
+    { tag: '🕸️', title: '객체 그래프', optional: true, skipTo: 2, items: ['graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle')] },
     // 표현식(3강)은 개념 단계(3, 3-1~3-6) + 드릴(...P(3) = 3-7~). 조건은 4강으로.
     { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5)] },
     { n: '3', title: '여러 값과 반복', items: [6, ...P(6), 7, ...P(7), 8, ...P(8)] },
-    { tag: '🧠', title: '메모리 심화', optional: true, skipTo: 9, items: ['callstack', 'closure', 'gc'] },
+    { tag: '🧠', title: '메모리 심화', optional: true, skipTo: 9, items: ['callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
   ]
 

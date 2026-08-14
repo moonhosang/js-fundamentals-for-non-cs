@@ -212,4 +212,31 @@
     root.querySelector('[data-m="qzgc"]').append(Quiz({ q: '힙에 있던 객체를 <b>아무 변수도 안 가리키게</b> 되면?', options: ['영원히 남는다', '자동으로 치워진다 (GC)'], answer: 1, explain: '아무도 안 가리키는(도달 불가) 객체는 <b>가비지 컬렉터</b>가 자동으로 메모리에서 치운다.' }))
     wireGoto(root)
   }
+
+  // ══ 🧠 메모리 심화 실습 (드릴) ══════════════════════════════
+  window.Practices = window.Practices || {}
+  window.Practices['callstack'] = {
+    pattern: '유형: 함수가 함수를 부르면 프레임이 쌓인다 — return으로 값을 돌려준다',
+    problems: [
+      { label: '호출 사슬', ask: 'a가 b를 부르고, b가 42를 돌려주게.', code: 'function a() { return b() }\nfunction b() {\n  return ____\n}\nprint(a())', expect: '42', answer: '42', hint: 'b가 42 반환' },
+      { label: '안쪽 반환', ask: 'inner가 10을 돌려주게.', code: 'function outer() { return inner() }\nfunction inner() {\n  return ____\n}\nprint(outer())', expect: '10', answer: '10', hint: 'return 10' },
+      { label: '더해서 반환', ask: 'tax(100)=110이 되게 빈칸에 10.', code: 'function tax(p) {\n  return p + ____\n}\nprint(tax(100))', expect: '110', answer: '10', hint: '100+10' },
+    ],
+  }
+  window.Practices['closure'] = {
+    pattern: '유형: 안쪽 함수가 바깥 변수를 붙잡으면, 함수가 끝나도 그 값이 살아남는다',
+    problems: [
+      { label: '값 붙잡기', ask: 'make 안 c(5)를 안쪽 함수가 붙잡아 돌려주게. 빈칸에 5.', code: 'function make() {\n  let c = ____\n  return function () { return c }\n}\nlet get = make()\nprint(get())', expect: '5', answer: '5', hint: 'c가 클로저에 살아남음' },
+      { label: '카운터', ask: 'counter의 n을 +1씩. next() 두 번이면 2. 빈칸에 1.', code: 'function counter() {\n  let n = 0\n  return function () { n = n + ____; return n }\n}\nlet next = counter()\nnext()\nprint(next())', expect: '2', answer: '1', hint: 'n이 호출 사이 기억됨(1→2)' },
+      { label: '숨은 잔액', ask: 'bank의 money(100)를 안쪽 함수로 꺼내게. 빈칸에 100.', code: 'function bank() {\n  let money = ____\n  return function () { return money }\n}\nlet balance = bank()\nprint(balance())', expect: '100', answer: '100', hint: 'money가 살아남아 반환' },
+    ],
+  }
+  window.Practices['gc'] = {
+    pattern: '유형: 참조가 끊기면(아무도 안 가리키면) 대상은 GC로 치워진다',
+    problems: [
+      { label: 'null로 끊기', ask: '큰 객체 a를 더 안 쓰려면? 빈칸에 null(참조를 끊는다).', code: 'let a = { big: "data" }\na = ____\nprint(a)', expect: 'null', answer: 'null', hint: 'a = null로 참조 끊기' },
+      { label: '다른 참조 살아있음', ask: 'box=null이어도 ref가 아직 가리키면 객체는 산다. ref.v(1)+0. 빈칸에 0.', code: 'let box = { v: 1 }\nlet ref = box\nbox = null\nprint(ref.v + ____)', expect: '1', answer: '0', hint: 'ref가 아직 가리켜 살아있음' },
+      { label: '고아 객체', ask: 'x에 5를 넣고 x=null로 끊으면, 그 객체는 아무도 안 가리켜 GC 대상. 빈칸에 5.', code: 'let x = { n: ____ }\nx = null\nprint(x)', expect: 'null', answer: '5', hint: 'x는 null, 객체는 고아' },
+    ],
+  }
 })()
