@@ -79,6 +79,11 @@
   const practiceItemsFor = (base) => {
     const cfg = window.Practices && window.Practices[base]
     if (!cfg) return []
+    // 문자열 id 챕터(메모리·그래프·심화)는 '동일 유형 반복' → 한 페이지에 전부(stepped Drill).
+    // 숫자 강의(1~10강)는 문제별 페이지 유지(기본→유사, 점진). '동일 유형은 한 페이지, 난이도 점진은 분리'.
+    if (typeof base === 'string') {
+      return [{ id: base + '-drill', kind: 'practiceset', base, badge: '📝', title: 'Practice', subtitle: '동일 유형 ' + cfg.problems.length + '문제' }]
+    }
     const start = cfg.startAt || 1
     return cfg.problems.map((p, i) => ({
       id: `${base}-${start + i}`, kind: 'practice', base, idx: i,
@@ -106,11 +111,12 @@
   const hasContent = (id) => {
     const l = byId[id]
     if (!l) return false
-    if (kindOf(l) === 'practice') return !!(window.Practices && window.Practices[l.base])
+    if (kindOf(l) === 'practice' || kindOf(l) === 'practiceset') return !!(window.Practices && window.Practices[l.base])
     return !!(window.Lessons && window.Lessons[id])
   }
+  const isPracticeKind = (l) => kindOf(l) === 'practice' || kindOf(l) === 'practiceset'
   // 진도는 개념 강의에, 연습은 실습 문제에 집계.
-  const modeApplies = (modeKey, l) => (modeKey === 'practice' ? kindOf(l) === 'practice' : kindOf(l) === 'lesson')
+  const modeApplies = (modeKey, l) => (modeKey === 'practice' ? isPracticeKind(l) : kindOf(l) === 'lesson')
 
   // ── 저장소 헬퍼 ───────────────────────────────────────────
   const load = (k, fb) => { try { const v = localStorage.getItem(k); return v == null ? fb : v } catch { return fb } }
@@ -251,7 +257,7 @@
           // 체크박스: 개념 서브내비(step)만 빼고 항상 표시. 각 항목은 '제 종류'의 집계셋에 연결
           // (개념 강의 → 📖 진도 셋, 실습 문제 → ✏️ 연습 셋). 모드 탭은 진행률 분모만 바꾼다.
           if (!l.step) {
-            const isPr = kindOf(l) === 'practice'
+            const isPr = isPracticeKind(l)
             const itemSet = isPr ? state.practice : state.study
             const itemK = isPr ? 'donePractice' : 'doneStudy'
             const cb = document.createElement('input')
@@ -269,7 +275,7 @@
           const btn = document.createElement('button')
           // 하위 항목(부모-번호 꼴, 예: 3-1)이면 부모 아래로 들여쓴다. 개념 단계(lesson)와 드릴(practice)은 색으로 구분.
           const isSub = typeof id === 'string' && /-\d+$/.test(id) && byId[id.replace(/-\d+$/, '')]
-          const subCls = kindOf(l) === 'practice' ? ' toc-item-practice' : (isSub ? ' toc-item-substep' : '')
+          const subCls = isPracticeKind(l) ? ' toc-item-practice' : (isSub ? ' toc-item-substep' : '')
           btn.className = 'toc-item' + (id === state.currentId ? ' active' : '') + subCls
           const flag = hasContent(id) ? '' : '<span class="toc-flag" title="준비 중">🚧</span>'
           btn.innerHTML = `<span class="toc-item-title">${flag}${l.title}</span><span class="toc-item-sub">${l.subtitle}</span>`
@@ -312,6 +318,8 @@
       if (kindOf(l) === 'practice') {
         if (hasContent(l.id)) host.append(renderPracticeProblem(l))
         else host.append(renderComingSoon(l))
+      } else if (kindOf(l) === 'practiceset') {
+        host.append(renderDrillSet(l))
       } else if (hasContent(l.id)) {
         window.Lessons[l.id](host)
         // 번호 SSOT: 숫자 강의만 헤더 badge를 메타(l.badge='N강')로 강제 동기화 — 파일이 옛 번호여도 화면 정확.
@@ -339,6 +347,31 @@
     saveSet('donePractice', state.practice)
     renderProgress()
     renderToc()
+  }
+
+  // 실습 세트 페이지 — 동일 유형 문제를 '한 페이지에서 연속 반복'(stepped Drill).
+  // (점진 난이도면 페이지를 나누지만, 같은 유형 반복은 한 페이지가 낫다.)
+  function renderDrillSet(l) {
+    const cfg = window.Practices[l.base]
+    const base = byId[l.base]
+    const sec = document.createElement('section')
+    sec.innerHTML = `
+      <header class="lesson-header">
+        <span class="badge">📝 ${base ? base.badge : ''} · 실습</span>
+        <h2>${base ? base.title : ''} — 실습</h2>
+        <p>${cfg.pattern} · <b>동일 유형 ${cfg.problems.length}문제</b>를 한 페이지에서 (하나 풀면 다음이 열려요).</p>
+      </header>
+      <div class="practice-back"><button class="chip" data-back="${l.base}">← ${base ? base.title : '개념'} 다시 보기</button></div>
+      <div data-m="drill"></div>
+    `
+    const solved = new Set()
+    sec.querySelector('[data-m="drill"]').append(Drill({
+      hideHead: true, stepped: true, problems: cfg.problems,
+      onSolved: (i) => { solved.add(i); if (solved.size === cfg.problems.length) markPractice(l.id) },
+    }))
+    const back = sec.querySelector('[data-back]')
+    if (back) back.onclick = () => go(l.base)
+    return sec
   }
 
   // 단일 실습 문제 페이지 — 문제 하나 + 이전/다음 + 개념으로.
