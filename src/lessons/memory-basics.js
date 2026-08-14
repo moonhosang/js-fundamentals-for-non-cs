@@ -11,37 +11,65 @@
   }
 
   // ══ M1 · 메모리(RAM)란 ══════════════════════════════════════
-  // 📇 이름표 장부(이름→주소) + 🗄️ RAM 칸(주소:값, 이름 없음) — 변수명 공간과 메모리 공간을 분리해 보인다.
-  // "변수 이름이 메모리 칸 안에 저장된다"는 흔한 오해를 그림에서 차단.
+  // 📇 이름표 장부 = 단순 '사상(Map)' 구조(이름 → ●) ──화살표──▶ 🗄️ RAM 칸(주소:값).
+  // 변수 영역은 RAM 격자가 아니라 '이름→주소' 매핑일 뿐 — 실제 값은 RAM 칸에, 화살표로 연결.
   function buildNameMap(ledgerHead, ramHead, items, N) {
-    const map = document.createElement('div'); map.className = 'namemap'
-    const dots = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
+    const NS = 'http://www.w3.org/2000/svg'
+    const stage = document.createElement('div'); stage.className = 'namemap'
+    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'nm-arrows')
+    // 이름표 장부 (Map): 이름 → ●
     const ledger = document.createElement('div'); ledger.className = 'nm-ledger'
     ledger.innerHTML = `<div class="nm-head">${ledgerHead}</div>`
-    const chips = document.createElement('div'); chips.className = 'nm-chips'
-    items.forEach((it) => {
-      const ch = document.createElement('div'); ch.className = 'nm-chip'
-      ch.style.borderColor = it.c; ch.style.color = it.c
-      ch.innerHTML = `<b>${it.name}</b>${it.tag ? ` <small>${it.tag}</small>` : ''}<span class="nm-to">→</span><span class="nm-adr">${it.adr}</span>`
-      chips.append(ch)
+    const frame = document.createElement('div'); frame.className = 'nm-frame'
+    items.forEach((it, i) => {
+      const row = document.createElement('div'); row.className = 'nm-src'; row.dataset.k = i
+      row.innerHTML = `<span class="nm-name" style="color:${it.c}">${it.name}${it.tag ? ` <small>${it.tag}</small>` : ''}</span><span class="nm-dot" style="color:${it.c};background:${it.c}"></span>`
+      frame.append(row)
     })
-    ledger.append(chips); map.append(ledger)
-    const ramWrap = document.createElement('div'); ramWrap.className = 'nm-ram'
-    ramWrap.innerHTML = `<div class="nm-head">${ramHead}</div>`
-    const w = document.createElement('div'); w.className = 'ram-grid'
-    const byAt = {}; items.forEach((it) => { byAt[it.at] = it })
-    w.append(dots())
-    for (let i = 0; i < N; i++) {
-      const it = byAt[i]
-      if (it) {
-        const hi = document.createElement('div'); hi.className = 'ram-hi'
-        hi.innerHTML = `<span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${String(it.val).replace(/</g, '&lt;')}</span><span class="adr">${it.adr}</span>`
-        w.append(hi)
-      } else { const c = document.createElement('div'); c.className = 'ram-c'; w.append(c) }
+    ledger.append(frame)
+    // RAM 칸 (값만, 이름 없음)
+    const ram = document.createElement('div'); ram.className = 'nm-ram'
+    ram.innerHTML = `<div class="nm-head">${ramHead}</div>`
+    const grid = document.createElement('div'); grid.className = 'ram-grid'
+    const dots = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
+    const byAt = {}; items.forEach((it, i) => { byAt[it.at] = { it, i } })
+    grid.append(dots())
+    for (let j = 0; j < N; j++) {
+      const e = byAt[j]
+      if (e) {
+        const hi = document.createElement('div'); hi.className = 'ram-hi nm-dst'; hi.dataset.k = e.i
+        hi.innerHTML = `<span class="cell" style="border-color:${e.it.c};color:${e.it.c};background:${e.it.c}1a">${String(e.it.val).replace(/</g, '&lt;')}</span><span class="adr">${e.it.adr}</span>`
+        grid.append(hi)
+      } else { const c = document.createElement('div'); c.className = 'ram-c'; grid.append(c) }
     }
-    w.append(dots())
-    ramWrap.append(w); map.append(ramWrap)
-    return map
+    grid.append(dots())
+    ram.append(grid)
+    stage.append(ledger, ram, svg)
+    // 레이아웃 후 화살표 그리기 (장부 ● → RAM 칸)
+    const draw = () => {
+      const sb = stage.getBoundingClientRect(); if (!sb.width) return
+      while (svg.firstChild) svg.removeChild(svg.firstChild)
+      items.forEach((it, i) => {
+        const src = stage.querySelector(`.nm-src[data-k="${i}"] .nm-dot`)
+        const dst = stage.querySelector(`.nm-dst[data-k="${i}"] .cell`)
+        if (!src || !dst) return
+        const s = src.getBoundingClientRect(), d = dst.getBoundingClientRect()
+        const x1 = s.left + s.width / 2 - sb.left, y1 = s.top + s.height / 2 - sb.top
+        const x2 = d.left - sb.left - 3, y2 = d.top + d.height / 2 - sb.top
+        const mx = x1 + Math.max(24, (x2 - x1) * 0.5)
+        const p = document.createElementNS(NS, 'path')
+        p.setAttribute('d', `M ${x1} ${y1} C ${mx} ${y1}, ${x2 - 28} ${y2}, ${x2} ${y2}`)
+        p.setAttribute('stroke', it.c); p.setAttribute('fill', 'none'); p.setAttribute('stroke-width', '2'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('opacity', '0.85')
+        svg.append(p)
+        const h = document.createElementNS(NS, 'path')
+        h.setAttribute('d', `M ${x2} ${y2} l -7 -4 l 0 8 z`); h.setAttribute('fill', it.c)
+        svg.append(h)
+      })
+    }
+    if (window.ResizeObserver) { try { new ResizeObserver(draw).observe(stage) } catch (e) {} }
+    if (window.requestAnimationFrame) requestAnimationFrame(() => requestAnimationFrame(draw))
+    window.addEventListener('resize', draw)
+    return stage
   }
 
   window.Lessons['ram'] = function render(root) {
@@ -189,10 +217,10 @@
         '📇 이름표 장부 <small>— 변수명이 사는 곳 (이름 → 주소)</small>',
         '🗄️ RAM <small>— 값이 사는 물리 칸 (주소마다). 이름은 여기 없다!</small>',
         [
-          { name: 'age', val: '20', c: '#16a34a', adr: '#0042', at: 6 },
-          { name: 'done', val: 'true', c: '#0891b2', adr: '#0043', at: 19 },
-          { name: 'card', val: '{ name: "민지" }', c: '#6366f1', adr: '#0055', at: 38 },
-        ], 52,
+          { name: 'age', val: '20', c: '#16a34a', adr: '#0042', at: 3 },
+          { name: 'done', val: 'true', c: '#0891b2', adr: '#0043', at: 10 },
+          { name: 'card', val: '{ name: "민지" }', c: '#6366f1', adr: '#0055', at: 17 },
+        ], 24,
       ))
     }
     const g2 = root.querySelector('[data-m="letconst-ram"]')
@@ -201,9 +229,9 @@
         '📇 이름표 장부 <small>— 이름(+let/const) → 주소</small>',
         '🗄️ RAM <small>— 값 칸 (이름 없음)</small>',
         [
-          { name: '🏷️ score', tag: 'let', val: '20', c: '#16a34a', adr: '#0042', at: 6 },
-          { name: '🔒 PI', tag: 'const', val: '3.14', c: '#dc2626', adr: '#0043', at: 20 },
-        ], 30,
+          { name: '🏷️ score', tag: 'let', val: '20', c: '#16a34a', adr: '#0042', at: 4 },
+          { name: '🔒 PI', tag: 'const', val: '3.14', c: '#dc2626', adr: '#0043', at: 12 },
+        ], 22,
       ))
     }
     root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
