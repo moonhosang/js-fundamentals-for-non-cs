@@ -10,7 +10,7 @@
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(/^\d+$/.test(t) ? Number(t) : t) : (location.hash = '#' + t) }
   }
 
-  // ══ M1 · 메모리(RAM)란 ══════════════════════════════════════
+  // ══ M1 · 메모리(Memory)란 — 주로 RAM ═══════════════════════
   // 📇 이름표 장부 = 사상(Map): 이름(●) ──화살표──▶ 🗄️ RAM 칸(주소:값).
   // names: [{name, c, to(=cell id)}], cells: [{id, val, adr, at, c}]. 여러 이름이 한 셀을 가리키면 = 별칭.
   function buildNameMap(ledgerHead, ramHead, names, cells, N) {
@@ -73,13 +73,13 @@
     root.innerHTML = `
       <header class="lesson-header">
         <span class="badge">🧠 M1</span>
-        <h2>메모리(RAM) — 값이 잠깐 사는 작업 공간</h2>
-        <p>변수에 값을 담으면 그 값은 <b>어딘가에</b> 실제로 저장된다. 그 어딘가가 <b>메모리(RAM)</b>다. 스택·힙을 배우기 전에, 그 무대부터 본다.</p>
+        <h2>메모리(Memory) — 값이 잠깐 사는 작업 공간</h2>
+        <p>변수에 값을 담으면 그 값은 <b>어딘가에</b> 실제로 저장된다. 그 어딘가가 <b>메모리</b>다 — 프로그램이 도는 동안 값을 두는 곳. (그중 우리가 주로 쓰는 게 <b>RAM</b>.) 스택·힙을 배우기 전에, 그 무대부터 본다.</p>
       </header>
 
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
-        <p><b>RAM</b>(Random Access Memory)은 프로그램이 <b>값을 잠깐 적어두는</b> 아주 빠른 작업 공간이다.
+        <p><b>메모리</b>는 프로그램이 <b>값을 잠깐 적어두는</b> 아주 빠른 작업 공간이다. (우리가 주로 쓰는 종류가 <b>RAM</b> — Random Access Memory.)
         번호(<b>주소</b>)가 붙은 칸이 줄지어 있고, 변수는 그중 어떤 칸에 값을 적고 <b>이름표</b>를 붙인 것이다.</p>
       </div>
 
@@ -204,7 +204,7 @@
 
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
-        <p class="section-desc" style="margin-top:0">값은 <b>메모리(RAM)</b>의 <b>주소 붙은 칸</b>에 저장된다. 변수 = 그 칸에 값을 적고 이름표를 붙인 것.
+        <p class="section-desc" style="margin-top:0">값은 <b>메모리</b>(주로 RAM)의 <b>주소 붙은 칸</b>에 저장된다. 변수 = 그 칸에 값을 적고 이름표를 붙인 것.
         RAM은 빠르지만 <b>끄면 사라진다</b>. 이 RAM을 스택·힙 두 방식으로 나눠 쓴다.</p>
       </div>
 

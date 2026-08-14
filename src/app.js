@@ -9,7 +9,7 @@
   const LESSONS = [
     { id: 1, badge: '1강', title: '1강 · 변수', subtitle: '값에 이름 붙이기' },
     // 🧠 메모리 기초 (실습 없는 개념 챕터, RAM부터 바닥부터). 콜스택·클로저는 함수 필요 → 심화로.
-    { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(RAM)', subtitle: '값이 사는 물리 공간 · 주소 · 휘발성' },
+    { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(Memory)', subtitle: '값이 사는 공간 · 주소 · 휘발성 (주로 RAM)' },
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
     { id: 'heap', badge: '🧠 M3', title: 'M3 · 힙', subtitle: '창고 · 주소 · 왜 힙인가 · ❌스택' },
     { id: 'ref', badge: '🧠 M4', title: 'M4 · 값 복사 vs 참조', subtitle: '별칭 · "왜 obj도 바뀌지"' },
