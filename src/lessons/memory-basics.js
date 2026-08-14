@@ -857,8 +857,8 @@
       </div>
 
       <div class="concept">
-        <p class="concept-lead">🗺️ 타입 지도 — 복사(M4-1)냐 공유(M4-2)냐를 가른다</p>
-        <p class="section-desc" style="margin-top:0">JS의 값은 딱 <b>두 부류</b>다. 어느 부류냐가 복사/공유를 결정한다. (지금까지 배운 숫자·문자열·객체·배열이 다 여기 들어간다.)</p>
+        <p class="concept-lead">🔑 복제냐 참조냐 — 실전은 이게 전부 (그럼 무엇으로 예측하나?)</p>
+        <p class="section-desc" style="margin-top:0"><code>b = a</code>에서 "b를 바꾸면 a도 바뀌나?" — <b>복제(독립)냐 참조(공유)냐</b>가 실전에서 유일하게 중요한 물음이다. 그럼 <b>무엇으로 예측하나?</b> → <b>a에 든 값의 부류</b>. JS 값은 딱 <b>두 부류</b>고, 아래 지도가 답을 준다 — <b>라벨(원시/참조)은 예측 도구일 뿐, 주인공은 복제/참조</b>:</p>
         <ul class="section-list">
           <li><b>원시 타입(primitive) — 복사된다(독립·불변) · M4-1</b>:
             <code>숫자 number</code> · <code>문자열 string</code> · <code>참거짓 boolean</code> · <code>null</code>(비어있음을 <b>일부러</b> 넣음) · <code>undefined</code>(아직 값 없음) · <span style="opacity:.75">고급: <code>symbol</code> · <code>bigint</code>(아주 큰 정수)</span>.
