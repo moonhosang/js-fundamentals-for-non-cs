@@ -644,7 +644,7 @@
     code: ['let nick1 = "무지"', 'let nick2 = nick1      // 문자열도 복사', 'nick2 = "어피치"        // nick2만 바뀜'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }] }], heap: {}, note: 'nick1에 "무지".' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"무지"' }] }], heap: {}, note: '문자열 "무지"를 <b>복사</b>해 nick2에. 별개의 두 슬롯 — 숫자와 똑같다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"무지"' }] }], heap: {}, note: '문자열 "무지"를 <b>복사</b>해 nick2에. 별개의 두 슬롯 — 숫자와 똑같다.', engine: '실제 V8: 문자열은 값 메모리에 두고 nick1·nick2가 <b>같은 "무지"를 가리킴</b>(주소 복사·공유). 하지만 불변이라 복사와 100% 동일 — 아래 💡심화 참고.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"어피치"', bad: true }] }], heap: {}, note: 'nick2만 "어피치". <b>nick1은 그대로 "무지"</b> — 문자열도 <b>원시값</b>이라 복사(안 공유). "숫자만 복사"가 아니다.' },
     ],
   }
@@ -730,6 +730,20 @@
       <p class="section-desc" style="margin-bottom:6px">숫자만이 아니다 — <b>문자열·참거짓</b>도 원시값이라 똑같이 각자 복사:</p>
       <div class="card"><div class="file-label">🔬 문자열도 복사 — nick2 = nick1</div><div data-m="strcopy"></div></div>
 
+      <div class="card" style="border-style:dashed">
+        <div class="file-label">💡 심화(선택) — 사실 문자열은 '공유'되는데 왜 '복사'로 볼까 (개념 vs 실제 엔진)</div>
+        <p class="section-desc" style="margin-top:0">위 그림은 <b>개념 모델</b>(각자 자기 "무지"). 그런데 <b>실제 엔진(V8)</b>은 문자열을 값 메모리에 두고 <b>주소만 복사</b>해 <b>같은 "무지"를 공유</b>한다(매번 통째로 베끼면 낭비). 이 차이는 <b>이름표 장부와 값 메모리를 나눠 화살표로</b> 그려야 보인다:</p>
+        <div style="margin:12px 0 0">
+          <div style="font-size:12.5px;font-weight:700;opacity:.85;margin-bottom:6px">🧠 개념 모델 — 각자 자기 "무지" (복사·독립)</div>
+          <div data-m="strshare-c"></div>
+        </div>
+        <div style="margin:16px 0 0">
+          <div style="font-size:12.5px;font-weight:700;opacity:.85;margin-bottom:6px">⚙️ 실제 엔진(V8) — 같은 "무지"를 공유 (주소 복사 · 🔒 불변이라 안전)</div>
+          <div data-m="strshare-e"></div>
+        </div>
+        <p class="section-desc" style="margin:12px 0 0">🔑 공유하고 있어도 문자열은 <b>불변(🔒)</b> — <b>아무도 그 "무지"를 못 바꾼다</b>. <code>nick2 = "어피치"</code>는 nick2를 <b>다른 문자열로 재할당</b>할 뿐, 공유하던 "무지"엔 손도 못 댄다. 그래서 <b>공유든 복사든 결과가 100% 똑같다</b> → 우리는 그냥 <b>'복사'로 본다</b>. (객체는 <b>가변</b>이라 공유가 티 나서 위험 — 그게 M4-2.)</p>
+      </div>
+
       <h3 class="section-title">3단계 · 객체가 껴도 — 속성을 '꺼내면' 복사 (<code>let b = a.num</code>)</h3>
       <span class="learn-tag">📎 최대 함정: 객체째 담기(공유) ↔ 속성 꺼내기(복사) — 글자 하나(.num) 차이</span>
       <p class="section-desc"><code>let b = a</code>(객체째)와 <code>let b = a.num</code>(그 안 숫자를 꺼냄)는 <b>정반대</b>다. 지금은 <b>꺼내는 쪽(복사)</b>을 판다 — 객체가 껴 있어도 <b>꺼낸 게 숫자면 복사</b>라 원본과 무관하다.</p>
@@ -766,6 +780,29 @@
     `
     root.querySelector('[data-m="xy"]').append(MemoryModel(SCENARIO_XY_COPY))
     root.querySelector('[data-m="strcopy"]').append(MemoryModel(SCENARIO_STR_COPY))
+    root.querySelector('[data-m="strshare-c"]').append(buildNameMap(
+      '📇 이름표 장부 <small>— 이름 둘</small>',
+      '🗄️ 값 메모리 <small>— "무지"가 둘 (각자 복사)</small>',
+      [
+        { name: 'nick1', c: '#2563eb', to: 'c1' },
+        { name: 'nick2', c: '#ea580c', to: 'c2' },
+      ],
+      [
+        { id: 'c1', val: '"무지"', adr: '#0031', at: 2, c: '#2563eb' },
+        { id: 'c2', val: '"무지"', adr: '#0058', at: 8, c: '#ea580c' },
+      ], 12,
+    ))
+    root.querySelector('[data-m="strshare-e"]').append(buildNameMap(
+      '📇 이름표 장부 <small>— 이름 둘</small>',
+      '🗄️ 값 메모리 <small>— "무지"는 하나 (🔒 불변·공유)</small>',
+      [
+        { name: 'nick1', c: '#2563eb', to: 'c1' },
+        { name: 'nick2', c: '#ea580c', to: 'c1' },
+      ],
+      [
+        { id: 'c1', val: '"무지" 🔒', adr: '#0031', at: 5, c: '#6366f1' },
+      ], 12,
+    ))
     root.querySelector('[data-m="extract"]').append(MemoryModel({
       title: '객체째 담기 vs 속성 꺼내기 — 공유냐 복사냐',
       stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
