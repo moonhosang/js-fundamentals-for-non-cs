@@ -1480,19 +1480,19 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     problems: [
       { label: 'let 재할당', ask: 'x(10)를 15로 만들려면 얼마를 더해야 할까?', code: 'let x = 10\nx = x + ____\nprint(x)', expect: '15', answer: '5', hint: '15 - 10' },
       { label: 'null로 비우기', ask: 'memo를 "값을 일부러 비움" 상태로 만들려면? (숫자 0이나 빈 글자 말고)', code: 'let memo = "메모"\nmemo = ____\nprint(memo)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
-      { label: '복사=독립', ask: 'b를 아무 값으로 바꿔 보라 — a는 그대로일까? 아무 숫자나 넣고 ▶확인.', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '123', hint: '원시값은 복사라 a는 안 변함' },
+      { label: '복사=독립', ask: 'b를 99로 바꿔 보세요. 그러면 a는 어떻게 될까요? (▶ 실행해 확인)', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '99', hint: '원시값은 복사라 a는 안 변함' },
       { label: 'typeof', ask: '결과가 "number"가 나오게 하려면 어떤 값을? (문자열 말고 숫자)', code: 'print(typeof ____)', expect: '"number"', answer: '99', hint: '아무 숫자' },
       { label: '문자열', ask: '화면에 토끼가 나오게 name을 채워라 — 문자열은 어떻게 쓰지?', code: 'let name = ____\nprint(name)', expect: '"토끼"', answer: '"토끼"', hint: '따옴표로 감싼다' },
     ],
   }
   window.Practices['ref'] = {
-    pattern: '유형: 한쪽을 아무 값으로 바꿔도 다른 쪽(원본)은 그대로임을 직접 확인',
+    pattern: '유형: 빈칸을 채워 한쪽을 바꾼 뒤, 다른 쪽(원본)이 어떻게 되는지 ▶로 확인한다',
     problems: [
-      { label: 'y 바꿔도 x', ask: 'y를 아무 값으로 바꿔도 x는 그대로일까? 아무 숫자나 넣고 ▶확인.', code: 'let x = 10\nlet y = x\ny = ____\nprint(x)', expect: '10', answer: '777', hint: '복사라 독립' },
-      { label: 'a 바꿔도 b', ask: 'a를 아무 값으로 바꿔도 b는? 아무 숫자나.', code: 'let a = 5\nlet b = a\na = ____\nprint(b)', expect: '5', answer: '0', hint: 'b는 자기 값' },
-      { label: '돈 복사', ask: 'money2를 아무 값으로 바꿔도 money1은? 아무 숫자나.', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = ____\nprint(money1)', expect: '200', answer: '0', hint: '숫자는 복사' },
-      { label: '문자열도 복사', ask: 's2를 아무 문자열로 바꿔도 s1은? 아무 이름이나(따옴표).', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = ____\nprint(s1)', expect: '"무지"', answer: '"어피치"', hint: '문자열도 복사' },
-      { label: '속성 꺼내면 복사', ask: 'a.num을 꺼내 담은 b를 아무 값으로 바꿔도 a.num은? 아무 숫자나.', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '55', hint: '꺼낼 때 복사됨' },
+      { label: 'y를 바꾸면 x는?', ask: 'y를 99로 바꿔 보세요. 그러면 x는 어떻게 될까요? (▶ 실행해 확인)', code: 'let x = 10\nlet y = x\ny = ____\nprint(x)', expect: '10', answer: '99', hint: '복사라 x는 그대로 10' },
+      { label: 'a를 바꾸면 b는?', ask: 'a를 100으로 바꿔 보세요. 그러면 b는? (▶ 확인)', code: 'let a = 5\nlet b = a\na = ____\nprint(b)', expect: '5', answer: '100', hint: 'b는 자기 값 5 그대로' },
+      { label: '돈을 바꾸면?', ask: 'money2를 0으로 바꿔 보세요. money1은 어떻게 될까요? (▶ 확인)', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = ____\nprint(money1)', expect: '200', answer: '0', hint: '숫자는 복사 → money1 그대로' },
+      { label: '글자를 바꾸면?', ask: 's2를 "어피치"로 바꿔 보세요. s1은? (▶ 확인)', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = ____\nprint(s1)', expect: '"무지"', answer: '"어피치"', hint: '문자열도 복사 → s1 그대로' },
+      { label: '꺼낸 값을 바꾸면?', ask: 'a.num을 꺼내 담은 b를 20으로 바꿔 보세요. a.num은? (▶ 확인)', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '20', hint: '꺼낼 때 복사 → a.num 그대로' },
     ],
   }
   window.Practices['ref2'] = {
@@ -1526,13 +1526,13 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     ],
   }
   window.Practices['passval'] = {
-    pattern: '유형: 함수가 매개변수를 아무 값으로 바꿔도 원본은 그대로임을 확인',
+    pattern: '유형: 함수가 받은 값을 바꿔도, 넘긴 원본은 어떻게 되는지 ▶로 확인한다',
     problems: [
-      { label: '돈 안전', ask: 'tear가 받은 bill을 아무 값으로 바꿔도 원본 money(100)는? 아무 숫자나.', code: 'function tear(bill){ bill = ____ }\nlet money = 100\ntear(money)\nprint(money)', expect: '100', answer: '0', hint: '복사본이라 원본 안전' },
-      { label: '점수 안전', ask: 'reset이 n을 아무 값으로 해도 score(50)는? 아무 숫자나.', code: 'function reset(n){ n = ____ }\nlet score = 50\nreset(score)\nprint(score)', expect: '50', answer: '999', hint: '원본 안전' },
-      { label: '+더해도 안전', ask: 'add1이 x에 뭘 더해도 a(10)는? 아무 숫자나.', code: 'function add1(x){ x = x + ____ }\nlet a = 10\nadd1(a)\nprint(a)', expect: '10', answer: '5', hint: '복사본만 바뀜' },
-      { label: '반값도 안전', ask: 'half가 v를 아무 값으로 해도 price(200)는? 아무 숫자나.', code: 'function half(v){ v = ____ }\nlet price = 200\nhalf(price)\nprint(price)', expect: '200', answer: '0', hint: '원본 안전' },
-      { label: '지워도 안전', ask: 'clear가 s를 비워도 name("민지")은? 아무 문자열이나(따옴표).', code: 'function clear(s){ s = ____ }\nlet name = "민지"\nclear(name)\nprint(name)', expect: '"민지"', answer: '""', hint: '원본 안전' },
+      { label: '돈은 안전?', ask: 'tear가 받은 bill을 0으로 만든다. tear(money) 뒤 원본 money(100)는? 빈칸에 0을 넣고 ▶확인', code: 'function tear(bill){ bill = ____ }\nlet money = 100\ntear(money)\nprint(money)', expect: '100', answer: '0', hint: '복사본이 전달됨 → 원본 안전' },
+      { label: '점수는 안전?', ask: 'reset이 받은 값을 999로 만든다. score(50)는? 빈칸에 999를 넣고 ▶확인', code: 'function reset(n){ n = ____ }\nlet score = 50\nreset(score)\nprint(score)', expect: '50', answer: '999', hint: '원본 안전' },
+      { label: '더해도 안전?', ask: 'add1이 받은 값에 5를 더한다. a(10)는? 빈칸에 5를 넣고 ▶확인', code: 'function add1(x){ x = x + ____ }\nlet a = 10\nadd1(a)\nprint(a)', expect: '10', answer: '5', hint: '복사본만 바뀜' },
+      { label: '반으로 해도?', ask: 'half가 받은 값을 0으로 만든다. price(200)는? 빈칸에 0을 넣고 ▶확인', code: 'function half(v){ v = ____ }\nlet price = 200\nhalf(price)\nprint(price)', expect: '200', answer: '0', hint: '원본 안전' },
+      { label: '지워도 안전?', ask: 'clear가 받은 값을 빈 글자로 만든다. name("민지")은? 빈칸에 ""(빈 문자열)을 넣고 ▶확인', code: 'function clear(s){ s = ____ }\nlet name = "민지"\nclear(name)\nprint(name)', expect: '"민지"', answer: '""', hint: '원본 안전' },
     ],
   }
   window.Practices['passobj'] = {
