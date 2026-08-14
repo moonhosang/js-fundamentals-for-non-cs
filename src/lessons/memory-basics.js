@@ -652,33 +652,30 @@
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"어피치"', bad: true }] }], heap: {}, note: 'nick2만 "어피치". <b>nick1은 그대로 "무지"</b> — 문자열도 <b>원시값</b>이라 복사(안 공유). "숫자만 복사"가 아니다.' },
     ],
   }
-  // 불변 — 변수(이름표)와 값(그 자체)을 분리. 3타입×3상황: 숫자 재할당 / 문자열 메서드=새값 / 참거짓 토글.
+  // 불변 — value-in-slot 통일. 재할당은 '슬롯 내용 교체'일 뿐 값 자체는 안 고쳐짐. 값 메모리는 안 씀(비어 있음).
   const SCENARIO_IMM_NUM = {
     title: '① 숫자 · 재할당 — money = 200',
-    stackLabel: '🏷️ 변수 (이름표)', heapLabel: '💎 값 (그 자체 · 불변)',
     code: ['let money = 100', 'money = 200   // 100이 200으로 변신? 아니다'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v1' }] }], heap: { v1: { label: '100' } }, note: 'money는 값 100을 가리킨다. (값과 변수를 <b>따로</b> 놓고 보자)' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v2' }] }], heap: { v1: { label: '100', faded: true }, v2: { label: '200' } }, note: 'money = 200 → money가 <b>다른 값 200</b>을 가리키게 됐다(재할당). 값 <b>100은 그대로</b>(불변) — 변신이 아니라 <b>가리키는 대상</b>이 바뀐 것. (안 쓰는 100은 회색)' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', value: '100' }] }], heap: {}, note: 'money 칸에 값 <b>100이 직접</b> 산다(원시값은 이름표 장부 안에).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money', value: '200', bad: true }] }], heap: {}, note: '<code>money = 200</code> → money 칸의 <b>내용을 200으로 교체</b>(재할당). 숫자 <s>100</s>이 <b>200으로 "변신"한 게 아니다</b> — 값 100 자체는 <b>어디서도 고쳐지지 않는다(불변)</b>. 바뀐 건 money가 <b>담은 내용</b>뿐.' },
     ],
   }
   const SCENARIO_IMM_STR = {
     title: '② 문자열 · 연산은 새 값을 만든다 — "kim".toUpperCase()',
-    stackLabel: '🏷️ 변수', heapLabel: '💎 값 (불변)',
     code: ['let name = "kim"', 'name.toUpperCase()   // 새 값 "KIM"을 만들 뿐', '// name 은? 여전히 "kim"'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"' } }, note: 'name은 "kim"을 가리킨다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"' }, v2: { label: '"KIM"', faded: true } }, note: '.toUpperCase()는 <b>새 값 "KIM"</b>을 만든다(v2) — 하지만 <b>어디에도 안 담아</b> 아무도 안 가리킨다(회색). 원본 "kim"은 <b>제자리에서 안 바뀐다</b>. name도 그대로.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"' } }, note: '그래서 name은 <b>여전히 "kim"</b>. 진짜 바꾸려면 <code>name = name.toUpperCase()</code>로 <b>재할당</b>해야 한다(①처럼). 문자열도 불변이다.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'name', value: '"kim"' }] }], heap: {}, note: 'name 칸에 <b>"kim"</b>이 직접 산다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'name', value: '"kim"' }] }], heap: {}, note: '.toUpperCase()는 <b>새 값 "KIM"</b>을 만든다 — 하지만 <b>어디에도 안 담아</b> 곧 사라진다. 원본 <b>"kim"은 제자리에서 안 바뀐다</b> → name 칸도 <b>그대로 "kim"</b>.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'name', value: '"kim"' }] }], heap: {}, note: '그래서 name은 <b>여전히 "kim"</b>. 진짜 바꾸려면 <code>name = name.toUpperCase()</code>로 <b>재할당</b>해야 한다(①처럼 칸 내용 교체). 문자열도 불변이다.' },
     ],
   }
   const SCENARIO_IMM_BOOL = {
     title: '③ 참거짓 · 뒤집기도 재할당 — on = !on',
-    stackLabel: '🏷️ 변수', heapLabel: '💎 값 (불변)',
-    code: ['let on = true', 'on = !on   // 뒤집기 = 새 값을 가리키기'],
+    code: ['let on = true', 'on = !on   // 뒤집기 = 새 값으로 교체'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v1' }] }], heap: { v1: { label: 'true' } }, note: 'on은 true를 가리킨다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v2' }] }], heap: { v1: { label: 'true', faded: true }, v2: { label: 'false' } }, note: '!on은 <b>새 값 false</b>를 만들고 on이 그걸 가리키게 된다(재할당). true는 그대로. <b>뒤집기도 결국 "다른 값 가리키기"</b> — 참거짓도 불변.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'on', value: 'true' }] }], heap: {}, note: 'on 칸에 <b>true</b>가 직접 산다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'on', value: 'false', bad: true }] }], heap: {}, note: '!on은 <b>새 값 false</b>를 만들고 on 칸에 <b>담는다</b>(재할당). <s>true</s>가 제자리에서 뒤집힌 게 아니라 — on이 <b>다른 값을 담게</b> 된 것. 참거짓도 불변.' },
     ],
   }
   // 묶음이면 다 참조 — object/array 말고 Date·class 인스턴스도 힙에, 슬롯엔 주소, 복사하면 별칭.
@@ -760,15 +757,15 @@
       <p class="section-desc">🔑 <b>객체(참조)를 통째로 담으면 공유, 그 안의 원시값을 꺼내 담으면 복사.</b> 꺼내는 순간 값이 복사되니 그 뒤로는 원본과 무관하다. 그럼 <b>객체째 담는(<code>let b = a</code>) 쪽</b>은? — 그게 <b>M4-2 · 참조 = 공유</b>다.</p>
 
       <h3 class="section-title">4단계 · 원시값은 불변 — "money=200, 변했잖아?"의 진실</h3>
-      <span class="learn-tag">📎 '변수 칸'과 '값 칸'을 나눠서 보라 — 값은 안 변하고, 변수가 다른 값을 가리킬 뿐</span>
-      <p class="section-desc">"원시값은 불변"이라는데 <code>money = 200</code>은 변한 것 같다. 진실은 — <b>값 자체는 안 변한다</b>.
-      변수가 <b>다른 값을 가리키게</b> 됐을 뿐(재할당). <b>세 가지 타입·상황</b>으로 확인한다. 각 카드에서 <b>변수 칸</b>과 <b>값 칸</b>을 나눠 ▶로 보라.</p>
+      <span class="learn-tag">📎 값이 '변신'하는 게 아니다 — 칸 내용을 통째로 교체(재할당)할 뿐, 값 자체는 불변</span>
+      <p class="section-desc">"원시값은 불변"이라는데 <code>money = 200</code>은 변한 것 같다. 진실은 — <b>값 100 자체는 안 변한다</b>.
+      money 칸의 <b>내용이 200으로 교체</b>됐을 뿐(재할당). <b>세 가지 타입·상황</b>으로 확인한다. ▶로 한 단계씩 보라 — 값 메모리는 내내 <b>비어 있다</b>(원시값이라).</p>
       <div class="card"><div class="file-label">🔬 ① 숫자 · 재할당</div><div data-m="imm-num"></div></div>
       <div class="card"><div class="file-label">🔬 ② 문자열 · 연산은 원본을 안 바꾼다(새 값)</div><div data-m="imm-str"></div></div>
       <div class="card"><div class="file-label">🔬 ③ 참거짓 · 뒤집기도 재할당</div><div data-m="imm-bool"></div></div>
       <ul class="section-list">
         <li><b>불변(immutable)</b> = 값 자체를 <b>제자리에서 못 바꾼다</b>. 숫자·문자열·참거짓 <b>모든 원시값</b>이 그렇다 (<code>100</code>→<code>101</code>, <code>"kim"</code>→<code>"KIM"</code>을 제자리에서 바꾸는 일은 없다).</li>
-        <li><code>money = 200</code>·<code>on = !on</code>은 <b>재할당</b> — 이름표가 <b>다른 값을 가리키게</b> 하는 것. 값의 '변신'이 아니다.</li>
+        <li><code>money = 200</code>·<code>on = !on</code>은 <b>재할당</b> — 이름표 칸에 <b>다른 값을 담는</b> 것(내용 교체). 값의 '변신'이 아니다.</li>
         <li>반대로 <b>객체는 가변(mutable)</b> — <code>obj.x = 2</code>는 값(객체)을 <b>제자리에서</b> 바꾼다. 그래서 공유되면 위험하다(→ M4-2).</li>
       </ul>
 
