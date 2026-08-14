@@ -755,6 +755,14 @@
       <p class="section-desc">🔑 me·hyoni는 객체(참조)지만 <code>me.money</code>는 <b>숫자</b>, <code>nick</code>은 <b>문자열</b> → 둘 다 원시값이라 복사, 안 공유.
       만약 <code>hyoni.buddy = me</code> 였다면? me는 <b>객체</b> → 주소 복사 = <b>공유(참조)</b>. <b>대입되는 값의 타입</b>(타입 지도 참고)이 전부를 가른다.</p>
 
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🎯 가장 많이 걸리는 함정 — 객체째 담기(공유) vs 속성 꺼내기(복사)</div>
+        <p class="section-desc" style="margin-top:0"><code>let b = a</code>(객체째)와 <code>let b = a.num</code>(그 안의 숫자를 꺼냄)는 <b>정반대</b>다 — 하나는 <b>같은 객체를 공유</b>, 하나는 <b>숫자를 복사</b>. "b를 바꿨는데 왜 a.num이 안 바뀌지?"의 정체다. ▶로 보라.</p>
+        <div data-m="extract"></div>
+        <div class="card" style="margin-top:12px"><div class="file-label">🔮 예측 후 ▶ — copied를 20으로 바꾸면 a.num은?</div><div data-m="extract-run"></div></div>
+      </div>
+      <p class="section-desc">🔑 규칙 한 줄: <b>객체(참조)를 통째로 담으면 공유</b>, <b>그 안의 원시값을 꺼내 담으면 복사</b>. 꺼내는 순간 값이 복사되니, 그 뒤로는 원본과 무관하다.</p>
+
       <h3 class="section-title">④ 원시값은 불변 — "money=200, 변했잖아?"의 진실</h3>
       <span class="learn-tag">📎 '변수 칸'과 '값 칸'을 나눠서 보라 — 값은 안 변하고, 변수가 다른 값을 가리킬 뿐</span>
       <p class="section-desc">"원시값은 불변"이라는데 <code>money = 200</code>은 변한 것 같다. 진실은 — <b>값 자체는 안 변한다</b>.
@@ -795,6 +803,27 @@
     root.querySelector('[data-m="varcopy"]').append(MemoryModel(SCENARIO_VAR_COPY))
     root.querySelector('[data-m="propcopy"]').append(MemoryModel(SCENARIO_PROP_COPY))
     root.querySelector('[data-m="strcopy"]').append(MemoryModel(SCENARIO_STR_COPY))
+    root.querySelector('[data-m="extract"]').append(MemoryModel({
+      title: '객체째 담기 vs 속성 꺼내기 — 공유냐 복사냐',
+      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+      code: ['let a = { num: 10 }', 'let shared = a       // 객체째 → 주소 복사(공유)', 'let copied = a.num   // 그 안 숫자를 꺼냄 → 값 복사', 'copied = 20          // copied만 바뀜'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: 'a는 객체를 가리킨다(장부 칸엔 주소).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let shared = a</code> → <b>주소를 복사</b> → shared·a가 <b>같은 객체</b>를 가리킨다(별칭·공유).' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '10' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let copied = a.num</code> → 객체 안에서 <b>숫자 10을 꺼내 복사</b>. copied는 힙과 <b>무관한 독립 슬롯</b>(값 10을 직접 가짐).' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '20', bad: true }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>copied = 20</code> → copied만 20. <b>a.num은 그대로 10!</b> (꺼낼 때 복사됐으니 무관.) ↔ 반대로 <code>shared.num = 99</code> 했다면 <b>a.num도 99</b>(같은 객체 공유). <b>객체째 = 공유, 속성 꺼내기 = 복사.</b>' },
+      ],
+    }))
+    root.querySelector('[data-m="extract-run"]').append(Runner({
+      showBox: false,
+      code: [
+        'let a = { num: 10 }',
+        'let copied = a.num      // 그 안 숫자 10을 꺼내 복사',
+        'copied = 20             // copied만 바꾼다',
+        'print(copied)           // 20',
+        'print(a.num)            // 예측? … ▶ 눌러 확인 (꺼낼 때 복사됐다)',
+      ].join('\n'),
+    }))
     root.querySelector('[data-m="imm-num"]').append(MemoryModel(SCENARIO_IMM_NUM))
     root.querySelector('[data-m="imm-str"]').append(MemoryModel(SCENARIO_IMM_STR))
     root.querySelector('[data-m="imm-bool"]').append(MemoryModel(SCENARIO_IMM_BOOL))
