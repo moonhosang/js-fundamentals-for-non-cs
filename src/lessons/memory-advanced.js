@@ -7,7 +7,7 @@
   // ── M3 시나리오: 콜 스택 push/pop ──
   const SCENARIO_STACK = {
     title: '콜 스택 — 함수가 쌓였다 사라진다',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['function addTax(price) {', '  return price + price * 0.1', '}', 'let total = addTax(1000)'],
     steps: [
       { line: 3, stack: [{ name: 'main', slots: [] }], heap: {},
@@ -73,7 +73,7 @@
   // ══ 심화 · 클로저 ═══════════════════════════════════════════
   const SCENARIO_CLOSURE = {
     title: '클로저 — 사라졌어야 할 count가 값 메모리에 살아남는다',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: [
       'function makeCounter() {',
       '  let count = 0',
@@ -146,7 +146,7 @@
   // ══ 심화 · 가비지 컬렉션 ════════════════════════════════════
   const SCENARIO_GC = {
     title: '도달 가능성 — 마지막 참조가 끊겨야 치워진다',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let box = { msg: "안녕" }', 'let a = box        // a도 같은 객체를 가리킴', 'box = null         // box 화살표만 끊음', 'a = null           // 마지막 화살표도 끊음'],
     steps: [
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }, { name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'msg', value: '"안녕"' }] } },

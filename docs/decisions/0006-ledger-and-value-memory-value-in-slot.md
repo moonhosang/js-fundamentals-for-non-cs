@@ -1,6 +1,8 @@
 # 0006. 이름표 장부 │ 값 메모리 두 칸 + 원시값은 value-in-slot
 
-Status: Accepted (refines [0002](0002-variable-is-alias-not-container.md), [0004](0004-notional-machine-framing.md))
+Status: **Superseded by [0007](0007-all-values-in-value-memory-model-b.md)** (원래: Accepted · refines 0002, 0004)
+
+> ⚠️ 이 결정(value-in-slot)은 [0007](0007-all-values-in-value-memory-model-b.md)로 대체됐다. 원시값을 칸 안에 그리니 '이름 칸에 값이 붙어' 이름/값 분리가 불완전했다 → 모든 값을 값 메모리에 두는 model B로 전환. 아래는 역사적 기록.
 
 ## 맥락
 초기 메모리 시각화는 **값·변수·메모리영역을 한 그림**(RAM 격자)에 결합했다. 그러자 입문자가 답을 못 찾는 질문이 생겼다:

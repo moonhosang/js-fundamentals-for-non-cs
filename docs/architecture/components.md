@@ -15,8 +15,9 @@
 | `title` | 제목 |
 | `code` | 코드 줄 배열(하이라이트용) |
 | `steps` | 스냅샷 배열 (아래) |
-| `showHeap:false` | 힙 열 숨김. **메모리 주제에선 쓰지 않는다** — 두 칸 항상 노출(ADR 0006). 원시값 예시는 값 메모리가 빈 채로 보인다(각인). |
-| `stackLabel`/`heapLabel` | 열 이름 override. **기본값 = `📇 이름표 장부 (변수)` / `🗄️ 값 메모리 (힙)`** (ADR 0006). 콜스택 강조 강의는 `📚 스택 (이름표 장부)`. |
+| `showHeap:false` | 힙 열 숨김. **메모리 주제에선 쓰지 않는다** — 두 칸 항상 노출(ADR 0007). |
+| `stackLabel`/`heapLabel` | 열 이름 override. **기본값 = `📇 이름표 장부 (변수)` / `🗄️ 값 메모리`** (ADR 0007). 콜스택 강조 강의는 `📚 스택 (이름표 장부)`. |
+| (자동) 원시값 셀 | **model B**: `value:` 슬롯은 이름표엔 이름+화살표로, 값은 값 메모리에 **초록 🔒 셀**(`p:frame#name`)로 자동 렌더. 명시적 셀이 필요하면(예: 불변 재할당) 힙 박스에 `prim:true`. |
 
 ### step(스냅샷) 스키마
 ```js
@@ -43,7 +44,7 @@
 - **애니메이션**: 직전 스텝과 diff → 새 슬롯/힙만 등장, 힙 값 변경은 플래시, 참조 화살표는 그려지는(draw-on) 효과.
 - **2층 토글**: 기본 [개념 모델](notional machine) / [실제 엔진](V8 심화). (왜: [../decisions/0004-notional-machine-framing.md](../decisions/0004-notional-machine-framing.md)) 예: 문자열 복사 step에 `engine`으로 "실제론 interning 공유" 노출.
 - `KEY_ICON` 맵 — person 필드 키에 아이콘(hair💇·money💰·parent👆 등).
-- **두 칸 프레임은 늘 유지** — 원시값 전용 예시도 값 메모리 열을 숨기지 않는다(빈 열이 "원시값은 장부 안에 직접"을 반복 각인). [ADR 0006](../decisions/0006-ledger-and-value-memory-value-in-slot.md).
+- **두 칸 프레임은 늘 유지** — 모든 값이 값 메모리에 산다(model B). 원시값도 값 메모리에 **초록 🔒 셀**, 변수는 이름표에서 화살표로 가리킨다. [ADR 0007](../decisions/0007-all-values-in-value-memory-model-b.md).
 
 ---
 
@@ -53,7 +54,7 @@
 이름(●)에서 값 메모리 칸으로 **SVG 화살표**를 그린다. `<memory-model>`이 스텝 시뮬이라면, 이건 **한 장짜리 사상 그림** — 특히 **여러 이름이 한 칸을 가리키면 = 별칭(alias)**을 한눈에.
 - `names: [{ name, c, to(=cell id), tag? }]` · `cells: [{ id, val, adr, at, c }]` · `N` = 격자 칸 수.
 - 쓰임: `let a = box` 별칭, 문자열 복사 **개념(칸 둘) vs 실제 엔진(칸 하나·공유)** 대비.
-- 왜 memory-model이 아니라 별도 헬퍼: 스텝 애니가 아니라 **정적 사상 + 화살표 수렴**이 요점이라. (ADR 0006의 "장부 쪽 사건"을 그리는 도구.)
+- 왜 memory-model이 아니라 별도 헬퍼: 스텝 애니가 아니라 **정적 사상 + 화살표 수렴**이 요점이라. (ADR 0007의 "이름 → 값 셀" 사상을 그리는 도구.)
 
 ---
 

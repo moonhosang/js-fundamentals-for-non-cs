@@ -121,7 +121,7 @@
 
       <h3 class="section-title">③ 칸에 이름 붙이기 — let · const · var (변수 vs 상수)</h3>
       <span class="learn-tag">📎 셋 다 '장부에 이름을 올린다'. 차이는 값 종류가 아니라 — 장부 칸에 <b>담긴 것</b>을 나중에 바꿀 수 있느냐</span>
-      <p class="section-desc">이름을 <b>장부(변수 관리 영역)</b>에 올리는 걸 <b>선언</b>이라 한다. 장부 칸에 담기는 것은 <b>원시값이면 값 자체, 객체면 주소</b>. 올리는 방법이 셋 — 담긴 것을 <b>나중에 바꿀 수 있느냐</b>만 다르다:</p>
+      <p class="section-desc">이름을 <b>장부(변수 관리 영역)</b>에 올리는 걸 <b>선언</b>이라 한다. 값(원시값이든 객체든)은 <b>값 메모리</b>에 살고, 장부 칸은 <b>이름과 가리키는 화살표</b>를 쥔다. 올리는 방법이 셋 — <b>화살표를 나중에 옮길 수 있느냐</b>만 다르다:</p>
       <ul class="section-list">
         <li><code>let</code> — <b>변수</b>: 장부 칸에 <b>담긴 것을 나중에 바꿀 수 있다</b>(재할당 O).</li>
         <li><code>const</code> — <b>상수</b>: 장부 칸에 <b>담긴 것을 한 번 정하면 못 바꾼다</b>(재할당 X). "안 바뀔 값"(세율·원주율·설정값)에 쓴다.</li>
@@ -130,10 +130,10 @@
       <div class="card">
         <div class="file-label">📍 이름은 '장부'에, 값은 '메모리 칸'에 — 변수는 주소로 그 칸을 가리킨다</div>
         <div data-m="letconst-ram"></div>
-        <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. (이 둘은 원시값이라 값이 <b>변수 영역 칸 안에</b> 있다.) <code>🏷️ score</code>(let)는 이 칸의 <b>값을 바꿀 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 바꾼다.</p>
+        <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. (원시값도 <b>값 메모리 칸</b>에 살고, 변수는 <b>화살표로 가리킨다</b>.) <code>🏷️ score</code>(let)는 화살표를 <b>다른 값으로 옮길 수 있고</b>, <code>🔒 PI</code>(const)는 <b>화살표가 잠겨</b> 못 옮긴다.</p>
       </div>
       <div class="card">
-        <div class="file-label">🎬 눈으로 — 원시값은 장부 안에, let은 값을 바꾸고 const는 잠근다 (▶ 한 단계씩)</div>
+        <div class="file-label">🎬 눈으로 — 원시값도 값 메모리에, let은 화살표를 옮기고 const는 잠근다 (▶ 한 단계씩)</div>
         <div data-m="letconst-viz"></div>
       </div>
       <div class="card">
@@ -189,7 +189,7 @@
         </table>
       </div>
       <p class="section-desc">🔑 <b>값 메모리의 객체를 버리는 효과는 셋 다 같다</b>(참조가 끊기니까 GC 대상). 차이는 <b>장부 칸에 남는 값·타입·의미</b>뿐 — <code>null</code>(일부러 비움) / <code>undefined</code>(값 미정) / <code>""</code>(빈 문자열, 여전히 값 있음). (<code>typeof null === "object"</code>는 JS의 유명한 버그.)</p>
-      <p class="section-desc" style="opacity:.85">❓ "그런데 <code>null</code>은 어디 있지? 전역변수 같은 건가?" — <b>아니다.</b> <code>null</code>·<code>undefined</code>는 <b>변수가 아니라 값(리터럴)</b>이다 — <code>5</code>·<code>"hi"</code>처럼 그냥 쓰는 값일 뿐. '전역에 딱 하나 있는 무언가'가 아니라, 대입하면 그 <b>장부 칸에 담기는 원시값</b>이다(그래서 원시값처럼 장부 칸 안에 산다).</p>
+      <p class="section-desc" style="opacity:.85">❓ "그런데 <code>null</code>은 어디 있지? 전역변수 같은 건가?" — <b>아니다.</b> <code>null</code>·<code>undefined</code>는 <b>변수가 아니라 값(리터럴)</b>이다 — <code>5</code>·<code>"hi"</code>처럼 그냥 쓰는 값일 뿐. '전역에 딱 하나 있는 무언가'가 아니라, 대입하면 그 변수가 가리키는 <b>원시값</b>이다(그래서 다른 원시값처럼 값 메모리에 담기고 이름표가 가리킨다).</p>
 
       <h3 class="section-title">⑤ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
       <span class="learn-tag">📎 메모리(작업용 RAM) = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
@@ -255,23 +255,23 @@
       ))
     }
     root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
-      title: 'let은 장부의 값을 바꾼다 · const는 잠근다 (원시값은 장부 안에)',
-      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+      title: 'let은 화살표를 옮기고 · const는 잠근다 (값은 값 메모리에)',
+      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
       code: ['let score = 10', 'score = 20        // let: 값 바꾸기 OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 바꿈'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', value: '10' }] }], heap: {},
-          note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 담긴 것 = <b>값 10 자체</b>(원시값이라 값이 장부 안에 산다). 오른쪽 <b>값 메모리(힙)는 안 쓴다</b>.' },
+          note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 화살표가 값 메모리의 <b>10</b>을 가리킨다(장부엔 이름+화살표).' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }] }], heap: {},
-          note: '<code>score = 20</code> → 장부의 <b>그 칸 값이 10 → 20</b>으로 바뀐다(재할당). let이라 가능. (힙은 여전히 안 씀)' },
+          note: '<code>score = 20</code> → score의 <b>화살표가 10 셀 → 20 셀</b>로 옮겨간다(재할당). let이라 가능.' },
         { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
-          note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 값 3.14. 이 칸은 <b>🔒 잠긴다</b>.' },
+          note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 화살표가 값 메모리의 3.14를 가리킨다. 이 <b>화살표는 🔒 잠긴다</b>.' },
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
-          note: '<code>PI = 3</code> → 잠긴 칸이라 <b>못 바꾼다 → ❌ 에러</b>. PI는 그대로 3.14. (score(let)는 바뀌었지만 PI(const)는 못 바꾼다.) — 그리고 <b>값 메모리(오른쪽)가 내내 비었죠?</b> 원시값은 장부 안에 살아서 힙을 안 씁니다.' },
+          note: '<code>PI = 3</code> → 화살표가 잠겨 <b>다른 값을 못 가리킨다 → ❌ 에러</b>. PI는 그대로 3.14. (score(let)는 화살표를 옮겼지만 PI(const)는 못 옮긴다.)' },
       ],
     }))
     root.querySelector('[data-m="boxnull-viz"]').append(MemoryModel({
       title: 'box = null — 장부 칸엔 null, 값 메모리의 객체는 버려진다',
-      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
       code: ['let box = { name: "민지" }', 'box = null'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
@@ -294,17 +294,17 @@
   // ══ M2 · 스택 ═══════════════════════════════════════════════
   const SCENARIO_STACK_SLOTS = {
     title: '스택 = 이름표 장부 — 이름표가 값째로 쌓인다',
-    stackLabel: '📚 스택 (= M1의 이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (= M1의 이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let count = 3', 'let ok = true'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '<b>age</b>라는 이름표가 스택에 놓인다 — 값 20을 가진다. (왼쪽 age=이름, 오른쪽 20=값)' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }] }], heap: {}, note: 'count 이름표가 그 위에 쌓인다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }, { name: 'ok', value: 'true' }] }], heap: {}, note: '스택에 쌓이는 건 <b>이름표(변수)</b>다. 원시값은 이름표가 값을 <b>직접 가진다</b> — 하지만 <b>이름표(age) ≠ 값(20)</b>. 이 경계가 핵심.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }, { name: 'ok', value: 'true' }] }], heap: {}, note: '스택에 쌓이는 건 <b>이름표(변수)</b>다. 원시값도 값 메모리에 살고 이름표가 <b>가리킨다</b> — <b>이름표(age) ≠ 값(20)</b>. 이 경계가 핵심.' },
     ],
   }
   const SCENARIO_PUSHPOP = {
     title: '함수가 함수를 부르면 — 칸이 쌓였다 사라진다',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: [
       'function makeGreeting(name) {',
       '  return "안녕, " + name + "님"',
@@ -329,7 +329,7 @@
   // ⑤ 스코프 — 전역 장부 vs 함수 장부(프레임), 접근 범위.
   const SCENARIO_SCOPE = {
     title: '전역 장부 vs 함수 장부(프레임) — 접근 범위가 다르다',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: [
       'let appName = "메모장"       // 전역변수 (함수 밖)',
       'function greet(user) {',
@@ -364,10 +364,10 @@
       </div>
 
       <h3 class="section-title">① 스택이란 — 접시 더미</h3>
-      <span class="learn-tag">📎 마지막에 올린 걸 먼저 뗀다(LIFO) · 슬롯 = 이름표 + 값</span>
+      <span class="learn-tag">📎 마지막에 올린 걸 먼저 뗀다(LIFO) · 슬롯 = 이름표(값은 값 메모리에)</span>
       <ul class="section-list">
         <li>접시를 쌓듯 <b>위로 쌓고</b>, 뗄 땐 <b>맨 위부터</b>(Last In, First Out).</li>
-        <li>칸 하나 = <b>슬롯 = 이름표</b>. ⚠️ 변수는 값을 담는 <b>통이 아니라 이름표</b> — 값을 <b>가리킨다</b>. 원시값은 작고 불변이라 이름표가 그 값을 <b>바로 가리킨다</b>(칸에 적어 둔다).</li>
+        <li>칸 하나 = <b>슬롯 = 이름표</b>. ⚠️ 변수는 값을 담는 <b>통이 아니라 이름표</b> — 값을 <b>가리킨다</b>. 원시값도 값 메모리에 살고, 이름표가 <b>화살표로 가리킨다</b>(불변이라 대입하면 각자 셀로 복사).</li>
         <li>스택은 <b>빠르다</b> — 순서대로 쌓고 떼기만 하니까.</li>
       </ul>
       <div class="card">
@@ -377,7 +377,7 @@
 
       <h3 class="section-title">② 눈으로 — 이름표가 쌓이고, 각자 값을 가진다</h3>
       <span class="learn-tag">📎 경계 분명히 — 스택에 쌓이는 건 <b>데이터</b>가 아니라 <b>이름표(변수)</b>. 이름표 ≠ 값</span>
-      <p class="section-desc">스택에 쌓이는 건 <b>이름표(변수)</b>다 — 데이터 자체가 아니라. (M1의 그 <b>이름표 장부</b>가 이거다.) 원시값은 작고 불변이라 이름표가 값을 <b>장부 칸 안에 직접</b> 가진다(슬롯 = 이름 + 값).
+      <p class="section-desc">스택에 쌓이는 건 <b>이름표(변수)</b>다 — 데이터 자체가 아니라. (M1의 그 <b>이름표 장부</b>가 이거다.) 원시값도 값 메모리에 살고, 이름표가 <b>화살표로</b> 가리킨다(불변이라 복사되면 각자 셀 · 슬롯 = 이름 + 화살표).
       반대로 <b>큰 묶음(객체)</b>이면 값을 스택에 못 담고 <b>값 메모리(힙)를 참조</b>한다(장부 칸엔 주소만 — 다음 M3). 어느 쪽이든 <b>변수(이름) ≠ 값(데이터)</b>라는 경계가 핵심이다.</p>
       <div data-m="slots"></div>
 
@@ -413,7 +413,7 @@
 
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
-        <p class="section-desc" style="margin-top:0">스택 = M1의 <b>이름표 장부(변수 영역)</b> = 이름표 슬롯이 <b>LIFO</b>로 쌓이는 빠른 공간. 원시값은 장부 칸에 그대로, 객체는 주소만(실체는 값 메모리).
+        <p class="section-desc" style="margin-top:0">스택 = M1의 <b>이름표 장부(변수 영역)</b> = 이름표 슬롯이 <b>LIFO</b>로 쌓이는 빠른 공간. 개념 그림은 이름(장부)과 값(값 메모리)을 갈라 그리지만, <b>원시값은 물리적으론 이 스택 프레임에 이름과 함께</b> 있어 함수가 끝나면 같이 사라진다. 객체만 <b>힙</b>에 따로(장부·값 메모리 셀엔 주소). 즉 <b>값 메모리 = 스택 구역(원시값) + 힙 구역(객체)</b>.
         <b>작업이 끝나면 그 칸이 통째로 사라진다</b> — 규약상 밖에서 못 쓰고, 필요한 건 이미 빼냈고, 지워야 재사용되니 <b>안전하다</b>. 이게 다음 M3의 "왜 묶음은 값 메모리(힙)에?"로 이어진다.</p>
       </div>
 
@@ -432,17 +432,17 @@
   // ══ M3 · 힙 ═════════════════════════════════════════════════
   const SCENARIO_HEAP = {
     title: '묶음은 값 메모리(힙)에, 장부 칸엔 주소만',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let tags = ["신상", "세일"]', 'let card = { name: "민지" }'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '원시값 age는 스택 슬롯에 그대로.', engine: 'SMI 태깅.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '원시값 age — 이름은 장부에, 값 20은 값 메모리 셀에(물리적으론 한 스택 프레임).', engine: 'SMI 태깅 — 실제론 슬롯에 인라인.' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'tags', ref: 'h1' }] }], heap: { h1: { label: '["신상", "세일"]' } }, note: '<b>배열</b>은 힙으로. tags 슬롯엔 <b>주소</b>만 → 힙으로 화살표.', engine: '힙 할당, tags엔 포인터.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'tags', ref: 'h1' }, { name: 'card', ref: 'h2' }] }], heap: { h1: { label: '["신상", "세일"]' }, h2: { label: '{ name: "민지" }' } }, note: '<b>객체</b>도 힙으로. 힙에 박스 둘, 슬롯이 각각을 화살표로 가리킨다.', engine: '힙 할당 + 히든클래스.' },
     ],
   }
   const SCENARIO_STACK_FAIL = {
     title: '❌ 만약 묶음(객체)을 스택 칸에 뒀다면?',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['function makeCard() {', '  return { name: "민지" }', '}', 'let c = makeCard()'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'makeCard', slots: [{ name: '(객체)', value: '{ name: "민지" }' }] }], heap: {}, note: '<b>상상</b>: 객체를 힙이 아니라 <b>makeCard 칸(스택) 안</b>에 통째로 뒀다.' },
@@ -452,14 +452,14 @@
   }
   // 거꾸로 — 원시값이 힙에 사는 경우(객체 속성). 같은 20이 스택(age)과 힙(card.age)에.
   const SCENARIO_PRIM_IN_HEAP = {
-    title: '같은 20인데 — age는 스택 장부, card.age는 값 메모리',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    title: '같은 20인데 — age는 독립 셀, card.age는 객체 안',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let card = { age: 20, name: "민지" }'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '독립 변수 age의 20은 <b>스택 슬롯</b>에 직접.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '독립 변수 age의 20은 값 메모리에 <b>자기 셀</b>(스택 구역).' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'card', ref: 'h1' }] }],
         heap: { h1: { fields: [{ key: 'age', value: '20' }, { key: 'name', value: '"민지"' }] } },
-        note: 'card 객체는 힙에. 그런데 그 안의 <b>age: 20</b>도 <b>힙(객체 안)</b>에 있다! 같은 숫자 20이 한 번은 스택(age), 한 번은 힙(card.age)에 산다.' },
+        note: 'card 객체(힙 구역) 안의 <b>age: 20</b>은 <b>객체 안 필드</b>. 같은 숫자 20이 한 번은 <b>자기 셀</b>(age·스택 구역), 한 번은 <b>객체 안 필드</b>(card.age·힙 구역)에 산다.' },
     ],
   }
 
@@ -547,7 +547,7 @@
     title: '값 복사 vs 참조 — 왜 p를 바꿨는데 obj도 바뀌나',
     code: ['let a = 3', 'let b = a', 'let obj = { n: 1 }', 'let p = obj', 'p.n = 9'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }] }], heap: {}, note: 'a 슬롯에 값 3을 직접.', engine: 'SMI 태깅.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }] }], heap: {}, note: 'a는 값 메모리의 3을 가리킨다.', engine: 'SMI 태깅 — 작은 정수는 실제로 슬롯에 인라인. 개념 모델에선 통일해 값 메모리 셀로 본다.' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }] }], heap: {}, note: 'b엔 a의 <b>값을 복사</b>. a·b는 무관한 3 두 개.', engine: '값 복사 — 별개 슬롯.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }] }], heap: { h1: { label: '{ n: 1 }' } }, note: '객체는 힙에, obj엔 <b>주소</b>만.', engine: '힙 할당, 포인터.' },
       { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }, { name: 'p', ref: 'h1' }] }], heap: { h1: { label: '{ n: 1 }' } }, note: 'p엔 obj의 <b>주소를 복사</b> — 둘이 <b>같은 힙 박스</b>(별칭).', engine: '참조 복사. 객체는 하나.' },
@@ -557,7 +557,7 @@
   // 값에 의한 전달 — 원시값을 함수에 넘기면 '복사본'이 전달된다(원본 안전).
   const SCENARIO_PASSVAL = {
     title: '값에 의한 전달 — 복사본이라 원본이 안전하다',
-    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let money = 10000', 'function tear(bill) {', '  bill = 0        // 건네받은 걸 찢어 못 쓰게', '}', 'tear(money)'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }], heap: {}, note: 'money 슬롯에 10000이 담긴다.' },
@@ -619,15 +619,15 @@
   }
 
   // ══ M4 · 값 복사 vs 참조 ════════════════════════════════════
-  // 이름표 착각 정면돌파 — let y = x. 원시값은 각자 자기 칸에 복사(같은 10에 안 붙는다).
+  // 이름표 착각 정면돌파 — let y = x. 원시값은 각자 자기 셀로 복사(같은 10 셀에 안 붙는다).
   const SCENARIO_XY_COPY = {
     title: '이름표 착각 깨기 — let y = x 하면 같은 10에 붙나?',
-    stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
     code: ['let x = 10', 'let y = x        // y도 10 — 같은 10에 붙나?', 'y = 20           // y만 바꾸면 x는?'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }] }], heap: {}, note: 'x 칸에 값 <b>10이 직접</b> 산다(원시값은 칸 안에).' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '10' }] }], heap: {}, note: '😵 착각: "x·y가 <b>같은 10 하나</b>에 같이 붙는다"? ❌ 아니다. 원시값은 값을 <b>복사</b> — y는 <b>자기 칸에 자기 10</b>을 받는다. <b>칸이 둘</b>이다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → <b>y 칸만</b> 20. <b>x는 그대로 10</b>. 애초에 별개의 두 칸이라 y를 바꿔도 x는 안 움직인다 → "같은 10에 붙어있다 옮겨붙는다"는 그림은 <b>틀렸다</b>.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }] }], heap: {}, note: 'x는 값 메모리의 <b>10</b>을 가리킨다(원시값도 값 메모리에, 장부엔 이름+화살표).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '10' }] }], heap: {}, note: '😵 착각: "x·y가 <b>같은 10 셀 하나</b>를 같이 가리킨다"? ❌ 아니다. 원시값은 불변이라 대입하면 <b>각자 셀로 복사</b> — y는 <b>자기 10 셀</b>을 가리킨다. <b>셀이 둘</b>이다.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → y의 화살표가 <b>20 셀</b>로 옮겨간다. <b>x는 그대로 10</b>. 애초에 별개의 두 셀이라 x는 안 움직인다 → "같은 10 셀에 같이 붙어있다"는 그림은 <b>틀렸다</b>.' },
     ],
   }
   // 객체 속성끼리 숫자 복사 — 객체가 껴도 숫자면 복사(안 공유)
@@ -644,7 +644,7 @@
   // 문자열도 원시값 → 복사(숫자만이 아님)
   const SCENARIO_STR_COPY = {
     title: '문자열도 복사 — nick2 = nick1 (숫자만이 아니다)',
-    stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+    stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
     code: ['let nick1 = "무지"', 'let nick2 = nick1      // 문자열도 복사', 'nick2 = "어피치"        // nick2만 바뀜'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }] }], heap: {}, note: 'nick1에 "무지".' },
@@ -652,30 +652,30 @@
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"어피치"', bad: true }] }], heap: {}, note: 'nick2만 "어피치". <b>nick1은 그대로 "무지"</b> — 문자열도 <b>원시값</b>이라 복사(안 공유). "숫자만 복사"가 아니다.' },
     ],
   }
-  // 불변 — value-in-slot 통일. 재할당은 '슬롯 내용 교체'일 뿐 값 자체는 안 고쳐짐. 값 메모리는 안 씀(비어 있음).
+  // 불변 (model B) — 재할당은 이름표의 화살표가 '새 값 셀'로 옮겨가는 것. 옛 값 셀은 안 고쳐지고 회색으로 남는다.
   const SCENARIO_IMM_NUM = {
     title: '① 숫자 · 재할당 — money = 200',
     code: ['let money = 100', 'money = 200   // 100이 200으로 변신? 아니다'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', value: '100' }] }], heap: {}, note: 'money 칸에 값 <b>100이 직접</b> 산다(원시값은 이름표 장부 안에).' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money', value: '200', bad: true }] }], heap: {}, note: '<code>money = 200</code> → money 칸의 <b>내용을 200으로 교체</b>(재할당). 숫자 <s>100</s>이 <b>200으로 "변신"한 게 아니다</b> — 값 100 자체는 <b>어디서도 고쳐지지 않는다(불변)</b>. 바뀐 건 money가 <b>담은 내용</b>뿐.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v1' }] }], heap: { v1: { label: '100', prim: true } }, note: 'money는 값 메모리의 <b>100</b>을 가리킨다(장부엔 이름+화살표).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v2' }] }], heap: { v1: { label: '100', prim: true, faded: true }, v2: { label: '200', prim: true } }, note: '<code>money = 200</code> → money의 <b>화살표가 새 200 셀로 옮겨간다</b>(재할당). 옛 <b>100은 그대로</b>(불변) — 아무도 안 가리켜 회색. 값 100이 200으로 "변신"한 게 아니다.' },
     ],
   }
   const SCENARIO_IMM_STR = {
     title: '② 문자열 · 연산은 새 값을 만든다 — "kim".toUpperCase()',
     code: ['let name = "kim"', 'name.toUpperCase()   // 새 값 "KIM"을 만들 뿐', '// name 은? 여전히 "kim"'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'name', value: '"kim"' }] }], heap: {}, note: 'name 칸에 <b>"kim"</b>이 직접 산다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'name', value: '"kim"' }] }], heap: {}, note: '.toUpperCase()는 <b>새 값 "KIM"</b>을 만든다 — 하지만 <b>어디에도 안 담아</b> 곧 사라진다. 원본 <b>"kim"은 제자리에서 안 바뀐다</b> → name 칸도 <b>그대로 "kim"</b>.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'name', value: '"kim"' }] }], heap: {}, note: '그래서 name은 <b>여전히 "kim"</b>. 진짜 바꾸려면 <code>name = name.toUpperCase()</code>로 <b>재할당</b>해야 한다(①처럼 칸 내용 교체). 문자열도 불변이다.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true } }, note: 'name은 값 메모리의 <b>"kim"</b>을 가리킨다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true }, v2: { label: '"KIM"', prim: true, faded: true } }, note: '.toUpperCase()는 <b>새 값 "KIM"</b>을 만든다(v2) — 하지만 <b>어디에도 안 담아</b> 아무도 안 가리킨다(회색). 원본 "kim"은 <b>제자리에서 안 바뀐다</b>. name의 화살표도 그대로.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true } }, note: '그래서 name은 <b>여전히 "kim"</b>. 진짜 바꾸려면 <code>name = name.toUpperCase()</code>로 <b>재할당</b>(화살표를 KIM 셀로 옮김, ①처럼). 문자열도 불변.' },
     ],
   }
   const SCENARIO_IMM_BOOL = {
     title: '③ 참거짓 · 뒤집기도 재할당 — on = !on',
-    code: ['let on = true', 'on = !on   // 뒤집기 = 새 값으로 교체'],
+    code: ['let on = true', 'on = !on   // 뒤집기 = 새 값을 가리키기'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'on', value: 'true' }] }], heap: {}, note: 'on 칸에 <b>true</b>가 직접 산다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'on', value: 'false', bad: true }] }], heap: {}, note: '!on은 <b>새 값 false</b>를 만들고 on 칸에 <b>담는다</b>(재할당). <s>true</s>가 제자리에서 뒤집힌 게 아니라 — on이 <b>다른 값을 담게</b> 된 것. 참거짓도 불변.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v1' }] }], heap: { v1: { label: 'true', prim: true } }, note: 'on은 값 메모리의 <b>true</b>를 가리킨다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v2' }] }], heap: { v1: { label: 'true', prim: true, faded: true }, v2: { label: 'false', prim: true } }, note: '!on은 <b>새 값 false</b>를 만들고 on의 <b>화살표가 그리로 옮겨간다</b>(재할당). true는 그대로(불변). <b>뒤집기도 결국 "다른 값 가리키기"</b> — 참거짓도 불변.' },
     ],
   }
   // 묶음이면 다 참조 — object/array 말고 Date·class 인스턴스도 힙에, 슬롯엔 주소, 복사하면 별칭.
@@ -714,7 +714,7 @@
 
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
-        <p>원시값 대입 = <b>값 복사</b>(독립). <code>let y = x</code>는 "같은 10에 같이 붙는" 게 아니라 <b>각자 자기 칸에 자기 값</b>. 객체가 껴도 <b>꺼낸 게 원시값이면 복사</b>다.</p>
+        <p>원시값 대입 = <b>값 복사</b>(독립). <code>let y = x</code>는 "같은 10 셀에 같이 붙는" 게 아니라 <b>각자 자기 값 셀을 가리킨다</b>. 객체가 껴도 <b>꺼낸 게 원시값이면 복사</b>다.</p>
       </div>
 
       <h3 class="section-title">1단계 · 변수는 이름표 — 맞다 (1강 복습)</h3>
@@ -727,7 +727,7 @@
       </div>
       <span class="learn-tag">📎 ▶로 확인 — x와 y는 애초에 '다른 칸'이다</span>
       <div class="card"><div class="file-label">🎬 let y = x — 같은 10에 붙나, 각자 복사하나 (▶ 한 단계씩)</div><div data-m="xy"></div></div>
-      <p class="section-desc">원시값은 <b>값을 복사</b>한다 — y는 <b>자기 칸에 자기 10</b>을 받는다(칸이 둘). 그래서 <code>y = 20</code>은 y 칸만 바꾸고 <b>x는 그대로 10</b>. "같은 10에 붙어있다 옮겨붙는다"는 그림은 <b>틀렸다</b>.</p>
+      <p class="section-desc">원시값은 불변이라 대입하면 <b>각자 셀로 복사</b>한다 — y는 <b>자기 10 셀</b>을 가리킨다(셀이 둘). 그래서 <code>y = 20</code>은 y의 화살표만 <b>20 셀</b>로 옮기고 <b>x는 그대로 10</b>. "같은 10 셀에 붙어있다 옮겨붙는다"는 그림은 <b>틀렸다</b>.</p>
       <p class="section-desc" style="margin-bottom:6px">숫자만이 아니다 — <b>문자열·참거짓</b>도 원시값이라 똑같이 각자 복사:</p>
       <div class="card"><div class="file-label">🔬 문자열도 복사 — nick2 = nick1</div><div data-m="strcopy"></div></div>
 
@@ -757,15 +757,15 @@
       <p class="section-desc">🔑 <b>객체(참조)를 통째로 담으면 공유, 그 안의 원시값을 꺼내 담으면 복사.</b> 꺼내는 순간 값이 복사되니 그 뒤로는 원본과 무관하다. 그럼 <b>객체째 담는(<code>let b = a</code>) 쪽</b>은? — 그게 <b>M4-2 · 참조 = 공유</b>다.</p>
 
       <h3 class="section-title">4단계 · 원시값은 불변 — "money=200, 변했잖아?"의 진실</h3>
-      <span class="learn-tag">📎 값이 '변신'하는 게 아니다 — 칸 내용을 통째로 교체(재할당)할 뿐, 값 자체는 불변</span>
+      <span class="learn-tag">📎 값이 '변신'하는 게 아니다 — 이름표의 화살표가 새 값 셀로 옮겨갈 뿐, 값 자체는 불변</span>
       <p class="section-desc">"원시값은 불변"이라는데 <code>money = 200</code>은 변한 것 같다. 진실은 — <b>값 100 자체는 안 변한다</b>.
-      money 칸의 <b>내용이 200으로 교체</b>됐을 뿐(재할당). <b>세 가지 타입·상황</b>으로 확인한다. ▶로 한 단계씩 보라 — 값 메모리는 내내 <b>비어 있다</b>(원시값이라).</p>
+      money의 <b>화살표가 새 200 셀로 옮겨갔을</b> 뿐(재할당) — 옛 100 셀은 손 안 대고 그대로. <b>세 가지 타입·상황</b>으로 확인한다. ▶로 한 단계씩 보라 — 값은 <b>값 메모리 셀</b>에 살고, 바뀌는 건 <b>어느 셀을 가리키느냐</b>다.</p>
       <div class="card"><div class="file-label">🔬 ① 숫자 · 재할당</div><div data-m="imm-num"></div></div>
       <div class="card"><div class="file-label">🔬 ② 문자열 · 연산은 원본을 안 바꾼다(새 값)</div><div data-m="imm-str"></div></div>
       <div class="card"><div class="file-label">🔬 ③ 참거짓 · 뒤집기도 재할당</div><div data-m="imm-bool"></div></div>
       <ul class="section-list">
         <li><b>불변(immutable)</b> = 값 자체를 <b>제자리에서 못 바꾼다</b>. 숫자·문자열·참거짓 <b>모든 원시값</b>이 그렇다 (<code>100</code>→<code>101</code>, <code>"kim"</code>→<code>"KIM"</code>을 제자리에서 바꾸는 일은 없다).</li>
-        <li><code>money = 200</code>·<code>on = !on</code>은 <b>재할당</b> — 이름표 칸에 <b>다른 값을 담는</b> 것(내용 교체). 값의 '변신'이 아니다.</li>
+        <li><code>money = 200</code>·<code>on = !on</code>은 <b>재할당</b> — 이름표의 화살표를 <b>다른 값 셀로 옮기는</b> 것. 값의 '변신'이 아니다.</li>
         <li>반대로 <b>객체는 가변(mutable)</b> — <code>obj.x = 2</code>는 값(객체)을 <b>제자리에서</b> 바꾼다. 그래서 공유되면 위험하다(→ M4-2).</li>
       </ul>
 
@@ -806,12 +806,12 @@
     ))
     root.querySelector('[data-m="extract"]').append(MemoryModel({
       title: '객체째 담기 vs 속성 꺼내기 — 공유냐 복사냐',
-      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
+      stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
       code: ['let a = { num: 10 }', 'let shared = a       // 객체째 → 주소 복사(공유)', 'let copied = a.num   // 그 안 숫자를 꺼냄 → 값 복사', 'copied = 20          // copied만 바뀜'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: 'a는 객체를 가리킨다(장부 칸엔 주소).' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let shared = a</code> → <b>주소를 복사</b> → shared·a가 <b>같은 객체</b>를 가리킨다(별칭·공유).' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '10' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let copied = a.num</code> → 객체 안에서 <b>숫자 10을 꺼내 복사</b>. copied는 힙과 <b>무관한 독립 슬롯</b>(값 10을 직접 가짐).' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '10' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let copied = a.num</code> → 객체 안에서 <b>숫자 10을 꺼내 복사</b>. copied는 힙과 <b>무관한 독립 슬롯</b>(자기 10 셀을 가리킴).' },
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '20', bad: true }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>copied = 20</code> → copied만 20. <b>a.num은 그대로 10!</b> (꺼낼 때 복사됐으니 무관.) ↔ 반대로 <code>shared.num = 99</code> 했다면 <b>a.num도 99</b>(같은 객체 공유). <b>객체째 = 공유, 속성 꺼내기 = 복사.</b>' },
       ],
     }))
@@ -862,7 +862,7 @@
         <ul class="section-list">
           <li><b>원시 타입(primitive) — 복사된다(독립·불변) · M4-1</b>:
             <code>숫자 number</code> · <code>문자열 string</code> · <code>참거짓 boolean</code> · <code>null</code>(비어있음을 <b>일부러</b> 넣음) · <code>undefined</code>(아직 값 없음) · <span style="opacity:.75">고급: <code>symbol</code> · <code>bigint</code>(아주 큰 정수)</span>.
-            → 슬롯에 <b>값이 직접</b> 들어간다.</li>
+            → 값 메모리 셀에 살고, 슬롯은 <b>화살표로</b> 가리킨다(불변이라 대입하면 각자 셀로 복사).</li>
           <li><b>참조 타입(reference) — 공유된다(별칭·가변) · M4-2</b>: <b>여러 값을 하나로 묶은 것</b>은 다 여기다 —
             <code>객체 object {}</code> · <code>배열 array []</code> · <code>함수 function</code>(함수도 값!) ·
             <code>Date</code>(날짜) · <code>Map·Set</code>(모음) · <code>RegExp</code>(정규식),
@@ -871,6 +871,7 @@
         </ul>
         <p class="section-desc" style="margin:6px 0 0">🔍 확인법 <code>typeof</code>: <code>typeof 100</code>→"number", <code>typeof "kim"</code>→"string", <code>typeof true</code>→"boolean", <code>typeof {}</code>→"object", <code>typeof []</code>→"object"(배열도 객체!), <code>typeof new Date()</code>→"object", <code>typeof function(){}</code>→"function".
         <br>그래서 규칙은 하나 — <b>대입되는 값이 원시면 복사, 참조(묶음의 주소)면 공유.</b> "객체가 끼었냐"가 아니라 <b>대입되는 값의 타입</b>이 전부를 가른다.
+        <br>🔑 <b>왜 하나는 복사고 하나는 공유일까?</b> 그림에선 둘 다 "이름 → 화살표 → 셀"로 같아 보인다. 차이는 <b>셀의 가변성</b>이다 — 원시값 셀은 <b>🔒 불변</b>이라 대입 시 <b>각자 새 셀로 복사</b>(공유해도 못 바꾸니 굳이 안 함), 객체 셀은 <b>가변</b>이라 <b>같은 셀을 공유(별칭)</b>. <b>가변성이 복사냐 공유냐를 가른다.</b>
         <br><span style="opacity:.8">📚 더 깊이: <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a> · <a href="https://ko.wikipedia.org/wiki/포인터_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">포인터(주소) ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조·별칭 ↗</a></span></p>
       </div>
 

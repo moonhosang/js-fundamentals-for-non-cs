@@ -17,6 +17,7 @@
 
 ;(function () {
   const COLORS = ['#6366f1', '#0891b2', '#db2777', '#16a34a', '#d97706', '#7c3aed']
+  const PRIM_COLOR = '#16a34a' // 원시값 셀·화살표 색(초록). model B: 원시값도 값 메모리에 산다.
   // 힙 박스가 'person'이면 필드에 이 아이콘을 붙여 사람 카드처럼 보여준다.
   const KEY_ICON = { hair: '💇', money: '💰', bestFriend: '👥', friends: '👥', name: '🏷️', age: '🎂', pet: '🐶', mood: '💬', level: '⭐', parent: '👆', children: '👶' }
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -38,6 +39,10 @@
       ;(s.steps || []).forEach((st) => Object.keys(st.heap || {}).forEach((k) => ids.add(k)))
       this._color = {}
       ;[...ids].forEach((id, i) => { this._color[id] = COLORS[i % COLORS.length] })
+      // 원시값 셀(model B, ADR 0007): 슬롯 값을 값 메모리에 둔다 — 셀 id = 'p:'+frame#name, 초록 고정.
+      ;(s.steps || []).forEach((st) => (st.stack || []).forEach((f) => (f.slots || []).forEach((sl) => {
+        if (!('ref' in sl && sl.ref)) this._color['p:' + f.name + '#' + sl.name] = PRIM_COLOR
+      })))
       this._build()
     }
 
@@ -74,6 +79,11 @@
           .htag { font-size:11px; font-weight:700; color:#fff; border-radius:6px; padding:1px 7px; }
           .hlabel { font-family:var(--font-mono,monospace); font-size:13px; }
           .hbox { align-items:flex-start; }
+          .hbox.prim { border-width:1.5px; padding:4px 11px; align-items:center; }
+          .hbox.prim::before { content:'🔒'; font-size:10px; opacity:.45; }
+          .hbox.prim .hlabel { color:#16a34a; }
+          .hbox.prim.bad { border-color:#dc2626 !important; }
+          .hbox.prim.bad .hlabel { color:#dc2626; font-weight:700; }
           .hfields { display:flex; flex-direction:column; gap:2px; }
           .hfield { display:flex; align-items:center; gap:6px; font-family:var(--font-mono,monospace); font-size:12.5px; }
           .hfkey { color:var(--muted,#6b7280); }
@@ -120,7 +130,7 @@
           <div class="code"></div>
           <div class="stage">
             <div class="col col-stack"><h4>📇 이름표 장부 (변수)</h4><div class="stack-body"></div></div>
-            <div class="col col-heap"><h4>🗄️ 값 메모리 (힙)</h4><div class="heap-body"></div></div>
+            <div class="col col-heap"><h4>🗄️ 값 메모리</h4><div class="heap-body"></div></div>
             <svg class="arrows"></svg>
           </div>
           <div class="note"></div>
@@ -179,6 +189,7 @@
         return `<span class="sname">${esc(name)}</span><span class="sref" data-ref="${esc(ref)}" style="color:${c}"><span class="dot" style="background:${c}"></span>→</span>`
       }
       const frames = (st.stack || []).slice().reverse()
+      const primCells = [] // model B: 원시값도 값 메모리에 셀로 (이름표 장부엔 이름+화살표만)
       $('.stack-body').innerHTML = frames.length ? frames.map((f, ri) => {
         const isTop = ri === 0
         const slots = (f.slots || []).map((sl) => {
@@ -186,7 +197,10 @@
           curSlots.add(key)
           const en = prev.slots.has(key) ? '' : ' enter'
           if ('ref' in sl && sl.ref) return `<div class="slot${en}">${slotRef(sl.name, sl.ref)}</div>`
-          return `<div class="slot${en}"><span class="sname">${esc(sl.name)}</span><span class="sval${sl.bad ? ' bad' : ' prim'}">${esc(sl.value)}</span></div>`
+          // 원시값 → 이름표 장부엔 이름+화살표, 값은 값 메모리 셀(p:frame#name)로
+          const pid = 'p:' + f.name + '#' + sl.name
+          primCells.push({ id: pid, value: sl.value, bad: !!sl.bad })
+          return `<div class="slot${en}">${slotRef(sl.name, pid)}</div>`
         }).join('') || '<div class="empty">(비어 있음)</div>'
         return `<div class="frame${isTop ? ' top' : ''}"><div class="frame-name">${esc(f.name)}()</div>${slots}</div>`
       }).join('') : '<div class="empty">(스택 비어 있음)</div>'
@@ -202,7 +216,16 @@
         }
         return `<div class="hfield"><span class="hfkey">${ico}${esc(fl.key)}:</span><span class="hfval">${esc(fl.value)}</span></div>`
       }).join('') + `</div>`
-      $('.heap-body').innerHTML = ids.length ? ids.map((id) => {
+      // 원시값 셀(값 메모리 맨 위) — 이름표 장부의 화살표가 여기로 꽂힌다
+      const primHTML = primCells.map((pc) => {
+        const sig = 'prim:' + pc.value + (pc.bad ? '!' : '')
+        curHeaps.add(pc.id); curLabels[pc.id] = sig
+        let anim = ''
+        if (!prev.heaps.has(pc.id)) anim = ' enter'
+        else if (prev.labels[pc.id] !== sig) anim = ' flash'
+        return `<div class="hbox prim${pc.bad ? ' bad' : ''}${anim}" data-heap="${esc(pc.id)}" style="border-color:${PRIM_COLOR}"><span class="hlabel">${esc(pc.value)}</span></div>`
+      }).join('')
+      const objHTML = ids.map((id) => {
         const c = this._color[id] || '#888'
         const box = heap[id]
         const sig = JSON.stringify([!!box.faded, box.person || 0, box.name || 0, box.items || 0, box.fields || 0, box.label != null ? String(box.label) : 0])
@@ -212,6 +235,7 @@
         else if (prev.labels[id] !== sig) anim = ' flash'
         let body, cls = 'hbox'
         if (box.faded) cls += ' faded'
+        if (box.prim) cls += ' prim'
         if (box.person) {
           cls += ' person'
           body = `<span class="pavatar">${esc(box.person)}</span><div class="pinfo"><div class="pname">${esc(box.name)}</div>${fieldRows(box.fields || [], true)}</div>`
@@ -229,8 +253,11 @@
         } else {
           body = `<span class="hlabel">${esc(box.label)}</span>`
         }
-        return `<div class="${cls}${anim}" data-heap="${esc(id)}" style="border-color:${c}"><span class="htag" style="background:${c}">${esc(id)}</span>${body}</div>`
-      }).join('') : '<div class="empty">(값 메모리 비어 있음 — 아직 객체·배열 없음.<br>원시값은 이름표 장부 안에 직접 산다)</div>'
+        const bc = box.prim ? PRIM_COLOR : c
+        const tag = box.prim ? '' : `<span class="htag" style="background:${c}">${esc(id)}</span>`
+        return `<div class="${cls}${anim}" data-heap="${esc(id)}" style="border-color:${bc}">${tag}${body}</div>`
+      }).join('')
+      $('.heap-body').innerHTML = (primHTML + objHTML) || '<div class="empty">(값 메모리 비어 있음)</div>'
 
       this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels }
 
