@@ -83,6 +83,12 @@
         번호(<b>주소</b>)가 붙은 칸이 줄지어 있고, 변수는 그중 어떤 칸에 값을 적고 <b>이름표</b>를 붙인 것이다.</p>
       </div>
 
+      <div class="card" style="background:color-mix(in srgb, var(--muted) 6%, var(--panel));border-style:dashed">
+        <p class="section-desc" style="margin:0;font-size:13px">ℹ️ <b>안내 — 입문자를 위해 단순화했습니다.</b> 우리는 값이 사는 곳을 계속 "<b>RAM(저장소)</b>"이라 부르지만, 실제 메모리는
+        <b>CPU 캐시(L1·L2·L3) → RAM → 디스크 스왑</b>으로 이어진 <b>여러 층(메모리 계층)</b>입니다. 여기선 값이 '<b>어디에</b> 사는지'의 감을 위해 <b>RAM 한 층으로 뭉뚱그렸고</b>, CPU 캐시·디스크 스왑은 <b>의도적으로 뺐습니다</b>. 스택·힙도 <b>개념 모델</b>이고요.
+        더 깊이: <a href="https://ko.wikipedia.org/wiki/메모리_계층_구조" target="_blank" rel="noopener noreferrer">메모리 계층 구조 — 위키백과 ↗</a></p>
+      </div>
+
       <h3 class="section-title">① 왜 메모리가 필요한가</h3>
       <p class="section-desc">컴퓨터가 <code>3 + 4</code>를 계산하려면 <b>3</b>과 <b>4</b>를 잠깐 어딘가에 적어둬야 한다. 그 "메모장"이 메모리다.
       변수 <code>let age = 20</code>은 곧 <b>"메모리 한 칸에 20을 적고 age라는 이름을 붙여라"</b>는 뜻이다.</p>
