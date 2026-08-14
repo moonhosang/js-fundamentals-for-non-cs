@@ -51,7 +51,13 @@
 2. `src/app.js` — `LESSONS` 배열에 `{ id:'myid', badge, title, subtitle }` 추가.
 3. `src/app.js` — `CHAPTERS`의 알맞은 챕터 `items`에 `'myid'` 넣기. (심화면 그 챕터에.)
 
-드릴이면: `window.Practices['myid'] = { pattern, problems:[{label,ask,code('…____…'),expect,answer,hint}] }` — app.js가 문제별 항목(`myid-1`…)으로 자동 전개.
+드릴이면: 개념은 레슨 파일, **드릴은 난이도별 파일**에 ([ADR 0008](../decisions/0008-tiered-drills-by-difficulty-files.md)):
+```js
+// src/drills/easy.js (normal.js·hard.js 동형)
+window.Drills = window.Drills || { easy:{}, normal:{}, hard:{} }
+window.Drills.easy['myid'] = { pattern, problems:[ …5개… ] } // {label,ask,code('…____…'),expect,answer,hint}
+```
+app.js가 `myid:easy`·`myid:normal`·`myid:hard` 3개의 stepped 실습 페이지로 자동 전개. **쉬움=동일 유형 반복, 보통=변형, 어려움=응용·전이.** 답을 문제에 노출 금지(§3).
 
 ## 4. 시각 자산 (재사용)
 안 보이는 것을 보이게 — [../architecture/components.md](../architecture/components.md) 참고:
@@ -65,7 +71,7 @@
 ## 5. 검증 (완성 판정)
 - [ ] `node --check src/lessons/<name>.js` (문법)
 - [ ] 예제 코드가 실제로 도는가 — `node -e '…'` (미선언 변수·의사코드 금지)
-- [ ] jsdom 스모크 — 렌더/스텝/드릴 채점
+- [ ] **드릴 계약 테스트** — 진짜 Drill 위젯을 real 브라우저(headless)로 구동해 전 난이도 일괄 채점: `chrome --headless=new --dump-dom test/drills.html` → `#result-json`이 `{"ok":n,"total":n,"fails":[]}`. (node DOM 스텁은 브라우저와 드리프트 — [ADR 0008](../decisions/0008-tiered-drills-by-difficulty-files.md))
 - [ ] **실브라우저 스크린샷** — 레이아웃·화살표·이모지 눈으로 (Chrome 헤드리스, [overview.md](../architecture/overview.md#시각-검증) 참고)
 - [ ] 📚 **관련 용어(위키) 링크** 있나 — 각 강의·단계에. URL은 실제 200인지 확인(오답 링크 금지)
 - [ ] 🔮 **의문-사슬(§5)** — 마찰 큰 이음새에 예측 퀴즈로 declarative 함정을 experienced로 바꿨나 ([design-principles §5](design-principles.md))
