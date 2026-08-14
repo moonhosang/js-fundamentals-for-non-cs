@@ -216,27 +216,27 @@
   // ══ 🧠 메모리 심화 실습 (드릴) ══════════════════════════════
   window.Practices = window.Practices || {}
   window.Practices['callstack'] = {
-    pattern: '유형: 함수가 함수를 부르면 프레임이 쌓인다 — return으로 값을 돌려준다',
+    pattern: '유형: 함수가 함수를 부를 때, 목표 값이 나오도록 안쪽 반환을 도출한다',
     problems: [
-      { label: '호출 사슬', ask: 'a가 b를 부르고, b가 42를 돌려주게.', code: 'function a() { return b() }\nfunction b() {\n  return ____\n}\nprint(a())', expect: '42', answer: '42', hint: 'b가 42 반환' },
-      { label: '안쪽 반환', ask: 'inner가 10을 돌려주게.', code: 'function outer() { return inner() }\nfunction inner() {\n  return ____\n}\nprint(outer())', expect: '10', answer: '10', hint: 'return 10' },
-      { label: '더해서 반환', ask: 'tax(100)=110이 되게 빈칸에 10.', code: 'function tax(p) {\n  return p + ____\n}\nprint(tax(100))', expect: '110', answer: '10', hint: '100+10' },
+      { label: '2배 사슬', ask: 'a는 b()의 2배를 돌려준다. a()가 10이 되려면 b는 얼마를 돌려줘야?', code: 'function a() { return b() * 2 }\nfunction b() { return ____ }\nprint(a())', expect: '10', answer: '5', hint: '10의 절반' },
+      { label: '+1 사슬', ask: 'outer는 inner()+1을 돌려준다. outer()가 10이 되려면 inner는?', code: 'function outer() { return inner() + 1 }\nfunction inner() { return ____ }\nprint(outer())', expect: '10', answer: '9', hint: '10 - 1' },
+      { label: '세금', ask: 'tax(100)이 110이 되게 — 세율은?', code: 'function tax(p) { return p + p * ____ }\nprint(tax(100))', expect: '110', answer: '0.1', hint: '세금 10 = 100 * ?' },
     ],
   }
   window.Practices['closure'] = {
-    pattern: '유형: 안쪽 함수가 바깥 변수를 붙잡으면, 함수가 끝나도 그 값이 살아남는다',
+    pattern: '유형: 안쪽 함수가 붙잡은 값을 이용해 목표 결과를 도출한다',
     problems: [
-      { label: '값 붙잡기', ask: 'make 안 c(5)를 안쪽 함수가 붙잡아 돌려주게. 빈칸에 5.', code: 'function make() {\n  let c = ____\n  return function () { return c }\n}\nlet get = make()\nprint(get())', expect: '5', answer: '5', hint: 'c가 클로저에 살아남음' },
-      { label: '카운터', ask: 'counter의 n을 +1씩. next() 두 번이면 2. 빈칸에 1.', code: 'function counter() {\n  let n = 0\n  return function () { n = n + ____; return n }\n}\nlet next = counter()\nnext()\nprint(next())', expect: '2', answer: '1', hint: 'n이 호출 사이 기억됨(1→2)' },
-      { label: '숨은 잔액', ask: 'bank의 money(100)를 안쪽 함수로 꺼내게. 빈칸에 100.', code: 'function bank() {\n  let money = ____\n  return function () { return money }\n}\nlet balance = bank()\nprint(balance())', expect: '100', answer: '100', hint: 'money가 살아남아 반환' },
+      { label: '붙잡은 값', ask: 'make 안 c(100)를 안쪽 함수가 붙잡는다. get()이 70이 되려면 얼마를 빼야?', code: 'function make() { let c = 100; return function () { return c - ____ } }\nlet get = make()\nprint(get())', expect: '70', answer: '30', hint: '100 - 70' },
+      { label: '카운터', ask: 'n은 호출 사이 기억된다. next()를 세 번 불러 3이 나오려면 매번 얼마씩 더할까?', code: 'function counter() { let n = 0; return function () { n = n + ____; return n } }\nlet next = counter()\nnext()\nnext()\nprint(next())', expect: '3', answer: '1', hint: '1씩 → 1,2,3' },
+      { label: '숨은 잔액', ask: 'bank의 money(100)를 안쪽 함수가 그대로 돌려주게 하려면 뭘 더할까? (그대로)', code: 'function bank() { let money = 100; return function () { return money + ____ } }\nlet balance = bank()\nprint(balance())', expect: '100', answer: '0', hint: '더 안 더함 = 0' },
     ],
   }
   window.Practices['gc'] = {
-    pattern: '유형: 참조가 끊기면(아무도 안 가리키면) 대상은 GC로 치워진다',
+    pattern: '유형: 참조를 끊으면 대상이 GC로 치워진다 — 참조/경로를 채운다',
     problems: [
-      { label: 'null로 끊기', ask: '큰 객체 a를 더 안 쓰려면? 빈칸에 null(참조를 끊는다).', code: 'let a = { big: "data" }\na = ____\nprint(a)', expect: 'null', answer: 'null', hint: 'a = null로 참조 끊기' },
-      { label: '다른 참조 살아있음', ask: 'box=null이어도 ref가 아직 가리키면 객체는 산다. ref.v(1)+0. 빈칸에 0.', code: 'let box = { v: 1 }\nlet ref = box\nbox = null\nprint(ref.v + ____)', expect: '1', answer: '0', hint: 'ref가 아직 가리켜 살아있음' },
-      { label: '고아 객체', ask: 'x에 5를 넣고 x=null로 끊으면, 그 객체는 아무도 안 가리켜 GC 대상. 빈칸에 5.', code: 'let x = { n: ____ }\nx = null\nprint(x)', expect: 'null', answer: '5', hint: 'x는 null, 객체는 고아' },
+      { label: 'null로 끊기', ask: '큰 객체 a를 더 안 써서 GC가 치우게 — 참조를 끊으려면 뭘 담을까?', code: 'let a = { big: "data" }\na = ____\nprint(a)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
+      { label: '다른 참조', ask: 'data=null이어도 ref가 아직 가리켜 객체는 산다. ref로 v를 꺼내려면?', code: 'let data = { v: 1 }\nlet ref = data\ndata = null\nprint(ref.____)', expect: '1', answer: 'v', hint: 'ref.v' },
+      { label: '고아 만들기', ask: 'x가 가리키던 객체를 고아로 만들려면(참조 끊기) x에 뭘 담을까?', code: 'let x = { n: 5 }\nx = ____\nprint(x)', expect: 'null', answer: 'null', hint: 'null' },
     ],
   }
 })()

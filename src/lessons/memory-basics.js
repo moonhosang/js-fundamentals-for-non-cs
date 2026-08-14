@@ -1476,123 +1476,123 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
   // ══ 🧠 메모리 챕터 실습 (드릴) — '바꿔보고 원본 확인' 예측 반복 ══════
   window.Practices = window.Practices || {}
   window.Practices['ram'] = {
-    pattern: '유형: 빈칸을 채워 예상한 값이 나오는지 확인 (변수·타입·null·복사)',
+    pattern: '유형: 목표 결과가 나오도록 빈칸을 스스로 채워 확인 (정답은 문제에 없음)',
     problems: [
-      { label: 'let 재할당', ask: 'let은 다시 담을 수 있다. score를 20으로 바꿔 20이 나오게.', code: 'let score = 10\nscore = ____\nprint(score)', expect: '20', answer: '20', hint: 'score = 20' },
-      { label: 'null로 비우기', ask: '값을 "일부러 비움"으로 만들려면? box에 넣어 null이 나오게.', code: 'let box = "메모"\nbox = ____\nprint(box)', expect: 'null', answer: 'null', hint: '비어있음을 일부러 = null' },
-      { label: '원시값 복사=독립', ask: 'b를 99로 바꿔도 a는 그대로 10. 빈칸에 99를 넣고 a를 확인.', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '99', hint: '원시값은 각자 복사 — a는 안 변함' },
-      { label: 'typeof', ask: '숫자 age의 타입은 "number". 빈칸에 age를 넣어 확인.', code: 'let age = 24\nprint(typeof ____)', expect: '"number"', answer: 'age', hint: 'typeof age' },
-      { label: '문자열', ask: '문자열은 따옴표로 감싼다. name에 "토끼"를 담아 출력.', code: 'let name = ____\nprint(name)', expect: '"토끼"', answer: '"토끼"', hint: '"토끼" (따옴표!)' },
+      { label: 'let 재할당', ask: 'x(10)를 15로 만들려면 얼마를 더해야 할까?', code: 'let x = 10\nx = x + ____\nprint(x)', expect: '15', answer: '5', hint: '15 - 10' },
+      { label: 'null로 비우기', ask: 'memo를 "값을 일부러 비움" 상태로 만들려면? (숫자 0이나 빈 글자 말고)', code: 'let memo = "메모"\nmemo = ____\nprint(memo)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
+      { label: '복사=독립', ask: 'b를 아무 값으로 바꿔 보라 — a는 그대로일까? 아무 숫자나 넣고 ▶확인.', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '123', hint: '원시값은 복사라 a는 안 변함' },
+      { label: 'typeof', ask: '결과가 "number"가 나오게 하려면 어떤 값을? (문자열 말고 숫자)', code: 'print(typeof ____)', expect: '"number"', answer: '99', hint: '아무 숫자' },
+      { label: '문자열', ask: '화면에 토끼가 나오게 name을 채워라 — 문자열은 어떻게 쓰지?', code: 'let name = ____\nprint(name)', expect: '"토끼"', answer: '"토끼"', hint: '따옴표로 감싼다' },
     ],
   }
   window.Practices['ref'] = {
-    pattern: '유형: 원시값은 복사라 독립 — 한쪽을 바꿔도 다른 쪽은 그대로임을 확인',
+    pattern: '유형: 한쪽을 아무 값으로 바꿔도 다른 쪽(원본)은 그대로임을 직접 확인',
     problems: [
-      { label: 'y 바꿔도 x', ask: 'y를 99로 바꿔도 x는 10 그대로. 빈칸에 99를 넣고 x 확인.', code: 'let x = 10\nlet y = x\ny = ____\nprint(x)', expect: '10', answer: '99', hint: '복사라 독립 — x는 안 변함' },
-      { label: 'a 바꿔도 b', ask: 'a를 100으로 바꿔도 b는 5 그대로. 빈칸에 100.', code: 'let a = 5\nlet b = a\na = ____\nprint(b)', expect: '5', answer: '100', hint: 'b는 자기 값 5' },
-      { label: '돈 복사', ask: 'money2를 0으로 바꿔도 money1은 200. 빈칸에 0.', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = ____\nprint(money1)', expect: '200', answer: '0', hint: '숫자는 복사' },
-      { label: '문자열도 복사', ask: 's2를 "어피치"로 바꿔도 s1은 "무지". 빈칸에 "어피치".', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = ____\nprint(s1)', expect: '"무지"', answer: '"어피치"', hint: '문자열도 원시값 → 복사' },
-      { label: '속성 꺼내면 복사', ask: 'a.num을 꺼내 담은 b를 20으로 바꿔도 a.num은 10. 빈칸에 20.', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '20', hint: '꺼낸 순간 복사 — a.num 무관' },
+      { label: 'y 바꿔도 x', ask: 'y를 아무 값으로 바꿔도 x는 그대로일까? 아무 숫자나 넣고 ▶확인.', code: 'let x = 10\nlet y = x\ny = ____\nprint(x)', expect: '10', answer: '777', hint: '복사라 독립' },
+      { label: 'a 바꿔도 b', ask: 'a를 아무 값으로 바꿔도 b는? 아무 숫자나.', code: 'let a = 5\nlet b = a\na = ____\nprint(b)', expect: '5', answer: '0', hint: 'b는 자기 값' },
+      { label: '돈 복사', ask: 'money2를 아무 값으로 바꿔도 money1은? 아무 숫자나.', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = ____\nprint(money1)', expect: '200', answer: '0', hint: '숫자는 복사' },
+      { label: '문자열도 복사', ask: 's2를 아무 문자열로 바꿔도 s1은? 아무 이름이나(따옴표).', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = ____\nprint(s1)', expect: '"무지"', answer: '"어피치"', hint: '문자열도 복사' },
+      { label: '속성 꺼내면 복사', ask: 'a.num을 꺼내 담은 b를 아무 값으로 바꿔도 a.num은? 아무 숫자나.', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '55', hint: '꺼낼 때 복사됨' },
     ],
   }
   window.Practices['ref2'] = {
-    pattern: '유형: 객체는 참조라 공유 — 별칭으로 바꾸면 원본도 바뀜을 확인',
+    pattern: '유형: 원본을 직접 안 쓰고 "같은 객체를 가리키는 변수(별칭)"로 바꿔 원본도 바뀜을 확인',
     problems: [
-      { label: '별칭 b.n', ask: 'b와 a는 같은 객체. b.n을 9로 바꾸면 a.n도 9. 빈칸에 9.', code: 'let a = { n: 1 }\nlet b = a\nb.n = ____\nprint(a.n)', expect: '9', answer: '9', hint: '같은 객체 공유' },
-      { label: 'hp 깎기', ask: 'p2.hp를 50으로 깎으면 p1.hp도 50. 빈칸에 50.', code: 'let p1 = { hp: 100 }\nlet p2 = p1\np2.hp = ____\nprint(p1.hp)', expect: '50', answer: '50', hint: 'p1·p2 같은 객체' },
-      { label: '배열 push 공유', ask: 'copy에 9를 push하면 arr 길이도 3. 빈칸에 9.', code: 'let arr = [1, 2]\nlet copy = arr\ncopy.push(____)\nprint(arr.length)', expect: '3', answer: '9', hint: '배열도 참조 — 같은 배열' },
-      { label: '이름 바꾸기', ask: 'ref.name을 "지훈"으로 바꾸면 user.name도 "지훈". 빈칸에 "지훈".', code: 'let user = { name: "민지" }\nlet ref = user\nref.name = ____\nprint(user.name)', expect: '"지훈"', answer: '"지훈"', hint: '같은 객체' },
-      { label: '중첩 객체', ask: 'f는 me.friend와 같은 객체. f.hair를 "숏컷"으로. 빈칸에 "숏컷".', code: 'let me = { friend: { hair: "긴머리" } }\nlet f = me.friend\nf.hair = ____\nprint(me.friend.hair)', expect: '"숏컷"', answer: '"숏컷"', hint: 'f와 me.friend 같은 객체' },
+      { label: '별칭 찾기', ask: 'a.n을 9로 바꾸고 싶다. a를 직접 안 쓰고 — a와 같은 객체를 가리키는 변수는?', code: 'let a = { n: 1 }\nlet b = a\n____.n = 9\nprint(a.n)', expect: '9', answer: 'b', hint: 'b는 a의 별칭' },
+      { label: 'hp 깎기', ask: 'p1.hp를 50으로 깎되 p1을 직접 안 쓰고 — 같은 객체는?', code: 'let p1 = { hp: 100 }\nlet p2 = p1\n____.hp = 50\nprint(p1.hp)', expect: '50', answer: 'p2', hint: 'p2가 별칭' },
+      { label: '배열 별칭', ask: 'arr에 9를 넣되 arr을 직접 안 쓰고 — 같은 배열을 가리키는 건?', code: 'let arr = [1, 2]\nlet copy = arr\n____.push(9)\nprint(arr.length)', expect: '3', answer: 'copy', hint: 'copy는 같은 배열' },
+      { label: '이름 별칭', ask: 'user.name을 바꾸되 user를 직접 안 쓰고 — 같은 객체는?', code: 'let user = { name: "민지" }\nlet ref = user\n____.name = "지훈"\nprint(user.name)', expect: '"지훈"', answer: 'ref', hint: 'ref가 별칭' },
+      { label: '중첩 별칭', ask: 'me.friend의 머리를 바꾸되 f를 활용 — f는 무엇과 같은 객체?', code: 'let me = { friend: { hair: "긴머리" } }\nlet f = me.friend\n____.hair = "숏컷"\nprint(me.friend.hair)', expect: '"숏컷"', answer: 'f', hint: 'f = me.friend' },
     ],
   }
   window.Practices['stack'] = {
-    pattern: '유형: 함수 프레임 — return으로 값을 돌려주고, 매개변수/지역변수를 쓴다',
+    pattern: '유형: 함수가 목표 값을 돌려주도록 return 내용을 채운다',
     problems: [
-      { label: 'return 합', ask: 'add가 a+b를 돌려주게. add(3,4)=7.', code: 'function add(a, b) {\n  return ____\n}\nprint(add(3, 4))', expect: '7', answer: 'a + b', hint: 'return a + b' },
-      { label: '지역변수 반환', ask: '함수 안 n(10)을 돌려주게.', code: 'function f() {\n  let n = 10\n  return ____\n}\nprint(f())', expect: '10', answer: 'n', hint: 'return n' },
-      { label: '함수가 함수 부름', ask: 'inner가 42를 돌려주게. outer는 그걸 반환.', code: 'function outer() { return inner() }\nfunction inner() {\n  return ____\n}\nprint(outer())', expect: '42', answer: '42', hint: 'inner가 42' },
-      { label: '세금', ask: '세율 0.1로 tax(100)=110이 되게.', code: 'function tax(p) {\n  return p + p * ____\n}\nprint(tax(100))', expect: '110', answer: '0.1', hint: 'p*0.1이 세금' },
-      { label: '문자열 반환', ask: 'name()이 "토끼"를 돌려주게.', code: 'function name() {\n  return "____"\n}\nprint(name())', expect: '"토끼"', answer: '토끼', hint: '따옴표 안에 토끼' },
+      { label: 'return 합', ask: 'add(3,4)가 7을 돌려주게 — 무엇을 return?', code: 'function add(a, b) { return ____ }\nprint(add(3, 4))', expect: '7', answer: 'a + b', hint: '두 매개변수를 더한다' },
+      { label: '지역변수 반환', ask: 'f()가 지역변수 n을 돌려주게.', code: 'function f() { let n = 10; return ____ }\nprint(f())', expect: '10', answer: 'n', hint: 'return n' },
+      { label: '세금', ask: 'tax(100)이 110이 되게 — 세율은? (세금 10 = 100 * ?)', code: 'function tax(p) { return p + p * ____ }\nprint(tax(100))', expect: '110', answer: '0.1', hint: '세금 10 = 100 * ?' },
+      { label: '배수', ask: 'twice(6)이 12가 되게 — 몇 배?', code: 'function twice(n) { return n * ____ }\nprint(twice(6))', expect: '12', answer: '2', hint: '6의 2배' },
+      { label: '문자열 반환', ask: 'name()이 "토끼"를 돌려주게.', code: 'function name() { return ____ }\nprint(name())', expect: '"토끼"', answer: '"토끼"', hint: '따옴표' },
     ],
   }
   window.Practices['heap'] = {
-    pattern: '유형: 객체·배열은 힙에 — 속성을 넣고 꺼낸다. 별칭이면 원본도 바뀐다',
+    pattern: '유형: 목표 결과가 나오게 속성·인덱스·별칭을 채운다',
     problems: [
-      { label: '속성 넣기', ask: 'obj.x가 5가 되게.', code: 'let obj = { x: ____ }\nprint(obj.x)', expect: '5', answer: '5', hint: '{ x: 5 }' },
-      { label: '배열 0번', ask: 'arr[0]이 10이 되게.', code: 'let arr = [____, 20, 30]\nprint(arr[0])', expect: '10', answer: '10', hint: '첫 칸에 10' },
-      { label: '별칭 공유', ask: 'b는 a와 같은 힙 객체. b.v를 9로 바꾸면 a.v도 9.', code: 'let a = { v: 1 }\nlet b = a\nb.v = ____\nprint(a.v)', expect: '9', answer: '9', hint: '같은 객체라 공유' },
-      { label: '이름', ask: 'card.name이 "민지"가 되게.', code: 'let card = { name: "____" }\nprint(card.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안 민지' },
-      { label: '중첩 속성', ask: 'box.inner.n이 7이 되게.', code: 'let box = { inner: { n: ____ } }\nprint(box.inner.n)', expect: '7', answer: '7', hint: '안쪽 n에 7' },
+      { label: '곱해서', ask: 'obj.x가 6이 되게 — 3에 뭘 곱할까?', code: 'let obj = { x: 3 * ____ }\nprint(obj.x)', expect: '6', answer: '2', hint: '3 * 2' },
+      { label: '마지막 인덱스', ask: '마지막 값 30을 꺼내려면 몇 번 인덱스? (0부터!)', code: 'let arr = [10, 20, 30]\nprint(arr[____])', expect: '30', answer: '2', hint: '셋 중 마지막 = 2' },
+      { label: '별칭 변경', ask: 'a.v를 9로 바꾸되 a를 직접 안 쓰고 — 같은 힙 객체는?', code: 'let a = { v: 1 }\nlet b = a\n____.v = 9\nprint(a.v)', expect: '9', answer: 'b', hint: 'b는 별칭' },
+      { label: '이름', ask: 'card.name이 "민지"가 되게.', code: 'let card = { name: "____" }\nprint(card.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에' },
+      { label: '중첩 속성', ask: '중첩된 n(7)에 도달하려면 어떤 속성?', code: 'let data = { inner: { n: 7 } }\nprint(data.inner.____)', expect: '7', answer: 'n', hint: 'data.inner.n' },
     ],
   }
   window.Practices['passval'] = {
-    pattern: '유형: 원시값을 함수에 넘기면 복사본 — 함수가 바꿔도 원본은 그대로',
+    pattern: '유형: 함수가 매개변수를 아무 값으로 바꿔도 원본은 그대로임을 확인',
     problems: [
-      { label: '돈 안전', ask: 'tear가 bill=0으로 찢어도 원본 money(100)는 그대로. 빈칸에 100.', code: 'function tear(bill) { bill = 0 }\nlet money = ____\ntear(money)\nprint(money)', expect: '100', answer: '100', hint: '복사본이라 원본 안전' },
-      { label: '점수 안전', ask: 'reset이 n=999로 해도 score(50)는 그대로. 빈칸에 50.', code: 'function reset(n) { n = 999 }\nlet score = ____\nreset(score)\nprint(score)', expect: '50', answer: '50', hint: '원본 50' },
-      { label: '+1 안전', ask: 'f가 x+1 해도 a(10)는 그대로. 빈칸에 10.', code: 'function f(x) { x = x + 1 }\nlet a = ____\nf(a)\nprint(a)', expect: '10', answer: '10', hint: '복사본만 바뀜' },
-      { label: '반값 안전', ask: 'half가 반으로 해도 price(200)는 그대로. 빈칸에 200.', code: 'function half(v) { v = v / 2 }\nlet price = ____\nhalf(price)\nprint(price)', expect: '200', answer: '200', hint: '원본 200' },
-      { label: '지워도 안전', ask: 'clear가 ""로 비워도 name("민지")은 그대로. 빈칸에 민지.', code: 'function clear(s) { s = "" }\nlet name = "____"\nclear(name)\nprint(name)', expect: '"민지"', answer: '민지', hint: '원본 문자열 안전' },
+      { label: '돈 안전', ask: 'tear가 받은 bill을 아무 값으로 바꿔도 원본 money(100)는? 아무 숫자나.', code: 'function tear(bill){ bill = ____ }\nlet money = 100\ntear(money)\nprint(money)', expect: '100', answer: '0', hint: '복사본이라 원본 안전' },
+      { label: '점수 안전', ask: 'reset이 n을 아무 값으로 해도 score(50)는? 아무 숫자나.', code: 'function reset(n){ n = ____ }\nlet score = 50\nreset(score)\nprint(score)', expect: '50', answer: '999', hint: '원본 안전' },
+      { label: '+더해도 안전', ask: 'add1이 x에 뭘 더해도 a(10)는? 아무 숫자나.', code: 'function add1(x){ x = x + ____ }\nlet a = 10\nadd1(a)\nprint(a)', expect: '10', answer: '5', hint: '복사본만 바뀜' },
+      { label: '반값도 안전', ask: 'half가 v를 아무 값으로 해도 price(200)는? 아무 숫자나.', code: 'function half(v){ v = ____ }\nlet price = 200\nhalf(price)\nprint(price)', expect: '200', answer: '0', hint: '원본 안전' },
+      { label: '지워도 안전', ask: 'clear가 s를 비워도 name("민지")은? 아무 문자열이나(따옴표).', code: 'function clear(s){ s = ____ }\nlet name = "민지"\nclear(name)\nprint(name)', expect: '"민지"', answer: '""', hint: '원본 안전' },
     ],
   }
   window.Practices['passobj'] = {
-    pattern: '유형: 객체를 함수에 넘기면 같은 것 — 함수가 바꾸면 원본도 바뀐다',
+    pattern: '유형: 함수에 "그 객체"를 넘기면 원본이 바뀐다 — 무엇을 넘길지 채운다',
     problems: [
-      { label: '차감', ask: 'pay가 30 깎으면 a.money도 70. 빈칸에 30.', code: 'function pay(acc) { acc.money = acc.money - ____ }\nlet a = { money: 100 }\npay(a)\nprint(a.money)', expect: '70', answer: '30', hint: '같은 객체라 원본 차감' },
-      { label: '이름 변경', ask: 'rename하면 user.name도 "지훈". 빈칸에 지훈.', code: 'function rename(u) { u.name = "____" }\nlet user = { name: "민지" }\nrename(user)\nprint(user.name)', expect: '"지훈"', answer: '지훈', hint: '원본도 바뀜' },
-      { label: 'hp 증가', ask: 'grow가 +50 하면 hero.hp도 150. 빈칸에 50.', code: 'function grow(p) { p.hp = p.hp + ____ }\nlet hero = { hp: 100 }\ngrow(hero)\nprint(hero.hp)', expect: '150', answer: '50', hint: '100+50' },
-      { label: '0으로', ask: 'zero하면 obj.count도 0. 빈칸에 0.', code: 'function zero(o) { o.count = ____ }\nlet obj = { count: 99 }\nzero(obj)\nprint(obj.count)', expect: '0', answer: '0', hint: '원본이 0으로' },
-      { label: '완료 표시', ask: 'tag하면 task.done도 true. 빈칸에 true.', code: 'function tag(item) { item.done = ____ }\nlet task = { done: false }\ntag(task)\nprint(task.done)', expect: 'true', answer: 'true', hint: '원본도 true' },
+      { label: '지갑', ask: 'pay는 받은 지갑의 money를 0으로. wallet.money도 0이 되게 하려면 pay에 무엇을 넘길까?', code: 'function pay(acc){ acc.money = 0 }\nlet wallet = { money: 100 }\npay(____)\nprint(wallet.money)', expect: '0', answer: 'wallet', hint: '그 객체를 넘기면 공유' },
+      { label: '이름 변경', ask: 'rename은 받은 객체 이름을 바꾼다. user.name도 바뀌게 하려면?', code: 'function rename(u){ u.name = "지훈" }\nlet user = { name: "민지" }\nrename(____)\nprint(user.name)', expect: '"지훈"', answer: 'user', hint: 'user를 넘긴다' },
+      { label: 'hp', ask: 'grow는 받은 것의 hp를 999로. hero.hp도 바뀌게 하려면?', code: 'function grow(p){ p.hp = 999 }\nlet hero = { hp: 100 }\ngrow(____)\nprint(hero.hp)', expect: '999', answer: 'hero', hint: 'hero를 넘긴다' },
+      { label: '완료', ask: 'done은 받은 것의 ok를 true로. task.ok도 바뀌게 하려면?', code: 'function done(t){ t.ok = true }\nlet task = { ok: false }\ndone(____)\nprint(task.ok)', expect: 'true', answer: 'task', hint: 'task를 넘긴다' },
+      { label: '0으로', ask: 'zero는 받은 것의 count를 0으로. data.count도 바뀌게 하려면?', code: 'function zero(o){ o.count = 0 }\nlet data = { count: 99 }\nzero(____)\nprint(data.count)', expect: '0', answer: 'data', hint: 'data를 넘긴다' },
     ],
   }
   window.Practices['passarr'] = {
-    pattern: '유형: 배열도 참조 — 함수 안에서 push·수정하면 원본 배열도 바뀐다',
+    pattern: '유형: 함수에 "그 배열"을 넘기면 원본이 바뀐다 — 무엇을 넘길지 채운다',
     problems: [
-      { label: 'push 새어나감', ask: 'add가 9를 push하면 arr 길이도 3. 빈칸에 9.', code: 'function add(list) { list.push(____) }\nlet arr = [1, 2]\nadd(arr)\nprint(arr.length)', expect: '3', answer: '9', hint: '같은 배열이라 늘어남' },
-      { label: '빈 배열에', ask: 'fill이 7을 push하면 nums[0]도 7. 빈칸에 7.', code: 'function fill(a) { a.push(____) }\nlet nums = []\nfill(nums)\nprint(nums[0])', expect: '7', answer: '7', hint: '원본에 들어감' },
-      { label: '0번 수정', ask: 'double이 2배로 하면 arr[0]도 10. 빈칸에 2.', code: 'function double(list) { list[0] = list[0] * ____ }\nlet arr = [5, 6]\ndouble(arr)\nprint(arr[0])', expect: '10', answer: '2', hint: '5*2' },
-      { label: '비우기', ask: 'clear가 length=0으로 하면 원본도 빔. 빈칸에 0.', code: 'function clear(a) { a.length = ____ }\nlet items = [1, 2, 3]\nclear(items)\nprint(items.length)', expect: '0', answer: '0', hint: 'length=0' },
-      { label: '항목 추가', ask: 'append("우유")하면 cart 길이 2. 빈칸에 우유.', code: 'function append(list, x) { list.push(x) }\nlet cart = ["빵"]\nappend(cart, "____")\nprint(cart.length)', expect: '2', answer: '우유', hint: '원본 배열이 늘어남' },
+      { label: 'push', ask: 'add는 받은 배열에 push한다. arr이 늘어나게 하려면 무엇을 넘길까?', code: 'function add(list){ list.push(9) }\nlet arr = [1, 2]\nadd(____)\nprint(arr.length)', expect: '3', answer: 'arr', hint: 'arr을 넘기면 같은 배열' },
+      { label: '빈 배열에', ask: 'fill9는 받은 배열에 9를 push. nums에 들어가게 하려면?', code: 'function fill9(a){ a.push(9) }\nlet nums = []\nfill9(____)\nprint(nums[0])', expect: '9', answer: 'nums', hint: 'nums를 넘긴다' },
+      { label: '비우기', ask: 'reset은 받은 배열을 비운다. items가 비게 하려면?', code: 'function reset(a){ a.length = 0 }\nlet items = [1, 2, 3]\nreset(____)\nprint(items.length)', expect: '0', answer: 'items', hint: 'items를 넘긴다' },
+      { label: '항목 추가', ask: 'grow는 받은 배열에 항목을 더한다. cart가 늘어나게 하려면?', code: 'function grow(list){ list.push("새") }\nlet cart = ["빵"]\ngrow(____)\nprint(cart.length)', expect: '2', answer: 'cart', hint: 'cart를 넘긴다' },
+      { label: '0번 수정', ask: 'double0은 받은 배열의 0번을 2배로. arr[0]이 바뀌게 하려면?', code: 'function double0(a){ a[0] = a[0] * 2 }\nlet arr = [5, 6]\ndouble0(____)\nprint(arr[0])', expect: '10', answer: 'arr', hint: 'arr을 넘긴다' },
     ],
   }
   window.Practices['graph'] = {
-    pattern: '유형: 객체가 객체를 가리킨다 — 화살표를 따라가고, 같은 객체면 함께 바뀐다',
+    pattern: '유형: 화살표를 따라가는 "경로"를 채운다 — 같은 객체면 함께 바뀐다',
     problems: [
-      { label: '베프 머리', ask: 'me.friend가 효니를 가리킨다. me.friend.hair를 바꾸면 효니도. 빈칸에 숏컷.', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\nme.friend.hair = "____"\nprint(hyoni.hair)', expect: '"숏컷"', answer: '숏컷', hint: '같은 사람 객체' },
-      { label: '화살표 따라', ask: 'a.next가 b를 가리킨다. b.val을 7로. 빈칸에 7.', code: 'let a = { next: null }\nlet b = { val: ____ }\na.next = b\nprint(a.next.val)', expect: '7', answer: '7', hint: 'a.next.val = b.val' },
-      { label: '참조로 변경', ask: 'y.ref가 x를 가리킨다. y.ref.n을 9로 바꾸면 x.n도. 빈칸에 9.', code: 'let x = { n: 1 }\nlet y = { ref: x }\ny.ref.n = ____\nprint(x.n)', expect: '9', answer: '9', hint: '같은 x' },
-      { label: '리더 이름', ask: 'team.leader가 p. team.leader.name을 바꾸면 p도. 빈칸에 이.', code: 'let p = { name: "김" }\nlet team = { leader: p }\nteam.leader.name = "____"\nprint(p.name)', expect: '"이"', answer: '이', hint: '같은 사람' },
-      { label: '2중 중첩', ask: 'root.child.child.v가 3이 되게.', code: 'let root = { child: { child: { v: ____ } } }\nprint(root.child.child.v)', expect: '3', answer: '3', hint: '안쪽 v에 3' },
+      { label: '베프 경로', ask: '효니 머리를 숏컷으로 — 효니를 직접 안 쓰고. me를 통해 효니에 닿는 경로는?', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\n____.hair = "숏컷"\nprint(hyoni.hair)', expect: '"숏컷"', answer: 'me.friend', hint: 'me.friend = 효니' },
+      { label: '화살표 따라', ask: 'a.next 안의 값 7을 꺼내려면 어떤 속성?', code: 'let a = { next: { val: 7 } }\nprint(a.next.____)', expect: '7', answer: 'val', hint: 'a.next.val' },
+      { label: '참조 경로', ask: 'x.n을 9로 — x를 직접 안 쓰고 y를 통해. x에 닿는 경로는?', code: 'let x = { n: 1 }\nlet y = { ref: x }\n____.n = 9\nprint(x.n)', expect: '9', answer: 'y.ref', hint: 'y.ref = x' },
+      { label: '리더 이름', ask: 'team.leader(=p)의 이름을 꺼내려면?', code: 'let p = { name: "김" }\nlet team = { leader: p }\nprint(team.leader.____)', expect: '"김"', answer: 'name', hint: '.name' },
+      { label: '2중 중첩', ask: '2중 중첩 안의 v(3)를 꺼내려면?', code: 'let root = { child: { child: { v: 3 } } }\nprint(root.child.child.____)', expect: '3', answer: 'v', hint: '.v' },
     ],
   }
   window.Practices['friends'] = {
-    pattern: '유형: 배열 안에 사람 객체 — 배열로 바꿔도 원래 그 사람(같은 객체)이 바뀐다',
+    pattern: '유형: 배열 안 사람 객체에 닿는 경로를 채운다 — 같은 객체면 함께 바뀐다',
     problems: [
-      { label: '배열로 변경', ask: 'list[0]과 minji는 같은 객체. list[0].name을 바꾸면 minji도. 빈칸에 X.', code: 'let minji = { name: "민지" }\nlet list = [minji]\nlist[0].name = "____"\nprint(minji.name)', expect: '"X"', answer: 'X', hint: '같은 사람 객체' },
-      { label: '배열 속 나이', ask: 'people[0].age가 20이 되게.', code: 'let people = [{ age: ____ }]\nprint(people[0].age)', expect: '20', answer: '20', hint: '객체의 age' },
-      { label: 'hp 공유', ask: 'arr[0]과 a는 같은 객체. arr[0].hp를 50으로 바꾸면 a도. 빈칸에 50.', code: 'let a = { hp: 100 }\nlet arr = [a]\narr[0].hp = ____\nprint(a.hp)', expect: '50', answer: '50', hint: '같은 객체' },
-      { label: '두 번째 id', ask: 'users[1].id가 2가 되게.', code: 'let users = [{ id: 1 }, { id: ____ }]\nprint(users[1].id)', expect: '2', answer: '2', hint: '두 번째 객체' },
-      { label: '카트 항목', ask: 'cart[0].item을 "우유"로.', code: 'let cart = [{ item: "빵" }]\ncart[0].item = "____"\nprint(cart[0].item)', expect: '"우유"', answer: '우유', hint: '0번 객체의 item' },
+      { label: '배열로 변경', ask: 'minji 이름을 바꾸되 minji를 직접 안 쓰고 — 배열로 같은 사람에 닿는 경로는?', code: 'let minji = { name: "민지" }\nlet list = [minji]\n____.name = "X"\nprint(minji.name)', expect: '"X"', answer: 'list[0]', hint: 'list[0] = minji' },
+      { label: '두 번째 나이', ask: 'people의 두 번째 사람 나이(30)를 꺼내려면?', code: 'let people = [{ age: 20 }, { age: 30 }]\nprint(people[1].____)', expect: '30', answer: 'age', hint: '.age' },
+      { label: 'hp 경로', ask: 'a.hp를 50으로 — a를 직접 안 쓰고 배열로. 같은 객체 경로는?', code: 'let a = { hp: 100 }\nlet arr = [a]\n____.hp = 50\nprint(a.hp)', expect: '50', answer: 'arr[0]', hint: 'arr[0] = a' },
+      { label: 'id 찾기', ask: 'id가 2인 사람은 몇 번째? (0부터)', code: 'let users = [{ id: 1 }, { id: 2 }]\nprint(users[____].id)', expect: '2', answer: '1', hint: '두 번째 = 1' },
+      { label: '항목', ask: 'cart 0번 객체의 item을 꺼내려면?', code: 'let cart = [{ item: "빵" }]\nprint(cart[0].____)', expect: '"빵"', answer: 'item', hint: '.item' },
     ],
   }
   window.Practices['family'] = {
-    pattern: '유형: 트리(가계도) — 화살표를 여러 번 따라가 원하는 값에 도달한다',
+    pattern: '유형: 트리에서 원하는 사람/값에 닿는 경로(속성)를 채운다',
     problems: [
-      { label: '할머니 찾기', ask: 'me.parent.parent가 할머니. 이름을 꺼내려면? 빈칸에 name.', code: 'let grandma = { name: "할머니" }\nlet mom = { parent: grandma }\nlet me = { parent: mom }\nprint(me.parent.parent.____)', expect: '"할머니"', answer: 'name', hint: '.name' },
-      { label: '손자 이름', ask: 'a.child.child.name이 "손자"가 되게.', code: 'let a = { child: { child: { name: "____" } } }\nprint(a.child.child.name)', expect: '"손자"', answer: '손자', hint: '제일 안쪽' },
-      { label: '왼쪽 값', ask: 'root.left.val이 5가 되게.', code: 'let root = { left: { val: ____ } }\nprint(root.left.val)', expect: '5', answer: '5', hint: 'left.val' },
-      { label: '엄마 이름', ask: 'me.mom의 이름을 꺼내려면? 빈칸에 name.', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.____)', expect: '"엄마"', answer: 'name', hint: '.name' },
-      { label: '깊은 데이터', ask: 'tree.node.node의 데이터를 꺼내려면? 빈칸에 data.', code: 'let tree = { node: { node: { data: 7 } } }\nprint(tree.node.node.____)', expect: '7', answer: 'data', hint: '.data' },
+      { label: '할머니', ask: 'me → 엄마 → 할머니. 할머니 이름에 닿으려면 me.parent 다음 어떤 속성?', code: 'let grandma = { name: "할머니" }\nlet mom = { parent: grandma }\nlet me = { parent: mom }\nprint(me.parent.____.name)', expect: '"할머니"', answer: 'parent', hint: '엄마의 parent = 할머니' },
+      { label: '손자', ask: '2대 아래 손자 이름을 꺼내려면?', code: 'let a = { child: { child: { name: "손자" } } }\nprint(a.child.child.____)', expect: '"손자"', answer: 'name', hint: '.name' },
+      { label: '왼쪽', ask: 'root의 왼쪽(left) 안 val을 꺼내려면 어떤 속성?', code: 'let root = { left: { val: 5 } }\nprint(root.____.val)', expect: '5', answer: 'left', hint: '.left' },
+      { label: '엄마 이름', ask: 'me.mom의 이름을 꺼내려면?', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.____)', expect: '"엄마"', answer: 'name', hint: '.name' },
+      { label: '깊은 데이터', ask: 'tree.node 다음 한 단계 더 들어가 data에 닿으려면?', code: 'let tree = { node: { node: { data: 7 } } }\nprint(tree.node.____.data)', expect: '7', answer: 'node', hint: 'node를 한 번 더' },
     ],
   }
   window.Practices['cycle'] = {
-    pattern: '유형: 순환 참조 — 서로가 서로를 가리켜도 주소일 뿐, 따라가면 도달한다',
+    pattern: '유형: 순환(서로 가리킴)에서도 경로를 따라가면 도달한다 — 경로를 채운다',
     problems: [
-      { label: '왕복', ask: 'a.to=b, b.to=a. b.val을 9로 하면 a.to.val도. 빈칸에 9.', code: 'let a = {}\nlet b = {}\na.to = b\nb.to = a\nb.val = ____\nprint(a.to.val)', expect: '9', answer: '9', hint: 'a.to가 곧 b' },
-      { label: '서로 가리킴', ask: 'x.peer=y. x.peer.id를 꺼내려면? 빈칸에 id.', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.peer = y\ny.peer = x\nprint(x.peer.____)', expect: '2', answer: 'id', hint: 'x.peer=y, .id' },
-      { label: '자기 순환', ask: 'node.self가 자기 자신. node.v를 7로. 빈칸에 7.', code: 'let node = {}\nnode.self = node\nnode.v = ____\nprint(node.self.v)', expect: '7', answer: '7', hint: 'self가 곧 node' },
-      { label: '앞뒤 연결', ask: 'a.fwd=b, b.back=a. a.n을 3으로 하면 b.back.n도. 빈칸에 3.', code: 'let a = { n: ____ }\nlet b = { back: a }\na.fwd = b\nprint(b.back.n)', expect: '3', answer: '3', hint: 'b.back가 곧 a' },
-      { label: '큐 이름', ask: 'p.q=q, q.p=p. q.name을 "큐"로 하면 p.q.name도. 빈칸에 큐.', code: 'let p = {}\nlet q = {}\np.q = q\nq.p = p\nq.name = "____"\nprint(p.q.name)', expect: '"큐"', answer: '큐', hint: 'p.q가 곧 q' },
+      { label: '왕복', ask: 'a.to(=b)의 val을 꺼내려면?', code: 'let a = {}\nlet b = {}\na.to = b\nb.to = a\nb.val = 9\nprint(a.to.____)', expect: '9', answer: 'val', hint: 'a.to = b' },
+      { label: '서로 가리킴', ask: 'x.peer(=y)의 id를 꺼내려면?', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.peer = y\ny.peer = x\nprint(x.peer.____)', expect: '2', answer: 'id', hint: 'x.peer = y' },
+      { label: '자기 순환', ask: 'node.self(=자기 자신)의 v를 꺼내려면?', code: 'let node = {}\nnode.self = node\nnode.v = 7\nprint(node.self.____)', expect: '7', answer: 'v', hint: 'self = node' },
+      { label: '앞뒤 연결', ask: 'b.back(=a)의 n을 꺼내려면?', code: 'let a = { n: 3 }\nlet b = { back: a }\na.fwd = b\nprint(b.back.____)', expect: '3', answer: 'n', hint: 'b.back = a' },
+      { label: '큐 이름', ask: 'p.q(=q)의 name을 꺼내려면?', code: 'let p = {}\nlet q = {}\np.q = q\nq.p = p\nq.name = "큐"\nprint(p.q.____)', expect: '"큐"', answer: 'name', hint: 'p.q = q' },
     ],
   }
 })()
