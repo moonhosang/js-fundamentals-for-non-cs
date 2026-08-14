@@ -123,4 +123,100 @@
       { label: 'DOM + 숫자', ask: '화면 글자를 "90점"으로 — 숫자 자리에 무엇?', code: 'let el = document.createElement("div")\nel.textContent = ____ + "점"\nprint(el.textContent)', expect: '"90점"', answer: '90', hint: '숫자 90 → 자동 문자' },
     ],
   }
+
+  // ── 🧠 M1 램(ram) : typeof 함정·복사 독립 산술 ──
+  H['ram'] = {
+    pattern: '🔴 어려움 · typeof 함정(null)·복사 독립·재할당 타입변경',
+    problems: [
+      { label: 'typeof null(함정)', ask: 'typeof null 의 결과는? (유명한 함정 — "object") 빈칸에 null', code: 'print(typeof ____)', expect: '"object"', answer: 'null', hint: 'JS의 오래된 버그 — null의 typeof는 object' },
+      { label: '복사 독립 산술', ask: 'y에 5를 더해 보세요. x는? (▶ 확인)', code: 'let x = 10\nlet y = x\ny = y + ____\nprint(x)', expect: '10', answer: '5', hint: '복사라 x는 10' },
+      { label: 'typeof 식', ask: '(1 + ?)의 타입이 "number"가 되게 — 숫자를.', code: 'print(typeof (1 + ____))', expect: '"number"', answer: '1', hint: '숫자끼리 더하면 number' },
+      { label: '재할당 타입변경', ask: 'v에 글자를 담으면 typeof는? 빈칸에 v', code: 'let v = 1\nv = "hi"\nprint(typeof ____)', expect: '"string"', answer: 'v', hint: '문자 담긴 v → string' },
+      { label: '복사 두 값', ask: 'b만 9로 바꿨다. a는 그대로라 a+b는? 빈칸에 b', code: 'let a = 1\nlet b = a\nb = 9\nprint(a + ____)', expect: '10', answer: 'b', hint: 'a=1(그대로) + b=9' },
+    ],
+  }
+
+  // ── 🧠 M4-1 값=복사(ref) : 복사 vs 공유 대비 ──
+  H['ref'] = {
+    pattern: '🔴 어려움 · 복사(원시)와 공유(객체)의 차이를 한 식에서',
+    problems: [
+      { label: '복사는 그대로', ask: 'b를 9로 바꿨다. a는 여전히 1이라 a===? 가 참. 빈칸에 1', code: 'let a = 1\nlet b = a\nb = 9\nprint(a === ____)', expect: 'true', answer: '1', hint: 'a는 복사라 1 그대로' },
+      { label: '독립한 두 값', ask: 'x(10)는 그대로, y(20)만 바뀜. x+y는? 빈칸에 y', code: 'let x = 10\nlet y = x\ny = 20\nprint(x + ____)', expect: '30', answer: 'y', hint: '10 + 20' },
+      { label: '함수도 복사', ask: 'f가 받은 값을 0으로 해도 p(200)는 안전. p+? 는? 빈칸에 0', code: 'let p = 200\nfunction f(x) { x = 0 }\nf(p)\nprint(p + ____)', expect: '200', answer: '0', hint: '원본 안전 → 200 + 0' },
+      { label: '꺼낸 값 vs 객체', ask: 'b는 a.v 복사(1), c는 a 자체. c.v=9 후 b+c.v는? 빈칸에 c', code: 'let a = { v: 1 }\nlet b = a.v\nlet c = a\nc.v = 9\nprint(b + ____.v)', expect: '10', answer: 'c', hint: 'b=1(복사) + c.v=9(공유)' },
+      { label: '문자 복사', ask: 't만 "b"로 바꿈. s는 "a" 그대로라 s+t는? 빈칸에 t', code: 'let s = "a"\nlet t = s\nt = "b"\nprint(s + ____)', expect: '"ab"', answer: 't', hint: '"a" + "b"' },
+    ],
+  }
+
+  // ── 🧠 M4-2 참조=공유(ref2) : 별칭 끊김·중첩 공유 ──
+  H['ref2'] = {
+    pattern: '🔴 어려움 · 별칭이 끊기는 재할당·중첩 객체 공유',
+    problems: [
+      { label: '복사값 vs 공유', ask: 'x는 a.n 복사(1), b는 a 자체. b.n=9 후 x+b.n은? 빈칸에 b', code: 'let a = { n: 1 }\nlet b = a\nlet x = a.n\nb.n = 9\nprint(x + ____.n)', expect: '10', answer: 'b', hint: 'x=1(복사) + b.n=9(공유)' },
+      { label: '두 별칭', ask: 'a·b 둘 다 o의 별칭. a.c=5 후 b로 c를 꺼내면? 빈칸에 c', code: 'let o = { c: 0 }\nlet a = o\nlet b = o\na.c = 5\nprint(b.____)', expect: '5', answer: 'c', hint: '셋 다 같은 객체' },
+      { label: '재할당은 끊는다', ask: 'b를 새 객체로 재할당하면 a와의 연결이 끊긴다. a.n은? 빈칸에 n', code: 'let a = { n: 1 }\nlet b = a\nb = { n: 9 }\nprint(a.____)', expect: '1', answer: 'n', hint: 'b가 다른 객체를 가리켜 a는 1 그대로' },
+      { label: '배열 공유', ask: 'c는 arr과 같은 배열. c.push(3) 후 arr 길이는? 빈칸에 length', code: 'let arr = [1, 2]\nlet c = arr\nc.push(3)\nprint(arr.____)', expect: '3', answer: 'length', hint: '같은 배열' },
+      { label: '중첩 공유', ask: 'p는 me.pet과 같은 객체. p.hp=0 후 me.pet.hp는? 빈칸에 p', code: 'let me = { pet: { hp: 10 } }\nlet p = me.pet\n____.hp = 0\nprint(me.pet.hp)', expect: '0', answer: 'p', hint: 'p = me.pet(같은 객체)' },
+    ],
+  }
+
+  // ── 🧠 M2 스택(stack) : 호출 사슬·조기 반환·지역 vs 전역 ──
+  H['stack'] = {
+    pattern: '🔴 어려움 · 함수가 함수를 부르는 사슬·조기 반환·스코프',
+    problems: [
+      { label: '2배 사슬', ask: 'a는 b()의 2배. a()가 10이 되려면 b는 얼마를 돌려줘야?', code: 'function a() { return b() * 2 }\nfunction b() { return ____ }\nprint(a())', expect: '10', answer: '5', hint: '10의 절반' },
+      { label: '+1 사슬', ask: 'outer는 inner()+1. outer()가 10이 되려면 inner는?', code: 'function outer() { return inner() + 1 }\nfunction inner() { return ____ }\nprint(outer())', expect: '10', answer: '9', hint: '10 - 1' },
+      { label: '중첩 호출', ask: 'f는 +1. f(f(f(?)))가 3이 되려면 안쪽 인수는?', code: 'function f(n) { return n + 1 }\nprint(f(f(f(____))))', expect: '3', answer: '0', hint: '0→1→2→3' },
+      { label: '지역 vs 전역', ask: '함수 안 n(10)과 밖 n(99)은 다른 칸. f()+밖n = 109가 되게 빈칸에 n', code: 'function f() { let n = 10; return n }\nlet n = 99\nprint(f() + ____)', expect: '109', answer: 'n', hint: '10 + 99' },
+      { label: '조기 반환', ask: 'f(-1)이 "음"이 되게 — 두 번째 return을 채워라.', code: 'function f(n) { if (n > 0) return "양"; return "____" }\nprint(f(-1))', expect: '"음"', answer: '음', hint: '음수는 아래 return' },
+    ],
+  }
+
+  // ── 🧠 M3 힙(heap) : 공유 대비·깊은 중첩·동적 키 ──
+  H['heap'] = {
+    pattern: '🔴 어려움 · 힙 공유 vs 원시 복사·깊은 중첩·동적 키',
+    problems: [
+      { label: '공유 vs 복사', ask: 'x는 o.n 복사(5), a는 o 자체. a.n=0 후 x+a.n은? 빈칸에 a', code: 'let o = { n: 5 }\nlet a = o\nlet x = o.n\na.n = 0\nprint(x + ____.n)', expect: '5', answer: 'a', hint: 'x=5(복사) + a.n=0(공유)' },
+      { label: '배열 속 객체', ask: 'arr[0].v를 9로 바꾼 뒤 다시 꺼내려면 어떤 속성?', code: 'let arr = [{ v: 1 }]\narr[0].v = 9\nprint(arr[0].____)', expect: '9', answer: 'v', hint: 'arr[0].v' },
+      { label: '깊은 중첩', ask: '3단계 중첩 안 c(7)를 꺼내려면 마지막 속성?', code: 'let d = { a: { b: { c: 7 } } }\nprint(d.a.b.____)', expect: '7', answer: 'c', hint: 'd.a.b.c' },
+      { label: '객체 안 배열', ask: 'o.list의 개수(3)를 구하려면?', code: 'let o = { list: [1, 2, 3] }\nprint(o.list.____)', expect: '3', answer: 'length', hint: 'o.list.length' },
+      { label: '동적 키', ask: 'k("score")로 넣은 값을 점 표기로 꺼내려면 어떤 속성?', code: 'let o = {}\nlet k = "score"\no[k] = 100\nprint(o.____)', expect: '100', answer: 'score', hint: 'o.score' },
+    ],
+  }
+
+  // ── 🧠 M5 값 전달(passval) : 원시는 반환해야 바뀐다 ──
+  H['passval'] = {
+    pattern: '🔴 어려움 · 원시값은 반환+재대입해야 바뀐다(원본은 여전히 안전)',
+    problems: [
+      { label: '반환+재대입', ask: 'dbl은 2배를 돌려준다. a가 10이 되게 하려면 a에 무엇을 다시 담을까?', code: 'function dbl(n) { return n * 2 }\nlet a = 5\na = dbl(____)\nprint(a)', expect: '10', answer: 'a', hint: 'a = dbl(a)' },
+      { label: '원본 확인', ask: 'f가 받은 값을 0으로 해도 a는 7. a===? 가 참이 되게 빈칸에 7', code: 'function f(n) { n = 0 }\nlet a = 7\nf(a)\nprint(a === ____)', expect: 'true', answer: '7', hint: '원본 안전' },
+      { label: '두 번 전달', ask: 'f가 받은 값을 99로 해도 a는 3. a+? 가 3이 되게 빈칸에 0', code: 'function f(n) { n = 99 }\nlet a = 3\nf(a)\nf(a)\nprint(a + ____)', expect: '3', answer: '0', hint: '3 + 0' },
+      { label: '문자 안전', ask: 'f가 받은 글자에 "!"를 붙여도 t는 "hi". t+"?" 가 "hi!"가 되게 빈칸에 !', code: 'function f(s) { s = s + "!" }\nlet t = "hi"\nf(t)\nprint(t + "____")', expect: '"hi!"', answer: '!', hint: 't는 "hi" 그대로' },
+      { label: '반환값 더하기', ask: 'inc(a)는 5를 준다. a는 그대로 4라 inc(a)+a는? 빈칸에 a', code: 'function inc(n) { return n + 1 }\nlet a = 4\nprint(inc(a) + ____)', expect: '9', answer: 'a', hint: '5 + 4' },
+    ],
+  }
+
+  // ── 🧠 M6 참조 전달(passobj) : 중첩·배열 속성·공유 참조 ──
+  H['passobj'] = {
+    pattern: '🔴 어려움 · 함수가 중첩 속성·배열 속성을 바꾸고, 공유 참조도 함께',
+    problems: [
+      { label: '속성 0으로', ask: 'z는 받은 것 c를 0으로. d.c를 꺼내려면 어떤 속성?', code: 'function z(o) { o.c = 0 }\nlet d = { c: 5 }\nz(d)\nprint(d.____)', expect: '0', answer: 'c', hint: 'd.c' },
+      { label: '중첩 변경', ask: 'f는 받은 것의 pet.hp를 0으로. me.pet의 무엇을 꺼내면 0?', code: 'function f(o) { o.pet.hp = 0 }\nlet me = { pet: { hp: 9 } }\nf(me)\nprint(me.pet.____)', expect: '0', answer: 'hp', hint: 'me.pet.hp' },
+      { label: '배열 속성', ask: 'f는 받은 것의 list에 push. d.list의 개수(2)를 구하려면?', code: 'function f(o) { o.list.push(9) }\nlet d = { list: [1] }\nf(d)\nprint(d.list.____)', expect: '2', answer: 'length', hint: 'd.list.length' },
+      { label: '반환 없이 변경', ask: 'grow는 받은 것 n을 2배로. d.n(10)을 꺼내려면?', code: 'function grow(o) { o.n = o.n * 2 }\nlet d = { n: 5 }\ngrow(d)\nprint(d.____)', expect: '10', answer: 'n', hint: 'd.n' },
+      { label: '공유 참조도', ask: 'b는 a의 별칭. f(a)가 a.v를 1로 바꾸면 b.v는? 빈칸에 v', code: 'function f(o) { o.v = 1 }\nlet a = { v: 0 }\nlet b = a\nf(a)\nprint(b.____)', expect: '1', answer: 'v', hint: 'a·b 같은 객체' },
+    ],
+  }
+
+  // ── 🧠 M7 배열 전달(passarr) : 누적·요소 수정·map은 원본유지 ──
+  H['passarr'] = {
+    pattern: '🔴 어려움 · 여러 번 push·요소 수정·map은 원본을 안 바꿈(대비)',
+    problems: [
+      { label: '두 번 호출', ask: 'f는 push(1). 두 번 부른 뒤 arr 개수(3)를 구하려면?', code: 'function f(a) { a.push(1) }\nlet arr = [0]\nf(arr)\nf(arr)\nprint(arr.____)', expect: '3', answer: 'length', hint: '1 + 2번 push' },
+      { label: 'map은 원본유지', ask: 'f 안 map은 새 배열만 만들 뿐 원본은 그대로. arr 개수(2)를 구하려면?', code: 'function f(a) { a.map(x => x * 2) }\nlet arr = [1, 2]\nf(arr)\nprint(arr.____)', expect: '2', answer: 'length', hint: 'map은 원본 안 바꿈' },
+      { label: '요소 수정', ask: 'f는 0번을 +1. arr[0]이 10이 되었으니 꺼내려면 몇 번?', code: 'function f(a) { a[0] = a[0] + 1 }\nlet arr = [9]\nf(arr)\nprint(arr[____])', expect: '10', answer: '0', hint: 'arr[0]' },
+      { label: '별칭 전달', ask: 'ref는 arr의 별칭. f(ref)가 push하면 arr 개수(2)를 구하려면?', code: 'function f(a) { a.push(5) }\nlet arr = [1]\nlet ref = arr\nf(ref)\nprint(arr.____)', expect: '2', answer: 'length', hint: 'ref·arr 같은 배열' },
+      { label: '비우기', ask: 'clr은 받은 배열을 비운다. arr의 개수(0)를 구하려면?', code: 'function clr(a) { a.length = 0 }\nlet arr = [1, 2, 3]\nclr(arr)\nprint(arr.____)', expect: '0', answer: 'length', hint: 'arr.length' },
+    ],
+  }
 })()

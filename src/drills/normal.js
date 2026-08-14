@@ -123,4 +123,100 @@
       { label: 'reduce 합', ask: '두 값을 더해 30이 되게 — 무슨 연산?', code: 'let a = [10, 20]\nprint(a.reduce((s, x) => s ____ x, 0))', expect: '30', answer: '+', hint: 's + x' },
     ],
   }
+
+  // ── 🧠 M1 램(ram) : 재할당 여러 번·typeof·복사 후 원본 ──
+  N['ram'] = {
+    pattern: '🟡 보통 · 재할당 누적·typeof 여러 타입·복사 후 원본',
+    problems: [
+      { label: '두 번 재할당', ask: 'x를 두 번 더해 10이 되게 — 마지막에 얼마를?', code: 'let x = 1\nx = x + 1\nx = x + ____\nprint(x)', expect: '10', answer: '8', hint: '1+1=2, +8 → 10' },
+      { label: 'typeof 문자', ask: '결과가 "string"이 나오게 — 어떤 값을?', code: 'print(typeof ____)', expect: '"string"', answer: '"hi"', hint: '따옴표 친 글자' },
+      { label: '원본은 그대로', ask: 'a를 0으로 바꿔 보세요. 먼저 복사한 b는? (▶ 확인)', code: 'let a = 7\nlet b = a\na = ____\nprint(b)', expect: '7', answer: '0', hint: 'b는 복사본 → 그대로 7' },
+      { label: 'typeof 불리언', ask: '결과가 "boolean"이 나오게 — 어떤 값을?', code: 'print(typeof ____)', expect: '"boolean"', answer: 'true', hint: 'true / false' },
+      { label: '미초기화', ask: '값을 안 넣은 x의 타입은 "undefined". 빈칸에 x', code: 'let x\nprint(typeof ____)', expect: '"undefined"', answer: 'x', hint: '선언만 하면 undefined' },
+    ],
+  }
+
+  // ── 🧠 M4-1 값=복사(ref) : 계산해 바꿔도 원본 그대로 ──
+  N['ref'] = {
+    pattern: '🟡 보통 · 계산으로 바꿔도 원시값 원본은 그대로',
+    problems: [
+      { label: '곱해 바꿔도?', ask: 'y를 2배로 바꿔 보세요. x는? (▶ 확인)', code: 'let x = 3\nlet y = x\ny = y * ____\nprint(x)', expect: '3', answer: '2', hint: '복사라 x는 3' },
+      { label: '빼서 바꿔도?', ask: 'b에서 30을 빼 보세요. a는? (▶ 확인)', code: 'let a = 100\nlet b = a\nb = b - ____\nprint(a)', expect: '100', answer: '30', hint: 'a는 100 그대로' },
+      { label: '0으로 해도?', ask: 'm을 0으로 바꿔 보세요. n은? (▶ 확인)', code: 'let n = 5\nlet m = n\nm = ____\nprint(n)', expect: '5', answer: '0', hint: 'n은 5 그대로' },
+      { label: '글자 바꿔도?', ask: 's2를 다른 글자로 바꿔 보세요. s1은? (▶ 확인)', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = "____"\nprint(s1)', expect: '"무지"', answer: '어피치', hint: '문자열도 복사' },
+      { label: '꺼낸 값 바꿔도?', ask: 'a.num을 꺼낸 b를 20으로 바꿔 보세요. a.num은? (▶ 확인)', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '20', hint: '꺼낼 때 복사' },
+    ],
+  }
+
+  // ── 🧠 M4-2 참조=공유(ref2) : 여러 별칭·배열 별칭 ──
+  N['ref2'] = {
+    pattern: '🟡 보통 · 별칭으로 속성/배열을 바꾸면 원본도 함께',
+    problems: [
+      { label: '별칭 속성', ask: 'b는 a와 같은 객체. b.x를 5로 바꾸면 a.x는? 빈칸에 b', code: 'let a = { x: 1 }\nlet b = a\n____.x = 5\nprint(a.x)', expect: '5', answer: 'b', hint: '같은 객체' },
+      { label: '배열 별칭 push', ask: 'c는 arr과 같은 배열. c에 2를 push하면 arr 길이는? 빈칸에 c', code: 'let arr = [1]\nlet c = arr\n____.push(2)\nprint(arr.length)', expect: '2', answer: 'c', hint: '같은 배열' },
+      { label: 'hp 깎기', ask: 'v는 u와 같은 객체. v.hp를 0으로 하면 u.hp는? 빈칸에 v', code: 'let u = { hp: 10 }\nlet v = u\n____.hp = 0\nprint(u.hp)', expect: '0', answer: 'v', hint: '같은 객체' },
+      { label: '완료 표시', ask: 'r은 o와 같은 객체. r.done을 true로 하면 o.done은? 빈칸에 r', code: 'let o = { done: false }\nlet r = o\n____.done = true\nprint(o.done)', expect: 'true', answer: 'r', hint: '같은 객체' },
+      { label: '이름 바꾸기', ask: 'q는 p와 같은 객체. q.name을 "b"로 하면 p.name은? 빈칸에 q', code: 'let p = { name: "a" }\nlet q = p\n____.name = "b"\nprint(p.name)', expect: '"b"', answer: 'q', hint: '같은 객체' },
+    ],
+  }
+
+  // ── 🧠 M2 스택(stack) : 계산·조건·문자 반환 ──
+  N['stack'] = {
+    pattern: '🟡 보통 · 계산·조건·문자 결합을 return',
+    problems: [
+      { label: '곱 반환', ask: 'mul(3,4)가 12를 돌려주게 — 무엇을 return?', code: 'function mul(a, b) { return ____ }\nprint(mul(3, 4))', expect: '12', answer: 'a * b', hint: 'a * b' },
+      { label: '뺄셈', ask: 'sub(10,4)가 6이 되게 — 무슨 연산?', code: 'function sub(a, b) { return a ____ b }\nprint(sub(10, 4))', expect: '6', answer: '-', hint: '빼기' },
+      { label: '조건 반환', ask: 'sign(-2)가 "-"가 되게 — else 쪽을 채워라.', code: 'function sign(n) { return n > 0 ? "+" : "____" }\nprint(sign(-2))', expect: '"-"', answer: '-', hint: '음수 → else' },
+      { label: '지역 계산', ask: 'f()가 10을 돌려주게 — x(5)에 몇을 곱할까?', code: 'function f() { let x = 5; return x * ____ }\nprint(f())', expect: '10', answer: '2', hint: '5 * 2' },
+      { label: '문자 결합 반환', ask: 'g("z")가 "hi z"가 되게 — 매개변수를 붙여라.', code: 'function g(n) { return "hi " + ____ }\nprint(g("z"))', expect: '"hi z"', answer: 'n', hint: '"hi " + n' },
+    ],
+  }
+
+  // ── 🧠 M3 힙(heap) : 속성 추가·중첩·별칭·동적 접근 ──
+  N['heap'] = {
+    pattern: '🟡 보통 · 속성 추가·중첩·별칭 변경',
+    problems: [
+      { label: '속성 추가', ask: 'o.x가 5가 되게 값을 채워라.', code: 'let o = {}\no.x = ____\nprint(o.x)', expect: '5', answer: '5', hint: 'o.x = 5' },
+      { label: '0번 꺼내기', ask: '[10,20]의 첫 값(10)을 꺼내려면 몇 번?', code: 'let a = [10, 20]\nprint(a[____])', expect: '10', answer: '0', hint: '첫째 = 0' },
+      { label: '중첩', ask: 'd.in.v(7)를 꺼내려면 어떤 속성?', code: 'let d = { in: { v: 7 } }\nprint(d.in.____)', expect: '7', answer: 'v', hint: 'd.in.v' },
+      { label: '별칭 변경', ask: 'b는 a와 같은 객체. b.v를 9로 바꾸면 a.v는? 빈칸에 b', code: 'let a = { v: 1 }\nlet b = a\n____.v = 9\nprint(a.v)', expect: '9', answer: 'b', hint: '같은 객체' },
+      { label: '이름', ask: 'c.name이 "민지"가 되게.', code: 'let c = { name: "____" }\nprint(c.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에' },
+    ],
+  }
+
+  // ── 🧠 M5 값 전달(passval) : 여러 상황에서 원본 안전 ──
+  N['passval'] = {
+    pattern: '🟡 보통 · 곱·빼기·문자·불리언을 넘겨도 원본 안전',
+    problems: [
+      { label: '곱해도 안전', ask: 'f는 받은 값을 2배로. a(5)는? 빈칸에 2를 넣고 ▶확인', code: 'function f(n) { n = n * ____ }\nlet a = 5\nf(a)\nprint(a)', expect: '5', answer: '2', hint: '원본 안전' },
+      { label: '리셋해도 안전', ask: 'reset은 받은 값을 0으로. s(100)는? 빈칸에 0을 넣고 ▶확인', code: 'function reset(x) { x = ____ }\nlet s = 100\nreset(s)\nprint(s)', expect: '100', answer: '0', hint: '원본 안전' },
+      { label: '더해도 안전', ask: 'g는 받은 값에 5를 더한다. n(10)는? 빈칸에 5를 넣고 ▶확인', code: 'function g(v) { v = v + ____ }\nlet n = 10\ng(n)\nprint(n)', expect: '10', answer: '5', hint: '복사본만 바뀜' },
+      { label: '글자도 안전', ask: 'clr은 받은 글자를 바꾼다. name("민지")은? 빈칸에 아무 글자를 넣고 ▶확인', code: 'function clr(s) { s = "____" }\nlet name = "민지"\nclr(name)\nprint(name)', expect: '"민지"', answer: 'x', hint: '원본 안전' },
+      { label: '불리언도 안전', ask: 'h는 받은 값을 false로. flag(true)는? 빈칸에 false를 넣고 ▶확인', code: 'function h(b) { b = ____ }\nlet flag = true\nh(flag)\nprint(flag)', expect: 'true', answer: 'false', hint: '원본 안전' },
+    ],
+  }
+
+  // ── 🧠 M6 참조 전달(passobj) : 여러 속성 변경 ──
+  N['passobj'] = {
+    pattern: '🟡 보통 · 그 객체를 넘겨 여러 속성을 바꾼다',
+    problems: [
+      { label: 'n 설정', ask: 'f는 받은 것의 n을 5로. a.n도 바뀌게 하려면?', code: 'function f(o) { o.n = 5 }\nlet a = { n: 0 }\nf(____)\nprint(a.n)', expect: '5', answer: 'a', hint: 'a를 넘긴다' },
+      { label: '이름', ask: 'setName은 받은 것 이름을 바꾼다. p.name도 바뀌게 하려면?', code: 'function setName(u) { u.name = "지훈" }\nlet p = { name: "x" }\nsetName(____)\nprint(p.name)', expect: '"지훈"', answer: 'p', hint: 'p를 넘긴다' },
+      { label: '회복', ask: 'heal은 받은 것 hp를 100으로. e.hp도 바뀌게 하려면?', code: 'function heal(c) { c.hp = 100 }\nlet e = { hp: 1 }\nheal(____)\nprint(e.hp)', expect: '100', answer: 'e', hint: 'e를 넘긴다' },
+      { label: '완료', ask: 'fin은 받은 것 done을 true로. task.done도 바뀌게 하려면?', code: 'function fin(t) { t.done = true }\nlet task = { done: false }\nfin(____)\nprint(task.done)', expect: 'true', answer: 'task', hint: 'task를 넘긴다' },
+      { label: '증가', ask: 'add는 받은 것 x를 +1. d.x가 10이 되게 하려면?', code: 'function add(o) { o.x = o.x + 1 }\nlet d = { x: 9 }\nadd(____)\nprint(d.x)', expect: '10', answer: 'd', hint: 'd를 넘긴다' },
+    ],
+  }
+
+  // ── 🧠 M7 배열 전달(passarr) : 여러 조작 ──
+  N['passarr'] = {
+    pattern: '🟡 보통 · 그 배열을 넘겨 push·수정·비우기',
+    problems: [
+      { label: '빈 배열에 push', ask: 'add는 받은 배열에 9를 push. a[0]이 9가 되게 하려면?', code: 'function add(l) { l.push(9) }\nlet a = []\nadd(____)\nprint(a[0])', expect: '9', answer: 'a', hint: 'a를 넘긴다' },
+      { label: '비우기', ask: 'clr은 받은 배열을 비운다. items가 비게 하려면?', code: 'function clr(a) { a.length = 0 }\nlet items = [1, 2]\nclr(____)\nprint(items.length)', expect: '0', answer: 'items', hint: 'items를 넘긴다' },
+      { label: '0번 수정', ask: 'set0은 받은 배열 0번을 7로. arr[0]이 바뀌게 하려면?', code: 'function set0(a) { a[0] = 7 }\nlet arr = [1, 2]\nset0(____)\nprint(arr[0])', expect: '7', answer: 'arr', hint: 'arr을 넘긴다' },
+      { label: '항목 추가', ask: 'grow는 받은 배열에 항목을 더한다. cart가 늘어나게 하려면?', code: 'function grow(l) { l.push("새") }\nlet cart = ["빵"]\ngrow(____)\nprint(cart.length)', expect: '2', answer: 'cart', hint: 'cart를 넘긴다' },
+      { label: '두 번 push', ask: 'fill은 받은 배열에 둘을 push. n의 개수가 2가 되게 하려면?', code: 'function fill(a) { a.push(1); a.push(2) }\nlet n = []\nfill(____)\nprint(n.length)', expect: '2', answer: 'n', hint: 'n을 넘긴다' },
+    ],
+  }
 })()
