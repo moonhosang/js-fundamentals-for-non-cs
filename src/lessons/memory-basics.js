@@ -1472,4 +1472,37 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     root.querySelector('[data-m="qzg4"]').append(Quiz({ q: 'A 객체가 B를, B 객체가 다시 A를 가리킨다. 이런 <b>순환</b>이 가능할까?', options: ['불가능 — 에러', '가능 — 서로 주소를 가리킬 뿐'], answer: 1, explain: '객체는 서로의 <b>주소</b>를 담을 뿐이라 <b>순환 참조</b>가 된다. (단, 무한 탐색·GC에서 조심 — 심화.)' }))
     wireCTA(root)
   }
+
+  // ══ 🧠 메모리 챕터 실습 (드릴) — '바꿔보고 원본 확인' 예측 반복 ══════
+  window.Practices = window.Practices || {}
+  window.Practices['ram'] = {
+    pattern: '유형: 빈칸을 채워 예상한 값이 나오는지 확인 (변수·타입·null·복사)',
+    problems: [
+      { label: 'let 재할당', ask: 'let은 다시 담을 수 있다. score를 20으로 바꿔 20이 나오게.', code: 'let score = 10\nscore = ____\nprint(score)', expect: '20', answer: '20', hint: 'score = 20' },
+      { label: 'null로 비우기', ask: '값을 "일부러 비움"으로 만들려면? box에 넣어 null이 나오게.', code: 'let box = "메모"\nbox = ____\nprint(box)', expect: 'null', answer: 'null', hint: '비어있음을 일부러 = null' },
+      { label: '원시값 복사=독립', ask: 'b를 99로 바꿔도 a는 그대로 10. 빈칸에 99를 넣고 a를 확인.', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '99', hint: '원시값은 각자 복사 — a는 안 변함' },
+      { label: 'typeof', ask: '숫자 age의 타입은 "number". 빈칸에 age를 넣어 확인.', code: 'let age = 24\nprint(typeof ____)', expect: '"number"', answer: 'age', hint: 'typeof age' },
+      { label: '문자열', ask: '문자열은 따옴표로 감싼다. name에 "토끼"를 담아 출력.', code: 'let name = ____\nprint(name)', expect: '"토끼"', answer: '"토끼"', hint: '"토끼" (따옴표!)' },
+    ],
+  }
+  window.Practices['ref'] = {
+    pattern: '유형: 원시값은 복사라 독립 — 한쪽을 바꿔도 다른 쪽은 그대로임을 확인',
+    problems: [
+      { label: 'y 바꿔도 x', ask: 'y를 99로 바꿔도 x는 10 그대로. 빈칸에 99를 넣고 x 확인.', code: 'let x = 10\nlet y = x\ny = ____\nprint(x)', expect: '10', answer: '99', hint: '복사라 독립 — x는 안 변함' },
+      { label: 'a 바꿔도 b', ask: 'a를 100으로 바꿔도 b는 5 그대로. 빈칸에 100.', code: 'let a = 5\nlet b = a\na = ____\nprint(b)', expect: '5', answer: '100', hint: 'b는 자기 값 5' },
+      { label: '돈 복사', ask: 'money2를 0으로 바꿔도 money1은 200. 빈칸에 0.', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = ____\nprint(money1)', expect: '200', answer: '0', hint: '숫자는 복사' },
+      { label: '문자열도 복사', ask: 's2를 "어피치"로 바꿔도 s1은 "무지". 빈칸에 "어피치".', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = ____\nprint(s1)', expect: '"무지"', answer: '"어피치"', hint: '문자열도 원시값 → 복사' },
+      { label: '속성 꺼내면 복사', ask: 'a.num을 꺼내 담은 b를 20으로 바꿔도 a.num은 10. 빈칸에 20.', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '20', hint: '꺼낸 순간 복사 — a.num 무관' },
+    ],
+  }
+  window.Practices['ref2'] = {
+    pattern: '유형: 객체는 참조라 공유 — 별칭으로 바꾸면 원본도 바뀜을 확인',
+    problems: [
+      { label: '별칭 b.n', ask: 'b와 a는 같은 객체. b.n을 9로 바꾸면 a.n도 9. 빈칸에 9.', code: 'let a = { n: 1 }\nlet b = a\nb.n = ____\nprint(a.n)', expect: '9', answer: '9', hint: '같은 객체 공유' },
+      { label: 'hp 깎기', ask: 'p2.hp를 50으로 깎으면 p1.hp도 50. 빈칸에 50.', code: 'let p1 = { hp: 100 }\nlet p2 = p1\np2.hp = ____\nprint(p1.hp)', expect: '50', answer: '50', hint: 'p1·p2 같은 객체' },
+      { label: '배열 push 공유', ask: 'copy에 9를 push하면 arr 길이도 3. 빈칸에 9.', code: 'let arr = [1, 2]\nlet copy = arr\ncopy.push(____)\nprint(arr.length)', expect: '3', answer: '9', hint: '배열도 참조 — 같은 배열' },
+      { label: '이름 바꾸기', ask: 'ref.name을 "지훈"으로 바꾸면 user.name도 "지훈". 빈칸에 "지훈".', code: 'let user = { name: "민지" }\nlet ref = user\nref.name = ____\nprint(user.name)', expect: '"지훈"', answer: '"지훈"', hint: '같은 객체' },
+      { label: '중첩 객체', ask: 'f는 me.friend와 같은 객체. f.hair를 "숏컷"으로. 빈칸에 "숏컷".', code: 'let me = { friend: { hair: "긴머리" } }\nlet f = me.friend\nf.hair = ____\nprint(me.friend.hair)', expect: '"숏컷"', answer: '"숏컷"', hint: 'f와 me.friend 같은 객체' },
+    ],
+  }
 })()
