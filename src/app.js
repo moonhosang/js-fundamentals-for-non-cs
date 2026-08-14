@@ -41,8 +41,15 @@
     { id: '3-6', badge: '3-6', title: '3-6 · 요약', subtitle: '식을 나무로 보는 눈', step: true },
     { id: 4, name: '조건', subtitle: 'if · 비교 · 참/거짓 · 삼항',
       plan: ['비교 연산자 == vs === · > < >=', 'truthy/falsy — 빈 값의 참·거짓', 'if / else 와 삼항 연산자', '화면: 조건에 따라 배지 색 바꾸기', '유형 드릴 ×10'] },
-    { id: 5, name: '함수', subtitle: '값을 넣으면 값이 나오는 상자',
-      plan: ['함수 정의와 호출 · 매개변수/인수', 'return — 값을 돌려주기', '화살표 함수 표기', '유형 드릴 ×10'] },
+    { id: 5, name: '함수', subtitle: '왜 · 정의 · 호출 · return · 스코프 (단계로 배웁니다)' },
+    // step:true → 함수 하위 단계(5강의 쇼츠, 5-1~5-7). 진도 단위는 5강 하나. 드릴은 startAt:8 → 5-8~.
+    { id: '5-1', badge: '5-1', title: '5-1 · 왜 함수?', subtitle: '반복을 하나로 묶기', step: true },
+    { id: '5-2', badge: '5-2', title: '5-2 · 정의 & 호출', subtitle: '만들고 ( )로 부르기', step: true },
+    { id: '5-3', badge: '5-3', title: '5-3 · 매개변수 vs 인수', subtitle: '빈 자리 vs 넣는 값', step: true },
+    { id: '5-4', badge: '5-4', title: '5-4 · return', subtitle: '돌려줌 vs print', step: true },
+    { id: '5-5', badge: '5-5', title: '5-5 · 🧠 프레임', subtitle: '부르면 칸이 쌓인다(복습)', step: true },
+    { id: '5-6', badge: '5-6', title: '5-6 · 스코프', subtitle: '지역 vs 전역', step: true },
+    { id: '5-7', badge: '5-7', title: '5-7 · 화살표 & 요약', subtitle: '짧은 표기 · 언제 만드나', step: true },
     { id: 6, name: '배열', subtitle: '여러 값을 목록으로',
       plan: ['배열 만들기 [ ] · 인덱스로 꺼내기', 'length · push 로 추가', '화면: 목록을 여러 칩으로 그리기', '유형 드릴 ×10'] },
     { id: 7, name: '반복과 map', subtitle: '훑기 · 변환하기',
@@ -89,7 +96,7 @@
     { tag: '🧠', title: '메모리 기초', optional: true, skipTo: 2, items: ['ram', 'stack', 'heap', 'ref', 'ref2', 'passval', 'passobj', 'passarr'] },
     { tag: '🕸️', title: '객체 그래프', optional: true, skipTo: 2, items: ['graph', 'friends', 'family', 'cycle'] },
     // 표현식(3강)은 개념 단계(3, 3-1~3-6) + 드릴(...P(3) = 3-7~). 조건은 4강으로.
-    { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', ...P(3), 4, ...P(4), 5, ...P(5)] },
+    { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5)] },
     { n: '3', title: '여러 값과 반복', items: [6, ...P(6), 7, ...P(7), 8, ...P(8)] },
     { tag: '🧠', title: '메모리 심화', optional: true, skipTo: 9, items: ['callstack', 'closure', 'gc'] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
@@ -307,9 +314,12 @@
         else host.append(renderComingSoon(l))
       } else if (hasContent(l.id)) {
         window.Lessons[l.id](host)
-        // 번호 SSOT: 레슨 파일 헤더 badge를 메타(l.badge)로 강제 동기화 — 파일이 옛 번호여도 화면은 정확.
-        const bdg = host.querySelector('.lesson-header .badge')
-        if (bdg && l.badge) bdg.textContent = l.badge
+        // 번호 SSOT: 숫자 강의만 헤더 badge를 메타(l.badge='N강')로 강제 동기화 — 파일이 옛 번호여도 화면 정확.
+        // (substep '3-1'·메모리 'ram' 등은 이모지 badge를 파일이 직접 그리므로 건드리지 않는다.)
+        if (typeof l.id === 'number') {
+          const bdg = host.querySelector('.lesson-header .badge')
+          if (bdg && l.badge) bdg.textContent = l.badge
+        }
       } else {
         host.append(renderComingSoon(l))
       }
