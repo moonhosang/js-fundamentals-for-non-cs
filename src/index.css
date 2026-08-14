@@ -1801,3 +1801,15 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
 .ram-zone + .ram-zone { margin-top: 10px; }
 .ram-zone-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
 .ram-zone-label b { color: var(--brand); }
+
+/* 이름표 장부 ↔ RAM 칸 분리 (M1 ②③ — 변수명은 RAM 칸 안에 없다) */
+.namemap { display: flex; flex-direction: column; gap: 12px; }
+.nm-head { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.nm-head small { font-family: var(--font-sans); font-weight: 500; color: var(--muted); }
+.nm-ledger, .nm-ram { padding: 10px 12px; border: 1px dashed var(--border); border-radius: 10px; }
+.nm-ledger { background: color-mix(in srgb, var(--brand-soft) 22%, var(--panel)); }
+.nm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.nm-chip { font-family: var(--font-mono); font-size: 13px; border: 1.5px solid; border-radius: 8px; padding: 5px 11px; display: inline-flex; align-items: center; gap: 5px; background: var(--panel); }
+.nm-chip .nm-adr { color: var(--muted); font-size: 11px; }
+.nm-chip .nm-to { color: var(--muted); font-weight: 700; }
+/* RAM 칸(값만, 이름 없음) — .ram-hi 재사용하되 lbl 없이 cell+adr */

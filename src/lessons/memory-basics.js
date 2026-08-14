@@ -11,6 +11,39 @@
   }
 
   // ══ M1 · 메모리(RAM)란 ══════════════════════════════════════
+  // 📇 이름표 장부(이름→주소) + 🗄️ RAM 칸(주소:값, 이름 없음) — 변수명 공간과 메모리 공간을 분리해 보인다.
+  // "변수 이름이 메모리 칸 안에 저장된다"는 흔한 오해를 그림에서 차단.
+  function buildNameMap(ledgerHead, ramHead, items, N) {
+    const map = document.createElement('div'); map.className = 'namemap'
+    const dots = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
+    const ledger = document.createElement('div'); ledger.className = 'nm-ledger'
+    ledger.innerHTML = `<div class="nm-head">${ledgerHead}</div>`
+    const chips = document.createElement('div'); chips.className = 'nm-chips'
+    items.forEach((it) => {
+      const ch = document.createElement('div'); ch.className = 'nm-chip'
+      ch.style.borderColor = it.c; ch.style.color = it.c
+      ch.innerHTML = `<b>${it.name}</b>${it.tag ? ` <small>${it.tag}</small>` : ''}<span class="nm-to">→</span><span class="nm-adr">${it.adr}</span>`
+      chips.append(ch)
+    })
+    ledger.append(chips); map.append(ledger)
+    const ramWrap = document.createElement('div'); ramWrap.className = 'nm-ram'
+    ramWrap.innerHTML = `<div class="nm-head">${ramHead}</div>`
+    const w = document.createElement('div'); w.className = 'ram-grid'
+    const byAt = {}; items.forEach((it) => { byAt[it.at] = it })
+    w.append(dots())
+    for (let i = 0; i < N; i++) {
+      const it = byAt[i]
+      if (it) {
+        const hi = document.createElement('div'); hi.className = 'ram-hi'
+        hi.innerHTML = `<span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${String(it.val).replace(/</g, '&lt;')}</span><span class="adr">${it.adr}</span>`
+        w.append(hi)
+      } else { const c = document.createElement('div'); c.className = 'ram-c'; w.append(c) }
+    }
+    w.append(dots())
+    ramWrap.append(w); map.append(ramWrap)
+    return map
+  }
+
   window.Lessons['ram'] = function render(root) {
     root.innerHTML = `
       <header class="lesson-header">
@@ -32,11 +65,9 @@
       <h3 class="section-title">② RAM의 모습 — 주소가 붙은 칸들</h3>
       <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 → 그래서 Random Access</span>
       <div class="card">
-        <div class="file-label">📄 같은 RAM인데 — 쓰임이 둘로 갈린다 (변수 영역 · 값 메모리 영역)</div>
+        <div class="file-label">📄 변수명은 어디 있나? — 이름은 '장부', 값은 'RAM 칸' (따로다)</div>
         <div data-m="ramgrid"></div>
-        <p class="section-desc" style="margin:10px 0 0">RAM은 <b>수십억 칸</b>(⋯ = 끝없이 이어짐). 프로그램은 이걸 <b>두 구역</b>으로 나눠 쓴다 —
-        <b>📇 변수 영역</b>(이름표 장부)엔 <b>원시값 변수가 값째로</b>(age=20), <b>🗄️ 값 메모리 영역</b>(힙)엔 <b>객체·배열의 실체</b>가 놓인다.
-        객체 변수는 장부엔 <b>주소만</b> 두고 값 메모리를 가리킨다. (두 구역 = 스택·힙, 자세힌 다음 강의)</p>
+        <p class="section-desc" style="margin:10px 0 0">헷갈리기 쉬운 것 — <b>변수 이름(age)은 RAM 칸 안에 있는 게 아니다.</b> 이름은 <b>📇 이름표 장부</b>에 살며 <b>주소(#0042)로 그 칸을 가리킬</b> 뿐이다. 실제 <b>값</b>은 <b>🗄️ RAM의 그 주소 칸</b>에 있다. (RAM은 수십억 칸 ⋯. 원시값 칸=스택 구역·객체 칸=힙 구역 — 다음 M2·M3)</p>
       </div>
 
       <div class="card" style="background:color-mix(in srgb, #f59e0b 8%, var(--panel));border-color:color-mix(in oklab, #f59e0b 32%, var(--border))">
@@ -58,7 +89,7 @@
         <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
       </ul>
       <div class="card">
-        <div class="file-label">📍 그 RAM 칸에 이름표를 붙인 모습 — 변수 = 주소에 붙인 '접근용 이름'</div>
+        <div class="file-label">📍 이름은 '장부'에, 값은 'RAM 칸'에 — 변수는 주소로 그 칸을 가리킨다</div>
         <div data-m="letconst-ram"></div>
         <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. (이 둘은 원시값이라 값이 <b>변수 영역 칸 안에</b> 있다.) <code>🏷️ score</code>(let)는 이 칸의 <b>값을 바꿀 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 바꾼다.</p>
       </div>
@@ -154,59 +185,26 @@
     // RAM을 두 구역으로 — 📇 변수 영역(원시값 값째로) / 🗄️ 값 메모리 영역(객체·배열 실체).
     const grid = root.querySelector('[data-m="ramgrid"]')
     if (grid) {
-      const dots = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
-      const hiCell = (it) => {
-        const hi = document.createElement('div'); hi.className = 'ram-hi'
-        hi.innerHTML = `<span class="lbl" style="color:${it.c}">${it.lbl}</span><span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${it.val.replace(/</g, '&lt;')}</span>`
-        return hi
-      }
-      const zone = (labelHtml, items, N) => {
-        const z = document.createElement('div'); z.className = 'ram-zone'
-        const h = document.createElement('div'); h.className = 'ram-zone-label'; h.innerHTML = labelHtml; z.append(h)
-        const w = document.createElement('div'); w.className = 'ram-grid'
-        w.append(dots())
-        for (let i = 0; i < N; i++) {
-          const it = items[i]
-          if (it) { w.append(hiCell(it)) }
-          else { const c = document.createElement('div'); c.className = 'ram-c'; w.append(c) }
-        }
-        w.append(dots())
-        z.append(w); return z
-      }
-      grid.append(zone('📇 <b>변수 영역</b> (스택) — 이름표 장부 · 원시값이 <b>값째로</b>', {
-        3: { lbl: '🏷️ age', val: '20', c: '#16a34a' },
-        13: { lbl: '🏷️ done', val: 'true', c: '#0891b2' },
-      }, 30))
-      grid.append(zone('🗄️ <b>값 메모리 영역</b> (힙) — 객체·배열의 <b>실체</b> (흩어져 놓인다)', {
-        4: { lbl: '📦 객체', val: '{ name: "민지", age: 24 }', c: '#6366f1' },
-        22: { lbl: '📚 배열', val: '[1, 2, 3]', c: '#7c3aed' },
-      }, 30))
+      grid.append(buildNameMap(
+        '📇 이름표 장부 <small>— 변수명이 사는 곳 (이름 → 주소)</small>',
+        '🗄️ RAM <small>— 값이 사는 물리 칸 (주소마다). 이름은 여기 없다!</small>',
+        [
+          { name: 'age', val: '20', c: '#16a34a', adr: '#0042', at: 6 },
+          { name: 'done', val: 'true', c: '#0891b2', adr: '#0043', at: 19 },
+          { name: 'card', val: '{ name: "민지" }', c: '#6366f1', adr: '#0055', at: 38 },
+        ], 52,
+      ))
     }
-    // ③ RAM 칸에 이름표 붙이기 — score(let)·PI(const)를 주소 붙은 칸으로 (②와 같은 물리 그리드)
     const g2 = root.querySelector('[data-m="letconst-ram"]')
     if (g2) {
-      const w = document.createElement('div')
-      w.className = 'ram-grid'
-      const dots2 = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
-      const items2 = {
-        9: { lbl: '🏷️ score · let', val: '20', c: '#16a34a', adr: '#0042' },
-        26: { lbl: '🔒 PI · const', val: '3.14', c: '#dc2626', adr: '#0043' },
-      }
-      const N2 = 42
-      w.append(dots2())
-      for (let i = 0; i < N2; i++) {
-        const it = items2[i]
-        if (it) {
-          const hi = document.createElement('div')
-          hi.className = 'ram-hi'
-          hi.innerHTML = `<span class="lbl" style="color:${it.c}">${it.lbl}</span><span class="cell" style="border-color:${it.c};color:${it.c};background:${it.c}1a">${it.val}</span><span class="adr">${it.adr}</span>`
-          w.append(hi)
-        } else {
-          const c = document.createElement('div'); c.className = 'ram-c'; w.append(c)
-        }
-      }
-      w.append(dots2())
-      g2.append(w)
+      g2.append(buildNameMap(
+        '📇 이름표 장부 <small>— 이름(+let/const) → 주소</small>',
+        '🗄️ RAM <small>— 값 칸 (이름 없음)</small>',
+        [
+          { name: '🏷️ score', tag: 'let', val: '20', c: '#16a34a', adr: '#0042', at: 6 },
+          { name: '🔒 PI', tag: 'const', val: '3.14', c: '#dc2626', adr: '#0043', at: 20 },
+        ], 30,
+      ))
     }
     root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
       title: 'let은 장부의 값을 바꾼다 · const는 잠근다 (원시값은 장부 안에)',
