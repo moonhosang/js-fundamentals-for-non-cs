@@ -1,4 +1,4 @@
-// 🧠 메모리 기초 챕터 — RAM → 스택 → 힙 → 값복사vs참조 (바닥부터 단계별)
+// 🧠 메모리 기초 챕터 — 메모리(주로 RAM) → 스택 → 힙 → 값복사vs참조 (바닥부터 단계별)
 // [notional machine] 실제 CPU가 아니라 "이렇게 상상하면 동작을 정확히 예측하는" 일관된 모형.
 // 콜 스택 심화·클로저는 함수(6강) 뒤 '메모리 심화'로.
 
@@ -11,7 +11,7 @@
   }
 
   // ══ M1 · 메모리(Memory)란 — 주로 RAM ═══════════════════════
-  // 📇 이름표 장부 = 사상(Map): 이름(●) ──화살표──▶ 🗄️ RAM 칸(주소:값).
+  // 📇 이름표 장부 = 사상(Map): 이름(●) ──화살표──▶ 🗄️ 메모리 칸(주소:값).
   // names: [{name, c, to(=cell id)}], cells: [{id, val, adr, at, c}]. 여러 이름이 한 셀을 가리키면 = 별칭.
   function buildNameMap(ledgerHead, ramHead, names, cells, N) {
     const NS = 'http://www.w3.org/2000/svg'
@@ -84,7 +84,7 @@
       </div>
 
       <div class="card" style="background:color-mix(in srgb, var(--muted) 6%, var(--panel));border-style:dashed">
-        <p class="section-desc" style="margin:0;font-size:13px">ℹ️ <b>안내 — 입문자를 위해 단순화했습니다.</b> 우리는 값이 사는 곳을 계속 "<b>RAM(저장소)</b>"이라 부르지만, 실제 메모리는
+        <p class="section-desc" style="margin:0;font-size:13px">ℹ️ <b>안내 — 입문자를 위해 단순화했습니다.</b> 우리는 값이 사는 곳을 그냥 "<b>메모리</b>"라 부르지만(주로 <b>RAM</b>), 실제 메모리는
         <b>CPU 캐시(L1·L2·L3) → RAM → 디스크 스왑</b>으로 이어진 <b>여러 층(메모리 계층)</b>입니다. 여기선 값이 '<b>어디에</b> 사는지'의 감을 위해 <b>RAM 한 층으로 뭉뚱그렸고</b>, CPU 캐시·디스크 스왑은 <b>의도적으로 뺐습니다</b>. 스택·힙도 <b>개념 모델</b>이고요.
         더 깊이: <a href="https://ko.wikipedia.org/wiki/메모리_계층_구조" target="_blank" rel="noopener noreferrer">메모리 계층 구조 — 위키백과 ↗</a></p>
       </div>
@@ -93,12 +93,12 @@
       <p class="section-desc">컴퓨터가 <code>3 + 4</code>를 계산하려면 <b>3</b>과 <b>4</b>를 잠깐 어딘가에 적어둬야 한다. 그 "메모장"이 메모리다.
       변수 <code>let age = 20</code>은 곧 <b>"메모리 한 칸에 20을 적고 age라는 이름을 붙여라"</b>는 뜻이다.</p>
 
-      <h3 class="section-title">② RAM의 모습 — 주소가 붙은 칸들</h3>
-      <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 → 그래서 Random Access</span>
+      <h3 class="section-title">② 메모리의 모습 — 주소가 붙은 칸들</h3>
+      <span class="learn-tag">📎 칸마다 번호(주소)가 있어 CPU가 아무 칸이나 즉시 읽는다 (그래서 RAM = <b>R</b>andom <b>A</b>ccess <b>M</b>emory)</span>
       <div class="card">
-        <div class="file-label">📄 변수명은 어디 있나? — 이름은 '장부', 값은 'RAM 칸' (따로다)</div>
+        <div class="file-label">📄 변수명은 어디 있나? — 이름은 '장부', 값은 '메모리 칸' (따로다)</div>
         <div data-m="ramgrid"></div>
-        <p class="section-desc" style="margin:10px 0 0">헷갈리기 쉬운 것 — <b>변수 이름(age)은 RAM 칸 안에 있는 게 아니다.</b> 이름은 <b>📇 이름표 장부</b>에 살며 <b>주소(#0042)로 그 칸을 가리킬</b> 뿐이다. 실제 <b>값</b>은 <b>🗄️ RAM의 그 주소 칸</b>에 있다. (RAM은 수십억 칸 ⋯. 원시값 칸=스택 구역·객체 칸=힙 구역 — 다음 M2·M3)</p>
+        <p class="section-desc" style="margin:10px 0 0">헷갈리기 쉬운 것 — <b>변수 이름(age)은 메모리 칸 안에 있는 게 아니다.</b> 이름은 <b>📇 이름표 장부</b>에 살며 <b>주소(#0042)로 그 칸을 가리킬</b> 뿐이다. 실제 <b>값</b>은 <b>🗄️ 메모리의 그 주소 칸</b>에 있다. (메모리는 수십억 칸 ⋯. 원시값 칸=스택 구역·객체 칸=힙 구역 — 다음 M2·M3)</p>
       </div>
 
       <div class="card" style="background:color-mix(in srgb, #f59e0b 8%, var(--panel));border-color:color-mix(in oklab, #f59e0b 32%, var(--border))">
@@ -120,7 +120,7 @@
         <li><code>var</code> — <b>옛날 방식</b>: 스코프·순서 함정이 있어 <b>지금은 거의 안 쓴다</b>. <b>let·const만</b> 기억하면 된다.</li>
       </ul>
       <div class="card">
-        <div class="file-label">📍 이름은 '장부'에, 값은 'RAM 칸'에 — 변수는 주소로 그 칸을 가리킨다</div>
+        <div class="file-label">📍 이름은 '장부'에, 값은 '메모리 칸'에 — 변수는 주소로 그 칸을 가리킨다</div>
         <div data-m="letconst-ram"></div>
         <p class="section-desc" style="margin:10px 0 0">주소 <code>#0042</code>는 <b>기계가 쓰는 번호</b>일 뿐 — 사람은 못 외우고, 실행할 때마다 바뀐다(위 💡). 그래서 그 칸에 <b>접근하려고</b> 사람이 부를 이름(<b>변수</b>)을 붙인다 — <code>score</code>라고 쓰면 그 칸에 닿는다. (이 둘은 원시값이라 값이 <b>변수 영역 칸 안에</b> 있다.) <code>🏷️ score</code>(let)는 이 칸의 <b>값을 바꿀 수 있고</b>, <code>🔒 PI</code>(const)는 <b>잠겨</b> 못 바꾼다.</p>
       </div>
@@ -184,14 +184,14 @@
       <p class="section-desc" style="opacity:.85">❓ "그런데 <code>null</code>은 어디 있지? 전역변수 같은 건가?" — <b>아니다.</b> <code>null</code>·<code>undefined</code>는 <b>변수가 아니라 값(리터럴)</b>이다 — <code>5</code>·<code>"hi"</code>처럼 그냥 쓰는 값일 뿐. '전역에 딱 하나 있는 무언가'가 아니라, 대입하면 그 <b>장부 칸에 담기는 원시값</b>이다(그래서 원시값처럼 장부 칸 안에 산다).</p>
 
       <h3 class="section-title">⑤ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
-      <span class="learn-tag">📎 RAM = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
+      <span class="learn-tag">📎 메모리(작업용 RAM) = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
       <ul class="section-list">
-        <li><b>RAM</b> — 빠르고 넓지만 <b>전원이 꺼지면 싹 지워진다</b>(휘발성). 프로그램이 도는 <b>동안만</b> 값을 둔다.</li>
+        <li><b>메모리(RAM)</b> — 빠르고 넓지만 <b>전원이 꺼지면 싹 지워진다</b>(휘발성). 프로그램이 도는 <b>동안만</b> 값을 둔다.</li>
         <li><b>디스크/SSD</b> — 느리지만 <b>영구</b>. 파일 저장, 사진, 문서는 여기에.</li>
-        <li>비유: RAM은 지금 펼쳐 놓은 <b>작업 책상</b>(끝나면 치움), 디스크는 <b>서랍/캐비닛</b>(계속 보관).</li>
+        <li>비유: 메모리는 지금 펼쳐 놓은 <b>작업 책상</b>(끝나면 치움), 디스크는 <b>서랍/캐비닛</b>(계속 보관).</li>
       </ul>
 
-      <h3 class="section-title">⑥ 이 RAM을 '두 방식'으로 나눠 쓴다</h3>
+      <h3 class="section-title">⑥ 이 메모리를 '두 방식'으로 나눠 쓴다</h3>
       <p class="section-desc">프로그램은 이 메모리를 아무렇게나 쓰지 않고, 성격이 다른 <b>두 방식</b>으로 나눠 쓴다 — <b>스택</b>과 <b>힙</b>.
       다음 두 강의에서 각각 자세히 본다.</p>
       <div class="card">
@@ -205,7 +205,7 @@
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">값은 <b>메모리</b>(주로 RAM)의 <b>주소 붙은 칸</b>에 저장된다. 변수 = 그 칸에 값을 적고 이름표를 붙인 것.
-        RAM은 빠르지만 <b>끄면 사라진다</b>. 이 RAM을 스택·힙 두 방식으로 나눠 쓴다.</p>
+        메모리는 빠르지만 <b>끄면 사라진다</b>. 이 메모리를 스택·힙 두 방식으로 나눠 쓴다.</p>
       </div>
 
       <div class="practice-cta">
@@ -213,12 +213,12 @@
         <button class="chip on" data-goto="stack">🧠 M2 · 스택 →</button>
       </div>
     `
-    // RAM을 두 구역으로 — 📇 변수 영역(원시값 값째로) / 🗄️ 값 메모리 영역(객체·배열 실체).
+    // 📇 이름표 장부(이름→●) ──화살표──▶ 🗄️ 메모리 칸(값). 변수명 공간과 메모리를 분리해 보인다.
     const grid = root.querySelector('[data-m="ramgrid"]')
     if (grid) {
       grid.append(buildNameMap(
         '📇 이름표 장부 <small>— 변수명이 사는 곳 (이름 → 칸)</small>',
-        '🗄️ RAM <small>— 값이 사는 물리 칸 (주소마다). 이름은 여기 없다!</small>',
+        '🗄️ 메모리 <small>— 값이 사는 물리 칸 (주소마다). 이름은 여기 없다!</small>',
         [
           { name: 'age', c: '#16a34a', to: 'a1' },
           { name: 'done', c: '#0891b2', to: 'a2' },
@@ -235,7 +235,7 @@
     if (g2) {
       g2.append(buildNameMap(
         '📇 이름표 장부 <small>— 이름(+let/const) → 칸</small>',
-        '🗄️ RAM <small>— 값 칸 (이름 없음)</small>',
+        '🗄️ 메모리 <small>— 값 칸 (이름 없음)</small>',
         [
           { name: '🏷️ score', tag: 'let', c: '#16a34a', to: 's1' },
           { name: '🔒 PI', tag: 'const', c: '#dc2626', to: 's2' },
@@ -345,7 +345,7 @@
       <header class="lesson-header">
         <span class="badge">🧠 M2</span>
         <h2>스택 — 이름표 장부가 쌓이는 곳</h2>
-        <p>M1에서 RAM을 <b>변수 영역</b>과 <b>값 메모리</b> 둘로 나눴다. 그중 <b>변수 영역(이름표 장부)이 바로 이 스택</b>이다 — 이름표 슬롯을 <b>작고 빠르게</b> 쌓고(push) 뗀다(pop).</p>
+        <p>M1에서 메모리를 <b>변수 영역</b>과 <b>값 메모리</b> 둘로 나눴다. 그중 <b>변수 영역(이름표 장부)이 바로 이 스택</b>이다 — 이름표 슬롯을 <b>작고 빠르게</b> 쌓고(push) 뗀다(pop).</p>
       </header>
 
       <div class="card" style="border-color:var(--brand)">
@@ -735,7 +735,7 @@
       <div class="card">
         <div class="file-label">🔗 별칭(alias)이란 — <b>장부의 두 이름이 한 칸을 가리킨다</b> (let a = box)</div>
         <div data-m="alias"></div>
-        <p class="section-desc" style="margin:10px 0 0">M1의 장부/RAM 그림으로 — <code>let a = box</code>는 <b>주소를 복사</b>한다. 그래서 장부에 <b>이름은 둘(box·a)</b>인데 화살표는 <b>같은 칸</b>으로 모인다 = <b>별칭</b>. 한 이름으로 그 칸의 객체를 바꾸면 <b>다른 이름으로 봐도 바뀐 값</b>이 보인다(위 시뮬의 정체).</p>
+        <p class="section-desc" style="margin:10px 0 0">M1의 장부/메모리 그림으로 — <code>let a = box</code>는 <b>주소를 복사</b>한다. 그래서 장부에 <b>이름은 둘(box·a)</b>인데 화살표는 <b>같은 칸</b>으로 모인다 = <b>별칭</b>. 한 이름으로 그 칸의 객체를 바꾸면 <b>다른 이름으로 봐도 바뀐 값</b>이 보인다(위 시뮬의 정체).</p>
       </div>
 
       <h3 class="section-title">② 그래서 실무에서</h3>
@@ -783,7 +783,7 @@
     root.querySelector('[data-m="ref"]').append(MemoryModel(SCENARIO_REF))
     root.querySelector('[data-m="alias"]').append(buildNameMap(
       '📇 이름표 장부 <small>— 이름 둘, 같은 칸을 가리킴</small>',
-      '🗄️ RAM (값 메모리) <small>— 객체 하나</small>',
+      '🗄️ 메모리 (값이 사는 칸) <small>— 객체 하나</small>',
       [
         { name: 'box', c: '#2563eb', to: 'o1' },
         { name: 'a', c: '#ea580c', to: 'o1' },

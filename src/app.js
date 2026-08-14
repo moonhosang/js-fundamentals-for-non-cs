@@ -8,7 +8,7 @@
   // 개념 강의(진도). 완성되면 window.Lessons[id] 에 render가 등록된다.
   const LESSONS = [
     { id: 1, badge: '1강', title: '1강 · 변수', subtitle: '값에 이름 붙이기' },
-    // 🧠 메모리 기초 (실습 없는 개념 챕터, RAM부터 바닥부터). 콜스택·클로저는 함수 필요 → 심화로.
+    // 🧠 메모리 기초 (실습 없는 개념 챕터, 메모리부터 바닥부터). 콜스택·클로저는 함수 필요 → 심화로.
     { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(Memory)', subtitle: '값이 사는 공간 · 주소 · 휘발성 (주로 RAM)' },
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
     { id: 'heap', badge: '🧠 M3', title: 'M3 · 힙', subtitle: '창고 · 주소 · 왜 힙인가 · ❌스택' },
