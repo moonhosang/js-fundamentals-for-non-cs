@@ -293,8 +293,8 @@
 
   // ══ M2 · 스택 ═══════════════════════════════════════════════
   const SCENARIO_STACK_SLOTS = {
-    title: '스택 = 이름표 장부 — 이름표가 값째로 쌓인다', showHeap: false,
-    stackLabel: '📚 스택 (= M1의 이름표 장부)',
+    title: '스택 = 이름표 장부 — 이름표가 값째로 쌓인다',
+    stackLabel: '📚 스택 (= M1의 이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['let age = 20', 'let count = 3', 'let ok = true'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '<b>age</b>라는 이름표가 스택에 놓인다 — 값 20을 가진다. (왼쪽 age=이름, 오른쪽 20=값)' },
@@ -303,7 +303,8 @@
     ],
   }
   const SCENARIO_PUSHPOP = {
-    title: '함수가 함수를 부르면 — 칸이 쌓였다 사라진다', showHeap: false,
+    title: '함수가 함수를 부르면 — 칸이 쌓였다 사라진다',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: [
       'function makeGreeting(name) {',
       '  return "안녕, " + name + "님"',
@@ -327,8 +328,8 @@
   }
   // ⑤ 스코프 — 전역 장부 vs 함수 장부(프레임), 접근 범위.
   const SCENARIO_SCOPE = {
-    title: '전역 장부 vs 함수 장부(프레임) — 접근 범위가 다르다', showHeap: false,
-    stackLabel: '📚 스택 (이름표 장부)',
+    title: '전역 장부 vs 함수 장부(프레임) — 접근 범위가 다르다',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: [
       'let appName = "메모장"       // 전역변수 (함수 밖)',
       'function greet(user) {',
@@ -555,7 +556,8 @@
   }
   // 값에 의한 전달 — 원시값을 함수에 넘기면 '복사본'이 전달된다(원본 안전).
   const SCENARIO_PASSVAL = {
-    title: '값에 의한 전달 — 복사본이라 원본이 안전하다', showHeap: false,
+    title: '값에 의한 전달 — 복사본이라 원본이 안전하다',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['let money = 10000', 'function tear(bill) {', '  bill = 0        // 건네받은 걸 찢어 못 쓰게', '}', 'tear(money)'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }], heap: {}, note: 'money 슬롯에 10000이 담긴다.' },
@@ -619,7 +621,8 @@
   // ══ M4 · 값 복사 vs 참조 ════════════════════════════════════
   // 이름표 착각 정면돌파 — let y = x. 원시값은 각자 자기 칸에 복사(같은 10에 안 붙는다).
   const SCENARIO_XY_COPY = {
-    title: '이름표 착각 깨기 — let y = x 하면 같은 10에 붙나?', showHeap: false,
+    title: '이름표 착각 깨기 — let y = x 하면 같은 10에 붙나?',
+    stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['let x = 10', 'let y = x        // y도 10 — 같은 10에 붙나?', 'y = 20           // y만 바꾸면 x는?'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }] }], heap: {}, note: 'x 칸에 값 <b>10이 직접</b> 산다(원시값은 칸 안에).' },
@@ -640,7 +643,8 @@
   }
   // 문자열도 원시값 → 복사(숫자만이 아님)
   const SCENARIO_STR_COPY = {
-    title: '문자열도 복사 — nick2 = nick1 (숫자만이 아니다)', showHeap: false,
+    title: '문자열도 복사 — nick2 = nick1 (숫자만이 아니다)',
+    stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['let nick1 = "무지"', 'let nick2 = nick1      // 문자열도 복사', 'nick2 = "어피치"        // nick2만 바뀜'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }] }], heap: {}, note: 'nick1에 "무지".' },

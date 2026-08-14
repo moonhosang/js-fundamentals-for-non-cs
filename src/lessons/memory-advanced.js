@@ -7,6 +7,7 @@
   // ── M3 시나리오: 콜 스택 push/pop ──
   const SCENARIO_STACK = {
     title: '콜 스택 — 함수가 쌓였다 사라진다',
+    stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리 (힙)',
     code: ['function addTax(price) {', '  return price + price * 0.1', '}', 'let total = addTax(1000)'],
     steps: [
       { line: 3, stack: [{ name: 'main', slots: [] }], heap: {},

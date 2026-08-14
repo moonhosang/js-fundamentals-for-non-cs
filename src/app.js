@@ -352,11 +352,11 @@
       const varName = m ? m[1] : 'x'
       memHost.dataset.shown = '1'
       memHost.hidden = false
-      memHost.innerHTML = '<div class="card"><div class="file-label">🧠 정답의 메모리 모델 — 이 변수는 어디에 사나 (스택/힙)</div><div data-mem-mount></div></div>'
+      memHost.innerHTML = '<div class="card"><div class="file-label">🧠 정답의 메모리 모델 — 이 값은 어디에 사나 (이름표 장부 / 값 메모리)</div><div data-mem-mount></div></div>'
       memHost.querySelector('[data-mem-mount]').append(MemoryModel({
-        title: `${varName} = ${p.answer} — 스택(Stack)`,
+        title: `${varName} = ${p.answer} — 이름표 장부에 직접`,
         code: [`let ${varName} = ${p.answer}`],
-        steps: [{ line: 0, stack: [{ name: 'main', slots: [{ name: varName, value: p.answer }] }], heap: {}, note: `이런 <b>작은 값</b>은 변수 ${varName}가 <b>스택</b>에 가진다(이름표에 값이 붙음). 힙은 큰 묶음(객체·배열)용 — 뒤 강의.` }],
+        steps: [{ line: 0, stack: [{ name: 'main', slots: [{ name: varName, value: p.answer }] }], heap: {}, note: `이런 <b>작은 값</b>(원시값)은 변수 ${varName}의 <b>이름표 장부 칸에 직접</b> 산다. <b>값 메모리(힙)</b>는 큰 묶음(객체·배열)용 — 뒤 강의.` }],
       }))
     }
     sec.querySelector('[data-m="drill"]').append(Drill({ problems: [p], hideHead: true, onSolved: () => { markPractice(l.id); revealMem() } }))

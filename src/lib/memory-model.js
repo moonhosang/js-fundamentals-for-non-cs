@@ -119,8 +119,8 @@
           </div>
           <div class="code"></div>
           <div class="stage">
-            <div class="col col-stack"><h4>📚 콜 스택 (Call Stack)</h4><div class="stack-body"></div></div>
-            <div class="col col-heap"><h4>🗄️ 힙 (Heap)</h4><div class="heap-body"></div></div>
+            <div class="col col-stack"><h4>📇 이름표 장부 (변수)</h4><div class="stack-body"></div></div>
+            <div class="col col-heap"><h4>🗄️ 값 메모리 (힙)</h4><div class="heap-body"></div></div>
             <svg class="arrows"></svg>
           </div>
           <div class="note"></div>
@@ -230,7 +230,7 @@
           body = `<span class="hlabel">${esc(box.label)}</span>`
         }
         return `<div class="${cls}${anim}" data-heap="${esc(id)}" style="border-color:${c}"><span class="htag" style="background:${c}">${esc(id)}</span>${body}</div>`
-      }).join('') : '<div class="empty">(힙 비어 있음 — 아직 객체·배열 없음)</div>'
+      }).join('') : '<div class="empty">(값 메모리 비어 있음 — 아직 객체·배열 없음.<br>원시값은 이름표 장부 안에 직접 산다)</div>'
 
       this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels }
 
