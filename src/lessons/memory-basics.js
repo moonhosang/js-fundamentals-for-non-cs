@@ -192,6 +192,7 @@
       <p class="section-desc" style="opacity:.85">❓ "그런데 <code>null</code>은 어디 있지? 전역변수 같은 건가?" — <b>아니다.</b> <code>null</code>·<code>undefined</code>는 <b>변수가 아니라 값(리터럴)</b>이다 — <code>5</code>·<code>"hi"</code>처럼 그냥 쓰는 값일 뿐. '전역에 딱 하나 있는 무언가'가 아니라, 대입하면 그 변수가 가리키는 <b>원시값</b>이다(그래서 다른 원시값처럼 값 메모리에 담기고 이름표가 가리킨다).</p>
 
       <h3 class="section-title">⑤ 휘발성 — 끄면 사라진다 (디스크와 다름)</h3>
+      <div data-m="qz"></div>
       <span class="learn-tag">📎 메모리(작업용 RAM) = 넓고 빠른 '작업 책상' · 디스크(SSD) = 느리지만 영구인 '서랍'</span>
       <ul class="section-list">
         <li><b>메모리(RAM)</b> — 빠르고 넓지만 <b>전원이 꺼지면 싹 지워진다</b>(휘발성). 프로그램이 도는 <b>동안만</b> 값을 둔다.</li>
@@ -287,6 +288,12 @@
         'rate = 0.2           // 이름표를 옮기려 하면?',
         '// ▶ 실행하면 "Assignment to constant variable" 에러 — const가 막는다',
       ].join('\n'),
+    }))
+    root.querySelector('[data-m="qz"]').append(Quiz({
+      q: '<code>let x = 10</code> 을 실행한 프로그램을 <b>껐다가 다시 켜면</b> x는?',
+      options: ['10 그대로 — 자동 저장됨', '없다 — 메모리는 껐다 켜면 싹 지워진다(휘발성)'],
+      answer: 1,
+      explain: '변수 값은 <b>메모리(RAM)</b>에 있고, 메모리는 <b>전원이 꺼지면 사라진다</b>(휘발성). 남기려면 <b>디스크(파일·DB)</b>에 따로 저장해야 한다 — 파일처럼 자동으로 남지 않는다.',
     }))
     wireCTA(root)
   }

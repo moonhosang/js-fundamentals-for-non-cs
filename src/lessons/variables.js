@@ -75,6 +75,8 @@
         <p class="section-desc" style="margin:8px 0 0;opacity:.8">💡 심화(지금은 몰라도 됨): 원시는 정확힌 7종(<code>symbol</code>·<code>bigint</code> 포함) · JS의 <code>===</code>는 <b>값</b>을 비교(참조 아님) · 문자열 메서드(<code>.length</code>)는 <b>오토박싱</b>(잠깐 래퍼 객체)으로 동작 · <b>Java와 달리 JS 문자열은 객체가 아니라 원시</b>다. <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a></p>
       </div>
 
+      <div data-m="qz1"></div>
+
       <h3 class="section-title">② 변수 = 값에 붙이는 '이름표'</h3>
       <span class="learn-tag">📎 Figma의 '컬러 스타일 이름'처럼 — 값 대신 이름을 부른다</span>
       <p class="section-desc">디자인 툴을 써봤다면 이미 익숙하다 — Figma에서 <code>#3B82F6</code>을 매번 쓰지 않고 <b>Primary</b>라는
@@ -122,6 +124,7 @@
       실무에선 대부분 const로 시작하고, 꼭 바꿔야 할 때만 let으로 바꾼다. (옛날 방식 <code>var</code>도 있지만 함정이 있어 <b>지금은 안 쓴다</b> — <b>let·const만</b> 기억.)</p>
 
       <h3 class="section-title">⑤ const에 객체를 담으면? — 가장 헷갈리는 지점</h3>
+      <div data-m="qz5"></div>
       <span class="learn-tag">📎 const는 '변수 재할당'을 막는다 — 객체 '속성 변경'은 안 막는다 (가리키는 포인터만 고정)</span>
       <p class="section-desc">입문자가 제일 많이 걸리는 곳 — <code>const user = { name: "민지" }</code> 인데 <code>user.name = "지훈"</code>이 <b>된다?!</b>
       맞다. const가 고정하는 건 <b>변수(이름표)가 가리키는 대상(주소·포인터)</b>이지 <b>그 객체의 내용</b>이 아니다. <b>화살표는 못 옮겨도, 화살표가 가리키는 객체 안</b>은 바꿀 수 있다.</p>
@@ -148,6 +151,18 @@
     `
 
     // ── 위젯 주입 ──
+    root.querySelector('[data-m="qz1"]').append(Quiz({
+      q: '<code>typeof []</code> (빈 배열)의 결과는?',
+      options: ['"array"', '"object"', '"list"'],
+      answer: 1,
+      explain: '배열도 <b>객체(참조 타입)</b>라 <code>typeof []</code>는 <b>"object"</b>! (배열 전용 타입은 없다.) 원시(숫자·문자열·불린)만 각자 타입 이름을 갖고, 나머지 묶음은 다 object.',
+    }))
+    root.querySelector('[data-m="qz5"]').append(Quiz({
+      q: '<code>const user = { name: "민지" }</code> 다음 <code>user.name = "지훈"</code> — 될까?',
+      options: ['에러 — const라서 못 바꾼다', '된다 — 이름은 "지훈"으로 바뀐다'],
+      answer: 1,
+      explain: 'const가 고정하는 건 <b>변수가 가리키는 대상(주소·포인터)</b>이지 <b>객체 내용</b>이 아니다. <code>user.name=…</code>은 내용 변경이라 <b>된다</b>. 막히는 건 <code>user = {…}</code>(다른 객체로 재할당)뿐.',
+    }))
     root.querySelector('[data-m="v1"]').append(Runner({
       showBox: false,
       code: 'print(3)          // 숫자\nprint("안녕")      // 글자 (문자열 — 따옴표로 감싼다)\nprint(true)       // 참/거짓 (true 아니면 false)',
