@@ -41,6 +41,7 @@
         <span class="lesson-goal-tag">🎯 이 강에서</span>
         <p><b>표현식(expression)</b>은 <b>값을 낳는다</b>. 식은 <b>중첩</b>되고(인자·피연산자도 표현식),
         <b>우선순위·안쪽·좌→우</b>로 <b>축약(reduction)</b>된다. (선수: 2강 연산자·우선순위)</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/식_(프로그래밍)" target="_blank" rel="noopener noreferrer">식(expression) ↗</a> · <a href="https://ko.wikipedia.org/wiki/연산자_(프로그래밍)" target="_blank" rel="noopener noreferrer">연산자 ↗</a></p>
       </div>
 
       <div class="card" style="border-color:var(--brand)">

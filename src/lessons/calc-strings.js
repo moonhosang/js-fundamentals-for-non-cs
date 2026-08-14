@@ -37,6 +37,7 @@
         <p>숫자는 <code>+ - * / %</code>로 계산한다(<b>우선순위</b>는 곱·나눗셈 먼저).
         글자(문자열)는 <code>+</code>로 <b>이어붙이고</b>, 요즘은 <b>템플릿 리터럴</b> <code>\`안녕 \${name}\`</code>로 깔끔하게 끼워 넣는다.
         <b>주의</b>: 숫자와 글자가 <code>+</code>로 만나면 <b>글자로 변한다</b> — <code>"5" + 3 = "53"</code>.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/문자열_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">문자열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/부동_소수점" target="_blank" rel="noopener noreferrer">부동소수점(숫자) ↗</a></p>
       </div>
 
       <h3 class="section-title">① 숫자 계산</h3>

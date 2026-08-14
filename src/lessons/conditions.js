@@ -19,6 +19,7 @@
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p><b>비교</b>(<code>&gt; &lt; ===</code>)는 참/거짓을 만든다. <code>if</code>는 그 갈림길을 고른다.
         그리고 <code>if</code>는 true/false만이 아니라 <b>아무 값의 '있냐/없냐'(truthy/falsy)</b>로도 판단한다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/조건문" target="_blank" rel="noopener noreferrer">조건문 ↗</a> · <a href="https://ko.wikipedia.org/wiki/제어_흐름" target="_blank" rel="noopener noreferrer">제어 흐름 ↗</a></p>
       </div>
 
       <div class="card" style="border-color:var(--brand)">

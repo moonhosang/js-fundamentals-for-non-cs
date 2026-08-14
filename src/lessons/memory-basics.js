@@ -355,6 +355,7 @@
         <h2>스택 — 이름표 장부가 쌓이는 곳</h2>
         <p>M1에서 메모리를 <b>변수 영역</b>과 <b>값 메모리</b> 둘로 나눴다. 그중 <b>변수 영역(이름표 장부)이 바로 이 스택</b>이다 — 이름표 슬롯을 <b>작고 빠르게</b> 쌓고(push) 뗀다(pop).</p>
       </header>
+      <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a> · <a href="https://ko.wikipedia.org/wiki/스택_(자료_구조)" target="_blank" rel="noopener noreferrer">스택(자료구조) ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">🔗 M1에서 이어집니다</div>
@@ -468,6 +469,7 @@
         <h2>힙 — 값 메모리, 큰 묶음을 두는 창고</h2>
         <p>M1에서 나눈 <b>🗄️ 값 메모리</b> — M2에서 "객체는 장부에 <b>주소만</b> 두고 여길 가리킨다"던 <b>바로 그곳</b>이 힙이다. <b>크고 변하는 묶음</b>(객체·배열)의 실체가 여기 산다.</p>
       </header>
+      <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/동적_메모리_할당" target="_blank" rel="noopener noreferrer">동적 메모리 할당 ↗</a> · <a href="https://ko.wikipedia.org/wiki/메모리_관리" target="_blank" rel="noopener noreferrer">메모리 관리 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">🔗 M1·M2에서 이어집니다</div>
@@ -530,7 +532,7 @@
 
       <div class="practice-cta">
         <span>슬롯이 '주소'를 담는다 — 그래서 생기는 유명한 함정을 다음에서 —</span>
-        <button class="chip on" data-goto="ref">🧠 M4 · 값 복사 vs 참조 →</button>
+        <button class="chip on" data-goto="ref">🧠 M4-1 · 값 = 복사 →</button>
       </div>
     `
     root.querySelector('[data-m="heap"]').append(MemoryModel(SCENARIO_HEAP))
@@ -615,14 +617,14 @@
   }
 
   // ══ M4 · 값 복사 vs 참조 ════════════════════════════════════
-  // 변수끼리 숫자 복사 (순수 값 복사)
-  const SCENARIO_VAR_COPY = {
-    title: '변수끼리 — money2 = money1 (숫자 복사)', showHeap: false,
-    code: ['let money1 = 100', 'let money2 = money1     // 숫자 복사', 'money2 = 0              // money2만 0으로'],
+  // 이름표 착각 정면돌파 — let y = x. 원시값은 각자 자기 칸에 복사(같은 10에 안 붙는다).
+  const SCENARIO_XY_COPY = {
+    title: '이름표 착각 깨기 — let y = x 하면 같은 10에 붙나?', showHeap: false,
+    code: ['let x = 10', 'let y = x        // y도 10 — 같은 10에 붙나?', 'y = 20           // y만 바꾸면 x는?'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money1', value: '100' }] }], heap: {}, note: 'money1에 100.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money1', value: '100' }, { name: 'money2', value: '100' }] }], heap: {}, note: 'money1의 숫자 100을 <b>복사</b>해 money2에. 별개의 두 슬롯.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'money1', value: '100' }, { name: 'money2', value: '0', bad: true }] }], heap: {}, note: 'money2만 0. <b>money1은 그대로 100</b> — 숫자는 복사라 서로 무관.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }] }], heap: {}, note: 'x 칸에 값 <b>10이 직접</b> 산다(원시값은 칸 안에).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '10' }] }], heap: {}, note: '😵 착각: "x·y가 <b>같은 10 하나</b>에 같이 붙는다"? ❌ 아니다. 원시값은 값을 <b>복사</b> — y는 <b>자기 칸에 자기 10</b>을 받는다. <b>칸이 둘</b>이다.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → <b>y 칸만</b> 20. <b>x는 그대로 10</b>. 애초에 별개의 두 칸이라 y를 바꿔도 x는 안 움직인다 → "같은 10에 붙어있다 옮겨붙는다"는 그림은 <b>틀렸다</b>.' },
     ],
   }
   // 객체 속성끼리 숫자 복사 — 객체가 껴도 숫자면 복사(안 공유)
@@ -700,78 +702,46 @@
         note: 'p2.hp = 50 → 같은 박스라 <b>link.hp도 50</b>. 숫자·문자열이면 복사였지만, 이건 <b>묶음(객체)</b>이라 공유. Date·배열·클래스… <b>묶음이면 전부 참조</b>, 같은 규칙이 그대로 적용된다.' },
     ],
   }
+  // ── M4-1 · 값 = 복사 (이름표 착각 정면돌파) ──────────────────
   window.Lessons['ref'] = function render(root) {
     root.innerHTML = `
       <header class="lesson-header">
-        <span class="badge">🧠 M4</span>
-        <h2>값 복사 vs 참조 — "왜 obj까지 바뀌지?"</h2>
-        <p>원시값을 넣으면 <b>값이 복사</b>, 객체·배열을 넣으면 <b>주소가 복사</b>된다. 이 차이가 입문자 최대 함정이다.</p>
+        <span class="badge">🧠 M4-1</span>
+        <h2>값 = 복사 — 원시값은 각자 '자기 값'을 가진다</h2>
+        <p>변수를 다른 변수에 담으면? 원시값(숫자·문자열·참거짓)은 <b>값이 복사</b>돼 서로 무관해진다. 입문자의 '이름표 착각'을 정면으로 깬다.</p>
       </header>
 
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
-        <p>원시값 = <b>값 복사</b>(서로 무관). 객체·배열 = <b>주소 복사</b>(같은 힙 = 별칭). 별칭이면 한쪽 변경이 <b>양쪽에 보인다</b>.</p>
+        <p>원시값 대입 = <b>값 복사</b>(독립). <code>let y = x</code>는 "같은 10에 같이 붙는" 게 아니라 <b>각자 자기 칸에 자기 값</b>. 객체가 껴도 <b>꺼낸 게 원시값이면 복사</b>다.</p>
       </div>
 
-      <div class="concept">
-        <p class="concept-lead">🗺️ 타입 지도 — 이 한 장이 '복사냐 공유냐'를 가른다</p>
-        <p class="section-desc" style="margin-top:0">JS의 값은 딱 <b>두 부류</b>다. 어느 부류냐가 복사/공유를 결정한다. (지금까지 배운 숫자·문자열·객체·배열이 다 여기 들어간다.)</p>
-        <ul class="section-list">
-          <li><b>원시 타입(primitive) — 복사된다(독립·불변)</b>:
-            <code>숫자 number</code> · <code>문자열 string</code> · <code>참거짓 boolean</code> · <code>null</code>(비어있음을 <b>일부러</b> 넣음) · <code>undefined</code>(아직 값 없음) · <span style="opacity:.75">고급: <code>symbol</code> · <code>bigint</code>(아주 큰 정수)</span>.
-            → 슬롯에 <b>값이 직접</b> 들어간다.</li>
-          <li><b>참조 타입(reference) — 공유된다(별칭·가변)</b>: <b>여러 값을 하나로 묶은 것</b>은 다 여기다 —
-            <code>객체 object {}</code> · <code>배열 array []</code> · <code>함수 function</code>(함수도 값!) ·
-            <code>Date</code>(날짜) · <code>Map·Set</code>(모음) · <code>RegExp</code>(정규식),
-            그리고 <b>우리가 <code>class</code>로 만든 인스턴스</b>(<code>new Hero(...)</code>).
-            → 하나같이 <b>힙</b>에 살고, 슬롯엔 <b>주소만</b> 들어간다. (그래서 <code>typeof</code>는 대부분 <code>"object"</code>)</li>
-        </ul>
-        <p class="section-desc" style="margin:6px 0 0">🔍 확인법 <code>typeof</code>: <code>typeof 100</code>→"number", <code>typeof "kim"</code>→"string", <code>typeof true</code>→"boolean", <code>typeof {}</code>→"object", <code>typeof []</code>→"object"(배열도 객체!), <code>typeof new Date()</code>→"object", <code>typeof function(){}</code>→"function".
-        <br>그래서 이 강의 규칙은 하나 — <b>대입되는 값이 원시면 복사, 참조(묶음의 주소)면 공유.</b> "객체가 끼었냐"가 아니라 <b>대입되는 값의 타입</b>이 전부를 가른다.</p>
+      <h3 class="section-title">1단계 · 변수는 이름표 — 맞다 (1강 복습)</h3>
+      <p class="section-desc">변수는 <b>값에 붙인 이름표</b>. 여기까진 좋다 — <b>ok!</b> 그런데 이 그림을 <b>과하게 밀면</b> 착각이 생긴다. 2단계에서 정면으로 본다.
+      <br><span style="opacity:.8">📚 이 챕터가 파고드는 용어: <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형(원시/참조) ↗</a> · <a href="https://ko.wikipedia.org/wiki/불변객체" target="_blank" rel="noopener noreferrer">불변 객체(immutable) ↗</a></span></p>
+
+      <h3 class="section-title">2단계 · 이름표 착각 깨기 — <code>let y = x</code></h3>
+      <div class="card warn-box">
+        <p class="section-desc" style="margin:0">😵 <b>흔한 착각:</b> "이름표 x와 y가 <b>10이라는 글자 하나에 같이 붙어</b> 있다가, <code>y = 20</code>하면 y가 <b>20으로 옮겨붙는</b> 거 아냐? 그럼 x는 어떻게 되지?"</p>
       </div>
+      <span class="learn-tag">📎 ▶로 확인 — x와 y는 애초에 '다른 칸'이다</span>
+      <div class="card"><div class="file-label">🎬 let y = x — 같은 10에 붙나, 각자 복사하나 (▶ 한 단계씩)</div><div data-m="xy"></div></div>
+      <p class="section-desc">원시값은 <b>값을 복사</b>한다 — y는 <b>자기 칸에 자기 10</b>을 받는다(칸이 둘). 그래서 <code>y = 20</code>은 y 칸만 바꾸고 <b>x는 그대로 10</b>. "같은 10에 붙어있다 옮겨붙는다"는 그림은 <b>틀렸다</b>.</p>
+      <p class="section-desc" style="margin-bottom:6px">숫자만이 아니다 — <b>문자열·참거짓</b>도 원시값이라 똑같이 각자 복사:</p>
+      <div class="card"><div class="file-label">🔬 문자열도 복사 — nick2 = nick1</div><div data-m="strcopy"></div></div>
 
-      <div class="card">
-        <div class="file-label">🔬 "묶음이면 다 참조" — Date · 클래스 인스턴스도 힙에 (▶로 확인)</div>
-        <div data-m="bundle"></div>
-        <p class="section-desc" style="margin:10px 0 0">plain 객체 <code>{}</code>·배열 <code>[]</code>만 참조가 아니다. <b>Date, 우리가 만든 클래스 인스턴스</b>도 결국 "여러 값을 묶은 것" → 힙에 살고 슬롯엔 주소만 → 복사하면 <b>별칭</b>. 참조의 규칙은 <b>묶음이면 종류를 안 가리고</b> 똑같다.</p>
-      </div>
-
-      <h3 class="section-title">① 눈으로 — 한 줄씩</h3>
-      <span class="learn-tag">📎 마지막 단계에서 "안 건드린 obj가 왜 9가 됐나"가 풀린다</span>
-      <div data-m="ref"></div>
-
-      <div class="card">
-        <div class="file-label">🔗 별칭(alias)이란 — <b>장부의 두 이름이 한 칸을 가리킨다</b> (let a = box)</div>
-        <div data-m="alias"></div>
-        <p class="section-desc" style="margin:10px 0 0">M1의 장부/메모리 그림으로 — <code>let a = box</code>는 <b>주소를 복사</b>한다. 그래서 장부에 <b>이름은 둘(box·a)</b>인데 화살표는 <b>같은 칸</b>으로 모인다 = <b>별칭</b>. 한 이름으로 그 칸의 객체를 바꾸면 <b>다른 이름으로 봐도 바뀐 값</b>이 보인다(위 시뮬의 정체).</p>
-      </div>
-
-      <h3 class="section-title">② 그래서 실무에서</h3>
-      <ul class="section-list">
-        <li>객체·배열을 함수에 넘기면 <b>같은 것</b>을 넘긴다 → 함수 안에서 바꾸면 <b>원본도 바뀐다</b>.</li>
-        <li>원본을 지키려면 <b>복사본</b>을 만든다 — 스프레드 <code>{...obj}</code> / <code>[...arr]</code> (뒤 강의).</li>
-        <li><code>const obj = {...}</code>여도 <code>obj.n = 9</code>는 된다 — const가 막는 건 <b>슬롯의 주소</b>지 <b>힙 내용</b>이 아니다.</li>
-      </ul>
-
-      <h3 class="section-title">③ 변수든 속성이든 — 원시값이면 복사 (숫자·문자열·참거짓, 객체가 껴도!)</h3>
-      <span class="learn-tag">📎 흔한 착각: "객체가 끼면 다 공유"? NO — 대입되는 게 '원시값'이면 복사다</span>
-      <p class="section-desc">아래는 <b>완전히 같은 일</b> — 원시값을 복사한다. 참조냐 값이냐는 <b>"객체가 끼었냐"가 아니라 "대입되는 값이 원시값이냐 객체 주소냐"</b>로 갈린다.</p>
-      <div class="card"><div class="file-label">🔬 ① 변수끼리 — money2 = money1 (숫자)</div><div data-m="varcopy"></div></div>
-      <div class="card"><div class="file-label">🔬 ② 객체 속성끼리 — hyoni.money = me.money (객체가 껴도 숫자면 복사!)</div><div data-m="propcopy"></div></div>
-      <p class="section-desc" style="margin-bottom:6px">그리고 <b>숫자만이 아니다</b> — 문자열·참거짓도 원시값이라 똑같이 복사된다:</p>
-      <div class="card"><div class="file-label">🔬 ③ 문자열도 복사 — nick2 = nick1</div><div data-m="strcopy"></div></div>
-      <p class="section-desc">🔑 me·hyoni는 객체(참조)지만 <code>me.money</code>는 <b>숫자</b>, <code>nick</code>은 <b>문자열</b> → 둘 다 원시값이라 복사, 안 공유.
-      만약 <code>hyoni.buddy = me</code> 였다면? me는 <b>객체</b> → 주소 복사 = <b>공유(참조)</b>. <b>대입되는 값의 타입</b>(타입 지도 참고)이 전부를 가른다.</p>
-
+      <h3 class="section-title">3단계 · 객체가 껴도 — 속성을 '꺼내면' 복사 (<code>let b = a.num</code>)</h3>
+      <span class="learn-tag">📎 최대 함정: 객체째 담기(공유) ↔ 속성 꺼내기(복사) — 글자 하나(.num) 차이</span>
+      <p class="section-desc"><code>let b = a</code>(객체째)와 <code>let b = a.num</code>(그 안 숫자를 꺼냄)는 <b>정반대</b>다. 지금은 <b>꺼내는 쪽(복사)</b>을 판다 — 객체가 껴 있어도 <b>꺼낸 게 숫자면 복사</b>라 원본과 무관하다.</p>
       <div class="card" style="border-color:var(--brand)">
-        <div class="file-label">🎯 가장 많이 걸리는 함정 — 객체째 담기(공유) vs 속성 꺼내기(복사)</div>
-        <p class="section-desc" style="margin-top:0"><code>let b = a</code>(객체째)와 <code>let b = a.num</code>(그 안의 숫자를 꺼냄)는 <b>정반대</b>다 — 하나는 <b>같은 객체를 공유</b>, 하나는 <b>숫자를 복사</b>. "b를 바꿨는데 왜 a.num이 안 바뀌지?"의 정체다. ▶로 보라.</p>
+        <div class="file-label">🎯 객체째 담기(공유) vs 속성 꺼내기(복사)</div>
         <div data-m="extract"></div>
         <div class="card" style="margin-top:12px"><div class="file-label">🔮 예측 후 ▶ — copied를 20으로 바꾸면 a.num은?</div><div data-m="extract-run"></div></div>
       </div>
-      <p class="section-desc">🔑 규칙 한 줄: <b>객체(참조)를 통째로 담으면 공유</b>, <b>그 안의 원시값을 꺼내 담으면 복사</b>. 꺼내는 순간 값이 복사되니, 그 뒤로는 원본과 무관하다.</p>
+      <div class="card"><div class="file-label">🔬 속성끼리도 복사 — hyoni.money = me.money (객체가 껴도 숫자면 복사!)</div><div data-m="propcopy"></div></div>
+      <p class="section-desc">🔑 <b>객체(참조)를 통째로 담으면 공유, 그 안의 원시값을 꺼내 담으면 복사.</b> 꺼내는 순간 값이 복사되니 그 뒤로는 원본과 무관하다. 그럼 <b>객체째 담는(<code>let b = a</code>) 쪽</b>은? — 그게 <b>M4-2 · 참조 = 공유</b>다.</p>
 
-      <h3 class="section-title">④ 원시값은 불변 — "money=200, 변했잖아?"의 진실</h3>
+      <h3 class="section-title">4단계 · 원시값은 불변 — "money=200, 변했잖아?"의 진실</h3>
       <span class="learn-tag">📎 '변수 칸'과 '값 칸'을 나눠서 보라 — 값은 안 변하고, 변수가 다른 값을 가리킬 뿐</span>
       <p class="section-desc">"원시값은 불변"이라는데 <code>money = 200</code>은 변한 것 같다. 진실은 — <b>값 자체는 안 변한다</b>.
       변수가 <b>다른 값을 가리키게</b> 됐을 뿐(재할당). <b>세 가지 타입·상황</b>으로 확인한다. 각 카드에서 <b>변수 칸</b>과 <b>값 칸</b>을 나눠 ▶로 보라.</p>
@@ -781,35 +751,20 @@
       <ul class="section-list">
         <li><b>불변(immutable)</b> = 값 자체를 <b>제자리에서 못 바꾼다</b>. 숫자·문자열·참거짓 <b>모든 원시값</b>이 그렇다 (<code>100</code>→<code>101</code>, <code>"kim"</code>→<code>"KIM"</code>을 제자리에서 바꾸는 일은 없다).</li>
         <li><code>money = 200</code>·<code>on = !on</code>은 <b>재할당</b> — 이름표가 <b>다른 값을 가리키게</b> 하는 것. 값의 '변신'이 아니다.</li>
-        <li>반대로 <b>객체는 가변(mutable)</b> — <code>obj.x = 2</code>는 값(객체)을 <b>제자리에서</b> 바꾼다. 그래서 공유되면 위험했다(②).</li>
+        <li>반대로 <b>객체는 가변(mutable)</b> — <code>obj.x = 2</code>는 값(객체)을 <b>제자리에서</b> 바꾼다. 그래서 공유되면 위험하다(→ M4-2).</li>
       </ul>
 
       <div class="concept">
-        <p class="concept-lead">📖 한 줄 요약</p>
-        <p class="section-desc" style="margin-top:0">슬롯에 <b>숫자가 들면 복사</b>(독립), <b>객체 주소가 들면 공유</b>(별칭). <b>변수든 객체 속성이든 똑같다.</b>
-        "객체가 끼면 무조건 공유"는 착각 — 대입되는 값의 종류로 갈린다.</p>
+        <p class="concept-lead">📖 한 줄 요약 (M4-1)</p>
+        <p class="section-desc" style="margin-top:0">원시값을 담으면 <b>복사</b> — 변수든 속성이든, 객체가 껴도, 꺼낸 게 원시값이면 <b>독립</b>. 다음은 정반대 이야기: <b>객체째 담으면 공유(별칭)</b>.</p>
       </div>
 
       <div class="practice-cta">
-        <span>그럼 함수에 '넘길' 때는? — 다음 —</span>
-        <button class="chip on" data-goto="passval">🧠 M5 · 값에 의한 전달 →</button>
+        <span>그럼 객체째 담으면? — 정반대 이야기 —</span>
+        <button class="chip on" data-goto="ref2">🧠 M4-2 · 참조 = 공유 →</button>
       </div>
     `
-    root.querySelector('[data-m="bundle"]').append(MemoryModel(SCENARIO_BUNDLE))
-    root.querySelector('[data-m="ref"]').append(MemoryModel(SCENARIO_REF))
-    root.querySelector('[data-m="alias"]').append(buildNameMap(
-      '📇 이름표 장부 <small>— 이름 둘, 같은 칸을 가리킴</small>',
-      '🗄️ 메모리 (값이 사는 칸) <small>— 객체 하나</small>',
-      [
-        { name: 'box', c: '#2563eb', to: 'o1' },
-        { name: 'a', c: '#ea580c', to: 'o1' },
-      ],
-      [
-        { id: 'o1', val: '{ name: "민지" }', adr: '#0055', at: 8, c: '#6366f1' },
-      ], 20,
-    ))
-    root.querySelector('[data-m="varcopy"]').append(MemoryModel(SCENARIO_VAR_COPY))
-    root.querySelector('[data-m="propcopy"]').append(MemoryModel(SCENARIO_PROP_COPY))
+    root.querySelector('[data-m="xy"]').append(MemoryModel(SCENARIO_XY_COPY))
     root.querySelector('[data-m="strcopy"]').append(MemoryModel(SCENARIO_STR_COPY))
     root.querySelector('[data-m="extract"]').append(MemoryModel({
       title: '객체째 담기 vs 속성 꺼내기 — 공유냐 복사냐',
@@ -832,9 +787,93 @@
         'print(a.num)            // 예측? … ▶ 눌러 확인 (꺼낼 때 복사됐다)',
       ].join('\n'),
     }))
+    root.querySelector('[data-m="propcopy"]').append(MemoryModel(SCENARIO_PROP_COPY))
     root.querySelector('[data-m="imm-num"]').append(MemoryModel(SCENARIO_IMM_NUM))
     root.querySelector('[data-m="imm-str"]').append(MemoryModel(SCENARIO_IMM_STR))
     root.querySelector('[data-m="imm-bool"]').append(MemoryModel(SCENARIO_IMM_BOOL))
+    wireCTA(root)
+  }
+
+  // ── M4-2 · 참조 = 공유 (별칭 · "왜 obj도 바뀌지") ──────────────
+  window.Lessons['ref2'] = function render(root) {
+    root.innerHTML = `
+      <header class="lesson-header">
+        <span class="badge">🧠 M4-2</span>
+        <h2>참조 = 공유 — "왜 obj까지 바뀌지?"</h2>
+        <p>객체·배열을 <b>통째로</b> 담으면 값이 아니라 <b>주소가 복사</b>된다 → 둘이 <b>같은 것</b>을 가리킨다(별칭). 한쪽을 바꾸면 양쪽에 보인다. (M4-1의 복사와 정반대)</p>
+      </header>
+
+      <div class="lesson-goal">
+        <span class="lesson-goal-tag">🎯 학습 포인트</span>
+        <p>객체 대입 = <b>주소 복사</b>(공유·별칭). <code>let p = obj</code>면 p·obj가 <b>같은 힙 박스</b> → <code>p.n = 9</code>가 <b>obj.n도 9</b>로 보인다. "객체가 끼면 공유"가 아니라 — <b>대입되는 값이 객체 주소</b>일 때 공유.</p>
+      </div>
+
+      <h3 class="section-title">① 눈으로 — "안 건드린 obj가 왜 9가 됐나"</h3>
+      <span class="learn-tag">📎 마지막 단계에서 정체가 풀린다 — 같은 박스니까</span>
+      <div data-m="ref"></div>
+
+      <div class="card">
+        <div class="file-label">🔗 별칭(alias)이란 — <b>장부의 두 이름이 한 칸을 가리킨다</b> (let a = box)</div>
+        <div data-m="alias"></div>
+        <p class="section-desc" style="margin:10px 0 0">M1의 장부/메모리 그림으로 — <code>let a = box</code>는 <b>주소를 복사</b>한다. 그래서 장부에 <b>이름은 둘(box·a)</b>인데 화살표는 <b>같은 칸</b>으로 모인다 = <b>별칭</b>. 한 이름으로 그 칸의 객체를 바꾸면 <b>다른 이름으로 봐도 바뀐 값</b>이 보인다(위 시뮬의 정체).</p>
+      </div>
+
+      <div class="concept">
+        <p class="concept-lead">🗺️ 타입 지도 — 복사(M4-1)냐 공유(M4-2)냐를 가른다</p>
+        <p class="section-desc" style="margin-top:0">JS의 값은 딱 <b>두 부류</b>다. 어느 부류냐가 복사/공유를 결정한다. (지금까지 배운 숫자·문자열·객체·배열이 다 여기 들어간다.)</p>
+        <ul class="section-list">
+          <li><b>원시 타입(primitive) — 복사된다(독립·불변) · M4-1</b>:
+            <code>숫자 number</code> · <code>문자열 string</code> · <code>참거짓 boolean</code> · <code>null</code>(비어있음을 <b>일부러</b> 넣음) · <code>undefined</code>(아직 값 없음) · <span style="opacity:.75">고급: <code>symbol</code> · <code>bigint</code>(아주 큰 정수)</span>.
+            → 슬롯에 <b>값이 직접</b> 들어간다.</li>
+          <li><b>참조 타입(reference) — 공유된다(별칭·가변) · M4-2</b>: <b>여러 값을 하나로 묶은 것</b>은 다 여기다 —
+            <code>객체 object {}</code> · <code>배열 array []</code> · <code>함수 function</code>(함수도 값!) ·
+            <code>Date</code>(날짜) · <code>Map·Set</code>(모음) · <code>RegExp</code>(정규식),
+            그리고 <b>우리가 <code>class</code>로 만든 인스턴스</b>(<code>new Hero(...)</code>).
+            → 하나같이 <b>힙</b>에 살고, 슬롯엔 <b>주소만</b> 들어간다. (그래서 <code>typeof</code>는 대부분 <code>"object"</code>)</li>
+        </ul>
+        <p class="section-desc" style="margin:6px 0 0">🔍 확인법 <code>typeof</code>: <code>typeof 100</code>→"number", <code>typeof "kim"</code>→"string", <code>typeof true</code>→"boolean", <code>typeof {}</code>→"object", <code>typeof []</code>→"object"(배열도 객체!), <code>typeof new Date()</code>→"object", <code>typeof function(){}</code>→"function".
+        <br>그래서 규칙은 하나 — <b>대입되는 값이 원시면 복사, 참조(묶음의 주소)면 공유.</b> "객체가 끼었냐"가 아니라 <b>대입되는 값의 타입</b>이 전부를 가른다.
+        <br><span style="opacity:.8">📚 더 깊이: <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a> · <a href="https://ko.wikipedia.org/wiki/포인터_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">포인터(주소) ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조·별칭 ↗</a></span></p>
+      </div>
+
+      <h3 class="section-title">② 묶음이면 다 참조 — Date · 클래스 인스턴스도</h3>
+      <div class="card">
+        <div class="file-label">🔬 "묶음이면 다 참조" — Date · 클래스 인스턴스도 힙에 (▶로 확인)</div>
+        <div data-m="bundle"></div>
+        <p class="section-desc" style="margin:10px 0 0">plain 객체 <code>{}</code>·배열 <code>[]</code>만 참조가 아니다. <b>Date, 우리가 만든 클래스 인스턴스</b>도 결국 "여러 값을 묶은 것" → 힙에 살고 슬롯엔 주소만 → 복사하면 <b>별칭</b>. 참조의 규칙은 <b>묶음이면 종류를 안 가리고</b> 똑같다.</p>
+      </div>
+
+      <h3 class="section-title">③ 그래서 실무에서</h3>
+      <ul class="section-list">
+        <li>객체·배열을 함수에 넘기면 <b>같은 것</b>을 넘긴다 → 함수 안에서 바꾸면 <b>원본도 바뀐다</b> (→ M6).</li>
+        <li>원본을 지키려면 <b>복사본</b>을 만든다 — 스프레드 <code>{...obj}</code> / <code>[...arr]</code> (뒤 강의).</li>
+        <li><code>const obj = {...}</code>여도 <code>obj.n = 9</code>는 된다 — const가 막는 건 <b>슬롯의 주소</b>지 <b>힙 내용</b>이 아니다.</li>
+      </ul>
+
+      <div class="concept">
+        <p class="concept-lead">📖 한 줄 요약</p>
+        <p class="section-desc" style="margin-top:0">슬롯에 <b>숫자가 들면 복사</b>(독립·M4-1), <b>객체 주소가 들면 공유</b>(별칭·M4-2). <b>변수든 객체 속성이든 똑같다.</b>
+        "객체가 끼면 무조건 공유"는 착각 — 대입되는 값의 종류로 갈린다.</p>
+      </div>
+
+      <div class="practice-cta">
+        <span>그럼 함수에 '넘길' 때는? — 다음 —</span>
+        <button class="chip on" data-goto="passval">🧠 M5 · 값에 의한 전달 →</button>
+      </div>
+    `
+    root.querySelector('[data-m="ref"]').append(MemoryModel(SCENARIO_REF))
+    root.querySelector('[data-m="alias"]').append(buildNameMap(
+      '📇 이름표 장부 <small>— 이름 둘, 같은 칸을 가리킴</small>',
+      '🗄️ 메모리 (값이 사는 칸) <small>— 객체 하나</small>',
+      [
+        { name: 'box', c: '#2563eb', to: 'o1' },
+        { name: 'a', c: '#ea580c', to: 'o1' },
+      ],
+      [
+        { id: 'o1', val: '{ name: "민지" }', adr: '#0055', at: 8, c: '#6366f1' },
+      ], 20,
+    ))
+    root.querySelector('[data-m="bundle"]').append(MemoryModel(SCENARIO_BUNDLE))
     wireCTA(root)
   }
 
@@ -851,6 +890,7 @@
         <span class="lesson-goal-tag">🎯 헷갈리는 '돈' 비유 바로잡기</span>
         <p>실제 지폐 <b>한 장</b>을 건네는 건 '같은 물건'이라 오히려 <b>참조</b>에 가깝다. <b>값에 의한 전달</b>은 건네는 순간 <b>똑같은 복사본이 하나 더 생기는</b> 것 —
         그래서 '내 것'과 '건넨 것'은 처음부터 <b>다른 두 장</b>이다. 비유는 <b>복사본</b>(문서를 복사해 주면 상대가 사본에 낙서해도 내 원본은 그대로)이 좋다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/값에_의한_호출" target="_blank" rel="noopener noreferrer">평가 전략(값에 의한 호출) ↗</a> · <a href="https://ko.wikipedia.org/wiki/매개변수_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">매개변수 ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — 사본을 찢어도 원본은 안전</h3>
@@ -897,6 +937,7 @@
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>객체를 함수에 넘기면 매개변수와 원본이 <b>같은 힙 객체</b>를 가리킨다(별칭). 그래서 함수 안 <code>user.level = ...</code>가 <b>바깥 hero</b>에도 보인다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/값에_의한_호출" target="_blank" rel="noopener noreferrer">평가 전략 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — 함수가 원본을 바꾼다</h3>
@@ -961,6 +1002,7 @@ let strong = levelUpSafe(hero)       // hero는 그대로, strong만 레벨업</
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>배열을 넘기면 매개변수와 원본이 <b>같은 배열</b>을 가리킨다. <code>push·sort·splice</code>처럼 <b>원본을 바꾸는</b> 메서드는 바깥 배열도 바꾼다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — 함수가 원본 배열을 늘린다</h3>
@@ -1063,6 +1105,7 @@ arr.concat([9])         // 이어붙인 새 배열
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p><code>me.bestFriend</code>가 효니 객체를 가리키면, 효니를 가리키는 화살표가 <b>둘</b>(hyoni · me.bestFriend)이 된다. 같은 객체라 <b>어느 쪽으로 바꿔도 양쪽에 보인다</b> — 두 방향을 각각 본다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">객체 ↗</a> · <a href="https://ko.wikipedia.org/wiki/그래프_(자료_구조)" target="_blank" rel="noopener noreferrer">그래프(자료구조) ↗</a></p>
       </div>
 
       <h3 class="section-title">① 내 베프가 머리를 자르면? → 효니의 머리는</h3>
@@ -1165,6 +1208,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>배열에 <b>객체들</b>을 담으면 me → friends배열 → 여러 사람으로 그래프가 <b>가지친다</b>. 같은 객체를 두 경로(hyoni · me.friends[0])로 가리키면 <b>한쪽 변경이 양쪽에</b> — 참조의 증거.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — 친구 5명, 그리고 참조 증명</h3>
@@ -1250,6 +1294,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>객체가 서로를 가리키면 <b>어떤 구조든</b> 만든다 — 한 줄(별칭), 목록(배열), 그리고 <b>트리(계통도)</b>.
         점(.)을 따라가면 <code>me.parent.parent</code>처럼 위로 거슬러 오른다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">객체 ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — 3대(代)가 이어진다</h3>
@@ -1323,6 +1368,7 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>객체 그래프의 마지막 모양 — <b>한 줄(별칭) → 목록 → 트리 → 순환(그물)</b>. 순환에선 화살표를 따라가면 <b>제자리로 돌아온다</b>(<code>hyoni.bestFriend.bestFriend === hyoni</code>).</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/쓰레기_수집_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">순환 참조와 GC ↗</a> · <a href="https://ko.wikipedia.org/wiki/참조_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">참조 ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — 서로 가리키기</h3>

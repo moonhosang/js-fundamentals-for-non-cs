@@ -40,6 +40,7 @@
         <p><b>값(value)</b>은 다뤄지는 데이터 하나 — <code>3</code>, <code>"안녕"</code>, <code>true</code>.
         <b> 변수(variable)</b>는 그 값에 붙이는 <b>이름표</b>다. <code>let</code>으로 만들고, <code>=</code>로
         이름표를 값에 <b>붙인다</b>. 이름을 부르면 그 값이 나온다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/변수_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">변수 ↗</a> · <a href="https://ko.wikipedia.org/wiki/상수_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">상수 ↗</a></p>
       </div>
 
       <div class="card" style="border-color:var(--brand)">

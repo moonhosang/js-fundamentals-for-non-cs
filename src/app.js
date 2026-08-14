@@ -12,7 +12,8 @@
     { id: 'ram', badge: '🧠 M1', title: 'M1 · 메모리(Memory)', subtitle: '값이 사는 공간 · 주소 · 휘발성 (주로 RAM)' },
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
     { id: 'heap', badge: '🧠 M3', title: 'M3 · 힙', subtitle: '창고 · 주소 · 왜 힙인가 · ❌스택' },
-    { id: 'ref', badge: '🧠 M4', title: 'M4 · 값 복사 vs 참조', subtitle: '별칭 · "왜 obj도 바뀌지"' },
+    { id: 'ref', badge: '🧠 M4-1', title: 'M4-1 · 값 = 복사', subtitle: '이름표 착각 정면돌파 · a.num은 복사' },
+    { id: 'ref2', badge: '🧠 M4-2', title: 'M4-2 · 참조 = 공유', subtitle: '별칭 · "왜 obj도 바뀌지"' },
     { id: 'passval', badge: '🧠 M5', title: 'M5 · 값에 의한 전달', subtitle: '원시값 → 함수 · 원본 안전' },
     { id: 'passobj', badge: '🧠 M6', title: 'M6 · 참조에 의한 전달', subtitle: '객체 → 함수 · 원본 바뀜' },
     { id: 'passarr', badge: '🧠 M7', title: 'M7 · 배열도 참조다', subtitle: '배열 → 함수 · push 새어나감' },
@@ -75,7 +76,7 @@
   const P = (base) => practiceItemsFor(base).map((pi) => pi.id)
   const CHAPTERS = [
     { n: '1', title: '값과 변수', items: [1, ...P(1)] },
-    { tag: '🧠', title: '메모리 기초', optional: true, skipTo: 2, items: ['ram', 'stack', 'heap', 'ref', 'passval', 'passobj', 'passarr'] },
+    { tag: '🧠', title: '메모리 기초', optional: true, skipTo: 2, items: ['ram', 'stack', 'heap', 'ref', 'ref2', 'passval', 'passobj', 'passarr'] },
     { tag: '🕸️', title: '객체 그래프', optional: true, skipTo: 2, items: ['graph', 'friends', 'family', 'cycle'] },
     // 표현식(3강)은 개념 단계(3, 3-1~3-6) + 드릴(...P(3) = 3-7~). 조건은 4강으로.
     { n: '2', title: '값 다루기', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', ...P(3), 4, ...P(4)] },

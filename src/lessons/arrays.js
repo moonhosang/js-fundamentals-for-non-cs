@@ -19,6 +19,7 @@
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>배열은 <code>[ ]</code>로 만들고 <code>arr[번호]</code>로 꺼낸다. <b>번호는 0부터</b>. <code>arr.length</code>는 개수,
         마지막은 <code>arr[length - 1]</code>. <code>push</code>로 끝에 추가한다. 배열은 <b>객체 → 힙</b>에 산다.</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/자료구조" target="_blank" rel="noopener noreferrer">자료구조 ↗</a></p>
       </div>
 
       <div class="card" style="border-color:var(--brand)">

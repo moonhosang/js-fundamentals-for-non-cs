@@ -34,6 +34,7 @@
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>함수 호출 = 스택에 <b>프레임 push</b>. 반환 = <b>pop</b>. 프레임 안의 <b>지역변수</b>는 그 프레임과 생사를 함께한다.
         (선수: 6강 함수)</p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a> · <a href="https://ko.wikipedia.org/wiki/스택_(자료_구조)" target="_blank" rel="noopener noreferrer">스택(자료구조) ↗</a></p>
       </div>
 
       <h3 class="section-title">① 눈으로 — push 되고 pop 된다</h3>
@@ -105,6 +106,7 @@
         <h2>클로저 — 사라지지 않는 장부</h2>
         <p>M2에서 "함수가 끝나면 그 장부(프레임)가 pop되며 지역변수가 사라진다" 했다. <b>딱 하나 예외</b> — 안쪽 함수가 그 변수를 <b>붙잡으면</b> 안 사라진다. 그게 클로저.</p>
       </header>
+      <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/클로저_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">클로저 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">🔗 M2에서 이어집니다</div>
@@ -162,6 +164,7 @@
         <h2>가비지 컬렉션 — 값 메모리를 누가 치우나</h2>
         <p>M1에서 "아무도 안 가리키는 값은 자동으로 치워진다" 예고했다. 그 <b>가비지 컬렉션(GC)</b>을 자세히 — <b>값 메모리(힙)</b>의 청소부다.</p>
       </header>
+      <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/쓰레기_수집_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">쓰레기 수집(GC) ↗</a> · <a href="https://ko.wikipedia.org/wiki/메모리_관리" target="_blank" rel="noopener noreferrer">메모리 관리 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">🔗 M1·M4에서 이어집니다</div>
