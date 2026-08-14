@@ -1,6 +1,6 @@
 // 🧠 메모리 기초 챕터 — 메모리(주로 RAM) → 스택 → 힙 → 값복사vs참조 (바닥부터 단계별)
 // [notional machine] 실제 CPU가 아니라 "이렇게 상상하면 동작을 정확히 예측하는" 일관된 모형.
-// 콜 스택 심화·클로저는 함수(6강) 뒤 '메모리 심화'로.
+// 콜 스택 심화·클로저는 함수(5강) 뒤 '메모리 심화'로.
 
 ;(function () {
   window.Lessons = window.Lessons || {}
@@ -382,7 +382,7 @@
       <div data-m="slots"></div>
 
       <h3 class="section-title">③ 핵심 성질 — 작업이 끝나면 칸이 통째로 사라진다</h3>
-      <span class="learn-tag">📎 함수를 부르면 새 칸(프레임) push, 끝나면 pop — 그 안 변수도 함께 사라진다 (함수는 6강)</span>
+      <span class="learn-tag">📎 함수를 부르면 새 칸(프레임) push, 끝나면 pop — 그 안 변수도 함께 사라진다 (함수는 5강에서 제대로 · 여기선 "호출=스택에 쌓임"만)</span>
       <p class="section-desc">이게 스택에서 <b>가장 중요한</b> 성질이다. 함수 같은 "작업 구역"이 시작되면 스택에 <b>새 칸</b>이 생기고, 그 작업이 끝나면 <b>그 칸이 통째로 치워진다</b>. ▶로 직접 보라.</p>
       <div data-m="pushpop"></div>
 
@@ -499,7 +499,7 @@
           </div>
           <div class="mem-cls-col">
             <div class="mem-cls-head" style="color:var(--brand)">🔵 묶음(참조값) → 힙에, 슬롯엔 주소</div>
-            <ul class="section-list" style="margin:0"><li><b>객체</b> <code>{ }</code> · <b>배열</b> <code>[ ]</code> · <b>함수</b>(6강)</li></ul>
+            <ul class="section-list" style="margin:0"><li><b>객체</b> <code>{ }</code> · <b>배열</b> <code>[ ]</code> · <b>함수</b>(5강)</li></ul>
             <p class="mem-cls-why">크기가 <b>가변</b>이라 슬롯에 못 넣는다.</p>
           </div>
         </div>
@@ -1059,7 +1059,7 @@ arr.reverse()     // 뒤집기
 arr.splice(0, 1)  // 잘라내기</pre>
       </div>
       <div class="card">
-        <div class="file-label">🟢 새 배열을 만든다 (원본 안전) — 5강에서 자세히</div>
+        <div class="file-label">🟢 새 배열을 만든다 (원본 안전) — 6강에서 자세히</div>
         <pre class="err-code">arr.map(x => x * 2)     // 변환한 새 배열
 arr.filter(x => x > 3)  // 거른 새 배열
 arr.slice(0, 2)         // 잘라낸 새 배열

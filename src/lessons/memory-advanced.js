@@ -1,5 +1,5 @@
-// 🧠 메모리 심화 챕터 — 콜 스택 · 클로저(예정) · GC(예정). 함수(6강)·객체(7강) 뒤.
-// 함수(6강)·객체(7강) 뒤에 오는 챕터. 콜 스택은 함수 호출의 삶과 죽음을 시뮬레이션한다.
+// 🧠 메모리 심화 챕터 — 콜 스택 · 클로저(예정) · GC(예정). 함수(5강)·객체(8강) 뒤.
+// 함수(5강)·객체(8강) 뒤에 오는 챕터. 콜 스택은 함수 호출의 삶과 죽음을 시뮬레이션한다.
 
 ;(function () {
   window.Lessons = window.Lessons || {}
@@ -34,7 +34,7 @@
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>함수 호출 = 스택에 <b>프레임 push</b>. 반환 = <b>pop</b>. 프레임 안의 <b>지역변수</b>는 그 프레임과 생사를 함께한다.
-        (선수: 6강 함수)</p>
+        (선수: 5강 함수 — 심화 챕터는 선택이라 함수 전에 훑어도 됨)</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a> · <a href="https://ko.wikipedia.org/wiki/스택_(자료_구조)" target="_blank" rel="noopener noreferrer">스택(자료구조) ↗</a></p>
       </div>
 

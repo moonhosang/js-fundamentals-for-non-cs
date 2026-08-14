@@ -7,10 +7,10 @@
   window.Lessons = window.Lessons || {}
   window.Practices = window.Practices || {}
 
-  window.Lessons[5] = function render(root) {
+  window.Lessons[6] = function render(root) {
     root.innerHTML = `
       <header class="lesson-header">
-        <span class="badge">5강</span>
+        <span class="badge">6강</span>
         <h2>배열 — 여러 값을 한 줄로</h2>
         <p>값이 여러 개면 이름을 여러 개 만들 필요 없다. <b>배열</b> <code>[ ]</code>에 <b>순서대로</b> 담고, <b>번호(인덱스)</b>로 꺼낸다.</p>
       </header>
@@ -69,7 +69,7 @@
 
       <div class="practice-cta">
         <span>🎯 이제 <b>단계별 실습</b>으로 — 번호·length·push를 손에 붙이자 (10문제).</span>
-        <button class="chip on" data-goto="5-1">📝 5강 실습 시작 (5-1) →</button>
+        <button class="chip on" data-goto="6-1">📝 6강 실습 시작 (6-1) →</button>
       </div>
     `
 
@@ -139,7 +139,7 @@
   }
 
   // 유형 드릴 ×10 — 인덱스/length/push. 1-5 기본(만들기·꺼내기·length), 6-10 유사(push·바꾸기·응용).
-  window.Practices[5] = {
+  window.Practices[6] = {
     pattern: '유형: 빈칸을 채워 배열에서 원하는 값·개수가 나오게 하기 (번호는 0부터!)',
     problems: [
       { label: '첫째 = a[0]', ask: '[10,20,30]의 첫 번째(10)를 꺼내세요. 번호는?', code: 'let a = [10, 20, 30]\nprint(a[____])', expect: '10', answer: '0', hint: '첫째는 0번' },

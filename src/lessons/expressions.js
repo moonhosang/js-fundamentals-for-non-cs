@@ -56,7 +56,7 @@
         <button class="home-card" data-goto="3-2"><span class="home-card-title">3-2 · 우선순위 눈금</span><span class="home-card-sub">factor ‹ term ‹ expression</span></button>
         <button class="home-card" data-goto="3-3"><span class="home-card-title">3-3 · 축약 ①</span><span class="home-card-sub">순수 계산 접기</span></button>
         <button class="home-card" data-goto="3-4"><span class="home-card-title">3-4 · 축약 ②</span><span class="home-card-sub">함수 · 중첩 삼항</span></button>
-        <button class="home-card" data-goto="3-5"><span class="home-card-title">3-5 · 🔒 중첩 함수</span><span class="home-card-sub">좌→우·안쪽 (7강 후)</span></button>
+        <button class="home-card" data-goto="3-5"><span class="home-card-title">3-5 · 🔒 중첩 함수</span><span class="home-card-sub">좌→우·안쪽 (5강 후)</span></button>
         <button class="home-card" data-goto="3-6"><span class="home-card-title">3-6 · 요약</span><span class="home-card-sub">식을 나무로 보기</span></button>
       </div>
 
@@ -265,12 +265,12 @@
     wireGoto(root)
   }
 
-  // ── 3-5 · 🔒 중첩 함수 (7강 함수 후) ────────────────────────
+  // ── 3-5 · 🔒 중첩 함수 (5강 함수 후) ────────────────────────
   window.Lessons['3-5'] = function render(root) {
     root.innerHTML = `
-      ${stepHeader('3-5 · 🔒 중첩 함수', '좌→우 · 안쪽 먼저', '이건 7강(함수) 배우고 오면 완전히 이해돼요')}
+      ${stepHeader('3-5 · 🔒 중첩 함수', '좌→우 · 안쪽 먼저', '이건 5강(함수) 배우고 오면 완전히 이해돼요')}
       <div class="card gate-card">
-        <div class="file-label">🔒 심화 — 지금은 '눈'만, 정확한 이해는 <b>7강(함수)</b> 뒤에</div>
+        <div class="file-label">🔒 심화 — 지금은 '눈'만, 정확한 이해는 <b>5강(함수)</b> 뒤에</div>
         <p class="section-desc" style="margin-top:0">실무 코드는 <b>우리가 만든 함수가 여러 겹</b> 중첩된다(예: 장바구니 총액 = 배송비 + 할인가). 원리는 똑같다 — <b>JS 평가순서 = 좌→우 + 안쪽 먼저</b>.
         함수에 부작용(로그·카운터)이 있으면 <b>순서가 결과를 바꾸므로</b> 정확히 알아야 한다.</p>
 
