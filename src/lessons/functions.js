@@ -129,6 +129,11 @@
         <li><b>정의(definition)</b> — <code>function greet() { … }</code>. 상자를 <b>만들어 두는</b> 것. <b>딱 한 번</b>.</li>
         <li><b>호출(call)</b> — <code>greet()</code>. 상자를 <b>실행</b>하는 것. <b>몇 번이든</b>. <b>( )가 핵심</b> — 없으면 실행이 아니라 '상자 자체'를 가리킬 뿐(안 돎).</li>
       </ul>
+
+      <h3 class="section-title">② 눈으로 — 스택에서 (이름표 장부 │ 값 메모리)</h3>
+      <span class="learn-tag">📎 ▶ — 정의만 하면 프레임이 안 생기고, 호출해야 greet 칸이 쌓인다</span>
+      <div data-m="mem"></div>
+
       ${nav('5-1', 2, '5-3', '5-3 · 매개변수 vs 인수 →')}
     `
     root.querySelector('[data-m="def"]').append(Runner({ showBox: false, code: [
@@ -139,6 +144,16 @@
       'print(greet())             // 호출: ( )를 붙여 실행 → "안녕!"',
       'print(greet())             // 몇 번이든 다시 부를 수 있다',
     ].join('\n') }))
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: '정의는 상자만 · 호출해야 프레임이 생긴다',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function greet() {', '  return "안녕!"', '}', 'print(greet())'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>function greet(){…}</code> <b>정의만</b> 하면 스택엔 <b>아무 프레임도 안 생긴다</b>(상자만 만들어 둠).' },
+        { line: 3, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [] }], heap: {}, note: '<code>greet()</code> <b>호출</b> → 비로소 <b>greet 프레임이 push</b>된다. ( )가 그 신호.' },
+        { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>return "안녕!"</code> → 값을 돌려주고 greet 프레임은 <b>pop(사라짐)</b>. print가 "안녕!"을 찍는다.' },
+      ],
+    }))
     wireGoto(root)
   }
 
@@ -154,6 +169,11 @@
         <li><b>인수(argument)</b> — 호출의 <code>greet(<b>"민지"</b>)</code>의 <b>"민지"</b>. "실제로 <b>넣는 값</b>". 이 값이 매개변수 name에 담긴다. (넣는 동전)</li>
       </ul>
       <p class="section-desc">여러 개도 가능 — <code>function add(a, b)</code>처럼 쉼표로. 순서대로 <code>add(3, 4)</code>의 3→a, 4→b.</p>
+
+      <h3 class="section-title">② 눈으로 — 인수가 매개변수 칸에 담긴다</h3>
+      <span class="learn-tag">📎 ▶ — 인수 "민지"가 매개변수 name 셀에 들어가는 걸 본다</span>
+      <div data-m="mem"></div>
+
       ${nav('5-2', 3, '5-4', '5-4 · return →')}
     `
     root.querySelector('[data-m="param"]').append(Runner({ showBox: false, code: [
@@ -164,6 +184,16 @@
       'print(greet("민지"))            // "민지" = 인수 → name에 담긴다',
       'print(greet("지훈"))            // 넣는 값만 바꾸면 결과가 바뀐다',
     ].join('\n') }))
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: 'greet("민지") — 인수가 매개변수 name에 담긴다',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function greet(name) {', '  return "안녕, " + name + " 님!"', '}', 'print(greet("민지"))'],
+      steps: [
+        { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>greet("민지")</code>를 호출하려 한다.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [{ name: 'name', value: '"민지"' }] }], heap: {}, note: 'greet 프레임 push — <b>인수 "민지"가 매개변수 name에 담긴다</b>(name 셀 = "민지"). 이름은 장부, 값은 값 메모리.' },
+        { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>"안녕, 민지 님!"</b>을 돌려주고 greet 프레임 pop. name도 함께 사라진다.' },
+      ],
+    }))
     wireGoto(root)
   }
 
@@ -179,6 +209,11 @@
       <span class="learn-tag">📎 let sum = add(3,4) — 돌려준 값을 담는다 · return 없으면 undefined</span>
       <div class="card"><div class="file-label">🔬 return 있음 vs 없음</div><div data-m="ret"></div></div>
       <p class="section-desc">🔑 <b>결과를 다시 쓰려면 반드시 return</b>. "화면에만 보이면 됐지"가 아니다 — 담아서 조립하려면 돌려줘야 한다(그게 5-1의 '부품으로 조립').</p>
+
+      <h3 class="section-title">② 눈으로 — 돌려준 값이 변수에 담긴다</h3>
+      <span class="learn-tag">📎 ▶ — return 10이 double 프레임에서 나와 r 셀에 담긴다</span>
+      <div data-m="mem"></div>
+
       ${nav('5-3', 4, '5-5', '5-5 · 🧠 프레임 →')}
     `
     root.querySelector('[data-m="ret"]').append(Runner({ showBox: false, code: [
@@ -195,6 +230,16 @@
       '}',
       'print(noReturn(5))        // undefined (돌려준 게 없다)',
     ].join('\n') }))
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: 'return이 값을 돌려줘 변수에 담긴다',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function double(x) {', '  return x * 2', '}', 'let r = double(5)'],
+      steps: [
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }], heap: {}, note: '<code>double(5)</code> 호출 직전 — r은 반환을 <b>기다린다</b>(대기).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }, { name: 'double', slots: [{ name: 'x', value: '5' }] }], heap: {}, note: 'double 프레임: x=5. <code>return x*2</code>가 <b>10</b>을 만든다.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: '10' }] }], heap: {}, note: '<b>return 10</b>을 돌려줘 <b>r 셀에 담긴다</b> ✔. (return이 없었다면 r엔 <b>undefined</b>가 담겼을 것.)' },
+      ],
+    }))
     wireGoto(root)
   }
 
@@ -240,6 +285,11 @@
       <span class="learn-tag">📎 함수 밖 변수(전역)는 어디서나 · 함수 안 변수(지역)는 그 안에서만</span>
       <div class="card"><div class="file-label">🔬 밖에서 msg를 부르면? (주석 풀면 에러)</div><div data-m="scope"></div></div>
       <p class="section-desc">그래서 함수는 <b>안전</b>하다 — 함수 안에서 뭘 하든 지역변수라 <b>밖을 안 건드린다</b>. 이름이 겹쳐도 서로 다른 프레임이라 안 부딪힌다.</p>
+
+      <h3 class="section-title">② 눈으로 — 전역은 남고, 지역은 사라진다</h3>
+      <span class="learn-tag">📎 ▶ — appName(전역)은 main에 남고, user·msg(지역)는 프레임과 함께 사라진다</span>
+      <div data-m="mem"></div>
+
       ${nav('5-5', 6, '5-7', '5-7 · 화살표 & 요약 →')}
     `
     root.querySelector('[data-m="scope"]').append(Runner({ showBox: false, code: [
@@ -253,6 +303,16 @@
       'print(makeMsg("민지"))             // OK — 함수가 msg를 만들어 돌려준다',
       '// print(msg)   // ❌ 여기선 msg가 안 보인다(지역이라) — 주석 풀면 에러',
     ].join('\n') }))
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: '전역(main)은 남고 · 지역(프레임)은 사라진다',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['let appName = "메모장"', 'function makeMsg(user) {', '  let msg = user + " 님"', '  return msg', '}', 'makeMsg("민지")'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'appName', value: '"메모장"' }] }], heap: {}, note: 'appName은 함수 <b>밖</b> — <b>전역</b>. main 장부에 산다(어디서나 보임).' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'appName', value: '"메모장"' }] }, { name: 'makeMsg', slots: [{ name: 'user', value: '"민지"' }, { name: 'msg', value: '"민지 님"' }] }], heap: {}, note: 'makeMsg 프레임: <b>user(인수)·msg(지역변수)는 이 프레임 안에만</b> 있다.' },
+        { line: 5, stack: [{ name: 'main', slots: [{ name: 'appName', value: '"메모장"' }] }], heap: {}, note: 'makeMsg <b>pop</b> → user·msg <b>사라짐</b>(지역이라). appName(전역)은 <b>그대로</b>. 그래서 밖에서 msg는 <b>없다</b>.' },
+      ],
+    }))
     wireGoto(root)
   }
 
@@ -264,6 +324,9 @@
       <span class="learn-tag">📎 (n) => n * 2 는 function (n) { return n * 2 } 의 짧은 표기 (한 줄이면 return 생략)</span>
       <div class="card"><div class="file-label">🔬 같은 함수, 두 표기</div><div data-m="arrow"></div></div>
       <p class="section-desc">뒤 강의(<b>7강 map</b>)에서 함수를 <b>인자로 넘길 때</b> 이 짧은 표기가 자주 나온다. 지금은 "둘은 같다"만 기억.</p>
+
+      <span class="learn-tag">📎 ▶ — 화살표 함수도 부르면 똑같이 프레임이 쌓인다(표기만 짧을 뿐)</span>
+      <div data-m="mem"></div>
 
       <h3 class="section-title">② 언제 함수를 만드나 — 감각</h3>
       <ul class="section-list">
@@ -291,6 +354,16 @@
       'print(doubleA(10))   // 20',
       'print(doubleB(10))   // 20  (똑같다)',
     ].join('\n') }))
+    root.querySelector('[data-m="mem"]').append(MemoryModel({
+      title: '화살표 함수도 똑같이 프레임이 쌓인다',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['const doubleB = (n) => n * 2', 'let x = doubleB(10)'],
+      steps: [
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '(대기)', bad: true }] }], heap: {}, note: '<code>doubleB(10)</code> 호출 직전.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '(대기)', bad: true }] }, { name: 'doubleB', slots: [{ name: 'n', value: '10' }] }], heap: {}, note: '화살표 함수도 부르면 <b>똑같이 프레임 push</b> — n=10. 표기만 짧을 뿐 동작은 같다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '20' }] }], heap: {}, note: '<b>n*2=20</b>을 (암묵적으로) 돌려주고 pop → x=20. <b>보통 함수와 완전히 같다</b>.' },
+      ],
+    }))
     wireGoto(root)
   }
 
