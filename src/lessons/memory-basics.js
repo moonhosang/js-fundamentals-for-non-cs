@@ -11,47 +11,44 @@
   }
 
   // ══ M1 · 메모리(RAM)란 ══════════════════════════════════════
-  // 📇 이름표 장부 = 단순 '사상(Map)' 구조(이름 → ●) ──화살표──▶ 🗄️ RAM 칸(주소:값).
-  // 변수 영역은 RAM 격자가 아니라 '이름→주소' 매핑일 뿐 — 실제 값은 RAM 칸에, 화살표로 연결.
-  function buildNameMap(ledgerHead, ramHead, items, N) {
+  // 📇 이름표 장부 = 사상(Map): 이름(●) ──화살표──▶ 🗄️ RAM 칸(주소:값).
+  // names: [{name, c, to(=cell id)}], cells: [{id, val, adr, at, c}]. 여러 이름이 한 셀을 가리키면 = 별칭.
+  function buildNameMap(ledgerHead, ramHead, names, cells, N) {
     const NS = 'http://www.w3.org/2000/svg'
     const stage = document.createElement('div'); stage.className = 'namemap'
     const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'nm-arrows')
-    // 이름표 장부 (Map): 이름 → ●
     const ledger = document.createElement('div'); ledger.className = 'nm-ledger'
     ledger.innerHTML = `<div class="nm-head">${ledgerHead}</div>`
     const frame = document.createElement('div'); frame.className = 'nm-frame'
-    items.forEach((it, i) => {
+    names.forEach((it, i) => {
       const row = document.createElement('div'); row.className = 'nm-src'; row.dataset.k = i
       row.innerHTML = `<span class="nm-name" style="color:${it.c}">${it.name}${it.tag ? ` <small>${it.tag}</small>` : ''}</span><span class="nm-dot" style="color:${it.c};background:${it.c}"></span>`
       frame.append(row)
     })
     ledger.append(frame)
-    // RAM 칸 (값만, 이름 없음)
     const ram = document.createElement('div'); ram.className = 'nm-ram'
     ram.innerHTML = `<div class="nm-head">${ramHead}</div>`
     const grid = document.createElement('div'); grid.className = 'ram-grid'
     const dots = () => { const d = document.createElement('span'); d.className = 'ram-dots'; d.textContent = '⋯'; return d }
-    const byAt = {}; items.forEach((it, i) => { byAt[it.at] = { it, i } })
+    const byAt = {}; cells.forEach((c) => { byAt[c.at] = c })
     grid.append(dots())
     for (let j = 0; j < N; j++) {
-      const e = byAt[j]
-      if (e) {
-        const hi = document.createElement('div'); hi.className = 'ram-hi nm-dst'; hi.dataset.k = e.i
-        hi.innerHTML = `<span class="cell" style="border-color:${e.it.c};color:${e.it.c};background:${e.it.c}1a">${String(e.it.val).replace(/</g, '&lt;')}</span><span class="adr">${e.it.adr}</span>`
+      const c = byAt[j]
+      if (c) {
+        const hi = document.createElement('div'); hi.className = 'ram-hi nm-dst'; hi.dataset.cell = c.id
+        hi.innerHTML = `<span class="cell" style="border-color:${c.c};color:${c.c};background:${c.c}1a">${String(c.val).replace(/</g, '&lt;')}</span><span class="adr">${c.adr}</span>`
         grid.append(hi)
-      } else { const c = document.createElement('div'); c.className = 'ram-c'; grid.append(c) }
+      } else { const el = document.createElement('div'); el.className = 'ram-c'; grid.append(el) }
     }
     grid.append(dots())
     ram.append(grid)
     stage.append(ledger, ram, svg)
-    // 레이아웃 후 화살표 그리기 (장부 ● → RAM 칸)
     const draw = () => {
       const sb = stage.getBoundingClientRect(); if (!sb.width) return
       while (svg.firstChild) svg.removeChild(svg.firstChild)
-      items.forEach((it, i) => {
+      names.forEach((it, i) => {
         const src = stage.querySelector(`.nm-src[data-k="${i}"] .nm-dot`)
-        const dst = stage.querySelector(`.nm-dst[data-k="${i}"] .cell`)
+        const dst = stage.querySelector(`.nm-dst[data-cell="${it.to}"] .cell`)
         if (!src || !dst) return
         const s = src.getBoundingClientRect(), d = dst.getBoundingClientRect()
         const x1 = s.left + s.width / 2 - sb.left, y1 = s.top + s.height / 2 - sb.top
@@ -214,23 +211,32 @@
     const grid = root.querySelector('[data-m="ramgrid"]')
     if (grid) {
       grid.append(buildNameMap(
-        '📇 이름표 장부 <small>— 변수명이 사는 곳 (이름 → 주소)</small>',
+        '📇 이름표 장부 <small>— 변수명이 사는 곳 (이름 → 칸)</small>',
         '🗄️ RAM <small>— 값이 사는 물리 칸 (주소마다). 이름은 여기 없다!</small>',
         [
-          { name: 'age', val: '20', c: '#16a34a', adr: '#0042', at: 3 },
-          { name: 'done', val: 'true', c: '#0891b2', adr: '#0043', at: 10 },
-          { name: 'card', val: '{ name: "민지" }', c: '#6366f1', adr: '#0055', at: 17 },
+          { name: 'age', c: '#16a34a', to: 'a1' },
+          { name: 'done', c: '#0891b2', to: 'a2' },
+          { name: 'card', c: '#6366f1', to: 'a3' },
+        ],
+        [
+          { id: 'a1', val: '20', adr: '#0042', at: 3, c: '#16a34a' },
+          { id: 'a2', val: 'true', adr: '#0043', at: 10, c: '#0891b2' },
+          { id: 'a3', val: '{ name: "민지" }', adr: '#0055', at: 17, c: '#6366f1' },
         ], 24,
       ))
     }
     const g2 = root.querySelector('[data-m="letconst-ram"]')
     if (g2) {
       g2.append(buildNameMap(
-        '📇 이름표 장부 <small>— 이름(+let/const) → 주소</small>',
+        '📇 이름표 장부 <small>— 이름(+let/const) → 칸</small>',
         '🗄️ RAM <small>— 값 칸 (이름 없음)</small>',
         [
-          { name: '🏷️ score', tag: 'let', val: '20', c: '#16a34a', adr: '#0042', at: 4 },
-          { name: '🔒 PI', tag: 'const', val: '3.14', c: '#dc2626', adr: '#0043', at: 12 },
+          { name: '🏷️ score', tag: 'let', c: '#16a34a', to: 's1' },
+          { name: '🔒 PI', tag: 'const', c: '#dc2626', to: 's2' },
+        ],
+        [
+          { id: 's1', val: '20', adr: '#0042', at: 4, c: '#16a34a' },
+          { id: 's2', val: '3.14', adr: '#0043', at: 12, c: '#dc2626' },
         ], 22,
       ))
     }
@@ -720,6 +726,12 @@
       <span class="learn-tag">📎 마지막 단계에서 "안 건드린 obj가 왜 9가 됐나"가 풀린다</span>
       <div data-m="ref"></div>
 
+      <div class="card">
+        <div class="file-label">🔗 별칭(alias)이란 — <b>장부의 두 이름이 한 칸을 가리킨다</b> (let a = box)</div>
+        <div data-m="alias"></div>
+        <p class="section-desc" style="margin:10px 0 0">M1의 장부/RAM 그림으로 — <code>let a = box</code>는 <b>주소를 복사</b>한다. 그래서 장부에 <b>이름은 둘(box·a)</b>인데 화살표는 <b>같은 칸</b>으로 모인다 = <b>별칭</b>. 한 이름으로 그 칸의 객체를 바꾸면 <b>다른 이름으로 봐도 바뀐 값</b>이 보인다(위 시뮬의 정체).</p>
+      </div>
+
       <h3 class="section-title">② 그래서 실무에서</h3>
       <ul class="section-list">
         <li>객체·배열을 함수에 넘기면 <b>같은 것</b>을 넘긴다 → 함수 안에서 바꾸면 <b>원본도 바뀐다</b>.</li>
@@ -763,6 +775,17 @@
     `
     root.querySelector('[data-m="bundle"]').append(MemoryModel(SCENARIO_BUNDLE))
     root.querySelector('[data-m="ref"]').append(MemoryModel(SCENARIO_REF))
+    root.querySelector('[data-m="alias"]').append(buildNameMap(
+      '📇 이름표 장부 <small>— 이름 둘, 같은 칸을 가리킴</small>',
+      '🗄️ RAM (값 메모리) <small>— 객체 하나</small>',
+      [
+        { name: 'box', c: '#2563eb', to: 'o1' },
+        { name: 'a', c: '#ea580c', to: 'o1' },
+      ],
+      [
+        { id: 'o1', val: '{ name: "민지" }', adr: '#0055', at: 8, c: '#6366f1' },
+      ], 20,
+    ))
     root.querySelector('[data-m="varcopy"]').append(MemoryModel(SCENARIO_VAR_COPY))
     root.querySelector('[data-m="propcopy"]').append(MemoryModel(SCENARIO_PROP_COPY))
     root.querySelector('[data-m="strcopy"]').append(MemoryModel(SCENARIO_STR_COPY))

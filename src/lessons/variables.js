@@ -106,7 +106,21 @@
         <div data-m="v4"></div>
       </div>
       <p class="section-desc" style="margin-top:-2px">규칙: <b>바뀌지 않을 값이면 <code>const</code>, 바뀔 값이면 <code>let</code></b>.
-      실무에선 대부분 const로 시작하고, 꼭 바꿔야 할 때만 let으로 바꾼다.</p>
+      실무에선 대부분 const로 시작하고, 꼭 바꿔야 할 때만 let으로 바꾼다. (옛날 방식 <code>var</code>도 있지만 함정이 있어 <b>지금은 안 쓴다</b> — <b>let·const만</b> 기억.)</p>
+
+      <h3 class="section-title">⑤ const에 객체를 담으면? — 가장 헷갈리는 지점</h3>
+      <span class="learn-tag">📎 const는 '변수 재할당'을 막는다 — 객체 '속성 변경'은 안 막는다 (가리키는 포인터만 고정)</span>
+      <p class="section-desc">입문자가 제일 많이 걸리는 곳 — <code>const user = { name: "민지" }</code> 인데 <code>user.name = "지훈"</code>이 <b>된다?!</b>
+      맞다. const가 고정하는 건 <b>변수(이름표)가 가리키는 대상(주소·포인터)</b>이지 <b>그 객체의 내용</b>이 아니다. <b>화살표는 못 옮겨도, 화살표가 가리키는 객체 안</b>은 바꿀 수 있다.</p>
+      <div class="card">
+        <div class="file-label">🔬 const 객체 — 속성 변경은 된다 (직접 실행)</div>
+        <div data-m="v5"></div>
+      </div>
+      <div class="card">
+        <div class="file-label">🎬 눈으로 — const는 '화살표(포인터)'를 잠근다, 객체 내용은 아니다 (▶ 한 단계씩)</div>
+        <div data-m="constobj"></div>
+      </div>
+      <p class="section-desc">🔑 그래서 <b>const obj여도 <code>obj.x = 5</code> · <code>arr.push(…)</code>는 된다.</b> "안 바뀌게 하려고 const 했는데 왜 바뀌지?" — const는 <b>이름표(포인터)만</b> 고정하니까. 객체 내용까지 얼리려면 다른 방법(<code>Object.freeze</code> 등 — 나중). 이 화살표/객체 이야기는 <b>🧠 메모리 기초</b>에서 더 깊이 본다.</p>
 
       <div class="practice-cta">
         <span>🎯 개념은 여기까지. 이제 <b>단계별 실습</b>으로 손에 붙일 차례예요 — 같은 유형 5문제.</span>
@@ -151,6 +165,30 @@
     root.querySelector('[data-m="v4"]').append(Runner({
       showBox: false,
       code: 'const TAX = 0.1\nprint(TAX)      // 0.1\n\nTAX = 0.2       // ❌ 여기서 에러가 난다 (const는 다른 값으로 옮겨 붙이기 금지)\nprint(TAX)',
+    }))
+
+    root.querySelector('[data-m="v5"]').append(Runner({
+      showBox: false,
+      code: [
+        'const user = { name: "민지" }',
+        'user.name = "지훈"      // 객체 속성을 바꾼다',
+        'print(user.name)        // "지훈" — const인데도 바뀐다!',
+        '// (user = { ... } 처럼 통째로 다시 담으면 그땐 에러 — 아래 그림)',
+      ].join('\n'),
+    }))
+
+    root.querySelector('[data-m="constobj"]').append(MemoryModel({
+      title: 'const 객체 — 화살표는 잠기고, 객체 내용은 바뀐다',
+      stackLabel: '🏷️ 변수 (이름표)', heapLabel: '📦 객체 (힙)',
+      code: ['const user = { name: "민지" }', 'user.name = "지훈"      // 내용 변경 ✅', 'user = { name: "새" }   // 재할당 ❌'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: '🔒 user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
+          note: 'const user → 변수 칸엔 <b>객체를 가리키는 화살표(주소)</b>가 담기고, 그 <b>화살표가 🔒 고정</b>된다. (객체 내용을 잠그는 게 아니라 — 화살표를 잠근다.)' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: '🔒 user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"지훈"' }] } },
+          note: '<code>user.name = "지훈"</code> → <b>화살표는 그대로</b>, 가리키는 객체의 <b>내용만</b> 바뀐다(민지→지훈). const는 이걸 <b>안 막는다</b> — 화살표를 안 옮겼으니까. ✅' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: '🔒 user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"지훈"' }] }, h2: { fields: [{ key: 'name', value: '"새"' }], faded: true } },
+          note: '<code>user = { … }</code> → <b>화살표를 다른 객체로 옮기려는 것</b>(재할당). const가 <b>바로 이걸</b> 막는다 → ❌ 에러. (새 객체는 아무도 안 가리켜 회색.)' },
+      ],
     }))
 
     root.querySelector('[data-m="mem"]').append(MemoryModel({
