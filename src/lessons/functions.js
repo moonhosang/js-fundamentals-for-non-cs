@@ -69,6 +69,7 @@
   window.Lessons['5-1'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('5-1 · 왜 함수?', '같은 코드가 반복되면 — 하나로 묶는다', '문법보다 먼저: 함수를 "왜" 쓰는지 감부터')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/함수_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">함수 ↗</a></p>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "함수는 어렵고 나중에 배우는 것"</div>
         <p class="section-desc" style="margin:0">반대다. 함수는 <b>귀찮음을 줄이는 도구</b>다. 같은 계산을 여기저기 <b>복붙</b>하다 보면, 나중에 <b>한 곳만 바꿔도 전부 틀어진다</b>. 그 고통을 없애려고 만든 게 함수다.</p>
@@ -117,6 +118,7 @@
   window.Lessons['5-2'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('5-2 · 정의 & 호출', '상자를 만들고(정의), 부른다(호출)', '이름 뒤 ( )가 "지금 실행해!" 신호')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/서브루틴" target="_blank" rel="noopener noreferrer">서브루틴(함수·호출) ↗</a></p>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "함수를 정의하면 바로 실행된다"</div>
         <p class="section-desc" style="margin:0"><code>function greet() { … }</code>는 상자를 <b>만들어 둘</b> 뿐 — 이 줄만으론 <b>아무 일도 안 난다</b>. <code>greet()</code>처럼 <b>이름 뒤에 ( )를 붙여 불러야</b> 비로소 안이 실행된다.</p>
@@ -161,6 +163,7 @@
   window.Lessons['5-3'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('5-3 · 매개변수 vs 인수', '빈 자리 vs 넣는 값', '같은 상자, 넣는 값만 바꾸면 결과가 바뀐다')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/매개변수_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">매개변수 ↗</a></p>
       <h3 class="section-title">① 값을 받는 상자</h3>
       <span class="learn-tag">📎 정의의 name = 매개변수(빈 자리) · 호출의 "민지" = 인수(실제 값)</span>
       <div class="card"><div class="file-label">🔬 같은 상자, 다른 입력</div><div data-m="param"></div></div>
@@ -201,6 +204,7 @@
   window.Lessons['5-4'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('5-4 · return', "값을 '돌려준다' — print와 다르다!", '돌려받아 담고, 또 다른 계산에 쓴다')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/반환문" target="_blank" rel="noopener noreferrer">반환문(return) ↗</a></p>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "return과 print가 같다"</div>
         <p class="section-desc" style="margin:0"><b>다르다.</b> <code>return</code>은 결과를 <b>호출한 자리로 돌려줘</b> 변수에 담거나 다시 쓸 수 있다. <code>print</code>는 <b>화면에 찍기만</b> 하고 값을 <b>못 돌려준다</b>. return이 없으면 함수는 <code>undefined</code>를 돌려준다.</p>
@@ -243,33 +247,111 @@
     wireGoto(root)
   }
 
-  // ── 5-5 · 🧠 눈으로: 프레임 (메모리 재활성화) ──────────────────
+  // ── 5-5 · 🧠 반환(return)을 프레임으로 — 아주 자세히 ──────────
   window.Lessons['5-5'] = function render(root) {
     root.innerHTML = `
-      ${stepHeader('5-5 · 🧠 부르면 칸이 쌓인다', '함수 호출 = 프레임 push, 반환 = pop', '메모리 기초를 안 봤어도 — 여기서 30초 복습하고 눈으로')}
+      ${stepHeader('5-5 · 🧠 반환의 여러 모습', "반환은 '있을 수도, 없을 수도, 다를 수도'", '함수 최대 난관 — 프레임 push/pop으로 낱낱이 본다')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/반환문" target="_blank" rel="noopener noreferrer">반환문 ↗</a> · <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a> · <a href="https://ko.wikipedia.org/wiki/제어_흐름" target="_blank" rel="noopener noreferrer">제어 흐름 ↗</a></p>
       <div class="card">
-        <div class="file-label">🧠 30초 복습 — 스택이 뭐였더라</div>
-        <p class="section-desc" style="margin:0">값은 <b>메모리</b>에 산다. 그중 변수(이름표)는 <b>스택</b>이라는 공간에 <b>쌓였다 사라진다</b>(접시 더미처럼). 왼쪽은 <b>이름표 장부</b>(이름), 오른쪽 <b>값 메모리</b>(실제 값). 함수를 부르면 <b>그 함수만의 칸(프레임)</b>이 스택에 <b>잠깐</b> 생긴다. (더 깊이는 🧠 M1~M2.)</p>
+        <div class="file-label">🧠 30초 복습 — 프레임이 뭐였더라</div>
+        <p class="section-desc" style="margin:0">함수를 부르면 <b>그 함수만의 작업 칸(프레임)</b>이 <b>스택</b>에 잠깐 쌓인다. 왼쪽 <b>이름표 장부</b>(이름) · 오른쪽 <b>값 메모리</b>(실제 값). <b>핵심: <code>return</code>은 두 가지를 동시에 한다 — ① 값을 프레임 <u>밖으로</u> 내보내고 ② 함수를 <u>즉시 끝낸다</u>(프레임 pop).</b> (더 깊이는 🧠 M1~M2 · 콜 스택.)</p>
       </div>
-      <h3 class="section-title">① 눈으로 — add(3,4) 한 단계씩</h3>
-      <span class="learn-tag">📎 ▶ 눌러 — 호출하면 add 칸이 쌓이고(push), return하면 통째로 사라진다(pop)</span>
-      <div data-m="frame"></div>
-      <p class="section-desc">이래서 함수는 <b>서로 안 간섭</b>한다 — 각자 자기 프레임에서 일한다. 그리고 <b>끝나면 그 칸이 통째로 사라져</b> 안의 지역변수도 함께 없어진다(→ 다음 5-6 스코프). 함수의 삶과 죽음 자세히는 <b>🧠 콜 스택</b>, 값을 넘길 때 원본이 안전한지는 <b>🧠 M5~M7</b>.</p>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">⚠️ 왜 어렵나 — 반환은 '있을 수도, 없을 수도'</div>
+        <p class="section-desc" style="margin:0">같은 함수라도 <b>어떤 길로 가느냐에 따라</b> 값을 <b>돌려줄 수도(return), 안 돌려줄 수도(undefined)</b> 있고, <b>여러 return 중 하나만</b> 실행된다. 이 '경우의 수'를 프레임으로 보면 헷갈림이 풀린다. 아래 네 가지를 ▶로.</p>
+      </div>
+
+      <h3 class="section-title">① 있음 — return이 값을 '밖으로' 내보낸다</h3>
+      <span class="learn-tag">📎 ▶ — return 7이 add 프레임에서 나와 sum에 담기고, 프레임은 pop</span>
+      <div data-m="f1"></div>
+
+      <h3 class="section-title">② 없음 — return이 없으면 undefined</h3>
+      <span class="learn-tag">📎 계산만 하고 안 돌려주면? 함수는 자동으로 undefined를 내놓는다</span>
+      <div data-m="f2"></div>
+      <div class="card"><div class="file-label">🔬 직접 — 돌려준 게 없으면</div><div data-m="r2"></div></div>
+
+      <h3 class="section-title">③ 조기 반환 — return을 만나면 '즉시' 끝 (아래는 안 돎)</h3>
+      <span class="learn-tag">📎 return은 함수를 그 자리에서 끝낸다 — 그 아래 코드는 실행조차 안 된다(dead)</span>
+      <div data-m="f3"></div>
+      <div class="card"><div class="file-label">🔬 직접 — 0으로 나눌 때 막기(가드)</div><div data-m="r3"></div></div>
+
+      <h3 class="section-title">④ 조건부 반환 — 분기마다 다른 return</h3>
+      <span class="learn-tag">📎 점수에 따라 A·B·C 중 하나만 실행 — "있을 수도, 다를 수도"의 정체</span>
+      <div data-m="f4"></div>
+      <div class="card"><div class="file-label">🔬 직접 — 점수 → 등급</div><div data-m="r4"></div></div>
+
+      <div class="concept">
+        <p class="concept-lead">📖 이 단계 요약</p>
+        <p class="section-desc" style="margin-top:0"><code>return 값</code>: 값을 <b>밖으로</b> + 함수 <b>즉시 종료</b>(pop). <b>return 없음/끝까지 안 만남 → undefined</b>. <b>여러 return</b> 중 <b>먼저 만나는 하나</b>만 실행. 지역변수는 프레임과 함께 사라진다(→ 5-6).</p>
+      </div>
       ${nav('5-4', 5, '5-6', '5-6 · 스코프 →')}
     `
-    root.querySelector('[data-m="frame"]').append(MemoryModel({
-      title: 'add(3, 4) 호출 — 프레임이 쌓였다 사라진다',
+    root.querySelector('[data-m="f1"]').append(MemoryModel({
+      title: '① 있음 — return이 값을 밖으로 내보낸다',
       stackLabel: '📚 스택 (이름표 장부)',
       code: ['function add(a, b) {', '  return a + b', '}', 'let sum = add(3, 4)'],
       steps: [
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'sum', value: '(대기)', bad: true }] }], heap: {},
-          note: '<code>add(3, 4)</code>를 호출하려 한다. main의 sum은 아직 <b>반환을 기다린다</b>(대기).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'sum', value: '(대기)', bad: true }] }, { name: 'add', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '4' }] }], heap: {},
-          note: 'add 프레임이 <b>push</b>된다. 인수 <b>3·4</b>가 매개변수 <b>a·b</b>에 담긴다. (이름은 장부, 값은 값 메모리 셀)' },
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'sum', value: '7' }] }], heap: {},
-          note: '<code>return a + b</code>(=7)를 돌려주고 add 프레임은 <b>pop(사라짐)</b> — a·b도 함께. 반환값 7이 <b>sum</b>에 담긴다.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'sum', value: '(대기)', bad: true }] }], heap: {}, note: '<code>add(3,4)</code> 호출 직전 — sum은 반환을 기다린다(대기).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'sum', value: '(대기)', bad: true }] }, { name: 'add', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '4' }] }], heap: {}, note: 'add 프레임 push. a=3, b=4. <code>return a+b</code>가 <b>7</b>을 만든다.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'sum', value: '7' }] }], heap: {}, note: '<b>return 7</b>이 프레임 <b>밖으로</b> 나와 sum에 담기고, add 프레임은 <b>pop</b>. ✔ 값이 있다.' },
       ],
     }))
+    root.querySelector('[data-m="f2"]').append(MemoryModel({
+      title: '② 없음 — 끝까지 return이 없으면 undefined',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function shout(x) {', '  let big = x * 100', '}', 'let r = shout(5)'],
+      steps: [
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }], heap: {}, note: '<code>shout(5)</code> 호출 직전.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }, { name: 'shout', slots: [{ name: 'x', value: '5' }, { name: 'big', value: '500' }] }], heap: {}, note: 'shout 프레임: x=5, big=500 <b>계산만</b>. 그런데 <b>return이 없다</b>.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: 'undefined', bad: true }] }], heap: {}, note: '끝까지 return이 없으면 함수는 <b>자동으로 undefined</b>를 돌려준다. big(지역)은 사라지고 <b>r엔 undefined</b>. ✗ 값이 없다.' },
+      ],
+    }))
+    root.querySelector('[data-m="r2"]').append(Runner({ showBox: false, code: [
+      'function shout(x) {',
+      '  let big = x * 100      // 계산만 하고',
+      '}                        // return이 없다',
+      'let r = shout(5)',
+      'print(r)                 // undefined (돌려준 게 없다)',
+    ].join('\n') }))
+    root.querySelector('[data-m="f3"]').append(MemoryModel({
+      title: '③ 조기 반환 — return을 만나면 즉시 끝',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function safeDiv(a, b) {', '  if (b === 0) return "못 나눔"', '  return a / b', '}', 'safeDiv(10, 0)'],
+      steps: [
+        { line: 4, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>safeDiv(10, 0)</code> 호출.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'safeDiv', slots: [{ name: 'a', value: '10' }, { name: 'b', value: '0' }] }], heap: {}, note: 'safeDiv 프레임: a=10, b=0. <code>b===0</code>이 <b>참</b> → 여기서 <b>return "못 나눔"</b>을 만난다.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }], heap: {}, note: 'return을 만나는 <b>순간 함수는 즉시 끝</b> — <b>아래 <code>return a/b</code>는 실행조차 안 됨</b>(dead code). 프레임 pop, "못 나눔" 반환.' },
+      ],
+    }))
+    root.querySelector('[data-m="r3"]').append(Runner({ showBox: false, code: [
+      'function safeDiv(a, b) {',
+      '  if (b === 0) return "0으로 못 나눔"   // 여기서 즉시 끝',
+      '  return a / b                          // b가 0이면 여긴 안 온다',
+      '}',
+      'print(safeDiv(10, 2))   // 5',
+      'print(safeDiv(10, 0))   // "0으로 못 나눔" (조기 반환)',
+    ].join('\n') }))
+    root.querySelector('[data-m="f4"]').append(MemoryModel({
+      title: '④ 조건부 — 분기마다 다른 return',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function grade(score) {', '  if (score >= 90) return "A"', '  if (score >= 80) return "B"', '  return "C"', '}', 'grade(85)'],
+      steps: [
+        { line: 5, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>grade(85)</code> 호출.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'grade', slots: [{ name: 'score', value: '85' }] }], heap: {}, note: 'score=85. 첫 <code>if(≥90)</code> <b>거짓</b> → 건너뛴다(이 return은 안 됨).' },
+        { line: 2, stack: [{ name: 'main', slots: [] }, { name: 'grade', slots: [{ name: 'score', value: '85' }] }], heap: {}, note: '둘째 <code>if(≥80)</code> <b>참</b> → <b>return "B"</b>. 여기서 끝(셋째 줄 "C"는 안 옴).' },
+        { line: 2, stack: [{ name: 'main', slots: [] }], heap: {}, note: '"B" 반환하고 pop. <b>점수가 달랐다면 다른 return</b>이 실행됐을 것 — 그래서 반환값은 "있을 수도, <b>다를 수도</b>".' },
+      ],
+    }))
+    root.querySelector('[data-m="r4"]').append(Runner({ showBox: false, code: [
+      'function grade(score) {',
+      '  if (score >= 90) return "A"',
+      '  if (score >= 80) return "B"',
+      '  return "C"',
+      '}',
+      'print(grade(95))   // "A"',
+      'print(grade(85))   // "B"  (첫 if 건너뛰고 둘째서 반환)',
+      'print(grade(70))   // "C"  (둘 다 건너뛰고 마지막)',
+    ].join('\n') }))
     wireGoto(root)
   }
 
@@ -277,6 +359,7 @@
   window.Lessons['5-6'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('5-6 · 스코프', "함수 안 변수는 '지역' — 밖에서 안 보인다", '5-5에서 봤듯 프레임과 함께 생겼다 사라지니까')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/지역_변수" target="_blank" rel="noopener noreferrer">지역 변수 ↗</a> · <a href="https://ko.wikipedia.org/wiki/전역_변수" target="_blank" rel="noopener noreferrer">전역 변수 ↗</a></p>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 오해 — "함수 안에서 만든 변수를 밖에서도 쓸 수 있다"</div>
         <p class="section-desc" style="margin:0">못 쓴다. 함수 안 <code>let</code> 변수(<b>지역변수</b>)는 <b>그 함수 안에서만</b> 살고, 함수가 끝나면 <b>프레임과 함께 사라진다</b>(5-5). 밖에서 부르면 에러다.</p>
@@ -320,6 +403,7 @@
   window.Lessons['5-7'] = function render(root) {
     root.innerHTML = `
       ${stepHeader('5-7 · 화살표 & 요약', '짧은 표기, 그리고 "언제 함수를 만드나"', '표기는 취향, 감각은 핵심')}
+      <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/익명_함수" target="_blank" rel="noopener noreferrer">익명 함수 ↗</a> · <a href="https://ko.wikipedia.org/wiki/람다_대수" target="_blank" rel="noopener noreferrer">람다 ↗</a></p>
       <h3 class="section-title">① 화살표 함수 — 짧게 쓰는 표기</h3>
       <span class="learn-tag">📎 (n) => n * 2 는 function (n) { return n * 2 } 의 짧은 표기 (한 줄이면 return 생략)</span>
       <div class="card"><div class="file-label">🔬 같은 함수, 두 표기</div><div data-m="arrow"></div></div>
