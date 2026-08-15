@@ -11,7 +11,7 @@
   const nav = (prev, pos, next, nextLabel) => `
     <div class="practice-nav">
       <button class="chip" data-goto="${prev}">← 이전</button>
-      <span class="practice-nav-dots">스텝 ${pos} / 6</span>
+      <span class="practice-nav-dots">스텝 ${pos} / 7</span>
       <button class="chip on" data-goto="${next}">${nextLabel || '다음 →'}</button>
     </div>`
 
@@ -57,7 +57,8 @@
         <button class="home-card" data-goto="3-3"><span class="home-card-title">3-3 · 축약 ①</span><span class="home-card-sub">순수 계산 접기</span></button>
         <button class="home-card" data-goto="3-4"><span class="home-card-title">3-4 · 축약 ②</span><span class="home-card-sub">함수 · 중첩 삼항</span></button>
         <button class="home-card" data-goto="3-5"><span class="home-card-title">3-5 · 🔒 중첩 함수</span><span class="home-card-sub">좌→우·안쪽 (5강 후)</span></button>
-        <button class="home-card" data-goto="3-6"><span class="home-card-title">3-6 · 요약</span><span class="home-card-sub">식을 나무로 보기</span></button>
+        <button class="home-card" data-goto="3-6"><span class="home-card-title">3-6 · 조건도 표현식</span><span class="home-card-sub">if·for·while·switch</span></button>
+        <button class="home-card" data-goto="3-7"><span class="home-card-title">3-7 · 요약</span><span class="home-card-sub">식을 나무로 보기</span></button>
       </div>
 
       <div class="practice-cta">
@@ -112,6 +113,14 @@
       </div>
       <p class="section-desc">🔑 <b>바로 이래서 삼항(<code>? :</code>)이 존재</b>한다 — "값이 되는 if"가 필요할 때 쓰라고 만든 것. 즉 <b>문(if)을 값 자리에 욱여넣지 말고, 값을 내는 표현식(삼항)을 써라</b>는 신호다. (<code>return</code>, <code>\`\${___}\`</code>, <code>map(n => ___)</code> 빈칸도 전부 같은 "값 자리".)</p>
 
+      <div class="concept">
+        <p class="concept-lead">🔎 그럼 <code>if</code>는 정확히 뭘 하나?</p>
+        <p class="section-desc" style="margin-top:0"><code>if (조건) { … }</code>는 <b>"조건이 참이면 이 <code>{ }</code> 안을 실행해라"</b>는 <b>명령(문)</b>이다.
+        하는 일은 <b>동작 — 갈림길에서 어느 블록을 실행할지 정하는 것</b>뿐. <b>그 자리에 값을 남기지 않는다</b>(그래서 <code>=</code> 오른쪽에 못 온다).
+        반대로 <b>삼항은 갈림길의 결과를 <u>값으로 돌려준다</u></b> — 그래서 담을 수 있다. 아래 <b>다음 ▶</b>을 눌러, 삼항이 <b>3-6의 나무처럼 한 겹씩 값으로 접히는</b> 걸 보라(<code>if</code>엔 이렇게 남는 값이 없다):</p>
+      </div>
+      <div class="card"><div class="file-label">🔬 삼항이 '값'으로 접힌다 — score > 90 ? "A" : "B"   (score = 95)</div><div data-m="red-tern-fold"></div></div>
+
       <h3 class="section-title">④ 놓치기 쉬운 것 — 비교·논리도 '값'이다</h3>
       <span class="learn-tag">📎 <code>&lt; &gt; ===</code> 나 <code>&amp;&amp; ||</code> 도 표현식 → 계산하면 값(대개 true/false)을 낳는다. if 안에서만 사는 게 아니다</span>
       <p class="section-desc">입문자는 <code>age &gt; 5</code>, <code>a &amp;&amp; b</code>를 "if에 쓰는 조건"으로만 본다. 하지만 이것도 <b>표현식</b> — <b>계산하면 값(참/거짓)이 나오고</b>, 그 값을 <b>변수에 담고 · print하고 · 이어붙일</b> 수 있다. "표현식은 계산 결과 그 자체를 돌려준다"가 핵심이다.</p>
@@ -143,6 +152,14 @@
         'print(canEnter)              // true   ("조건"이 아니라 "값")',
         'print(true < true && true)   // false  (이상해 보여도 하나의 값!)',
       ].join('\n'),
+    }))
+    root.querySelector('[data-m="red-tern-fold"]').append(ExprReduce({
+      title: 'score > 90 ? "A" : "B"   // score = 95',
+      steps: [
+        { code: 'let grade = 95 > 90 ? "A" : "B"', mark: '95 > 90', note: '삼항도 <b>표현식</b> → 안쪽 <b>조건부터</b> 접는다. <b>95 &gt; 90</b> 은 <b>true</b>.' },
+        { code: 'let grade = true ? "A" : "B"', mark: 'true ? "A" : "B"', note: '조건이 <b>true</b> → <code>?</code>(then) 쪽 값 <b>"A"</b>를 고른다. <code>: "B"</code>는 버린다.' },
+        { code: 'let grade = "A"', note: '삼항이 <b>하나의 값 "A"</b>로 접혔다 → grade에 담긴다. <b>if였다면 이 자리에 남는 값이 없어</b> 못 담는다 — 이게 문(if)과 식(삼항)의 갈림.' },
+      ],
     }))
     wireGoto(root)
   }
@@ -259,29 +276,12 @@
       <div class="card"><div class="file-label">🔬 축약: score>=90 ? "A" : score>=80 ? "B" : "C"  (score=85)</div><div data-m="red-tern"></div></div>
       <div class="card"><div class="file-label">🔬 직접 바꿔 실행 — score를 95·75·50으로 바꿔 보라</div><div data-m="tern-run"></div></div>
 
-      <h3 class="section-title">③ if·while·for·switch의 (조건)도 전부 표현식 — 완전히 똑같이 접힌다</h3>
-      <p class="section-desc"><code>if</code>·<code>for</code>·<code>while</code>·<code>switch</code>는 <b>문</b>(값을 안 냄)이지만, 괄호 안 <b>(조건)은 표현식</b>이다. 그래서 <b>조건이 먼저 하나의 값으로 접혀야</b> 갈림길·반복 여부가 정해진다. (3-1의 "식 vs 문"이 여기서 만난다.)</p>
-      <div class="card"><div class="file-label">🔬 축약: if (age >= 19 && hasTicket) { … }  (age=20, hasTicket=true)</div><div data-m="red-if"></div></div>
-
-      <span class="learn-tag">📎 반복·분기의 괄호 <code>(…)</code>은 전부 같은 '값 자리' — <b>여기서 배운 축약이 어디서나 완벽히 동일</b>하게 일어난다(새로 외울 것 0)</span>
-      <div class="card">
-        <div class="file-label">🧩 같은 자리, 같은 규칙 — 조건은 어디서나 표현식</div>
-        <div class="bnf">
-          <div class="bnf-rule">if&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bnf-rec">(score >= 80)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 조건 → 참/거짓</span></div>
-          <div class="bnf-rule">while&nbsp;&nbsp;<span class="bnf-rec">(n < 10)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 조건 → 참/거짓 (매 반복 다시 접힘)</span></div>
-          <div class="bnf-rule">for&nbsp;&nbsp;&nbsp;&nbsp;(i = 0; <span class="bnf-rec">i &lt; 3</span>; i++)&nbsp;&nbsp;<span style="opacity:.65">← 가운데 → 참/거짓 (매 반복)</span></div>
-          <div class="bnf-rule">switch&nbsp;<span class="bnf-rec">(day % 7)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 값 → 각 case와 === 비교</span></div>
-        </div>
-        <p class="section-desc" style="margin:8px 0 0">전부 <b>같은 축약</b>이다 — 산수·비교·논리·삼항·함수호출이 그 안에서 똑같이 접힌다. 문(if/for/switch)이 달라도 <b>(괄호 안)은 늘 표현식 하나</b>. 새 규칙이 아니라 <b>이미 배운 그 규칙</b>이다.</p>
-      </div>
-      <div class="card"><div class="file-label">🔬 조건이 값으로 접히는 걸 직접 — if·for·switch 자리</div><div data-m="cond-run"></div></div>
-
-      <h3 class="section-title">④ 산수·비교·논리가 섞여도 — 우선순위 순으로</h3>
+      <h3 class="section-title">③ 산수·비교·논리가 섞여도 — 우선순위 순으로</h3>
       <p class="section-desc">한 줄에 <b>산수(<code>+ / </code>) · 비교(<code>&gt; ===</code>) · 논리(<code>&amp;&amp;</code>)</b>가 다 섞여도 규칙은 하나 — <b>우선순위 높은 것부터</b> 접는다: <b>산수 → 비교 → 논리</b> 순. 실타래를 안쪽 매듭부터 푸는 것과 같다.</p>
       <div class="card"><div class="file-label">🔬 축약: 2 + 3 > 4 && 10 / 2 === 5</div><div data-m="red-mix"></div></div>
       <div data-m="qz-mix"></div>
 
-      <h3 class="section-title">⑤ 축약 예시 10선 — ★5개는 당신의 예상을 깬다</h3>
+      <h3 class="section-title">④ 축약 예시 10선 — ★5개는 당신의 예상을 깬다</h3>
       <p class="section-desc">먼저 <b>머릿속으로 값을 예측</b>하고 ▶ 실행으로 확인하라. <b>★ 표시 5개</b>는 규칙을 알아도 대부분 틀린다 — 축약(왼쪽부터·우선순위·강제변환)이 만드는 함정이다. 몇 개나 맞혔나?</p>
       <div class="card"><div class="file-label">🔬 10개를 예측하고 실행</div><div data-m="gallery"></div></div>
 
@@ -328,27 +328,6 @@
         '    : score >= 70 ? "C"',
         '    : "F")            // 85 → "B"  (오른쪽 결합: else가 또 삼항)',
       ].join('\n'),
-    }))
-    root.querySelector('[data-m="cond-run"]').append(Runner({
-      showBox: false,
-      code: [
-        'let score = 85, n = 5, day = 9',
-        '',
-        'print(score >= 80)   // true   ← if (…) · while (…) 의 그 조건 자리',
-        'print(n < 10)        // true   ← for (…; 조건; …) 가운데도 같은 자리',
-        'print(day % 7)       // 2      ← switch (…) 값도 표현식 → case 2: 와 === 비교',
-        '',
-        '// for의 조건은 매 반복 "다시" 접힌다 — i가 0,1,2 → true, 3 → false(종료)',
-        'for (let i = 0; i < 3; i++) print("i=" + i + " → " + (i < 3))',
-      ].join('\n'),
-    }))
-    root.querySelector('[data-m="red-if"]').append(ExprReduce({
-      title: 'if (age >= 19 && hasTicket) { 입장() }   // age = 20, hasTicket = true',
-      steps: [
-        { code: 'if (20 >= 19 && true) { 입장() }', mark: '20 >= 19', note: '<code>if</code>는 문이지만 <b>(조건)은 표현식</b> → 먼저 접는다. <b>20 &gt;= 19</b> 는 <b>true</b>. (비교부터)' },
-        { code: 'if (true && true) { 입장() }', mark: 'true && true', note: '이제 논리 <code>&&</code> → 둘 다 참이라 <b>true</b>.' },
-        { code: 'if (true) { 입장() }', note: '조건이 <b>하나의 값(true)</b>으로 접혔다 → if가 <b>블록을 실행</b>한다. (거짓이었다면 건너뛴다) — 조건이 값이 돼야 갈림길이 정해진다.' },
-      ],
     }))
     root.querySelector('[data-m="red-mix"]').append(ExprReduce({
       title: '2 + 3 > 4 && 10 / 2 === 5',
@@ -474,10 +453,55 @@
     wireGoto(root)
   }
 
-  // ── 3-6 · 요약 ──────────────────────────────────────────────
+  // ── 3-6 · 조건도 표현식 (if·for·while·switch) ────────────────
   window.Lessons['3-6'] = function render(root) {
     root.innerHTML = `
-      ${stepHeader('3-6 · 요약', '식을 나무로 보는 눈', '한 줄을 쪼개 안쪽부터 접는다')}
+      ${stepHeader('3-6 · 조건도 표현식', 'if·for·while·switch의 (조건)', '반복·분기의 괄호도 결국 표현식 하나 — 완전히 같은 축약')}
+      <p class="section-desc"><code>if</code>·<code>for</code>·<code>while</code>·<code>switch</code>는 <b>문</b>(값을 안 냄)이지만, 괄호 안 <b>(조건)은 표현식</b>이다. 그래서 <b>조건이 먼저 하나의 값으로 접혀야</b> 갈림길·반복 여부가 정해진다. (3-1의 "식 vs 문"이 여기서 만난다.)</p>
+      <div class="card"><div class="file-label">🔬 축약: if (age >= 19 && hasTicket) { … }  (age=20, hasTicket=true)</div><div data-m="red-if"></div></div>
+
+      <span class="learn-tag">📎 반복·분기의 괄호 <code>(…)</code>은 전부 같은 '값 자리' — <b>여기서 배운 축약이 어디서나 완벽히 동일</b>하게 일어난다(새로 외울 것 0)</span>
+      <div class="card">
+        <div class="file-label">🧩 같은 자리, 같은 규칙 — 조건은 어디서나 표현식</div>
+        <div class="bnf">
+          <div class="bnf-rule">if&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bnf-rec">(score >= 80)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 조건 → 참/거짓</span></div>
+          <div class="bnf-rule">while&nbsp;&nbsp;<span class="bnf-rec">(n < 10)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 조건 → 참/거짓 (매 반복 다시 접힘)</span></div>
+          <div class="bnf-rule">for&nbsp;&nbsp;&nbsp;&nbsp;(i = 0; <span class="bnf-rec">i &lt; 3</span>; i++)&nbsp;&nbsp;<span style="opacity:.65">← 가운데 → 참/거짓 (매 반복)</span></div>
+          <div class="bnf-rule">switch&nbsp;<span class="bnf-rec">(day % 7)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 값 → 각 case와 === 비교</span></div>
+        </div>
+        <p class="section-desc" style="margin:8px 0 0">전부 <b>같은 축약</b>이다 — 산수·비교·논리·삼항·함수호출이 그 안에서 똑같이 접힌다. 문(if/for/switch)이 달라도 <b>(괄호 안)은 늘 표현식 하나</b>. 새 규칙이 아니라 <b>이미 배운 그 규칙</b>이다.</p>
+      </div>
+      <div class="card"><div class="file-label">🔬 조건이 값으로 접히는 걸 직접 — if·for·switch 자리</div><div data-m="cond-run"></div></div>
+      ${nav('3-5', 6, '3-7')}
+    `
+    root.querySelector('[data-m="red-if"]').append(ExprReduce({
+      title: 'if (age >= 19 && hasTicket) { 입장() }   // age = 20, hasTicket = true',
+      steps: [
+        { code: 'if (20 >= 19 && true) { 입장() }', mark: '20 >= 19', note: '<code>if</code>는 문이지만 <b>(조건)은 표현식</b> → 먼저 접는다. <b>20 &gt;= 19</b> 는 <b>true</b>. (비교부터)' },
+        { code: 'if (true && true) { 입장() }', mark: 'true && true', note: '이제 논리 <code>&&</code> → 둘 다 참이라 <b>true</b>.' },
+        { code: 'if (true) { 입장() }', note: '조건이 <b>하나의 값(true)</b>으로 접혔다 → if가 <b>블록을 실행</b>한다. (거짓이었다면 건너뛴다) — 조건이 값이 돼야 갈림길이 정해진다.' },
+      ],
+    }))
+    root.querySelector('[data-m="cond-run"]').append(Runner({
+      showBox: false,
+      code: [
+        'let score = 85, n = 5, day = 9',
+        '',
+        'print(score >= 80)   // true   ← if (…) · while (…) 의 그 조건 자리',
+        'print(n < 10)        // true   ← for (…; 조건; …) 가운데도 같은 자리',
+        'print(day % 7)       // 2      ← switch (…) 값도 표현식 → case 2: 와 === 비교',
+        '',
+        '// for의 조건은 매 반복 "다시" 접힌다 — i가 0,1,2 → true, 3 → false(종료)',
+        'for (let i = 0; i < 3; i++) print("i=" + i + " → " + (i < 3))',
+      ].join('\n'),
+    }))
+    wireGoto(root)
+  }
+
+  // ── 3-7 · 요약 ──────────────────────────────────────────────
+  window.Lessons['3-7'] = function render(root) {
+    root.innerHTML = `
+      ${stepHeader('3-7 · 요약', '식을 나무로 보는 눈', '한 줄을 쪼개 안쪽부터 접는다')}
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">한 줄을 <b>나무로 쪼개고</b>, <b>우선순위 높은 것·안쪽·왼쪽부터</b> 값으로 <b>접어 올린다</b>.
@@ -500,8 +524,8 @@
         <button class="chip on" data-goto="3:easy">📝 표현식 실습 시작 (🟢 쉬움) →</button>
       </div>
       <div class="practice-nav">
-        <button class="chip" data-goto="3-5">← 이전</button>
-        <span class="practice-nav-dots">스텝 6 / 6 · 개념 끝</span>
+        <button class="chip" data-goto="3-6">← 이전</button>
+        <span class="practice-nav-dots">스텝 7 / 7 · 개념 끝</span>
         <button class="chip on" data-goto="3:easy">드릴로 →</button>
       </div>
     `

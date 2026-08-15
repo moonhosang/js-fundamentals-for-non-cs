@@ -38,7 +38,8 @@
     { id: '3-3', badge: '3-3', title: '3-3 · 축약 ①', subtitle: '순수 계산 한 겹씩 접기', step: true },
     { id: '3-4', badge: '3-4', title: '3-4 · 축약 ②', subtitle: '함수 · 중첩 삼항 · 안쪽부터', step: true },
     { id: '3-5', badge: '3-5', title: '3-5 · 🔒 중첩 함수', subtitle: '좌→우·안쪽 먼저 (5강 함수 후)', step: true },
-    { id: '3-6', badge: '3-6', title: '3-6 · 요약', subtitle: '식을 나무로 보는 눈', step: true },
+    { id: '3-6', badge: '3-6', title: '3-6 · 조건도 표현식', subtitle: 'if·for·while·switch의 (조건)', step: true },
+    { id: '3-7', badge: '3-7', title: '3-7 · 요약', subtitle: '식을 나무로 보는 눈', step: true },
     { id: 4, name: '조건', subtitle: 'if · 비교 · 참/거짓 · 삼항',
       plan: ['비교 연산자 == vs === · > < >=', 'truthy/falsy — 빈 값의 참·거짓', 'if / else 와 삼항 연산자', '화면: 조건에 따라 배지 색 바꾸기', '유형 드릴 ×10'] },
     { id: 5, name: '함수', subtitle: '왜 · 정의 · 호출 · return · 스코프 (단계로 배웁니다)' },
@@ -110,7 +111,7 @@
     { tag: '🧠', title: '메모리 기초', optional: true, skipTo: 2, items: ['ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
     { tag: '🕸️', title: '객체 그래프', optional: true, skipTo: 2, items: ['graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle')] },
     // 표현식(3강)은 개념 단계(3, 3-1~3-6) + 드릴(...P(3) = 3-7~). 조건은 4강으로.
-    { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5)] },
+    { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5)] },
     { n: '3', title: '여러 값과 반복', items: [6, ...P(6), 7, ...P(7), 8, ...P(8)] },
     // 🧬 클래스 — 객체(8강) 뒤 선택 심화. 코드 급하면 9강으로 건너뛰기.
     { tag: '🧬', title: '클래스 (선택)', optional: true, skipTo: 9, items: ['class', ...P('class')] },
