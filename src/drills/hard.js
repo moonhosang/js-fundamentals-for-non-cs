@@ -1,15 +1,15 @@
-// 🔴 어려움 드릴 (ADR 0008) — 예측 패턴 · 정답 시 설명/메모리 증명. 자동 생성(scratchpad/gen.js).
+// 🔴 어려움 드릴 (ADR 0008) — 예측 패턴 · 정답 시 설명/메모리 증명. 자동 생성.
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const H = window.Drills.hard
   H["1"] = {
     pattern: "🔴 어려움 · typeof 함정·부동소수점·+와 -의 차이 — 아는 것도 틀린다",
     problems: [
-      {"label":"typeof null","ask":"null 의 typeof 결과는? (JS의 유명한 버그)","code":"print((typeof null) === \"____\")","expect":"true","answer":"object","hint":"오래된 버그 — object","explain":"<code>typeof null</code>은 <b>\"object\"</b> — JS 초창기 버그가 호환성 때문에 남았다.","wiki":{"label":"자료형","url":"https://ko.wikipedia.org/wiki/자료형"}},
-      {"label":"typeof NaN","ask":"NaN(계산 실패값)의 typeof 이름은?","code":"print((typeof NaN) === \"____\")","expect":"true","answer":"number","hint":"뜻밖에 number","explain":"NaN은 \"숫자가 아님\"이지만 <b>타입은 number</b>(실패한 숫자 계산 결과)."},
+      {"label":"typeof null","ask":"null 의 typeof 결과는? (JS의 유명한 버그)","code":"print((typeof null) === \"____\")","expect":"true","answer":"object","hint":"오래된 버그 — object","explain":"<code>typeof null</code>은 <b>\"object\"</b> — JS 초창기 버그가 호환성 때문에 남았다.","see":"builtins","wiki":{"label":"자료형","url":"https://ko.wikipedia.org/wiki/자료형"}},
+      {"label":"typeof NaN","ask":"NaN(계산 실패값)의 typeof 이름은?","code":"print((typeof NaN) === \"____\")","expect":"true","answer":"number","hint":"뜻밖에 number","explain":"NaN은 \"숫자가 아님\"이지만 <b>타입은 number</b>(실패한 숫자 계산 결과).","see":"builtins"},
       {"label":"부동소수점","ask":"0.1 + 0.2 는 0.3 과 정확히 같은가?","code":"print((0.1 + 0.2 === 0.3) === ____)","expect":"true","answer":"false","hint":"미세 오차로 다르다","explain":"0.1·0.2는 2진 소수로 딱 안 떨어져 <b>미세 오차</b>가 생겨 0.3과 다르다."},
       {"label":"- 는 숫자로","ask":"\"5\" - 1 의 결과는? (빼기는 +와 다르게)","code":"print((\"5\" - 1) === ____)","expect":"true","answer":"4","hint":"\"5\"가 숫자 5로 강제","explain":"<code>-</code>는 <code>\"5\"</code>를 <b>숫자 5로 강제</b> → <code>5-1=4</code>. (+와 반대)"},
-      {"label":"미초기화","ask":"값을 안 넣은 변수 x의 타입 이름은?","code":"let x\nprint((typeof x) === \"____\")","expect":"true","answer":"undefined","hint":"선언만 = undefined","explain":"선언만 하고 값을 안 넣은 변수는 <code>undefined</code>."}
+      {"label":"미초기화","ask":"값을 안 넣은 변수 x의 타입 이름은?","code":"let x\nprint((typeof x) === \"____\")","expect":"true","answer":"undefined","hint":"선언만 = undefined","explain":"선언만 하고 값을 안 넣은 변수는 <code>undefined</code>.","see":"builtins"}
     ],
   }
   H["2"] = {
@@ -18,14 +18,14 @@
       {"label":"* 는 숫자로","ask":"\"5\" * 2 는? (곱하기는 숫자로 강제)","code":"print((\"5\" * 2) === ____)","expect":"true","answer":"10","hint":"\"5\"→5, 5×2","explain":"<code>*</code>는 글자를 <b>숫자로 강제</b> → <code>5*2=10</code>. (+와 반대)","wiki":{"label":"형 변환","url":"https://ko.wikipedia.org/wiki/형_변환"}},
       {"label":"+ \"\" 는 글자로","ask":"10 + \"\" 는? (숫자 + 빈 글자)","code":"print((10 + \"\") === \"____\")","expect":"true","answer":"10","hint":"글자로 변함 → \"10\"","explain":"<code>+</code>에 빈 글자가 끼면 숫자가 <b>문자로</b> → <code>\"10\"</code>. 숫자→문자 변환 관용구."},
       {"label":"글자도 인덱스","ask":"\"abc\"[1] 는? (글자도 번호로 접근)","code":"print((\"abc\"[1]) === \"____\")","expect":"true","answer":"b","hint":"0:a,1:b","explain":"문자열도 <b>번호로 접근</b> → 1번 글자 <code>\"b\"</code>."},
-      {"label":"split 개수","ask":"\"a,b,c\".split(\",\") 의 개수는?","code":"print((\"a,b,c\".split(\",\").length) === ____)","expect":"true","answer":"3","hint":"쉼표로 3조각","explain":"<code>split(\",\")</code>는 쉼표로 잘라 배열 <code>[\"a\",\"b\",\"c\"]</code> → 길이 3."},
-      {"label":"Number 변환","ask":"Number(\"12\") + 3 는?","code":"print((Number(\"12\") + 3) === ____)","expect":"true","answer":"15","hint":"\"12\"→숫자 12, +3","explain":"<code>Number(\"12\")</code>는 문자를 숫자 12로 → <code>12+3=15</code>."}
+      {"label":"split 개수","ask":"\"a,b,c\".split(\",\") 의 개수는?","code":"print((\"a,b,c\".split(\",\").length) === ____)","expect":"true","answer":"3","hint":"쉼표로 3조각","explain":"<code>split(\",\")</code>는 쉼표로 잘라 배열 <code>[\"a\",\"b\",\"c\"]</code> → 길이 3.","see":"builtins"},
+      {"label":"Number 변환","ask":"Number(\"12\") + 3 는?","code":"print((Number(\"12\") + 3) === ____)","expect":"true","answer":"15","hint":"\"12\"→숫자 12, +3","explain":"<code>Number(\"12\")</code>는 문자를 숫자 12로 → <code>12+3=15</code>.","see":"builtins"}
     ],
   }
   H["3"] = {
     pattern: "🔴 어려움 · 지수·왼쪽부터 결합·강제 형변환·비교 체인",
     problems: [
-      {"label":"지수","ask":"2 ** 3 은? (2의 3제곱)","code":"print((2 ** 3) === ____)","expect":"true","answer":"8","hint":"2*2*2","explain":"<code>2**3</code>은 2의 3제곱 → 8."},
+      {"label":"지수","ask":"2 ** 3 은? (2의 3제곱)","code":"print((2 ** 3) === ____)","expect":"true","answer":"8","hint":"2*2*2","explain":"<code>2**3</code>은 2의 3제곱 → 8.","see":"builtins"},
       {"label":"왼쪽부터 결합","ask":"1 + 2 + \"3\" 은? (왼쪽부터: 3, 그다음 문자 이어붙이기)","code":"print((1 + 2 + \"3\") === ____)","expect":"true","answer":"\"33\"","hint":"1+2=3 → 3+\"3\"=\"33\"","explain":"왼쪽부터: <code>1+2=3</code>, <code>3+\"3\"</code>은 글자 → <code>\"33\"</code>."},
       {"label":"문자 - 숫자","ask":"\"5\" - 1 은? (빼기는 숫자로 강제 변환)","code":"print((\"5\" - 1) === ____)","expect":"true","answer":"4","hint":"\"5\"가 숫자 5로 → 5-1","explain":"<code>-</code>는 <code>\"5\"</code>를 숫자 5로 강제 → <code>5-1=4</code>."},
       {"label":"true + 1","ask":"true + 1 은? (true는 1로)","code":"print((true + 1) === ____)","expect":"true","answer":"2","hint":"true → 1","explain":"true가 숫자 1로 강제 → <code>1+1=2</code>."},
@@ -38,7 +38,7 @@
       {"label":"&&는 값을 돌려준다","ask":"&&는 불리언이 아니라 \"피연산자\"를 돌려준다. 1 && 2 의 값은?","code":"print((1 && 2) === ____)","expect":"true","answer":"2","hint":"둘 다 참이면 뒤쪽(2)을 돌려준다","explain":"<code>&amp;&amp;</code>는 참/거짓이 아니라 <b>피연산자 자체</b>를 돌려준다 → 둘 다 참이면 뒤쪽 2.","wiki":{"label":"형 변환","url":"https://ko.wikipedia.org/wiki/형_변환"}},
       {"label":"||는 값을 돌려준다","ask":"||는 참인 쪽 \"피연산자\"를 돌려준다. 0 || \"안녕\" 의 값은?","code":"print((0 || \"안녕\") === ____)","expect":"true","answer":"\"안녕\"","hint":"0은 falsy → 오른쪽 값 자체","explain":"<code>||</code>는 <b>참인 쪽 피연산자</b>를 돌려준다 → 0은 falsy라 <code>\"안녕\"</code>."},
       {"label":"비교 체인","ask":"2 > 1 > 0 의 결과는? (왼쪽부터: 앞이 true가 되고, 그 true가 다시...)","code":"print((2 > 1 > 0) === ____)","expect":"true","answer":"true","hint":"(2>1)=true → true>0 → 1>0 → true","explain":"왼쪽부터: <code>2&gt;1=true</code>, <code>true</code>가 1로 강제 → <code>1&gt;0=true</code>."},
-      {"label":"NaN 함정","ask":"NaN === NaN 의 결과는? (자기 자신과 비교)","code":"print((NaN === NaN) === ____)","expect":"true","answer":"false","hint":"NaN은 자기 자신과도 같지 않다","explain":"NaN은 <b>자기 자신과도 같지 않게</b> 정의돼 있다 → false. (유일한 예외)"},
+      {"label":"NaN 함정","ask":"NaN === NaN 의 결과는? (자기 자신과 비교)","code":"print((NaN === NaN) === ____)","expect":"true","answer":"false","hint":"NaN은 자기 자신과도 같지 않다","explain":"NaN은 <b>자기 자신과도 같지 않게</b> 정의돼 있다 → false. (유일한 예외)","see":"builtins"},
       {"label":"느슨한 ==","ask":"느슨한 == 로 \"\" 와 0 을 비교하면? (양쪽을 숫자로 강제 변환)","code":"print((\"\" == 0) === ____)","expect":"true","answer":"true","hint":"\"\"→0, 0==0 → true","explain":"느슨한 <code>==</code>는 양쪽을 숫자로 강제: <code>\"\"→0</code>, <code>0==0=true</code>."}
     ],
   }
@@ -55,9 +55,9 @@
   H["6"] = {
     pattern: "🔴 어려움 · 배열은 참조·sort는 문자 비교·음수 인덱스 없음 — 함정",
     problems: [
-      {"label":"join","ask":"[1,2,3] 을 \"-\" 로 이으면?","code":"print(([1, 2, 3].join(\"-\")) === \"____\")","expect":"true","answer":"1-2-3","hint":"사이에 - 끼움","explain":"<code>join(\"-\")</code>은 요소 사이에 \"-\"를 끼워 문자열 → <code>\"1-2-3\"</code>."},
+      {"label":"join","ask":"[1,2,3] 을 \"-\" 로 이으면?","code":"print(([1, 2, 3].join(\"-\")) === \"____\")","expect":"true","answer":"1-2-3","hint":"사이에 - 끼움","explain":"<code>join(\"-\")</code>은 요소 사이에 \"-\"를 끼워 문자열 → <code>\"1-2-3\"</code>.","see":"builtins"},
       {"label":"배열은 참조","ask":"b = a 로 둔 뒤 b에 push하면 원본 a의 개수는?","code":"let a = [1, 2, 3]\nlet b = a\nb.push(4)\nprint(a.length === ____)","expect":"true","answer":"4","hint":"같은 배열 → a도 늘어남","explain":"<b>배열은 참조</b> → b·a가 같은 배열이라 b에 push하면 a도 늘어 4.","see":"ref2","wiki":{"label":"배열","url":"https://ko.wikipedia.org/wiki/배열"}},
-      {"label":"sort 함정","ask":"[3, 20, 100].sort() 의 첫 요소는? (기본 정렬은 문자로 비교!)","code":"print(([3, 20, 100].sort()[0]) === ____)","expect":"true","answer":"100","hint":"\"100\" < \"20\" < \"3\" → 첫째 100","explain":"기본 <code>sort()</code>는 <b>문자로 비교</b> → \"100\"&lt;\"20\"&lt;\"3\" → 첫째 100. (함정)"},
+      {"label":"sort 함정","ask":"[3, 20, 100].sort() 의 첫 요소는? (기본 정렬은 문자로 비교!)","code":"print(([3, 20, 100].sort()[0]) === ____)","expect":"true","answer":"100","hint":"\"100\" < \"20\" < \"3\" → 첫째 100","explain":"기본 <code>sort()</code>는 <b>문자로 비교</b> → \"100\"&lt;\"20\"&lt;\"3\" → 첫째 100. (함정)","see":"builtins"},
       {"label":"음수 인덱스 없음","ask":"a[-1] 로 마지막을 꺼내려 하면? (JS엔 음수 인덱스가 없다)","code":"let a = [1, 2, 3]\nprint((a[-1]) === ____)","expect":"true","answer":"undefined","hint":"없는 칸 → undefined","explain":"JS엔 <b>음수 인덱스가 없다</b> → 없는 칸 <code>undefined</code>. (파이썬과 다름)"},
       {"label":"filter 개수","ask":"[1,2,3,4] 에서 2보다 큰 것만 거르면 몇 개?","code":"print(([1, 2, 3, 4].filter(x => x > 2).length) === ____)","expect":"true","answer":"2","hint":"3,4 → 2개","explain":"<code>filter(x&gt;2)</code>는 3,4만 남겨 개수 2."}
     ],
@@ -66,8 +66,8 @@
     pattern: "🔴 어려움 · 시작값 없는 reduce·find·every·객체 배열 집계·forEach는 undefined",
     problems: [
       {"label":"reduce 시작값 없음","ask":"요소가 하나면 시작값 없는 reduce는? [5].reduce((a,b)=>a+b)","code":"print([5].reduce((a, b) => a + b) === ____)","expect":"true","answer":"5","hint":"더할 짝이 없어 그대로 5","explain":"시작값 없는 reduce는 <b>첫 요소를 그대로 시작값</b>으로 → 요소 하나면 5."},
-      {"label":"find","ask":"7보다 큰 첫 값은?","code":"print([5, 10, 15].find(x => x > 7) === ____)","expect":"true","answer":"10","hint":"조건 맞는 첫 값","explain":"<code>find</code>는 조건 맞는 <b>첫 값</b>을 돌려준다 → 10."},
-      {"label":"every","ask":"전부 0보다 큰가?","code":"print([1, 2, 3].every(x => x > 0) === ____)","expect":"true","answer":"true","hint":"모두 만족 → true","explain":"<code>every</code>는 <b>모두</b> 만족하면 true."},
+      {"label":"find","ask":"7보다 큰 첫 값은?","code":"print([5, 10, 15].find(x => x > 7) === ____)","expect":"true","answer":"10","hint":"조건 맞는 첫 값","explain":"<code>find</code>는 조건 맞는 <b>첫 값</b>을 돌려준다 → 10.","see":"builtins"},
+      {"label":"every","ask":"전부 0보다 큰가?","code":"print([1, 2, 3].every(x => x > 0) === ____)","expect":"true","answer":"true","hint":"모두 만족 → true","explain":"<code>every</code>는 <b>모두</b> 만족하면 true.","see":"builtins"},
       {"label":"객체 배열 집계","ask":"나이만 뽑아 다 더하면?","code":"print([{ age: 20 }, { age: 30 }].map(p => p.age).reduce((a, b) => a + b, 0) === ____)","expect":"true","answer":"50","hint":"20 + 30","explain":"<code>map</code>으로 나이만 뽑아 <code>reduce</code>로 합 → <code>20+30=50</code>."},
       {"label":"forEach 반환","ask":"forEach는 무엇을 돌려주나?","code":"let r = [1, 2].forEach(x => x)\nprint(r === ____)","expect":"true","answer":"undefined","hint":"forEach는 반환이 없다","explain":"<code>forEach</code>는 <b>반환이 없다</b> → r은 undefined. (map과 다름)","wiki":{"label":"배열","url":"https://ko.wikipedia.org/wiki/배열"}}
     ],
@@ -105,8 +105,8 @@
   H["ram"] = {
     pattern: "🔴 어려움 · typeof null=object·NaN=number·부동소수점·복사 독립",
     problems: [
-      {"label":"typeof null","ask":"null 의 typeof 는? (유명 버그)","code":"print((typeof null) === \"____\")","expect":"true","answer":"object","hint":"오래된 버그 — object","explain":"<code>typeof null=\"object\"</code> — JS의 오래된 버그(호환성 때문에 유지)."},
-      {"label":"typeof NaN","ask":"NaN 의 typeof 는?","code":"print((typeof NaN) === \"____\")","expect":"true","answer":"number","hint":"뜻밖에 number","explain":"NaN은 실패한 <b>숫자</b> → 타입은 number."},
+      {"label":"typeof null","ask":"null 의 typeof 는? (유명 버그)","code":"print((typeof null) === \"____\")","expect":"true","answer":"object","hint":"오래된 버그 — object","explain":"<code>typeof null=\"object\"</code> — JS의 오래된 버그(호환성 때문에 유지).","see":"builtins"},
+      {"label":"typeof NaN","ask":"NaN 의 typeof 는?","code":"print((typeof NaN) === \"____\")","expect":"true","answer":"number","hint":"뜻밖에 number","explain":"NaN은 실패한 <b>숫자</b> → 타입은 number.","see":"builtins"},
       {"label":"부동소수점","ask":"0.1 + 0.2 는 0.3 과 정확히 같은가?","code":"print((0.1 + 0.2 === 0.3) === ____)","expect":"true","answer":"false","hint":"미세 오차로 다르다","explain":"2진 소수 오차로 <code>0.1+0.2 ≠ 0.3</code>."},
       {"label":"복사 두 값","ask":"a=1,b=a,b=9 후 a + b 는? (a는 복사라 그대로)","code":"let a = 1\nlet b = a\nb = 9\nprint((a + b) === ____)","expect":"true","answer":"10","hint":"a=1 + b=9","explain":"a는 복사라 1, b만 9 → <code>1+9=10</code>."},
       {"label":"복사 독립","ask":"a=5,b=a,b=b+1 후 a는?","code":"let a = 5\nlet b = a\nb = b + 1\nprint(a === ____)","expect":"true","answer":"5","hint":"b만 바뀜","explain":"b만 +1, a는 복제본이라 5."}
@@ -128,7 +128,7 @@
       {"label":"복사+공유","ask":"snap은 복사(1), b는 공유. b.n=9 후 snap + b.n 은?","code":"let a = { n: 1 }\nlet b = a\nlet snap = a.n\nb.n = 9\nprint((snap + b.n) === ____)","expect":"true","answer":"10","hint":"1(복사) + 9(공유)","explain":"snap은 복사(1), b는 공유(9) → <code>1+9=10</code>."},
       {"label":"끊긴 뒤 변경","ask":"b를 새 객체로 바꾼 뒤 b.n=100. 원래 a.n은?","code":"let a = { n: 1 }\nlet b = a\nb = { n: 9 }\nb.n = 100\nprint(a.n === ____)","expect":"true","answer":"1","hint":"연결 끊긴 뒤라 a는 1","explain":"재할당으로 연결 끊긴 뒤라 이후 변경은 a와 무관 → 1."},
       {"label":"함수+별칭","ask":"f가 a.n을 0으로. b는 a의 별칭. b.n은?","code":"function f(o) { o.n = 0 }\nlet a = { n: 5 }\nlet b = a\nf(a)\nprint(b.n === ____)","expect":"true","answer":"0","hint":"함수가 공유 객체를 바꿈","explain":"함수가 공유 객체를 바꿔 b(별칭)도 0."},
-      {"label":"concat은 새 배열","ask":"b = b.concat(4) 는 새 배열을 만든다. 원본 a 개수는?","code":"let a = [1, 2, 3]\nlet b = a\nb = b.concat(4)\nprint(a.length === ____)","expect":"true","answer":"3","hint":"concat은 원본 안 바꿈(push와 다름)","explain":"<code>concat</code>은 <b>새 배열</b>을 만들 뿐 원본 안 바꿈 → a는 3. (push와 다름)"},
+      {"label":"concat은 새 배열","ask":"b = b.concat(4) 는 새 배열을 만든다. 원본 a 개수는?","code":"let a = [1, 2, 3]\nlet b = a\nb = b.concat(4)\nprint(a.length === ____)","expect":"true","answer":"3","hint":"concat은 원본 안 바꿈(push와 다름)","explain":"<code>concat</code>은 <b>새 배열</b>을 만들 뿐 원본 안 바꿈 → a는 3. (push와 다름)","see":"builtins"},
       {"label":"중첩 공유","ask":"p는 me.pet과 같은 객체. p.hp=0 후 me.pet.hp는?","code":"let me = { pet: { hp: 10 } }\nlet p = me.pet\np.hp = 0\nprint(me.pet.hp === ____)","expect":"true","answer":"0","hint":"p = me.pet(같은 객체)","explain":"p는 <code>me.pet</code>과 같은 객체 → 0."}
     ],
   }
@@ -149,7 +149,7 @@
       {"label":"깊은 중첩","ask":"d.a.b.c 는?","code":"let d = { a: { b: { c: 7 } } }\nprint(d.a.b.c === ____)","expect":"true","answer":"7","hint":"끝까지 따라감","explain":"점을 이어 <code>d.a.b.c</code> → 7."},
       {"label":"배열 별칭","ask":"b=a 배열 별칭. b.push(4) 후 a의 개수는?","code":"let a = [1, 2, 3]\nlet b = a\nb.push(4)\nprint(a.length === ____)","expect":"true","answer":"4","hint":"같은 배열 → a도 늘어남","explain":"<b>배열은 참조</b> → b에 push하면 a도 늘어 4."},
       {"label":"중첩 배열 객체","ask":"o.list[1].v 는? {list:[{v:1},{v:2}]}","code":"let o = { list: [{ v: 1 }, { v: 2 }] }\nprint(o.list[1].v === ____)","expect":"true","answer":"2","hint":"두 번째 객체","explain":"<code>o.list[1].v</code> → 2."},
-      {"label":"삭제","ask":"delete o.a 후 o.a 는?","code":"let o = { a: 1 }\ndelete o.a\nprint(o.a === ____)","expect":"true","answer":"undefined","hint":"지워진 키 = undefined","explain":"<code>delete</code>로 지운 키는 <code>undefined</code>."}
+      {"label":"삭제","ask":"delete o.a 후 o.a 는?","code":"let o = { a: 1 }\ndelete o.a\nprint(o.a === ____)","expect":"true","answer":"undefined","hint":"지워진 키 = undefined","explain":"<code>delete</code>로 지운 키는 <code>undefined</code>.","see":"builtins"}
     ],
   }
   H["passval"] = {
@@ -258,8 +258,8 @@
       {"label":"인스턴스 독립","ask":"a·b는 각자 다른 객체. a.n=9로 바꿔도 b.n은?","code":"class C { constructor() { this.n = 0 } }\nlet a = new C()\nlet b = new C()\na.n = 9\nprint(b.n === ____)","expect":"true","answer":"0","hint":"각자 힙 객체 → b는 0","explain":"<code>new</code>마다 <b>힙에 다른 객체</b> → a·b는 별개, b.n은 0.","mem":{"title":"new 마다 힙에 새 객체 — a와 b는 다른 객체","stackLabel":"📇 이름표 장부","code":["let a = new C()","let b = new C()","a.n = 9"],"steps":[{"line":1,"stack":[{"name":"main","slots":[{"name":"a","ref":"h1"},{"name":"b","ref":"h2"}]}],"heap":{"h1":{"label":"C","fields":[{"key":"n","value":"0"}]},"h2":{"label":"C","fields":[{"key":"n","value":"0"}]}},"note":"new 두 번 → <b>힙에 서로 다른 객체</b> h1, h2. a·b는 별칭이 아니다."},{"line":2,"stack":[{"name":"main","slots":[{"name":"a","ref":"h1"},{"name":"b","ref":"h2"}]}],"heap":{"h1":{"label":"C","fields":[{"key":"n","value":"9","bad":true}]},"h2":{"label":"C","fields":[{"key":"n","value":"0"}]}},"note":"<code>a.n = 9</code>는 h1만 고침. <b>b(h2).n은 0 그대로</b>."}]}},
       {"label":"상속(extends)","ask":"B는 A를 물려받는다. new B().hi() 는?","code":"class A { hi() { return \"A\" } }\nclass B extends A {}\nprint(new B().hi() === \"____\")","expect":"true","answer":"A","hint":"물려받은 hi()","explain":"B가 A를 물려받아(extends) A의 hi()를 그대로 → <code>\"A\"</code>."},
       {"label":"인스턴스 배열","ask":"ds[1].name 은?","code":"class D { constructor(n) { this.name = n } }\nlet ds = [new D(\"가\"), new D(\"나\")]\nprint(ds[1].name === \"____\")","expect":"true","answer":"나","hint":"두 번째 인스턴스","explain":"<code>ds[1]</code>은 두 번째 인스턴스 → <code>\"나\"</code>."},
-      {"label":"instanceof","ask":"c instanceof C 는?","code":"class C {}\nlet c = new C()\nprint((c instanceof C) === ____)","expect":"true","answer":"true","hint":"C로 만든 c","explain":"c는 C로 만들어졌다 → <code>instanceof</code> true."},
-      {"label":"그냥 객체","ask":"typeof (new C()) 는? (인스턴스도 특별하지 않다)","code":"class C {}\nprint((typeof (new C())) === \"____\")","expect":"true","answer":"object","hint":"인스턴스 = 그냥 객체","explain":"<b>인스턴스도 그냥 객체</b> → <code>typeof=\"object\"</code>. (class는 프로토타입 문법설탕)","wiki":{"label":"객체 (컴퓨터 과학)","url":"https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)"}}
+      {"label":"instanceof","ask":"c instanceof C 는?","code":"class C {}\nlet c = new C()\nprint((c instanceof C) === ____)","expect":"true","answer":"true","hint":"C로 만든 c","explain":"c는 C로 만들어졌다 → <code>instanceof</code> true.","see":"builtins"},
+      {"label":"그냥 객체","ask":"typeof (new C()) 는? (인스턴스도 특별하지 않다)","code":"class C {}\nprint((typeof (new C())) === \"____\")","expect":"true","answer":"object","hint":"인스턴스 = 그냥 객체","explain":"<b>인스턴스도 그냥 객체</b> → <code>typeof=\"object\"</code>. (class는 프로토타입 문법설탕)","see":"builtins","wiki":{"label":"객체 (컴퓨터 과학)","url":"https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)"}}
     ],
   }
 })()

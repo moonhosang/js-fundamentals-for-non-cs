@@ -1,13 +1,13 @@
-// 🟢 쉬움 드릴 (ADR 0008) — 예측 패턴 · 정답 시 설명/메모리 증명. 자동 생성(scratchpad/gen.js).
+// 🟢 쉬움 드릴 (ADR 0008) — 예측 패턴 · 정답 시 설명/메모리 증명. 자동 생성.
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const E = window.Drills.easy
   E["1"] = {
     pattern: "🟢 쉬움 · 값의 타입·계산 결과를 스스로 예측해 채운다 (=== true 면 정답)",
     problems: [
-      {"label":"숫자의 타입","ask":"숫자 24의 타입 이름은? (typeof 결과)","code":"print((typeof 24) === \"____\")","expect":"true","answer":"number","hint":"숫자 = number","explain":"<b>typeof</b>는 값의 종류 이름을 준다. 숫자는 <code>\"number\"</code>."},
-      {"label":"글자의 타입","ask":"글자 \"안녕\"의 타입 이름은?","code":"print((typeof \"안녕\") === \"____\")","expect":"true","answer":"string","hint":"글자 = string","explain":"따옴표로 감싼 값은 <b>문자열</b> → <code>\"string\"</code>."},
-      {"label":"참거짓의 타입","ask":"참/거짓 값의 타입 이름은?","code":"print((typeof true) === \"____\")","expect":"true","answer":"boolean","hint":"참거짓 = boolean","explain":"<code>true</code>·<code>false</code>는 <b>불리언</b> → <code>\"boolean\"</code>."},
+      {"label":"숫자의 타입","ask":"숫자 24의 타입 이름은? (typeof 결과)","code":"print((typeof 24) === \"____\")","expect":"true","answer":"number","hint":"숫자 = number","explain":"<b>typeof</b>는 값의 종류 이름을 준다. 숫자는 <code>\"number\"</code>.","see":"builtins"},
+      {"label":"글자의 타입","ask":"글자 \"안녕\"의 타입 이름은?","code":"print((typeof \"안녕\") === \"____\")","expect":"true","answer":"string","hint":"글자 = string","explain":"따옴표로 감싼 값은 <b>문자열</b> → <code>\"string\"</code>.","see":"builtins"},
+      {"label":"참거짓의 타입","ask":"참/거짓 값의 타입 이름은?","code":"print((typeof true) === \"____\")","expect":"true","answer":"boolean","hint":"참거짓 = boolean","explain":"<code>true</code>·<code>false</code>는 <b>불리언</b> → <code>\"boolean\"</code>.","see":"builtins"},
       {"label":"재할당 결과","ask":"x = 10 다음 x = x + 5 를 하면 x는?","code":"let x = 10\nx = x + 5\nprint(x === ____)","expect":"true","answer":"15","hint":"10 + 5","explain":"<code>x = x + 5</code>는 <b>지금 x의 값(10)에 5를 더한 15</b>를 다시 x에 담는다."},
       {"label":"복사는 독립","ask":"a를 복사해 b를 만들고 b만 9로 바꾸면 a는?","code":"let a = 5\nlet b = a\nb = 9\nprint(a === ____)","expect":"true","answer":"5","hint":"원시값 복사 → a는 그대로","explain":"원시값은 <code>=</code>로 넘길 때 <b>값을 복제</b>한다. b를 바꿔도 a의 셀은 그대로 10."}
     ],
@@ -106,10 +106,10 @@
     pattern: "🟢 쉬움 · 재할당·복사 독립·typeof 결과를 스스로 예측",
     problems: [
       {"label":"재할당","ask":"x=10 다음 x=x+5 하면 x는?","code":"let x = 10\nx = x + 5\nprint(x === ____)","expect":"true","answer":"15","hint":"10 + 5","explain":"<code>x=x+5</code>는 현재 10에 5를 더한 15를 다시 담는다."},
-      {"label":"숫자 타입","ask":"숫자 값의 타입 이름은?","code":"print((typeof 99) === \"____\")","expect":"true","answer":"number","hint":"숫자 = number","explain":"숫자의 타입 이름은 <code>\"number\"</code>."},
+      {"label":"숫자 타입","ask":"숫자 값의 타입 이름은?","code":"print((typeof 99) === \"____\")","expect":"true","answer":"number","hint":"숫자 = number","explain":"숫자의 타입 이름은 <code>\"number\"</code>.","see":"builtins"},
       {"label":"복사는 독립","ask":"b를 99로 바꿔도 a는? (b=a로 복사한 뒤)","code":"let a = 10\nlet b = a\nb = 99\nprint(a === ____)","expect":"true","answer":"10","hint":"원시값은 복사 → a는 그대로","explain":"원시값(숫자·문자·불리언)은 <code>=</code>로 넘길 때 <b>값을 각자 셀에 복제</b>한다. 그래서 b의 셀을 99로 바꿔도 a의 셀은 10 그대로. (만약 객체였다면 <b>주소를 공유</b>해 함께 바뀐다 — M4-2 참조=공유.)","see":"ref2","wiki":{"label":"원시 자료형","url":"https://ko.wikipedia.org/wiki/원시_자료형"},"mem":{"title":"왜 a는 10 그대로인가 — 원시값은 각자 셀로 복사","stackLabel":"📇 이름표 장부","code":["let a = 10","let b = a","b = 99"],"steps":[{"line":1,"stack":[{"name":"main","slots":[{"name":"a","value":"10"},{"name":"b","value":"10"}]}],"heap":{},"note":"<code>let b = a</code> → 값 10을 <b>b의 셀에 복제</b>. a·b는 <b>각자 셀</b>(별개)."},{"line":2,"stack":[{"name":"main","slots":[{"name":"a","value":"10"},{"name":"b","value":"99","bad":true}]}],"heap":{},"note":"<code>b = 99</code>는 <b>b의 셀만</b> 바꾼다. <b>a는 10 그대로</b> — 서로 독립."}]}},
       {"label":"null","ask":"memo를 \"일부러 비움\"으로 만들면? (0이나 빈 글자 말고)","code":"let memo = \"메모\"\nmemo = null\nprint(memo === ____)","expect":"true","answer":"null","hint":"의도적 빈 값","explain":"<code>null</code>은 \"<b>일부러 비움</b>\"을 뜻하는 값. (undefined=아직 없음과 구분)"},
-      {"label":"글자 타입","ask":"글자 값의 타입 이름은?","code":"print((typeof \"hi\") === \"____\")","expect":"true","answer":"string","hint":"글자 = string","explain":"글자의 타입 이름은 <code>\"string\"</code>."}
+      {"label":"글자 타입","ask":"글자 값의 타입 이름은?","code":"print((typeof \"hi\") === \"____\")","expect":"true","answer":"string","hint":"글자 = string","explain":"글자의 타입 이름은 <code>\"string\"</code>.","see":"builtins"}
     ],
   }
   E["ref"] = {

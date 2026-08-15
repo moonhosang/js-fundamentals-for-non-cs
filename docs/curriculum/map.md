@@ -48,6 +48,9 @@ IT 전공자가 아닌 사람이 **완전 제로**에서 시작하는 실습형 
 - ✅ **9강 · DOM** — querySelector(첫 하나)·textContent/style·createElement+append(7강 forEach 합체)·addEventListener(콜백)·실전 카운터. 드릴 9-1~9-10.
 - ✅ **10강 · 실전 캡스톤** — 디지털 명함 카드 생성기. 새 문법 0, 배운 조각 조립(데이터→함수→반복→조건→DOM·이벤트). 졸업 실습 10-1~10-8(전 강 한 문제씩).
 
+## 📚 레퍼런스
+- ✅ **내장 기능(빌트인)** — 드릴이 쓰는 `typeof`·`instanceof`·`Number()`·`Math.max`·`sort`·`includes`·`indexOf`·`join`·`Object.keys`·`delete`·`toUpperCase`·`split` 등을 **분류별 카탈로그**(타입·숫자·문자열·배열·객체) + 실행 예제. 드릴 40곳이 `see:'builtins'`로 연결. `typeof`는 1강에 인라인 소개.
+
 ---
 
 ## 설계 메모

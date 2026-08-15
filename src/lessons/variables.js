@@ -55,6 +55,12 @@
         <p class="section-desc" style="margin:8px 0 0;opacity:.8">💡 심화(지금은 몰라도 됨): 원시는 정확힌 7종(<code>symbol</code>·<code>bigint</code> 포함) · JS의 <code>===</code>는 <b>값</b>을 비교(참조 아님) · 문자열 메서드(<code>.length</code>)는 <b>오토박싱</b>(잠깐 래퍼 객체)으로 동작 · <b>Java와 달리 JS 문자열은 객체가 아니라 원시</b>다. <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a></p>
       </div>
 
+      <div class="card">
+        <div class="file-label">🔬 typeof — 값의 타입 이름을 확인하는 내장 기능</div>
+        <div data-m="typeof"></div>
+      </div>
+      <p class="section-desc"><code>typeof 값</code>은 그 값의 <b>타입 이름</b>을 문자열로 돌려준다(실습에서 자주 만난다). <code>typeof</code>·<code>sort</code>·<code>Object.keys</code> 같은 <b>이미 만들어진 도구</b>는 <button class="inline-goto" data-goto="builtins">📚 내장 기능 레퍼런스</button>에 한곳에 모아 뒀다.</p>
+
       <div data-m="qz1"></div>
 
       <h3 class="section-title">② 변수 = 값에 붙이는 '이름표'</h3>
@@ -209,7 +215,19 @@
       ],
     }))
 
-    const cta = root.querySelector('[data-goto]')
-    if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    root.querySelector('[data-m="typeof"]').append(Runner({
+      showBox: false,
+      code: [
+        'print(typeof 3)        // "number"',
+        'print(typeof "안녕")    // "string"',
+        'print(typeof true)     // "boolean"',
+        'print(typeof { a: 1 }) // "object"  (묶음은 객체)',
+      ].join('\n'),
+    }))
+
+    // 모든 data-goto(실습 CTA + 인라인 레퍼런스 링크)를 배선한다.
+    root.querySelectorAll('[data-goto]').forEach((el) => {
+      el.onclick = () => { const t = el.getAttribute('data-goto'); const id = /^\d+$/.test(t) ? Number(t) : t; window.goLesson ? window.goLesson(id) : (location.hash = '#' + id) }
+    })
   }
 })()

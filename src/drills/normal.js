@@ -1,4 +1,4 @@
-// 🟡 보통 드릴 (ADR 0008) — 예측 패턴 · 정답 시 설명/메모리 증명. 자동 생성(scratchpad/gen.js).
+// 🟡 보통 드릴 (ADR 0008) — 예측 패턴 · 정답 시 설명/메모리 증명. 자동 생성.
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const N = window.Drills.normal
@@ -6,8 +6,8 @@
     pattern: "🟡 보통 · 두 단계 계산·타입 결합을 예측",
     problems: [
       {"label":"두 단계","ask":"1에서 +1 한 뒤 ×3 하면?","code":"let x = 1\nx = x + 1\nx = x * 3\nprint(x === ____)","expect":"true","answer":"6","hint":"2 × 3","explain":"왼쪽부터: <code>1+1=2</code>, 그다음 <code>2*3=6</code>."},
-      {"label":"식의 타입","ask":"10 + 5 의 타입 이름은?","code":"print((typeof (10 + 5)) === \"____\")","expect":"true","answer":"number","hint":"숫자끼리 → number","explain":"숫자끼리의 계산 결과도 숫자 → <code>\"number\"</code>."},
-      {"label":"섞인 타입","ask":"1 + \"2\" 의 타입 이름은? (숫자와 글자를 더하면)","code":"print((typeof (1 + \"2\")) === \"____\")","expect":"true","answer":"string","hint":"글자로 끌려간다","explain":"숫자+글자는 <b>글자로 끌려간다</b>(2강) → <code>\"1\"+\"2\"=\"12\"</code>는 문자열."},
+      {"label":"식의 타입","ask":"10 + 5 의 타입 이름은?","code":"print((typeof (10 + 5)) === \"____\")","expect":"true","answer":"number","hint":"숫자끼리 → number","explain":"숫자끼리의 계산 결과도 숫자 → <code>\"number\"</code>.","see":"builtins"},
+      {"label":"섞인 타입","ask":"1 + \"2\" 의 타입 이름은? (숫자와 글자를 더하면)","code":"print((typeof (1 + \"2\")) === \"____\")","expect":"true","answer":"string","hint":"글자로 끌려간다","explain":"숫자+글자는 <b>글자로 끌려간다</b>(2강) → <code>\"1\"+\"2\"=\"12\"</code>는 문자열.","see":"builtins"},
       {"label":"복사 후 원본 변경","ask":"a를 복사해 b를 만든 뒤 a에만 +5. b는?","code":"let a = 10\nlet b = a\na = a + 5\nprint(b === ____)","expect":"true","answer":"10","hint":"b는 복사본 → 그대로","explain":"b는 대입 순간 값 10을 <b>복제</b>. 나중에 a만 바꿔도 b는 10."},
       {"label":"+ 강제 변환","ask":"\"5\" + 3 의 결과는? (+는 함정)","code":"print((\"5\" + 3) === \"____\")","expect":"true","answer":"53","hint":"글자 이어붙이기 → \"53\"","explain":"<code>+</code>는 한쪽이 글자면 <b>이어붙이기</b> → <code>\"5\"+3=\"53\"</code>."}
     ],
@@ -19,27 +19,27 @@
       {"label":"첫 만남이 글자","ask":"\"3\" + 2 + 1 는? (첫 만남이 글자면)","code":"print((\"3\" + 2 + 1) === \"____\")","expect":"true","answer":"321","hint":"\"3\"+2=\"32\", +1=\"321\"","explain":"첫 <code>\"3\"+2</code>가 이미 문자 <code>\"32\"</code>, 이어서 <code>+1=\"321\"</code>."},
       {"label":"글자 수","ask":"\"abc\" 의 글자 수는?","code":"print((\"abc\".length) === ____)","expect":"true","answer":"3","hint":".length","explain":"문자열 <code>.length</code>는 글자 수 → 3."},
       {"label":"템플릿 계산","ask":"a=2, b=3일 때 `합 ${a + b}` 은?","code":"let a = 2\nlet b = 3\nprint((`합 ${a + b}`) === \"____\")","expect":"true","answer":"합 5","hint":"${a+b}=5","explain":"<code>${a+b}</code>는 <b>먼저 계산</b>돼 5가 끼워진다."},
-      {"label":"대문자","ask":"\"hi\".toUpperCase() 는?","code":"print((\"hi\".toUpperCase()) === \"____\")","expect":"true","answer":"HI","hint":"전부 대문자","explain":"<code>toUpperCase()</code>는 전부 대문자로 → <code>\"HI\"</code>."}
+      {"label":"대문자","ask":"\"hi\".toUpperCase() 는?","code":"print((\"hi\".toUpperCase()) === \"____\")","expect":"true","answer":"HI","hint":"전부 대문자","explain":"<code>toUpperCase()</code>는 전부 대문자로 → <code>\"HI\"</code>.","see":"builtins"}
     ],
   }
   N["3"] = {
     pattern: "🟡 보통 · 문자열·인자·삼항·논리 축약 — 표현식은 모두 값",
     problems: [
       {"label":"문자열 + 괄호","ask":"\"n=\" + (1 + 2) 는? (괄호 안 먼저, 그다음 이어붙이기)","code":"print((\"n=\" + (1 + 2)) === ____)","expect":"true","answer":"\"n=3\"","hint":"1+2=3 → \"n=3\" (따옴표째 입력)","explain":"괄호 안 <code>1+2=3</code> 먼저, 그다음 문자 이어붙이기 → <code>\"n=3\"</code>."},
-      {"label":"인자 안 먼저","ask":"Math.max(1, 2 * 3) 은? (인자 안 곱셈 먼저)","code":"print((Math.max(1, 2 * 3)) === ____)","expect":"true","answer":"6","hint":"2*3=6 → max(1,6)=6","explain":"인자 안 <code>2*3=6</code> 먼저 계산 → <code>max(1,6)=6</code>."},
+      {"label":"인자 안 먼저","ask":"Math.max(1, 2 * 3) 은? (인자 안 곱셈 먼저)","code":"print((Math.max(1, 2 * 3)) === ____)","expect":"true","answer":"6","hint":"2*3=6 → max(1,6)=6","explain":"인자 안 <code>2*3=6</code> 먼저 계산 → <code>max(1,6)=6</code>.","see":"builtins"},
       {"label":"삼항도 값","ask":"7 > 3 ? \"y\" : \"n\" 은? (삼항은 표현식 → 값)","code":"print((7 > 3 ? \"y\" : \"n\") === ____)","expect":"true","answer":"\"y\"","hint":"7>3은 true → \"y\" (따옴표째)","explain":"삼항도 <b>값을 내는 식</b> → <code>7>3</code>이 참이라 <code>\"y\"</code>."},
       {"label":"비교·논리도 값","ask":"true < true && true 는? (< 가 && 보다 먼저!)","code":"print((true < true && true) === ____)","expect":"true","answer":"false","hint":"true<true=false → false && true","explain":"<code>&lt;</code>가 <code>&amp;&amp;</code>보다 먼저 → <code>true&lt;true=false</code>, <code>false&amp;&amp;true=false</code>."},
-      {"label":"나머지 연산","ask":"10 % 3 은? (나눈 나머지)","code":"print((10 % 3) === ____)","expect":"true","answer":"1","hint":"10 = 3*3 + 1","explain":"<code>%</code>는 나눈 나머지 → <code>10=3·3+1</code> → 1."}
+      {"label":"나머지 연산","ask":"10 % 3 은? (나눈 나머지)","code":"print((10 % 3) === ____)","expect":"true","answer":"1","hint":"10 = 3*3 + 1","explain":"<code>%</code>는 나눈 나머지 → <code>10=3·3+1</code> → 1.","see":"builtins"}
     ],
   }
   N["4"] = {
     pattern: "🟡 보통 · Boolean(값)의 결과를 예측 — \"비어 보이는 것\"의 함정",
     problems: [
-      {"label":"Boolean(0)","ask":"숫자 0을 Boolean()에 넣으면 참일까 거짓일까?","code":"print(Boolean(0) === ____)","expect":"true","answer":"false","hint":"0은 falsy → false","explain":"0은 <b>falsy</b>(거짓 취급) → <code>Boolean(0)=false</code>."},
-      {"label":"Boolean(\"\")","ask":"빈 문자열 \"\" 은?","code":"print(Boolean(\"\") === ____)","expect":"true","answer":"false","hint":"빈 글자는 falsy","explain":"빈 문자열은 falsy → false."},
-      {"label":"Boolean([])","ask":"빈 배열 [] 은? (비어 보이지만 \"객체\"다)","code":"print(Boolean([]) === ____)","expect":"true","answer":"true","hint":"빈 배열도 truthy — 함정","explain":"<b>빈 배열도 객체</b> → truthy → true. (내용 아니라 \"존재\"로 판단)"},
-      {"label":"Boolean(\"false\")","ask":"글자 \"false\" 는? (진짜 false 가 아니라 5글자 문자열)","code":"print(Boolean(\"false\") === ____)","expect":"true","answer":"true","hint":"따옴표 친 글자는 truthy","explain":"<code>\"false\"</code>는 5글자짜리 <b>문자열</b>(값이 있음) → truthy → true."},
-      {"label":"Boolean(\" \")","ask":"공백 한 칸 \" \" 은? (눈엔 비어 보인다)","code":"print(Boolean(\" \") === ____)","expect":"true","answer":"true","hint":"공백도 글자 1개 → truthy","explain":"공백 한 칸도 <b>글자 1개</b> → truthy → true."}
+      {"label":"Boolean(0)","ask":"숫자 0을 Boolean()에 넣으면 참일까 거짓일까?","code":"print(Boolean(0) === ____)","expect":"true","answer":"false","hint":"0은 falsy → false","explain":"0은 <b>falsy</b>(거짓 취급) → <code>Boolean(0)=false</code>.","see":"builtins"},
+      {"label":"Boolean(\"\")","ask":"빈 문자열 \"\" 은?","code":"print(Boolean(\"\") === ____)","expect":"true","answer":"false","hint":"빈 글자는 falsy","explain":"빈 문자열은 falsy → false.","see":"builtins"},
+      {"label":"Boolean([])","ask":"빈 배열 [] 은? (비어 보이지만 \"객체\"다)","code":"print(Boolean([]) === ____)","expect":"true","answer":"true","hint":"빈 배열도 truthy — 함정","explain":"<b>빈 배열도 객체</b> → truthy → true. (내용 아니라 \"존재\"로 판단)","see":"builtins"},
+      {"label":"Boolean(\"false\")","ask":"글자 \"false\" 는? (진짜 false 가 아니라 5글자 문자열)","code":"print(Boolean(\"false\") === ____)","expect":"true","answer":"true","hint":"따옴표 친 글자는 truthy","explain":"<code>\"false\"</code>는 5글자짜리 <b>문자열</b>(값이 있음) → truthy → true.","see":"builtins"},
+      {"label":"Boolean(\" \")","ask":"공백 한 칸 \" \" 은? (눈엔 비어 보인다)","code":"print(Boolean(\" \") === ____)","expect":"true","answer":"true","hint":"공백도 글자 1개 → truthy","explain":"공백 한 칸도 <b>글자 1개</b> → truthy → true.","see":"builtins"}
     ],
   }
   N["5"] = {
@@ -57,8 +57,8 @@
     problems: [
       {"label":"바꾼 뒤 합","ask":"0번을 9로 바꾼 뒤 a[0] + a[1] 은?","code":"let a = [1, 2, 3]\na[0] = 9\nprint((a[0] + a[1]) === ____)","expect":"true","answer":"11","hint":"9 + 2","explain":"0번을 9로 바꾼 뒤 <code>a[0]+a[1] = 9+2 = 11</code>."},
       {"label":"push 둘","ask":"2개짜리 배열에 push(3, 4) 하면 개수는?","code":"let a = [1, 2]\na.push(3, 4)\nprint(a.length === ____)","expect":"true","answer":"4","hint":"한 번에 둘 → 2+2","explain":"<code>push(3,4)</code>는 한 번에 둘 추가 → <code>2+2=4</code>."},
-      {"label":"includes","ask":"[1,2,3] 에 2가 들어 있는가?","code":"print([1, 2, 3].includes(2) === ____)","expect":"true","answer":"true","hint":"있으면 true","explain":"<code>includes(2)</code>는 담고 있으면 true."},
-      {"label":"indexOf","ask":"[\"a\",\"b\",\"c\"] 에서 \"c\"의 위치(번호)는?","code":"print([\"a\", \"b\", \"c\"].indexOf(\"c\") === ____)","expect":"true","answer":"2","hint":"0,1,2","explain":"<code>indexOf(\"c\")</code>는 위치(0부터) → 2."},
+      {"label":"includes","ask":"[1,2,3] 에 2가 들어 있는가?","code":"print([1, 2, 3].includes(2) === ____)","expect":"true","answer":"true","hint":"있으면 true","explain":"<code>includes(2)</code>는 담고 있으면 true.","see":"builtins"},
+      {"label":"indexOf","ask":"[\"a\",\"b\",\"c\"] 에서 \"c\"의 위치(번호)는?","code":"print([\"a\", \"b\", \"c\"].indexOf(\"c\") === ____)","expect":"true","answer":"2","hint":"0,1,2","explain":"<code>indexOf(\"c\")</code>는 위치(0부터) → 2.","see":"builtins"},
       {"label":"pop","ask":"3개짜리에서 pop 하면 개수는?","code":"let a = [1, 2, 3]\na.pop()\nprint(a.length === ____)","expect":"true","answer":"2","hint":"하나 빠짐","explain":"<code>pop</code>은 끝을 하나 빼 → <code>3-1=2</code>."}
     ],
   }
@@ -66,9 +66,9 @@
     pattern: "🟡 보통 · map은 원본 불변·짝수 개수·곱 누적·체이닝 결과 예측",
     problems: [
       {"label":"map은 원본 불변","ask":"map은 원본을 안 바꾼다. map 후 원본 n의 개수는?","code":"let n = [1, 2, 3]\nn.map(x => x * 2)\nprint(n.length === ____)","expect":"true","answer":"3","hint":"새 배열을 만들 뿐","explain":"<code>map</code>은 <b>새 배열을 만들 뿐 원본은 그대로</b> → 개수 3."},
-      {"label":"짝수 개수","ask":"짝수만 거른 개수는?","code":"print([1, 2, 3, 4, 5, 6].filter(x => x % 2 === 0).length === ____)","expect":"true","answer":"3","hint":"2,4,6 → 3개","explain":"짝수(나머지 0)만 → 2,4,6 세 개."},
+      {"label":"짝수 개수","ask":"짝수만 거른 개수는?","code":"print([1, 2, 3, 4, 5, 6].filter(x => x % 2 === 0).length === ____)","expect":"true","answer":"3","hint":"2,4,6 → 3개","explain":"짝수(나머지 0)만 → 2,4,6 세 개.","see":"builtins"},
       {"label":"곱 누적","ask":"곱을 누적하면? (시작 1)","code":"print([2, 3, 4].reduce((a, b) => a * b, 1) === ____)","expect":"true","answer":"24","hint":"2×3×4","explain":"<code>reduce</code>로 곱 누적 → <code>2×3×4=24</code>(시작 1)."},
-      {"label":"대문자 변환","ask":"각 글자를 대문자로 바꾼 배열의 첫 요소는?","code":"print([\"a\", \"b\"].map(s => s.toUpperCase())[0] === \"____\")","expect":"true","answer":"A","hint":"\"a\" → \"A\"","explain":"<code>toUpperCase</code>로 대문자 → 첫 요소 <code>\"A\"</code>."},
+      {"label":"대문자 변환","ask":"각 글자를 대문자로 바꾼 배열의 첫 요소는?","code":"print([\"a\", \"b\"].map(s => s.toUpperCase())[0] === \"____\")","expect":"true","answer":"A","hint":"\"a\" → \"A\"","explain":"<code>toUpperCase</code>로 대문자 → 첫 요소 <code>\"A\"</code>.","see":"builtins"},
       {"label":"체이닝","ask":"1보다 큰 것만 걸러 2배 한 배열의 첫 요소는?","code":"print([1, 2, 3].filter(x => x > 1).map(x => x * 2)[0] === ____)","expect":"true","answer":"4","hint":"[2,3]→[4,6]→첫째 4","explain":"체이닝: <code>filter</code>로 [2,3] → <code>map</code>으로 [4,6] → 첫째 4."}
     ],
   }
@@ -79,7 +79,7 @@
       {"label":"배열 안 객체","ask":"users[1].name 은?","code":"let users = [{ name: \"민지\" }, { name: \"지훈\" }]\nprint(users[1].name === \"____\")","expect":"true","answer":"지훈","hint":"두 번째 사람","explain":"<code>users[1]</code>은 두 번째 객체 → <code>.name=\"지훈\"</code>."},
       {"label":"대괄호(공백 키)","ask":"o[\"my key\"] 는?","code":"let o = { \"my key\": 7 }\nprint(o[\"my key\"] === ____)","expect":"true","answer":"7","hint":"대괄호로 접근","explain":"공백 있는 키는 <b>대괄호</b>로만 → <code>o[\"my key\"]=7</code>."},
       {"label":"속성 조합","ask":"이름과 나이를 이으면? name(age)","code":"let p = { name: \"민지\", age: 24 }\nprint((p.name + \"(\" + p.age + \")\") === \"____\")","expect":"true","answer":"민지(24)","hint":"이어붙이기","explain":"속성을 이어붙여 <code>\"민지(24)\"</code>."},
-      {"label":"키 개수","ask":"객체의 키(속성) 개수는?","code":"let o = { a: 1, b: 2 }\nprint(Object.keys(o).length === ____)","expect":"true","answer":"2","hint":"a, b → 2개","explain":"<code>Object.keys(o)</code>는 키 배열 <code>[\"a\",\"b\"]</code> → 길이 2."}
+      {"label":"키 개수","ask":"객체의 키(속성) 개수는?","code":"let o = { a: 1, b: 2 }\nprint(Object.keys(o).length === ____)","expect":"true","answer":"2","hint":"a, b → 2개","explain":"<code>Object.keys(o)</code>는 키 배열 <code>[\"a\",\"b\"]</code> → 길이 2.","see":"builtins"}
     ],
   }
   N["9"] = {
@@ -107,9 +107,9 @@
     problems: [
       {"label":"두 단계","ask":"1에서 +1 한 뒤 ×3 하면?","code":"let x = 1\nx = x + 1\nx = x * 3\nprint(x === ____)","expect":"true","answer":"6","hint":"2 × 3","explain":"왼쪽부터: <code>1+1=2</code>, <code>2*3=6</code>."},
       {"label":"원본은 그대로","ask":"a=7, b=a 뒤 a=0 하면 b는?","code":"let a = 7\nlet b = a\na = 0\nprint(b === ____)","expect":"true","answer":"7","hint":"b는 복사본 → 그대로","explain":"a를 바꿔도 b는 <b>복사본</b>이라 7 그대로.","mem":{"title":"a만 바뀌고 b는 그대로 — 원시값은 각자 셀로 복사","stackLabel":"📇 이름표 장부","code":["let b = 7","let a = b","a = 0"],"steps":[{"line":1,"stack":[{"name":"main","slots":[{"name":"b","value":"7"},{"name":"a","value":"7"}]}],"heap":{},"note":"복사 → b·a가 <b>각자 셀</b>(값 7)."},{"line":2,"stack":[{"name":"main","slots":[{"name":"b","value":"7"},{"name":"a","value":"0","bad":true}]}],"heap":{},"note":"<code>a=0</code>는 <b>a의 셀만</b> 바꾼다. <b>b는 7 그대로</b>."}]}},
-      {"label":"참거짓 타입","ask":"참거짓 값의 타입 이름은?","code":"print((typeof true) === \"____\")","expect":"true","answer":"boolean","hint":"boolean","explain":"참거짓의 타입 이름은 <code>\"boolean\"</code>."},
-      {"label":"미초기화","ask":"값을 안 넣은 x의 타입 이름은?","code":"let x\nprint((typeof x) === \"____\")","expect":"true","answer":"undefined","hint":"선언만 = undefined","explain":"선언만 하고 값이 없으면 <code>\"undefined\"</code>."},
-      {"label":"재할당 타입변경","ask":"v=1 이었다가 v=\"hi\" 하면 typeof v는?","code":"let v = 1\nv = \"hi\"\nprint((typeof v) === \"____\")","expect":"true","answer":"string","hint":"문자 담긴 v","explain":"v에 글자를 담으면 타입도 <b>string</b>으로 바뀐다(동적 타입)."}
+      {"label":"참거짓 타입","ask":"참거짓 값의 타입 이름은?","code":"print((typeof true) === \"____\")","expect":"true","answer":"boolean","hint":"boolean","explain":"참거짓의 타입 이름은 <code>\"boolean\"</code>.","see":"builtins"},
+      {"label":"미초기화","ask":"값을 안 넣은 x의 타입 이름은?","code":"let x\nprint((typeof x) === \"____\")","expect":"true","answer":"undefined","hint":"선언만 = undefined","explain":"선언만 하고 값이 없으면 <code>\"undefined\"</code>.","see":"builtins"},
+      {"label":"재할당 타입변경","ask":"v=1 이었다가 v=\"hi\" 하면 typeof v는?","code":"let v = 1\nv = \"hi\"\nprint((typeof v) === \"____\")","expect":"true","answer":"string","hint":"문자 담긴 v","explain":"v에 글자를 담으면 타입도 <b>string</b>으로 바뀐다(동적 타입).","see":"builtins"}
     ],
   }
   N["ref"] = {

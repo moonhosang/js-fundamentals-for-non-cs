@@ -62,6 +62,8 @@
       plan: ['요소 선택 querySelector', 'textContent · style 로 바꾸기', '버튼 클릭에 반응 addEventListener', '유형 드릴 ×10'] },
     { id: 10, name: '실전 미니앱', subtitle: '배운 걸 합쳐 하나 만들기',
       plan: ['컬러 팔레트 생성기 or 디지털 명함 카드', '지금까지의 값·배열·함수·DOM 총동원', '단계별로 조립'] },
+    // 📚 내장 기능 레퍼런스 — 드릴이 쓰는 typeof·sort·Object.keys 등을 한곳에.
+    { id: 'builtins', badge: '📚 레퍼런스', title: '내장 기능', subtitle: 'typeof·배열·문자열·객체 도구 모음' },
   ]
   // 번호(N강)의 단일 출처(SSOT): 숫자 id에서 badge·title을 파생한다.
   // → 강의를 재배치할 땐 여기 id만 바꾸면 badge·title·목차가 다 따라온다.
@@ -114,6 +116,7 @@
     { tag: '🧬', title: '클래스 (선택)', optional: true, skipTo: 9, items: ['class', ...P('class')] },
     { tag: '🧠', title: '메모리 심화', optional: true, skipTo: 9, items: ['callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
+    { tag: '📚', title: '레퍼런스', items: ['builtins'] },
   ]
 
   const kindOf = (l) => (l && l.kind) || 'lesson'
