@@ -4,15 +4,15 @@
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const E = window.Drills.easy
 
-  // ── 1강 · 값과 타입, 변수 : 이름표에 값 담기(리터럴) ──
+  // ── 1강 · 값과 타입 : 타입·계산 결과를 스스로 예측 (답은 문제에 없음) ──
   E['1'] = {
-    pattern: '🟢 쉬움 · let 이름 = 값 으로 담고 print(이름) — 리터럴 담기 반복',
+    pattern: '🟢 쉬움 · 값의 타입·계산 결과를 스스로 예측해 채운다 (=== true 면 정답)',
     problems: [
-      { label: 'age 에 24', ask: 'age가 24가 나오게 담으세요.', code: 'let age = ____\nprint(age)', expect: '24', answer: '24', hint: '숫자는 따옴표 없이' },
-      { label: 'name 에 이름', ask: 'name이 "민지"가 나오게 담으세요.', code: 'let name = ____\nprint(name)', expect: '"민지"', answer: '"민지"', hint: '글자는 따옴표로 감싼다' },
-      { label: 'price 에 12000', ask: 'price가 12000이 나오게 담으세요.', code: 'let price = ____\nprint(price)', expect: '12000', answer: '12000', hint: '숫자' },
-      { label: 'isOpen 에 참', ask: 'isOpen이 true가 나오게 담으세요.', code: 'let isOpen = ____\nprint(isOpen)', expect: 'true', answer: 'true', hint: '참은 true (따옴표 없음)' },
-      { label: 'grade 에 A', ask: 'grade가 "A"가 나오게 담으세요.', code: 'let grade = ____\nprint(grade)', expect: '"A"', answer: '"A"', hint: '한 글자도 글자 → 따옴표' },
+      { label: '숫자의 타입', ask: '숫자 24의 타입 이름은? (typeof 결과)', code: 'print((typeof 24) === "____")', expect: 'true', answer: 'number', hint: '숫자 = number' },
+      { label: '글자의 타입', ask: '글자 "안녕"의 타입 이름은?', code: 'print((typeof "안녕") === "____")', expect: 'true', answer: 'string', hint: '글자 = string' },
+      { label: '참거짓의 타입', ask: '참/거짓 값의 타입 이름은?', code: 'print((typeof true) === "____")', expect: 'true', answer: 'boolean', hint: '참거짓 = boolean' },
+      { label: '재할당 결과', ask: 'x = 10 다음 x = x + 5 를 하면 x는?', code: 'let x = 10\nx = x + 5\nprint(x === ____)', expect: 'true', answer: '15', hint: '10 + 5' },
+      { label: '복사는 독립', ask: 'a를 복사해 b를 만들고 b만 9로 바꾸면 a는?', code: 'let a = 5\nlet b = a\nb = 9\nprint(a === ____)', expect: 'true', answer: '5', hint: '원시값 복사 → a는 그대로' },
     ],
   }
 
@@ -64,15 +64,15 @@
     ],
   }
 
-  // ── 6강 · 배열 : 인덱스·length 기본 ──
+  // ── 6강 · 배열 : 개수·인덱스·push 결과를 예측 (번호는 0부터!) ──
   E['6'] = {
-    pattern: '🟢 쉬움 · 인덱스로 꺼내기·length 개수 (번호는 0부터!) 반복',
+    pattern: '🟢 쉬움 · 개수·인덱스·push 결과를 스스로 예측',
     problems: [
-      { label: '첫째 = a[0]', ask: '[10,20,30]의 첫 번째(10)를 꺼내세요. 번호는?', code: 'let a = [10, 20, 30]\nprint(a[____])', expect: '10', answer: '0', hint: '첫째는 0번' },
-      { label: '둘째 = a[1]', ask: '[10,20,30]의 두 번째(20)를 꺼내세요.', code: 'let a = [10, 20, 30]\nprint(a[____])', expect: '20', answer: '1', hint: '둘째는 1번' },
-      { label: '문자 배열', ask: '["사과","배","귤"]의 마지막(귤)을 번호로 꺼내세요.', code: 'let f = ["사과", "배", "귤"]\nprint(f[____])', expect: '"귤"', answer: '2', hint: '셋 중 마지막 = 2번' },
-      { label: 'length=개수', ask: '[1,2,3,4]의 개수를 구하세요.', code: 'let a = [1, 2, 3, 4]\nprint(a.____)', expect: '4', answer: 'length', hint: '개수: .length' },
-      { label: '빈 배열 length', ask: '빈 배열의 개수는 0. 무엇으로 구하나?', code: 'let a = []\nprint(a.____)', expect: '0', answer: 'length', hint: '.length' },
+      { label: '개수', ask: '[1,2,3,4] 의 요소 개수는?', code: 'let a = [1, 2, 3, 4]\nprint(a.length === ____)', expect: 'true', answer: '4', hint: '세어 본다' },
+      { label: '번호 1', ask: '[10,20,30] 에서 번호 1(두 번째) 요소는?', code: 'let a = [10, 20, 30]\nprint(a[1] === ____)', expect: 'true', answer: '20', hint: '0,1,2 → 1은 두 번째' },
+      { label: '빈 배열', ask: '빈 배열의 요소 개수는?', code: 'let a = []\nprint(a.length === ____)', expect: 'true', answer: '0', hint: '없으면 0' },
+      { label: 'push 후 개수', ask: '3개짜리 배열에 하나 push하면 개수는?', code: 'let a = [5, 6, 7]\na.push(8)\nprint(a.length === ____)', expect: 'true', answer: '4', hint: '3 + 1' },
+      { label: '마지막', ask: '[1,2,3] 의 마지막 요소는?', code: 'let a = [1, 2, 3]\nprint(a[a.length - 1] === ____)', expect: 'true', answer: '3', hint: 'length-1 번' },
     ],
   }
 
@@ -148,15 +148,15 @@
     ],
   }
 
-  // ── 🧠 M4-2 참조=공유(ref2) : 별칭으로 바꾸면 원본도 ──
+  // ── 🧠 M4-2 참조=공유(ref2) : 별칭으로 바꾼 뒤 원본을 예측 ──
   E['ref2'] = {
-    pattern: '🟢 쉬움 · 별칭(같은 객체)으로 바꾸면 원본도 함께',
+    pattern: '🟢 쉬움 · 별칭(같은 객체)으로 바꾼 뒤, 원본이 어떻게 되는지 예측',
     problems: [
-      { label: '별칭으로 바꾸면?', ask: 'b는 a와 같은 객체다(별칭). b.n을 9로 바꾸면 a.n은? 빈칸에 b를 넣고 ▶확인', code: 'let a = { n: 1 }\nlet b = a\n____.n = 9\nprint(a.n)', expect: '9', answer: 'b', hint: '같은 객체라 a.n도 9' },
-      { label: 'p2로 깎으면?', ask: 'p2는 p1과 같은 객체다. p2.hp를 50으로 깎으면 p1.hp는? 빈칸에 p2를 넣고 ▶확인', code: 'let p1 = { hp: 100 }\nlet p2 = p1\n____.hp = 50\nprint(p1.hp)', expect: '50', answer: 'p2', hint: 'p1·p2 같은 객체' },
-      { label: 'copy에 push하면?', ask: 'copy는 arr과 같은 배열이다. copy에 9를 push하면 arr 길이는? 빈칸에 copy를 넣고 ▶확인', code: 'let arr = [1, 2]\nlet copy = arr\n____.push(9)\nprint(arr.length)', expect: '3', answer: 'copy', hint: '같은 배열이라 arr도 늘어남' },
-      { label: 'ref로 바꾸면?', ask: 'ref는 user와 같은 객체다. ref.name을 "지훈"으로 바꾸면 user.name은? 빈칸에 ref를 넣고 ▶확인', code: 'let user = { name: "민지" }\nlet ref = user\n____.name = "지훈"\nprint(user.name)', expect: '"지훈"', answer: 'ref', hint: '같은 객체' },
-      { label: 'f로 바꾸면?', ask: 'f는 me.friend와 같은 객체다. f.hair를 "숏컷"으로 바꾸면 me.friend.hair는? 빈칸에 f를 넣고 ▶확인', code: 'let me = { friend: { hair: "긴머리" } }\nlet f = me.friend\n____.hair = "숏컷"\nprint(me.friend.hair)', expect: '"숏컷"', answer: 'f', hint: 'f = me.friend' },
+      { label: '별칭 변경', ask: 'b는 a와 같은 객체다. b.n을 9로 바꾸면 a.n은?', code: 'let a = { n: 1 }\nlet b = a\nb.n = 9\nprint(a.n === ____)', expect: 'true', answer: '9', hint: '같은 객체라 a.n도 바뀐다' },
+      { label: 'hp 깎기', ask: 'p2는 p1과 같은 객체. p2.hp를 50으로 깎으면 p1.hp는?', code: 'let p1 = { hp: 100 }\nlet p2 = p1\np2.hp = 50\nprint(p1.hp === ____)', expect: 'true', answer: '50', hint: '같은 객체' },
+      { label: '배열 별칭', ask: 'c는 arr과 같은 배열. c에 하나 push하면 원본 arr 개수는?', code: 'let arr = [1, 2]\nlet c = arr\nc.push(9)\nprint(arr.length === ____)', expect: 'true', answer: '3', hint: '같은 배열 → 함께 늘어남' },
+      { label: '이름 변경', ask: 'r은 u와 같은 객체. r.name을 "지훈"으로 바꾸면 u.name은?', code: 'let u = { name: "민지" }\nlet r = u\nr.name = "지훈"\nprint(u.name === "____")', expect: 'true', answer: '지훈', hint: '같은 객체' },
+      { label: 'v 변경', ask: 'y는 x와 같은 객체. y.v를 5로 바꾸면 x.v는?', code: 'let x = { v: 1 }\nlet y = x\ny.v = 5\nprint(x.v === ____)', expect: 'true', answer: '5', hint: '같은 객체' },
     ],
   }
 

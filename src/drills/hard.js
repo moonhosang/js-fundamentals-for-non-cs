@@ -4,15 +4,15 @@
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const H = window.Drills.hard
 
-  // ── 1강 · 값과 타입, 변수 : typeof 경계·형 결합 ──
+  // ── 1강 · 값과 타입 : typeof 함정·부동소수점·강제변환 ──
   H['1'] = {
-    pattern: '🔴 어려움 · typeof 여러 타입·형 결합·미초기화',
+    pattern: '🔴 어려움 · typeof 함정·부동소수점·+와 -의 차이 — 아는 것도 틀린다',
     problems: [
-      { label: 'typeof 문자', ask: '결과가 "string"이 나오게 — 어떤 값을?', code: 'print(typeof ____)', expect: '"string"', answer: '"hi"', hint: '따옴표 친 글자' },
-      { label: 'typeof 불리언', ask: '결과가 "boolean"이 나오게 — 어떤 값을?', code: 'print(typeof ____)', expect: '"boolean"', answer: 'true', hint: 'true / false' },
-      { label: '미초기화', ask: '값을 안 넣은 변수 x의 타입은 "undefined". 빈칸에 x', code: 'let x\nprint(typeof ____)', expect: '"undefined"', answer: 'x', hint: '선언만 하면 undefined' },
-      { label: '문자+숫자', ask: '숫자 n을 이어붙여 "n=3"이 나오게 — 무엇을 더할까?', code: 'let n = 3\nprint("n=" + ____)', expect: '"n=3"', answer: 'n', hint: '문자열 + 숫자 → 문자열' },
-      { label: '재할당 타입변경', ask: 'v에 글자를 담아 typeof가 "string"이 되게.', code: 'let v = 10\nv = "____"\nprint(typeof v)', expect: '"string"', answer: '글', hint: '따옴표 안 아무 글자' },
+      { label: 'typeof null', ask: 'null 의 typeof 결과는? (JS의 유명한 버그)', code: 'print((typeof null) === "____")', expect: 'true', answer: 'object', hint: '오래된 버그 — object' },
+      { label: 'typeof NaN', ask: 'NaN(계산 실패값)의 typeof 이름은?', code: 'print((typeof NaN) === "____")', expect: 'true', answer: 'number', hint: '뜻밖에 number' },
+      { label: '부동소수점', ask: '0.1 + 0.2 는 0.3 과 정확히 같은가?', code: 'print((0.1 + 0.2 === 0.3) === ____)', expect: 'true', answer: 'false', hint: '미세 오차로 다르다' },
+      { label: '- 는 숫자로', ask: '"5" - 1 의 결과는? (빼기는 +와 다르게)', code: 'print(("5" - 1) === ____)', expect: 'true', answer: '4', hint: '"5"가 숫자 5로 강제' },
+      { label: '미초기화', ask: '값을 안 넣은 변수 x의 타입 이름은?', code: 'let x\nprint((typeof x) === "____")', expect: 'true', answer: 'undefined', hint: '선언만 = undefined' },
     ],
   }
 
@@ -64,15 +64,15 @@
     ],
   }
 
-  // ── 6강 · 배열 : includes·indexOf·join·concat·2차원 ──
+  // ── 6강 · 배열 : 참조·정렬 함정·음수 인덱스·체이닝 ──
   H['6'] = {
-    pattern: '🔴 어려움 · includes·indexOf·join·concat·중첩 배열',
+    pattern: '🔴 어려움 · 배열은 참조·sort는 문자 비교·음수 인덱스 없음 — 함정',
     problems: [
-      { label: '포함?', ask: '[1,2,3]이 2를 담고 있나? true가 나오게 — 무슨 메서드?', code: 'let a = [1, 2, 3]\nprint(a.____(2))', expect: 'true', answer: 'includes', hint: '담고 있나 = includes' },
-      { label: '위치 찾기', ask: '["x","y"]에서 "y"의 위치(1)를 찾으려면?', code: 'let a = ["x", "y"]\nprint(a.____("y"))', expect: '1', answer: 'indexOf', hint: '위치 = indexOf' },
-      { label: '이어붙이기', ask: '[1,2,3]을 "-"로 이어 "1-2-3"이 되게 — 무슨 메서드?', code: 'print([1, 2, 3].____("-"))', expect: '"1-2-3"', answer: 'join', hint: '합치기 = join' },
-      { label: '합친 개수', ask: '[1,2]에 [3]을 붙인 배열의 개수(3)를 구하려면?', code: 'print([1, 2].concat([3]).____)', expect: '3', answer: 'length', hint: 'concat 결과의 .length' },
-      { label: '2차원', ask: '[[1,2],[3,4]] 에서 3을 꺼내려면 m[1] 다음 몇 번?', code: 'let m = [[1, 2], [3, 4]]\nprint(m[1][____])', expect: '3', answer: '0', hint: 'm[1]=[3,4]의 0번' },
+      { label: 'join', ask: '[1,2,3] 을 "-" 로 이으면?', code: 'print(([1, 2, 3].join("-")) === "____")', expect: 'true', answer: '1-2-3', hint: '사이에 - 끼움' },
+      { label: '배열은 참조', ask: 'b = a 로 둔 뒤 b에 push하면 원본 a의 개수는?', code: 'let a = [1, 2, 3]\nlet b = a\nb.push(4)\nprint(a.length === ____)', expect: 'true', answer: '4', hint: '같은 배열 → a도 늘어남' },
+      { label: 'sort 함정', ask: '[3, 20, 100].sort() 의 첫 요소는? (기본 정렬은 문자로 비교!)', code: 'print(([3, 20, 100].sort()[0]) === ____)', expect: 'true', answer: '100', hint: '"100" < "20" < "3" → 첫째 100' },
+      { label: '음수 인덱스 없음', ask: 'a[-1] 로 마지막을 꺼내려 하면? (JS엔 음수 인덱스가 없다)', code: 'let a = [1, 2, 3]\nprint((a[-1]) === ____)', expect: 'true', answer: 'undefined', hint: '없는 칸 → undefined' },
+      { label: 'filter 개수', ask: '[1,2,3,4] 에서 2보다 큰 것만 거르면 몇 개?', code: 'print(([1, 2, 3, 4].filter(x => x > 2).length) === ____)', expect: 'true', answer: '2', hint: '3,4 → 2개' },
     ],
   }
 
@@ -148,15 +148,15 @@
     ],
   }
 
-  // ── 🧠 M4-2 참조=공유(ref2) : 별칭 끊김·중첩 공유 ──
+  // ── 🧠 M4-2 참조=공유(ref2) : 복사↔공유 결합·재할당·concat 함정 ──
   H['ref2'] = {
-    pattern: '🔴 어려움 · 별칭이 끊기는 재할당·중첩 객체 공유',
+    pattern: '🔴 어려움 · 복사와 공유가 한 식에·재할당은 끊고·concat은 안 바꾼다',
     problems: [
-      { label: '복사값 vs 공유', ask: 'x는 a.n 복사(1), b는 a 자체. b.n=9 후 x+b.n은? 빈칸에 b', code: 'let a = { n: 1 }\nlet b = a\nlet x = a.n\nb.n = 9\nprint(x + ____.n)', expect: '10', answer: 'b', hint: 'x=1(복사) + b.n=9(공유)' },
-      { label: '두 별칭', ask: 'a·b 둘 다 o의 별칭. a.c=5 후 b로 c를 꺼내면? 빈칸에 c', code: 'let o = { c: 0 }\nlet a = o\nlet b = o\na.c = 5\nprint(b.____)', expect: '5', answer: 'c', hint: '셋 다 같은 객체' },
-      { label: '재할당은 끊는다', ask: 'b를 새 객체로 재할당하면 a와의 연결이 끊긴다. a.n은? 빈칸에 n', code: 'let a = { n: 1 }\nlet b = a\nb = { n: 9 }\nprint(a.____)', expect: '1', answer: 'n', hint: 'b가 다른 객체를 가리켜 a는 1 그대로' },
-      { label: '배열 공유', ask: 'c는 arr과 같은 배열. c.push(3) 후 arr 길이는? 빈칸에 length', code: 'let arr = [1, 2]\nlet c = arr\nc.push(3)\nprint(arr.____)', expect: '3', answer: 'length', hint: '같은 배열' },
-      { label: '중첩 공유', ask: 'p는 me.pet과 같은 객체. p.hp=0 후 me.pet.hp는? 빈칸에 p', code: 'let me = { pet: { hp: 10 } }\nlet p = me.pet\n____.hp = 0\nprint(me.pet.hp)', expect: '0', answer: 'p', hint: 'p = me.pet(같은 객체)' },
+      { label: '복사+공유', ask: 'snap은 복사(1), b는 공유. b.n=9 후 snap + b.n 은?', code: 'let a = { n: 1 }\nlet b = a\nlet snap = a.n\nb.n = 9\nprint((snap + b.n) === ____)', expect: 'true', answer: '10', hint: '1(복사) + 9(공유)' },
+      { label: '끊긴 뒤 변경', ask: 'b를 새 객체로 바꾼 뒤 b.n=100. 원래 a.n은?', code: 'let a = { n: 1 }\nlet b = a\nb = { n: 9 }\nb.n = 100\nprint(a.n === ____)', expect: 'true', answer: '1', hint: '연결 끊긴 뒤라 a는 1' },
+      { label: '함수+별칭', ask: 'f가 a.n을 0으로. b는 a의 별칭. b.n은?', code: 'function f(o) { o.n = 0 }\nlet a = { n: 5 }\nlet b = a\nf(a)\nprint(b.n === ____)', expect: 'true', answer: '0', hint: '함수가 공유 객체를 바꿈' },
+      { label: 'concat은 새 배열', ask: 'b = b.concat(4) 는 새 배열을 만든다. 원본 a 개수는?', code: 'let a = [1, 2, 3]\nlet b = a\nb = b.concat(4)\nprint(a.length === ____)', expect: 'true', answer: '3', hint: 'concat은 원본 안 바꿈(push와 다름)' },
+      { label: '중첩 공유', ask: 'p는 me.pet과 같은 객체. p.hp=0 후 me.pet.hp는?', code: 'let me = { pet: { hp: 10 } }\nlet p = me.pet\np.hp = 0\nprint(me.pet.hp === ____)', expect: 'true', answer: '0', hint: 'p = me.pet(같은 객체)' },
     ],
   }
 

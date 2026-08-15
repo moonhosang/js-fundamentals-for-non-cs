@@ -4,15 +4,15 @@
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const N = window.Drills.normal
 
-  // ── 1강 · 값과 타입, 변수 : 재할당·typeof·복사독립·null ──
+  // ── 1강 · 값과 타입 : 여러 단계·형 결합을 예측 ──
   N['1'] = {
-    pattern: '🟡 보통 · 재할당·typeof·복사 독립·null — 값의 성질',
+    pattern: '🟡 보통 · 두 단계 계산·타입 결합을 예측',
     problems: [
-      { label: '재할당', ask: 'x(10)에 얼마를 더해야 15가 될까?', code: 'let x = 10\nx = x + ____\nprint(x)', expect: '15', answer: '5', hint: '15 - 10' },
-      { label: 'typeof 숫자', ask: '결과가 "number"가 나오게 — 어떤 값을? (숫자)', code: 'print(typeof ____)', expect: '"number"', answer: '99', hint: '아무 숫자' },
-      { label: '복사=독립', ask: 'b를 99로 바꿔 보세요. 그러면 a는? (▶ 확인)', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '99', hint: '원시값은 복사라 a는 안 변함' },
-      { label: 'null로 비우기', ask: 'memo를 "값을 일부러 비움" 상태로. (0이나 빈 글자 말고)', code: 'let memo = "메모"\nmemo = ____\nprint(memo)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
-      { label: '문자열 담기', ask: '화면에 토끼가 나오게 — 문자열은 어떻게 쓰지?', code: 'let name = ____\nprint(name)', expect: '"토끼"', answer: '"토끼"', hint: '따옴표로 감싼다' },
+      { label: '두 단계', ask: '1에서 +1 한 뒤 ×3 하면?', code: 'let x = 1\nx = x + 1\nx = x * 3\nprint(x === ____)', expect: 'true', answer: '6', hint: '2 × 3' },
+      { label: '식의 타입', ask: '10 + 5 의 타입 이름은?', code: 'print((typeof (10 + 5)) === "____")', expect: 'true', answer: 'number', hint: '숫자끼리 → number' },
+      { label: '섞인 타입', ask: '1 + "2" 의 타입 이름은? (숫자와 글자를 더하면)', code: 'print((typeof (1 + "2")) === "____")', expect: 'true', answer: 'string', hint: '글자로 끌려간다' },
+      { label: '복사 후 원본 변경', ask: 'a를 복사해 b를 만든 뒤 a에만 +5. b는?', code: 'let a = 10\nlet b = a\na = a + 5\nprint(b === ____)', expect: 'true', answer: '10', hint: 'b는 복사본 → 그대로' },
+      { label: '+ 강제 변환', ask: '"5" + 3 의 결과는? (+는 함정)', code: 'print(("5" + 3) === "____")', expect: 'true', answer: '53', hint: '글자 이어붙이기 → "53"' },
     ],
   }
 
@@ -64,15 +64,15 @@
     ],
   }
 
-  // ── 6강 · 배열 : push·칸 바꾸기·마지막·이름배열 ──
+  // ── 6강 · 배열 : 두 단계 조작·메서드 결과 예측 ──
   N['6'] = {
-    pattern: '🟡 보통 · push 추가·칸 바꾸기·마지막(length-1) 변형',
+    pattern: '🟡 보통 · 칸 바꾸기·여러 push·includes/indexOf 결과 예측',
     problems: [
-      { label: 'push로 추가', ask: '[1,2]에 값을 하나 추가해 개수가 3이 되게. 무슨 메서드?', code: 'let a = [1, 2]\na.____(3)\nprint(a.length)', expect: '3', answer: 'push', hint: '끝에 추가: push' },
-      { label: '칸 바꾸기', ask: '[1,2,3]의 0번 칸을 9로 바꾸세요.', code: 'let a = [1, 2, 3]\na[0] = ____\nprint(a[0])', expect: '9', answer: '9', hint: 'arr[0] = 9' },
-      { label: '마지막 = length-1', ask: '[5,6,7]의 마지막(7)을 length로 꺼내세요.', code: 'let a = [5, 6, 7]\nprint(a[a.length - ____])', expect: '7', answer: '1', hint: '마지막 번호 = length - 1' },
-      { label: '이름 배열', ask: '["민지","지훈","서연"]의 세 번째(서연)를 꺼내세요.', code: 'let names = ["민지", "지훈", "서연"]\nprint(names[____])', expect: '"서연"', answer: '2', hint: '세 번째 = 2번' },
-      { label: 'push 값', ask: '["우유"]에 뭐든 하나 추가해 개수가 2가 되게 빈칸을.', code: 'let cart = ["우유"]\ncart.push(____)\nprint(cart.length)', expect: '2', answer: '"빵"', hint: 'push는 뭘 넣어도 개수 +1' },
+      { label: '바꾼 뒤 합', ask: '0번을 9로 바꾼 뒤 a[0] + a[1] 은?', code: 'let a = [1, 2, 3]\na[0] = 9\nprint((a[0] + a[1]) === ____)', expect: 'true', answer: '11', hint: '9 + 2' },
+      { label: 'push 둘', ask: '2개짜리 배열에 push(3, 4) 하면 개수는?', code: 'let a = [1, 2]\na.push(3, 4)\nprint(a.length === ____)', expect: 'true', answer: '4', hint: '한 번에 둘 → 2+2' },
+      { label: 'includes', ask: '[1,2,3] 에 2가 들어 있는가?', code: 'print([1, 2, 3].includes(2) === ____)', expect: 'true', answer: 'true', hint: '있으면 true' },
+      { label: 'indexOf', ask: '["a","b","c"] 에서 "c"의 위치(번호)는?', code: 'print(["a", "b", "c"].indexOf("c") === ____)', expect: 'true', answer: '2', hint: '0,1,2' },
+      { label: 'pop', ask: '3개짜리에서 pop 하면 개수는?', code: 'let a = [1, 2, 3]\na.pop()\nprint(a.length === ____)', expect: 'true', answer: '2', hint: '하나 빠짐' },
     ],
   }
 
@@ -148,15 +148,15 @@
     ],
   }
 
-  // ── 🧠 M4-2 참조=공유(ref2) : 여러 별칭·배열 별칭 ──
+  // ── 🧠 M4-2 참조=공유(ref2) : 복사 vs 공유 대비·연결 끊김 ──
   N['ref2'] = {
-    pattern: '🟡 보통 · 별칭으로 속성/배열을 바꾸면 원본도 함께',
+    pattern: '🟡 보통 · 복사(원시)와 공유(객체)를 한 식에서 구분',
     problems: [
-      { label: '별칭 속성', ask: 'b는 a와 같은 객체. b.x를 5로 바꾸면 a.x는? 빈칸에 b', code: 'let a = { x: 1 }\nlet b = a\n____.x = 5\nprint(a.x)', expect: '5', answer: 'b', hint: '같은 객체' },
-      { label: '배열 별칭 push', ask: 'c는 arr과 같은 배열. c에 2를 push하면 arr 길이는? 빈칸에 c', code: 'let arr = [1]\nlet c = arr\n____.push(2)\nprint(arr.length)', expect: '2', answer: 'c', hint: '같은 배열' },
-      { label: 'hp 깎기', ask: 'v는 u와 같은 객체. v.hp를 0으로 하면 u.hp는? 빈칸에 v', code: 'let u = { hp: 10 }\nlet v = u\n____.hp = 0\nprint(u.hp)', expect: '0', answer: 'v', hint: '같은 객체' },
-      { label: '완료 표시', ask: 'r은 o와 같은 객체. r.done을 true로 하면 o.done은? 빈칸에 r', code: 'let o = { done: false }\nlet r = o\n____.done = true\nprint(o.done)', expect: 'true', answer: 'r', hint: '같은 객체' },
-      { label: '이름 바꾸기', ask: 'q는 p와 같은 객체. q.name을 "b"로 하면 p.name은? 빈칸에 q', code: 'let p = { name: "a" }\nlet q = p\n____.name = "b"\nprint(p.name)', expect: '"b"', answer: 'q', hint: '같은 객체' },
+      { label: '복사는 그대로', ask: 'c는 a.n을 복사(원시값), b는 같은 객체. b.n=9 후 c는?', code: 'let a = { n: 1 }\nlet b = a\nlet c = a.n\nb.n = 9\nprint(c === ____)', expect: 'true', answer: '1', hint: 'c는 꺼낼 때 복사 → 1 그대로' },
+      { label: '둘 다 바뀜', ask: 'a·b가 같은 객체. b.n=9 후 a.n + b.n 은?', code: 'let a = { n: 1 }\nlet b = a\nb.n = 9\nprint((a.n + b.n) === ____)', expect: 'true', answer: '18', hint: '둘 다 9 → 18' },
+      { label: '두 번 push', ask: 'c는 arr과 같은 배열. 두 번 push하면 arr 개수는?', code: 'let arr = [1]\nlet c = arr\nc.push(2)\nc.push(3)\nprint(arr.length === ____)', expect: 'true', answer: '3', hint: '1 + 2번' },
+      { label: '재할당은 끊는다', ask: 'b를 새 객체로 재할당하면 a.n은? (연결이 끊긴다)', code: 'let a = { n: 1 }\nlet b = a\nb = { n: 9 }\nprint(a.n === ____)', expect: 'true', answer: '1', hint: 'b가 다른 객체를 가리켜 a는 그대로' },
+      { label: '중첩 공유', ask: 'p는 o와 같은 객체. p.list에 push하면 o.list 개수는?', code: 'let o = { list: [1, 2] }\nlet p = o\np.list.push(3)\nprint(o.list.length === ____)', expect: 'true', answer: '3', hint: '같은 객체 → 같은 list' },
     ],
   }
 
