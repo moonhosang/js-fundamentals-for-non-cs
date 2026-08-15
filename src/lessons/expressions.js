@@ -170,6 +170,22 @@
         <div class="file-label">🔬 괄호가 눈금을 뒤집는다 (직접 실행)</div>
         <div data-m="e2-run"></div>
       </div>
+
+      <h3 class="section-title">③ 같은 규칙의 '문법' 버전 — 생성규칙(BNF)</h3>
+      <span class="learn-tag">📎 위 세 층을 형식 문법으로 적으면 — 컴파일러가 실제로 식을 읽는 규칙이다</span>
+      <p class="section-desc">세 층은 사실 <b>세 개의 규칙</b>이다. <code>→</code>는 "왼쪽 이름은 오른쪽 중 <b>하나로 펼쳐진다</b>", <code>|</code>는 "또는"을 뜻한다:</p>
+      <div class="bnf">
+        <div class="bnf-rule"><span class="bnf-lhs">expression</span>→&nbsp; term&nbsp; <b>|</b>&nbsp; expression <b>(+ | -)</b> term</div>
+        <div class="bnf-rule"><span class="bnf-lhs">term</span>→&nbsp; factor&nbsp; <b>|</b>&nbsp; term <b>(* | / | %)</b> factor</div>
+        <div class="bnf-rule"><span class="bnf-lhs">factor</span>→&nbsp; 숫자 <b>|</b> 변수 <b>|</b> 함수호출(…) <b>|</b> <span class="bnf-rec">( expression )</span></div>
+      </div>
+      <p class="section-desc">여기서 <b>두 가지</b>가 전부를 설명한다:</p>
+      <ul class="section-list">
+        <li>🥇 <b>왜 <code>*</code>가 먼저?</b> — <code>term</code>(<code>* / %</code>)이 <code>expression</code>(<code>+ -</code>) <b>규칙 안쪽</b>에 있다. <b>문법 계층이 곧 우선순위</b>다(외울 필요 없음).</li>
+        <li>🔁 <b>재귀</b> — <code>factor</code>의 마지막 <span class="bnf-rec">( expression )</span>: factor가 <b>다시 expression을 품는다</b>. 이 <b>되돌아가는 고리</b> 덕에 <code>((2+3)*4)</code>처럼 <b>괄호·중첩이 무한히</b> 된다. (이게 사용자가 말한 <code>expr → … | factor</code>, <code>factor → ( expr )</code> 그 자체.)</li>
+      </ul>
+      <div data-m="qz-bnf"></div>
+
       ${nav('3-1', 2, '3-3')}
     `
     const tiers = [...root.querySelectorAll('.tier-row')]
@@ -194,6 +210,12 @@
       ].join('\n'),
     }))
     root.querySelector('[data-m="qz32"]').append(Quiz({ q: '<code>2 + 3 * 4</code> 의 값은?', options: ['20 (왼쪽부터)', '14 (곱셈 먼저)', '24'], answer: 1, explain: '<code>*</code>가 <code>+</code>보다 <b>우선순위가 높다</b> → 3*4=12 먼저, 그다음 2+12=<b>14</b>. 왼쪽부터가 아니다.' }))
+    root.querySelector('[data-m="qz-bnf"]').append(Quiz({
+      q: '문법에서 <code>factor → ( expression )</code> 이 규칙이 없다면 무슨 일이 생길까?',
+      options: ['괄호 <code>( )</code> 로 우선순위를 못 바꾼다 (중첩 불가)', '아무 차이 없다', '곱셈이 안 된다'],
+      answer: 0,
+      explain: 'factor가 <b>다시 expression을 품는(재귀)</b> 이 한 줄이 있어서 <code>(2+3)*4</code>·<code>((…))</code>처럼 <b>괄호로 우선순위를 뒤집고 무한히 중첩</b>할 수 있다. 이 고리가 없으면 식은 한 겹짜리로 끝난다.',
+    }))
     wireGoto(root)
   }
 
@@ -202,6 +224,10 @@
     root.innerHTML = `
       ${stepHeader('3-3 · 축약 ①', '한 겹씩 값으로 접기', '순수 계산 — 이게 컴퓨터가 식을 푸는 방식')}
       <span class="learn-tag">📎 ▶를 누르며 '이번에 줄어들 조각(강조)'이 값으로 바뀌는 걸 보라</span>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🧶 현실 감각 — 엉킨 실타래 / 단계별 산수</div>
+        <p class="section-desc" style="margin:0">복합 표현식을 푸는 건 <b>엉킨 실타래를 한 올씩 푸는 것</b>과 같다 — 아무 데나 잡아당기면 더 엉킨다. <b>가장 안쪽·가장 급한 매듭(redex)</b>부터 하나씩 풀어야 한다. 결국 우리가 <b>산수를 단계별로</b>(곱셈 먼저, 그다음 덧셈…) 푸는 것과 똑같다 — 컴퓨터도 이렇게 <b>한 줄을 여러 단계로</b> 접는다.</p>
+      </div>
       <p class="section-desc">복합 표현식은 <b>한 번에 한 조각(redex)</b>씩 값으로 <b>치환(축약)</b>되며 접혀 올라간다.</p>
       <div class="card"><div class="file-label">🔬 축약: 2 + 3 * 4 - 1</div><div data-m="red1"></div></div>
       ${nav('3-2', 3, '3-4')}
@@ -233,6 +259,15 @@
       <div class="card"><div class="file-label">🔬 축약: score>=90 ? "A" : score>=80 ? "B" : "C"  (score=85)</div><div data-m="red-tern"></div></div>
       <div class="card"><div class="file-label">🔬 직접 바꿔 실행 — score를 95·75·50으로 바꿔 보라</div><div data-m="tern-run"></div></div>
 
+      <h3 class="section-title">③ if의 (조건)도 표현식 — 먼저 값으로 접힌다</h3>
+      <p class="section-desc"><code>if</code>는 <b>문</b>(값을 안 냄)이지만, 괄호 안 <b>(조건)은 표현식</b>이다. 그래서 <b>조건이 먼저 하나의 값(참/거짓)으로 접혀야</b> if가 어느 갈림길로 갈지 정한다. (3-1의 "식 vs 문"이 여기서 만난다.)</p>
+      <div class="card"><div class="file-label">🔬 축약: if (age >= 19 && hasTicket) { … }  (age=20, hasTicket=true)</div><div data-m="red-if"></div></div>
+
+      <h3 class="section-title">④ 산수·비교·논리가 섞여도 — 우선순위 순으로</h3>
+      <p class="section-desc">한 줄에 <b>산수(<code>+ / </code>) · 비교(<code>&gt; ===</code>) · 논리(<code>&amp;&amp;</code>)</b>가 다 섞여도 규칙은 하나 — <b>우선순위 높은 것부터</b> 접는다: <b>산수 → 비교 → 논리</b> 순. 실타래를 안쪽 매듭부터 푸는 것과 같다.</p>
+      <div class="card"><div class="file-label">🔬 축약: 2 + 3 > 4 && 10 / 2 === 5</div><div data-m="red-mix"></div></div>
+      <div data-m="qz-mix"></div>
+
       ${nav('3-3', 4, '3-5')}
     `
     root.querySelector('[data-m="red2"]').append(ExprReduce({
@@ -263,6 +298,31 @@
         '    : score >= 70 ? "C"',
         '    : "F")            // 85 → "B"  (오른쪽 결합: else가 또 삼항)',
       ].join('\n'),
+    }))
+    root.querySelector('[data-m="red-if"]').append(ExprReduce({
+      title: 'if (age >= 19 && hasTicket) { 입장() }   // age = 20, hasTicket = true',
+      steps: [
+        { code: 'if (20 >= 19 && true) { 입장() }', mark: '20 >= 19', note: '<code>if</code>는 문이지만 <b>(조건)은 표현식</b> → 먼저 접는다. <b>20 &gt;= 19</b> 는 <b>true</b>. (비교부터)' },
+        { code: 'if (true && true) { 입장() }', mark: 'true && true', note: '이제 논리 <code>&&</code> → 둘 다 참이라 <b>true</b>.' },
+        { code: 'if (true) { 입장() }', note: '조건이 <b>하나의 값(true)</b>으로 접혔다 → if가 <b>블록을 실행</b>한다. (거짓이었다면 건너뛴다) — 조건이 값이 돼야 갈림길이 정해진다.' },
+      ],
+    }))
+    root.querySelector('[data-m="red-mix"]').append(ExprReduce({
+      title: '2 + 3 > 4 && 10 / 2 === 5',
+      steps: [
+        { code: 'const ok = 2 + 3 > 4 && 10 / 2 === 5', mark: '2 + 3', note: '① <b>산수</b>부터(가장 급함). <b>2 + 3 = 5</b>.' },
+        { code: 'const ok = 5 > 4 && 10 / 2 === 5', mark: '10 / 2', note: '다른 쪽 산수도 — <b>10 / 2 = 5</b>.' },
+        { code: 'const ok = 5 > 4 && 5 === 5', mark: '5 > 4', note: '② 이제 <b>비교</b>. <b>5 &gt; 4 = true</b>.' },
+        { code: 'const ok = true && 5 === 5', mark: '5 === 5', note: '다른 비교도 — <b>5 === 5 = true</b>.' },
+        { code: 'const ok = true && true', mark: 'true && true', note: '③ 마지막으로 <b>논리 &&</b>. 둘 다 참 → <b>true</b>.' },
+        { code: 'const ok = true', note: '완성. 섞여 있어도 <b>산수 → 비교 → 논리</b> 순으로 한 겹씩 접힌다.' },
+      ],
+    }))
+    root.querySelector('[data-m="qz-mix"]').append(Quiz({
+      q: '<code>2 + 3 > 4</code> 에서 가장 먼저 값이 되는 조각은?',
+      options: ['<code>3 > 4</code> (왼쪽부터)', '<code>2 + 3</code> (산수가 비교보다 먼저)', '<code>2 + 3 > 4</code> 통째로'],
+      answer: 1,
+      explain: '<b>산수(<code>+</code>)가 비교(<code>&gt;</code>)보다 우선순위가 높다</b> → <code>2+3=5</code> 먼저, 그다음 <code>5 &gt; 4 = true</code>. 문법 계층: 산수가 비교 규칙 안쪽에 있다.',
     }))
     wireGoto(root)
   }

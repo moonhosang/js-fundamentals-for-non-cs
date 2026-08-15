@@ -1560,6 +1560,11 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
 .drill-feedback.bad { color: var(--red); }
 .drill-answer { margin-top: 8px; font-size: 12.5px; color: var(--muted); }
 .drill-answer code { font-family: var(--font-mono); background: var(--bg); padding: 1px 6px; border-radius: 5px; }
+/* 🌳 BNF 생성규칙 박스 */
+.bnf { font-family: var(--font-mono); font-size: 14px; line-height: 2; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin: 8px 0; overflow-x: auto; }
+.bnf-rule { white-space: nowrap; }
+.bnf-lhs { display: inline-block; min-width: 92px; color: var(--brand); font-weight: 700; }
+.bnf-rec { background: rgba(99,102,241,.14); border-radius: 5px; padding: 1px 6px; font-weight: 700; }
 /* 본문 속 인라인 이동 링크(버튼) */
 .inline-goto { background: none; border: none; padding: 0; font: inherit; color: var(--brand); font-weight: 700; cursor: pointer; text-decoration: underline; }
 .inline-goto:hover { opacity: .8; }
