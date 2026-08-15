@@ -1627,6 +1627,21 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
 }
 .skip-banner > span { flex: 1 1 280px; }
 
+/* 본 코스 ↔ 원리 심화 트랙 구분선 (사이드바) */
+.toc-track-divider {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  margin: 18px 4px 6px; padding: 8px 8px 6px;
+  border-top: 1px dashed var(--border);
+}
+.toc-track-divider > span { font-size: 12px; font-weight: 800; color: var(--brand); letter-spacing: .02em; }
+.toc-track-divider > small { font-size: 11px; color: var(--muted); }
+/* 홈 그리드 트랙 구분선 */
+.home-track-divider {
+  margin: 10px 2px 2px; padding-top: 14px; border-top: 1px dashed var(--border);
+  font-size: 15px; font-weight: 800; color: var(--brand);
+}
+.home-track-divider > small { display: block; margin-top: 2px; font-size: 12px; font-weight: 500; color: var(--muted); }
+
 /* ❌ falsy 6종 표 (3강 조건) */
 .falsy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 @media (max-width: 480px) { .falsy-grid { grid-template-columns: repeat(2, 1fr); } }
