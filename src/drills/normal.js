@@ -124,27 +124,27 @@
     ],
   }
 
-  // ── 🧠 M1 램(ram) : 재할당 여러 번·typeof·복사 후 원본 ──
+  // ── 🧠 M1 램(ram) : 재할당 누적·typeof·복사 후 원본 예측 ──
   N['ram'] = {
-    pattern: '🟡 보통 · 재할당 누적·typeof 여러 타입·복사 후 원본',
+    pattern: '🟡 보통 · 재할당 누적·여러 타입·복사 후 원본 예측',
     problems: [
-      { label: '두 번 재할당', ask: 'x를 두 번 더해 10이 되게 — 마지막에 얼마를?', code: 'let x = 1\nx = x + 1\nx = x + ____\nprint(x)', expect: '10', answer: '8', hint: '1+1=2, +8 → 10' },
-      { label: 'typeof 문자', ask: '결과가 "string"이 나오게 — 어떤 값을?', code: 'print(typeof ____)', expect: '"string"', answer: '"hi"', hint: '따옴표 친 글자' },
-      { label: '원본은 그대로', ask: 'a를 0으로 바꿔 보세요. 먼저 복사한 b는? (▶ 확인)', code: 'let a = 7\nlet b = a\na = ____\nprint(b)', expect: '7', answer: '0', hint: 'b는 복사본 → 그대로 7' },
-      { label: 'typeof 불리언', ask: '결과가 "boolean"이 나오게 — 어떤 값을?', code: 'print(typeof ____)', expect: '"boolean"', answer: 'true', hint: 'true / false' },
-      { label: '미초기화', ask: '값을 안 넣은 x의 타입은 "undefined". 빈칸에 x', code: 'let x\nprint(typeof ____)', expect: '"undefined"', answer: 'x', hint: '선언만 하면 undefined' },
+      { label: '두 단계', ask: '1에서 +1 한 뒤 ×3 하면?', code: 'let x = 1\nx = x + 1\nx = x * 3\nprint(x === ____)', expect: 'true', answer: '6', hint: '2 × 3' },
+      { label: '원본은 그대로', ask: 'a=7, b=a 뒤 a=0 하면 b는?', code: 'let a = 7\nlet b = a\na = 0\nprint(b === ____)', expect: 'true', answer: '7', hint: 'b는 복사본 → 그대로' },
+      { label: '참거짓 타입', ask: '참거짓 값의 타입 이름은?', code: 'print((typeof true) === "____")', expect: 'true', answer: 'boolean', hint: 'boolean' },
+      { label: '미초기화', ask: '값을 안 넣은 x의 타입 이름은?', code: 'let x\nprint((typeof x) === "____")', expect: 'true', answer: 'undefined', hint: '선언만 = undefined' },
+      { label: '재할당 타입변경', ask: 'v=1 이었다가 v="hi" 하면 typeof v는?', code: 'let v = 1\nv = "hi"\nprint((typeof v) === "____")', expect: 'true', answer: 'string', hint: '문자 담긴 v' },
     ],
   }
 
-  // ── 🧠 M4-1 값=복사(ref) : 계산해 바꿔도 원본 그대로 ──
+  // ── 🧠 M4-1 값=복사(ref) : 계산해 바꿔도 원본을 예측 ──
   N['ref'] = {
-    pattern: '🟡 보통 · 계산으로 바꿔도 원시값 원본은 그대로',
+    pattern: '🟡 보통 · 계산·전달로 바꿔도 원시값 원본이 어떻게 되는지 예측',
     problems: [
-      { label: '곱해 바꿔도?', ask: 'y를 2배로 바꿔 보세요. x는? (▶ 확인)', code: 'let x = 3\nlet y = x\ny = y * ____\nprint(x)', expect: '3', answer: '2', hint: '복사라 x는 3' },
-      { label: '빼서 바꿔도?', ask: 'b에서 30을 빼 보세요. a는? (▶ 확인)', code: 'let a = 100\nlet b = a\nb = b - ____\nprint(a)', expect: '100', answer: '30', hint: 'a는 100 그대로' },
-      { label: '0으로 해도?', ask: 'm을 0으로 바꿔 보세요. n은? (▶ 확인)', code: 'let n = 5\nlet m = n\nm = ____\nprint(n)', expect: '5', answer: '0', hint: 'n은 5 그대로' },
-      { label: '글자 바꿔도?', ask: 's2를 다른 글자로 바꿔 보세요. s1은? (▶ 확인)', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = "____"\nprint(s1)', expect: '"무지"', answer: '어피치', hint: '문자열도 복사' },
-      { label: '꺼낸 값 바꿔도?', ask: 'a.num을 꺼낸 b를 20으로 바꿔 보세요. a.num은? (▶ 확인)', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '20', hint: '꺼낼 때 복사' },
+      { label: '곱해 바꿔도?', ask: 'y=x 뒤 y=y*2 하면 x는?', code: 'let x = 3\nlet y = x\ny = y * 2\nprint(x === ____)', expect: 'true', answer: '3', hint: '복사라 x는 그대로' },
+      { label: '빼서 바꿔도?', ask: 'b=a 뒤 b=b-30 하면 a는?', code: 'let a = 100\nlet b = a\nb = b - 30\nprint(a === ____)', expect: 'true', answer: '100', hint: 'a는 그대로' },
+      { label: '함수에 넘겨도?', ask: '함수가 x=0 해도 원본 p는?', code: 'function f(x) { x = 0 }\nlet p = 5\nf(p)\nprint(p === ____)', expect: 'true', answer: '5', hint: '복사본만 바뀜' },
+      { label: '둘 다 살아있음', ask: 'x=10, y=x, y=20 후 x + y 는?', code: 'let x = 10\nlet y = x\ny = 20\nprint((x + y) === ____)', expect: 'true', answer: '30', hint: '10 + 20' },
+      { label: '문자 복사', ask: 's="a", t=s, t="b" 후 s + t 는?', code: 'let s = "a"\nlet t = s\nt = "b"\nprint((s + t) === "____")', expect: 'true', answer: 'ab', hint: 's는 "a" 그대로' },
     ],
   }
 
@@ -160,27 +160,27 @@
     ],
   }
 
-  // ── 🧠 M2 스택(stack) : 계산·조건·문자 반환 ──
+  // ── 🧠 M2 스택(stack) : 계산·조건·문자 반환값을 예측 ──
   N['stack'] = {
-    pattern: '🟡 보통 · 계산·조건·문자 결합을 return',
+    pattern: '🟡 보통 · 계산·조건·문자 결합 반환값을 예측',
     problems: [
-      { label: '곱 반환', ask: 'mul(3,4)가 12를 돌려주게 — 무엇을 return?', code: 'function mul(a, b) { return ____ }\nprint(mul(3, 4))', expect: '12', answer: 'a * b', hint: 'a * b' },
-      { label: '뺄셈', ask: 'sub(10,4)가 6이 되게 — 무슨 연산?', code: 'function sub(a, b) { return a ____ b }\nprint(sub(10, 4))', expect: '6', answer: '-', hint: '빼기' },
-      { label: '조건 반환', ask: 'sign(-2)가 "-"가 되게 — else 쪽을 채워라.', code: 'function sign(n) { return n > 0 ? "+" : "____" }\nprint(sign(-2))', expect: '"-"', answer: '-', hint: '음수 → else' },
-      { label: '지역 계산', ask: 'f()가 10을 돌려주게 — x(5)에 몇을 곱할까?', code: 'function f() { let x = 5; return x * ____ }\nprint(f())', expect: '10', answer: '2', hint: '5 * 2' },
-      { label: '문자 결합 반환', ask: 'g("z")가 "hi z"가 되게 — 매개변수를 붙여라.', code: 'function g(n) { return "hi " + ____ }\nprint(g("z"))', expect: '"hi z"', answer: 'n', hint: '"hi " + n' },
+      { label: '곱 반환', ask: 'mul(3, 4)는?', code: 'function mul(a, b) { return a * b }\nprint(mul(3, 4) === ____)', expect: 'true', answer: '12', hint: '3 × 4' },
+      { label: '뺄셈', ask: 'sub(10, 4)는?', code: 'function sub(a, b) { return a - b }\nprint(sub(10, 4) === ____)', expect: 'true', answer: '6', hint: '10 - 4' },
+      { label: '조건 반환', ask: 'sign(-2)는? (양수면 "+", 아니면 "-")', code: 'function sign(n) { return n > 0 ? "+" : "-" }\nprint(sign(-2) === "____")', expect: 'true', answer: '-', hint: '-2는 양수 아님' },
+      { label: '지역 계산', ask: 'f는 지역 x=5의 2배를 반환. f()는?', code: 'function f() { let x = 5; return x * 2 }\nprint(f() === ____)', expect: 'true', answer: '10', hint: '5 × 2' },
+      { label: '문자 결합', ask: 'g("z")는? (return "hi " + n)', code: 'function g(n) { return "hi " + n }\nprint(g("z") === "____")', expect: 'true', answer: 'hi z', hint: '"hi " + "z"' },
     ],
   }
 
-  // ── 🧠 M3 힙(heap) : 속성 추가·중첩·별칭·동적 접근 ──
+  // ── 🧠 M3 힙(heap) : 속성 추가·중첩·동적 키·배열 속 객체 예측 ──
   N['heap'] = {
-    pattern: '🟡 보통 · 속성 추가·중첩·별칭 변경',
+    pattern: '🟡 보통 · 속성 추가·중첩·동적 키·배열 속 객체 결과 예측',
     problems: [
-      { label: '속성 추가', ask: 'o.x가 5가 되게 값을 채워라.', code: 'let o = {}\no.x = ____\nprint(o.x)', expect: '5', answer: '5', hint: 'o.x = 5' },
-      { label: '0번 꺼내기', ask: '[10,20]의 첫 값(10)을 꺼내려면 몇 번?', code: 'let a = [10, 20]\nprint(a[____])', expect: '10', answer: '0', hint: '첫째 = 0' },
-      { label: '중첩', ask: 'd.in.v(7)를 꺼내려면 어떤 속성?', code: 'let d = { in: { v: 7 } }\nprint(d.in.____)', expect: '7', answer: 'v', hint: 'd.in.v' },
-      { label: '별칭 변경', ask: 'b는 a와 같은 객체. b.v를 9로 바꾸면 a.v는? 빈칸에 b', code: 'let a = { v: 1 }\nlet b = a\n____.v = 9\nprint(a.v)', expect: '9', answer: 'b', hint: '같은 객체' },
-      { label: '이름', ask: 'c.name이 "민지"가 되게.', code: 'let c = { name: "____" }\nprint(c.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에' },
+      { label: '속성 추가', ask: 'o.x 추가 후 o.x 는?', code: 'let o = {}\no.x = 5\nprint(o.x === ____)', expect: 'true', answer: '5', hint: '방금 넣은 값' },
+      { label: '중첩', ask: 'd.in.v 는?', code: 'let d = { in: { v: 7 } }\nprint(d.in.v === ____)', expect: 'true', answer: '7', hint: '안쪽 v' },
+      { label: '동적 키', ask: 'o[k]=100, k="score" 뒤 o.score 는?', code: 'let o = {}\nlet k = "score"\no[k] = 100\nprint(o.score === ____)', expect: 'true', answer: '100', hint: 'k가 "score"라 o.score' },
+      { label: '배열 속 객체', ask: 'arr[0].v=9 후 arr[0].v 는?', code: 'let arr = [{ v: 1 }]\narr[0].v = 9\nprint(arr[0].v === ____)', expect: 'true', answer: '9', hint: '방금 바꾼 값' },
+      { label: '객체 안 배열', ask: 'o.list.length 는? {list:[1,2,3]}', code: 'let o = { list: [1, 2, 3] }\nprint(o.list.length === ____)', expect: 'true', answer: '3', hint: '3개' },
     ],
   }
 

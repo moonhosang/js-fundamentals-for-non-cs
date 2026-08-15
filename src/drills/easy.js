@@ -182,27 +182,32 @@
     ],
   }
 
-  // ── 🧠 M2 스택(stack) : 함수가 return으로 값 돌려주기 ──
+  // ── 🧠 M2 스택(stack) : 함수의 반환값을 예측 ──
   E['stack'] = {
-    pattern: '🟢 쉬움 · 함수가 return으로 목표 값 돌려주기',
+    pattern: '🟢 쉬움 · 함수를 부르면 무엇이 돌아오는지 예측',
     problems: [
-      { label: 'return 합', ask: 'add(3,4)가 7을 돌려주게 — 무엇을 return?', code: 'function add(a, b) { return ____ }\nprint(add(3, 4))', expect: '7', answer: 'a + b', hint: '두 매개변수를 더한다' },
-      { label: '지역변수 반환', ask: 'f()가 지역변수 n을 돌려주게.', code: 'function f() { let n = 10; return ____ }\nprint(f())', expect: '10', answer: 'n', hint: 'return n' },
-      { label: '세금', ask: 'tax(100)이 110이 되게 — 세율은? (세금 10 = 100 * ?)', code: 'function tax(p) { return p + p * ____ }\nprint(tax(100))', expect: '110', answer: '0.1', hint: '세금 10 = 100 * ?' },
-      { label: '배수', ask: 'twice(6)이 12가 되게 — 몇 배?', code: 'function twice(n) { return n * ____ }\nprint(twice(6))', expect: '12', answer: '2', hint: '6의 2배' },
-      { label: '문자열 반환', ask: 'name()이 "토끼"를 돌려주게.', code: 'function name() { return ____ }\nprint(name())', expect: '"토끼"', answer: '"토끼"', hint: '따옴표' },
+      { label: '합 반환', ask: 'add(3, 4)는?', code: 'function add(a, b) { return a + b }\nprint(add(3, 4) === ____)', expect: 'true', answer: '7', hint: '3 + 4' },
+      { label: '지역변수 반환', ask: 'f는 지역변수 n을 돌려준다. f()는?', code: 'function f() { let n = 10; return n }\nprint(f() === ____)', expect: 'true', answer: '10', hint: '안의 n' },
+      { label: '세금', ask: 'tax는 10%를 더한다. tax(100)은?', code: 'function tax(p) { return p + p * 0.1 }\nprint(tax(100) === ____)', expect: 'true', answer: '110', hint: '100 + 10' },
+      { label: '배수', ask: 'twice(6)은?', code: 'function twice(n) { return n * 2 }\nprint(twice(6) === ____)', expect: 'true', answer: '12', hint: '6 × 2' },
+      { label: '문자 반환', ask: 'name()은?', code: 'function name() { return "토끼" }\nprint(name() === "____")', expect: 'true', answer: '토끼', hint: '돌려주는 글자' },
     ],
   }
 
-  // ── 🧠 M3 힙(heap) : 속성·인덱스·별칭 ──
+  // ── 🧠 M3 힙(heap) : 속성·인덱스·별칭 결과를 예측 ──
   E['heap'] = {
-    pattern: '🟢 쉬움 · 속성·인덱스·별칭으로 목표 값 만들기',
+    pattern: '🟢 쉬움 · 힙 객체의 속성·인덱스·별칭 결과를 예측',
     problems: [
-      { label: '곱해서', ask: 'obj.x가 6이 되게 — 3에 뭘 곱할까?', code: 'let obj = { x: 3 * ____ }\nprint(obj.x)', expect: '6', answer: '2', hint: '3 * 2' },
-      { label: '마지막 인덱스', ask: '마지막 값 30을 꺼내려면 몇 번 인덱스? (0부터!)', code: 'let arr = [10, 20, 30]\nprint(arr[____])', expect: '30', answer: '2', hint: '셋 중 마지막 = 2' },
-      { label: '별칭으로 바꾸면?', ask: 'b는 a와 같은 힙 객체다. b.v를 9로 바꾸면 a.v는? 빈칸에 b를 넣고 ▶확인', code: 'let a = { v: 1 }\nlet b = a\n____.v = 9\nprint(a.v)', expect: '9', answer: 'b', hint: '같은 객체라 a.v도 9' },
-      { label: '이름', ask: 'card.name이 "민지"가 되게.', code: 'let card = { name: "____" }\nprint(card.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에' },
-      { label: '중첩 속성', ask: '중첩된 n(7)에 도달하려면 어떤 속성?', code: 'let data = { inner: { n: 7 } }\nprint(data.inner.____)', expect: '7', answer: 'n', hint: 'data.inner.n' },
+      { label: '계산 속성', ask: 'obj.x 는? (x: 3 * 2)', code: 'let obj = { x: 3 * 2 }\nprint(obj.x === ____)', expect: 'true', answer: '6', hint: '3 × 2' },
+      { label: '마지막 인덱스', ask: 'arr[2] 는?', code: 'let arr = [10, 20, 30]\nprint(arr[2] === ____)', expect: 'true', answer: '30', hint: '0,1,2번' },
+      { label: '별칭', ask: 'b는 a와 같은 힙 객체. b.v=9 후 a.v 는?', code: 'let a = { v: 1 }\nlet b = a\nb.v = 9\nprint(a.v === ____)', expect: 'true', answer: '9', hint: '같은 객체라 a.v도 9',
+        explain: '객체는 <b>힙에 하나</b> 있고 a·b는 <b>같은 주소</b>를 가리킨다(별칭). b로 고쳐도 a로 봐도 <b>같은 셀</b>이라 함께 바뀐다. (원시값이었다면 각자 복사돼 독립 — M4-1.)', see: 'ref', wiki: { label: '객체 (컴퓨터 과학)', url: 'https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)' },
+        mem: { title: '왜 a.v도 9인가 — a·b가 같은 힙 객체', stackLabel: '📇 이름표 장부', code: ['let a = { v: 1 }', 'let b = a', 'b.v = 9'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'v', value: '1' }] } }, note: '<code>let b = a</code> → 주소 복사 → a·b가 <b>같은 h1</b>.' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'v', value: '9', bad: true }] } }, note: '<code>b.v = 9</code> → h1을 고침 → <b>a.v도 9</b>.' },
+        ] } },
+      { label: '이름 속성', ask: 'card.name 는?', code: 'let card = { name: "민지" }\nprint(card.name === "____")', expect: 'true', answer: '민지', hint: 'name 값' },
+      { label: '중첩 속성', ask: 'data.inner.n 는?', code: 'let data = { inner: { n: 7 } }\nprint(data.inner.n === ____)', expect: 'true', answer: '7', hint: '안쪽 n' },
     ],
   }
 
