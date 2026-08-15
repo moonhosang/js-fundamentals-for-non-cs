@@ -268,39 +268,39 @@
     ],
   }
 
-  // ── 🧠 콜 스택(callstack) : 3중 사슬·인수 전달 ──
+  // ── 🧠 콜 스택(callstack) : 3중 사슬·인수 전달 결과 예측 ──
   N['callstack'] = {
-    pattern: '🟡 보통 · 3중 호출 사슬·인수 전달·중첩 호출',
+    pattern: '🟡 보통 · 3중 호출 사슬·인수 전달·중첩 호출 결과 예측',
     problems: [
-      { label: '3중 사슬', ask: 'a→b→c로 이어진다. a()가 9가 되려면 c는?', code: 'function a() { return b() }\nfunction b() { return c() }\nfunction c() { return ____ }\nprint(a())', expect: '9', answer: '9', hint: 'c가 9' },
-      { label: '곱 사슬', ask: 'a는 b()의 3배. a()가 6이 되려면 b는?', code: 'function a() { return b() * 3 }\nfunction b() { return ____ }\nprint(a())', expect: '6', answer: '2', hint: '6의 1/3' },
-      { label: '뺄셈 사슬', ask: 'a는 b()-1. a()가 9가 되려면 b는?', code: 'function a() { return b() - 1 }\nfunction b() { return ____ }\nprint(a())', expect: '9', answer: '10', hint: '9 + 1' },
-      { label: '인수 전달', ask: 'a(3)이 b로 3을 넘긴다. 6이 되려면 b는 몇 배?', code: 'function a(n) { return b(n) }\nfunction b(n) { return n * ____ }\nprint(a(3))', expect: '6', answer: '2', hint: '3 * 2' },
-      { label: '중첩 호출', ask: 'inc는 +1. inc(inc(?))가 5가 되려면 안쪽 인수는?', code: 'function inc(n) { return n + 1 }\nprint(inc(inc(____)))', expect: '5', answer: '3', hint: '3→4→5' },
+      { label: '3중 사슬', ask: 'a→b→c, c()=9. a()는?', code: 'function a() { return b() }\nfunction b() { return c() }\nfunction c() { return 9 }\nprint(a() === ____)', expect: 'true', answer: '9', hint: 'c가 9' },
+      { label: '곱 사슬', ask: 'a는 b()의 3배, b()=2. a()는?', code: 'function a() { return b() * 3 }\nfunction b() { return 2 }\nprint(a() === ____)', expect: 'true', answer: '6', hint: '2 × 3' },
+      { label: '뺄셈 사슬', ask: 'a는 b()-1, b()=10. a()는?', code: 'function a() { return b() - 1 }\nfunction b() { return 10 }\nprint(a() === ____)', expect: 'true', answer: '9', hint: '10 - 1' },
+      { label: '인수 전달', ask: 'a(3)이 b로 3 전달, b는 2배. a(3)은?', code: 'function a(n) { return b(n) }\nfunction b(n) { return n * 2 }\nprint(a(3) === ____)', expect: 'true', answer: '6', hint: '3 × 2' },
+      { label: '중첩 호출', ask: 'inc=+1. inc(inc(3))은?', code: 'function inc(n) { return n + 1 }\nprint(inc(inc(3)) === ____)', expect: 'true', answer: '5', hint: '3→4→5' },
     ],
   }
 
-  // ── 🧠 클로저(closure) : 인수 팩토리·2회 카운트 ──
+  // ── 🧠 클로저(closure) : 인수 팩토리·2회 카운트 결과 예측 ──
   N['closure'] = {
-    pattern: '🟡 보통 · 인수를 붙잡는 팩토리·2회 카운터',
+    pattern: '🟡 보통 · 인수를 붙잡는 팩토리·2회 카운터 결과 예측',
     problems: [
-      { label: '붙잡아 더하기', ask: 'v(3)를 붙잡아 7을 돌려주게 하려면 뭘 더할까?', code: 'function make() { let v = 3; return function () { return v + ____ } }\nlet f = make()\nprint(f())', expect: '7', answer: '4', hint: '3 + 4' },
-      { label: '카운터 2번', ask: 'next()를 두 번 불러 2가 나오게 매번 얼마씩?', code: 'function c() { let n = 0; return function () { n = n + ____; return n } }\nlet next = c()\nnext()\nprint(next())', expect: '2', answer: '1', hint: '1,2' },
-      { label: '곱 팩토리', ask: 'mk(5)가 붙잡은 5로 10을 돌려주게 몇을 곱할까?', code: 'function mk(x) { return function () { return x * ____ } }\nlet f = mk(5)\nprint(f())', expect: '10', answer: '2', hint: '5 * 2' },
-      { label: '인사말 팩토리', ask: 'greeter("z")가 "hi z"를 돌려주게 — 붙잡은 name을 붙여라.', code: 'function greeter(name) { return function () { return "hi " + ____ } }\nlet g = greeter("z")\nprint(g())', expect: '"hi z"', answer: 'name', hint: '"hi " + name' },
-      { label: '잔액', ask: 'm(100)을 붙잡아 60을 돌려주게 얼마를 뺄까?', code: 'function bank() { let m = 100; return function () { return m - ____ } }\nlet b = bank()\nprint(b())', expect: '60', answer: '40', hint: '100 - 40' },
+      { label: '붙잡아 더하기', ask: 'v=3을 붙잡아 v+4를 돌려주면?', code: 'function make() { let v = 3; return function () { return v + 4 } }\nlet f = make()\nprint(f() === ____)', expect: 'true', answer: '7', hint: '3 + 4' },
+      { label: '카운터 2번', ask: 'next()를 두 번 부르면(매번 +1)?', code: 'function c() { let n = 0; return function () { n = n + 1; return n } }\nlet next = c()\nnext()\nprint(next() === ____)', expect: 'true', answer: '2', hint: '1,2' },
+      { label: '곱 팩토리', ask: 'mk(5)가 붙잡은 5로 2배를 돌려주면?', code: 'function mk(x) { return function () { return x * 2 } }\nlet f = mk(5)\nprint(f() === ____)', expect: 'true', answer: '10', hint: '5 × 2' },
+      { label: '인사말 팩토리', ask: 'greeter("z")가 만든 함수를 부르면? (return "hi "+name)', code: 'function greeter(name) { return function () { return "hi " + name } }\nlet g = greeter("z")\nprint(g() === "____")', expect: 'true', answer: 'hi z', hint: '"hi " + "z"' },
+      { label: '잔액', ask: 'm=100을 붙잡아 m-40을 돌려주면?', code: 'function bank() { let m = 100; return function () { return m - 40 } }\nlet b = bank()\nprint(b() === ____)', expect: 'true', answer: '60', hint: '100 - 40' },
     ],
   }
 
-  // ── 🧠 가비지 컬렉션(gc) : 남은 참조로 접근 ──
+  // ── 🧠 가비지 컬렉션(gc) : 참조 끊기·남은 참조로 접근 결과 예측 ──
   N['gc'] = {
-    pattern: '🟡 보통 · 한 참조를 끊어도 남은 참조로 객체는 산다',
+    pattern: '🟡 보통 · 한 참조를 끊어도 남은 참조로 객체는 산다 — 결과 예측',
     problems: [
-      { label: '남은 참조', ask: 'a=null이어도 b가 가리켜 산다. b로 n(1)을 꺼내려면?', code: 'let a = { n: 1 }\nlet b = a\na = null\nprint(b.____)', expect: '1', answer: 'n', hint: 'b.n' },
-      { label: '고아 만들기', ask: 'x가 가리키던 객체를 고아로 만들려면 뭘 담을까?', code: 'let x = { big: "d" }\nx = ____\nprint(x)', expect: 'null', answer: 'null', hint: 'null' },
-      { label: '배열 살아있음', ask: 'o=null이어도 r이 가리켜 산다. r.list의 개수(1)를 꺼내려면?', code: 'let o = { list: [1] }\nlet r = o\no = null\nprint(r.list.____)', expect: '1', answer: 'length', hint: 'r.list.length' },
-      { label: '지켜둔 참조', ask: 'data=null이어도 keep이 가리켜 산다. keep.v(5)를 꺼내려면?', code: 'let data = { v: 5 }\nlet keep = data\ndata = null\nprint(keep.____)', expect: '5', answer: 'v', hint: 'keep.v' },
-      { label: '노드 비우기', ask: 'node를 GC 대상으로 만들려면 뭘 담을까?', code: 'let node = { v: 7 }\nnode = ____\nprint(node)', expect: 'null', answer: 'null', hint: 'null' },
+      { label: '남은 참조', ask: 'a를 비워도 b가 가리킨다. b.n 은?', code: 'let a = { n: 1 }\nlet b = a\na = null\nprint(b.n === ____)', expect: 'true', answer: '1', hint: 'b가 살림' },
+      { label: '고아 만들기', ask: 'x의 참조를 끊으면 x는?', code: 'let x = { big: "d" }\nx = null\nprint(x === ____)', expect: 'true', answer: 'null', hint: 'null' },
+      { label: '배열 살아있음', ask: 'o를 비워도 r이 가리킨다. r.list의 개수는?', code: 'let o = { list: [1] }\nlet r = o\no = null\nprint(r.list.length === ____)', expect: 'true', answer: '1', hint: 'r이 살림' },
+      { label: '지켜둔 참조', ask: 'data를 비워도 keep이 가리킨다. keep.v 는?', code: 'let data = { v: 5 }\nlet keep = data\ndata = null\nprint(keep.v === ____)', expect: 'true', answer: '5', hint: 'keep이 살림' },
+      { label: '여러 참조', ask: 'x·y가 같은 객체. x를 비워도 y.n 은?', code: 'let o = { n: 9 }\nlet x = o\nlet y = o\nx = null\nprint(y.n === ____)', expect: 'true', answer: '9', hint: 'y가 살림' },
     ],
   }
 

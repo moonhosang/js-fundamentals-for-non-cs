@@ -305,39 +305,39 @@
     ],
   }
 
-  // ── 🧠 콜 스택(callstack) : 함수가 함수를 부르는 사슬 ──
+  // ── 🧠 콜 스택(callstack) : 함수가 함수를 부른 결과를 예측 ──
   E['callstack'] = {
-    pattern: '🟢 쉬움 · 함수가 함수를 부를 때 안쪽 반환을 도출',
+    pattern: '🟢 쉬움 · 함수가 함수를 부를 때 최종 반환값을 예측',
     problems: [
-      { label: '2배 사슬', ask: 'a는 b()의 2배를 돌려준다. a()가 10이 되려면 b는 얼마를 돌려줘야?', code: 'function a() { return b() * 2 }\nfunction b() { return ____ }\nprint(a())', expect: '10', answer: '5', hint: '10의 절반' },
-      { label: '+1 사슬', ask: 'outer는 inner()+1을 돌려준다. outer()가 10이 되려면 inner는?', code: 'function outer() { return inner() + 1 }\nfunction inner() { return ____ }\nprint(outer())', expect: '10', answer: '9', hint: '10 - 1' },
-      { label: '세금', ask: 'tax(100)이 110이 되게 — 세율은?', code: 'function tax(p) { return p + p * ____ }\nprint(tax(100))', expect: '110', answer: '0.1', hint: '세금 10 = 100 * ?' },
-      { label: '그대로 전달', ask: 'a는 b()를 그대로 돌려준다. a()가 7이 되려면 b는?', code: 'function a() { return b() }\nfunction b() { return ____ }\nprint(a())', expect: '7', answer: '7', hint: 'b가 7' },
-      { label: '더하는 사슬', ask: 'f는 g()에 얼마를 더해 5가 되게? (g는 4)', code: 'function f() { return g() + ____ }\nfunction g() { return 4 }\nprint(f())', expect: '5', answer: '1', hint: '4 + 1' },
+      { label: '2배 사슬', ask: 'a는 b()의 2배, b()=5. a()는?', code: 'function a() { return b() * 2 }\nfunction b() { return 5 }\nprint(a() === ____)', expect: 'true', answer: '10', hint: '5 × 2' },
+      { label: '+1 사슬', ask: 'outer는 inner()+1, inner()=9. outer()는?', code: 'function outer() { return inner() + 1 }\nfunction inner() { return 9 }\nprint(outer() === ____)', expect: 'true', answer: '10', hint: '9 + 1' },
+      { label: '세금', ask: 'tax는 10%를 더한다. tax(100)은?', code: 'function tax(p) { return p + p * 0.1 }\nprint(tax(100) === ____)', expect: 'true', answer: '110', hint: '100 + 10' },
+      { label: '그대로 전달', ask: 'a는 b()를 그대로, b()=7. a()는?', code: 'function a() { return b() }\nfunction b() { return 7 }\nprint(a() === ____)', expect: 'true', answer: '7', hint: 'b가 7' },
+      { label: '더하는 사슬', ask: 'f는 g()+1, g()=4. f()는?', code: 'function f() { return g() + 1 }\nfunction g() { return 4 }\nprint(f() === ____)', expect: 'true', answer: '5', hint: '4 + 1' },
     ],
   }
 
-  // ── 🧠 클로저(closure) : 안쪽 함수가 붙잡은 값 ──
+  // ── 🧠 클로저(closure) : 안쪽 함수가 붙잡은 값의 결과를 예측 ──
   E['closure'] = {
-    pattern: '🟢 쉬움 · 안쪽 함수가 바깥 값을 붙잡아 쓴다',
+    pattern: '🟢 쉬움 · 안쪽 함수가 바깥 값을 붙잡아 쓴 결과를 예측',
     problems: [
-      { label: '붙잡은 값', ask: 'make 안 c(100)를 안쪽 함수가 붙잡는다. get()이 70이 되려면 얼마를 빼야?', code: 'function make() { let c = 100; return function () { return c - ____ } }\nlet get = make()\nprint(get())', expect: '70', answer: '30', hint: '100 - 70' },
-      { label: '카운터', ask: 'n은 호출 사이 기억된다. next()를 세 번 불러 3이 나오려면 매번 얼마씩?', code: 'function counter() { let n = 0; return function () { n = n + ____; return n } }\nlet next = counter()\nnext()\nnext()\nprint(next())', expect: '3', answer: '1', hint: '1씩 → 1,2,3' },
-      { label: '숨은 잔액', ask: 'bank의 money(100)를 그대로 돌려주게 하려면 뭘 더할까? (그대로)', code: 'function bank() { let money = 100; return function () { return money + ____ } }\nlet balance = bank()\nprint(balance())', expect: '100', answer: '0', hint: '더 안 더함 = 0' },
-      { label: '붙잡아 더하기', ask: 'x(5)를 붙잡아 그대로 돌려주게 하려면 뭘 더할까?', code: 'function make() { let x = 5; return function () { return x + ____ } }\nprint(make()())', expect: '5', answer: '0', hint: '5 + 0' },
-      { label: '붙잡아 곱하기', ask: 'n(10)을 붙잡아 20을 돌려주게 하려면 몇을 곱할까?', code: 'function make() { let n = 10; return function () { return n * ____ } }\nprint(make()())', expect: '20', answer: '2', hint: '10 * 2' },
+      { label: '붙잡은 값', ask: 'make 안 c=100. get()이 c-30을 돌려주면?', code: 'function make() { let c = 100; return function () { return c - 30 } }\nlet get = make()\nprint(get() === ____)', expect: 'true', answer: '70', hint: '100 - 30' },
+      { label: '카운터', ask: 'n은 호출 사이 기억된다. next()를 세 번 부르면(매번 +1)?', code: 'function counter() { let n = 0; return function () { n = n + 1; return n } }\nlet next = counter()\nnext()\nnext()\nprint(next() === ____)', expect: 'true', answer: '3', hint: '1,2,3' },
+      { label: '숨은 잔액', ask: 'bank가 붙잡은 money를 그대로 돌려주면? (money=100)', code: 'function bank() { let money = 100; return function () { return money + 0 } }\nlet balance = bank()\nprint(balance() === ____)', expect: 'true', answer: '100', hint: '그대로 100' },
+      { label: '붙잡아 곱하기', ask: 'n=10을 붙잡아 2배를 돌려주면?', code: 'function make() { let n = 10; return function () { return n * 2 } }\nprint(make()() === ____)', expect: 'true', answer: '20', hint: '10 × 2' },
+      { label: '붙잡아 더하기', ask: 'v=3을 붙잡아 +4를 돌려주면?', code: 'function make() { let v = 3; return function () { return v + 4 } }\nprint(make()() === ____)', expect: 'true', answer: '7', hint: '3 + 4' },
     ],
   }
 
-  // ── 🧠 가비지 컬렉션(gc) : 참조를 끊으면 치워진다 ──
+  // ── 🧠 가비지 컬렉션(gc) : 참조를 끊거나 남은 참조로 접근한 결과 예측 ──
   E['gc'] = {
-    pattern: '🟢 쉬움 · 참조를 끊거나(=null) 남은 참조로 접근하기',
+    pattern: '🟢 쉬움 · 참조를 끊으면 무엇이 되나·남은 참조로 접근한 결과 예측',
     problems: [
-      { label: 'null로 끊기', ask: '큰 객체 a를 더 안 써서 GC가 치우게 — 참조를 끊으려면 뭘 담을까?', code: 'let a = { big: "data" }\na = ____\nprint(a)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
-      { label: '다른 참조', ask: 'data=null이어도 ref가 아직 가리켜 객체는 산다. ref로 v를 꺼내려면?', code: 'let data = { v: 1 }\nlet ref = data\ndata = null\nprint(ref.____)', expect: '1', answer: 'v', hint: 'ref.v' },
-      { label: '고아 만들기', ask: 'x가 가리키던 객체를 고아로 만들려면(참조 끊기) x에 뭘 담을까?', code: 'let x = { n: 5 }\nx = ____\nprint(x)', expect: 'null', answer: 'null', hint: 'null' },
-      { label: '원본 끊어도', ask: 'o=null이어도 r이 가리켜 산다. r로 v(9)를 꺼내려면?', code: 'let o = { v: 9 }\nlet r = o\no = null\nprint(r.____)', expect: '9', answer: 'v', hint: 'r.v' },
-      { label: '큰 데이터 비우기', ask: 'big을 GC 대상으로 만들려면 뭘 담을까?', code: 'let big = { data: 1 }\nbig = ____\nprint(big)', expect: 'null', answer: 'null', hint: 'null' },
+      { label: '참조 끊기', ask: 'a의 참조를 끊으면(비우면) a는?', code: 'let a = { big: "data" }\na = null\nprint(a === ____)', expect: 'true', answer: 'null', hint: '의도적 빈 값' },
+      { label: '다른 참조', ask: 'data를 비워도 ref가 아직 가리킨다. ref.v 는?', code: 'let data = { v: 1 }\nlet ref = data\ndata = null\nprint(ref.v === ____)', expect: 'true', answer: '1', hint: 'ref가 살림' },
+      { label: '고아 만들기', ask: 'x의 참조를 끊으면 x는?', code: 'let x = { n: 5 }\nx = null\nprint(x === ____)', expect: 'true', answer: 'null', hint: 'null' },
+      { label: '원본 끊어도', ask: 'o를 비워도 r이 가리킨다. r.v 는?', code: 'let o = { v: 9 }\nlet r = o\no = null\nprint(r.v === ____)', expect: 'true', answer: '9', hint: 'r이 살림' },
+      { label: '남은 참조', ask: 'a를 비워도 b가 가리킨다. b.n 은?', code: 'let a = { n: 1 }\nlet b = a\na = null\nprint(b.n === ____)', expect: 'true', answer: '1', hint: 'b가 살림' },
     ],
   }
 

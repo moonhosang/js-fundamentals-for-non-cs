@@ -269,39 +269,44 @@
     ],
   }
 
-  // ── 🧠 콜 스택(callstack) : 깊은 사슬·지역 스코프·조기 반환 ──
+  // ── 🧠 콜 스택(callstack) : 깊은 사슬·지역 스코프·조기 반환 예측 ──
   H['callstack'] = {
-    pattern: '🔴 어려움 · 깊은 호출 사슬·사슬 속 지역변수·조기 반환',
+    pattern: '🔴 어려움 · 깊은 호출 사슬·사슬 속 지역변수·조기 반환 결과 예측',
     problems: [
-      { label: '사슬 + 지역', ask: 'a는 지역 x(2)와 b()를 곱한다. a()가 10이 되려면 b는?', code: 'function a() { let x = 2; return b() * x }\nfunction b() { return ____ }\nprint(a())', expect: '10', answer: '5', hint: '5 * 2' },
-      { label: '조건 후 호출', ask: 'chk(1)은 b()를 부른다. 5가 되려면 b는?', code: 'function chk(n) { if (n > 0) return b(); return -1 }\nfunction b() { return ____ }\nprint(chk(1))', expect: '5', answer: '5', hint: 'b가 5' },
-      { label: '깊이 4', ask: 'a→b→c→d. a()가 8이 되려면 d는?', code: 'function a() { return b() }\nfunction b() { return c() }\nfunction c() { return d() }\nfunction d() { return ____ }\nprint(a())', expect: '8', answer: '8', hint: 'd가 8' },
-      { label: '중첩 2배', ask: 'd는 2배. d(d(?))가 12가 되려면 안쪽 인수는?', code: 'function d(n) { return n * 2 }\nprint(d(d(____)))', expect: '12', answer: '3', hint: '3→6→12' },
-      { label: '두 함수 합', ask: 'a()+b()+? 가 10이 되게 (a=3, b=4)', code: 'function a() { return 3 }\nfunction b() { return 4 }\nprint(a() + b() + ____)', expect: '10', answer: '3', hint: '3+4+3' },
+      { label: '사슬 + 지역', ask: 'a는 지역 x=2와 b() 곱, b()=5. a()는?', code: 'function a() { let x = 2; return b() * x }\nfunction b() { return 5 }\nprint(a() === ____)', expect: 'true', answer: '10', hint: '5 × 2' },
+      { label: '조건 후 호출', ask: 'chk(1)이 b() 부름, b()=5. chk(1)은?', code: 'function chk(n) { if (n > 0) return b(); return -1 }\nfunction b() { return 5 }\nprint(chk(1) === ____)', expect: 'true', answer: '5', hint: '1>0 → b()' },
+      { label: '깊이 4', ask: 'a→b→c→d, d()=8. a()는?', code: 'function a() { return b() }\nfunction b() { return c() }\nfunction c() { return d() }\nfunction d() { return 8 }\nprint(a() === ____)', expect: 'true', answer: '8', hint: 'd가 8' },
+      { label: '중첩 2배', ask: 'd=2배. d(d(3))은?', code: 'function d(n) { return n * 2 }\nprint(d(d(3)) === ____)', expect: 'true', answer: '12', hint: '3→6→12' },
+      { label: '두 함수 합', ask: 'a()=3, b()=4. a() + b() 은?', code: 'function a() { return 3 }\nfunction b() { return 4 }\nprint((a() + b()) === ____)', expect: 'true', answer: '7', hint: '3 + 4' },
     ],
   }
 
-  // ── 🧠 클로저(closure) : 인수 붙잡기·누적·독립 인스턴스 ──
+  // ── 🧠 클로저(closure) : 인수+붙잡기·누적·독립 인스턴스 예측 ──
   H['closure'] = {
-    pattern: '🔴 어려움 · 안쪽 인수+붙잡은 값·누적·인스턴스는 독립',
+    pattern: '🔴 어려움 · 안쪽 인수+붙잡은 값·누적·인스턴스는 독립 — 결과 예측',
     problems: [
-      { label: '인수+붙잡기', ask: 'adder(5)의 5를 붙잡고 y도 받는다. add5(3)이 8이 되게 빈칸에 y', code: 'function adder(x) { return function (y) { return x + ____ } }\nlet add5 = adder(5)\nprint(add5(3))', expect: '8', answer: 'y', hint: '5 + 3' },
-      { label: '3회 누적', ask: 'next를 세 번 불러 3이 나오게 매번 얼마씩 더할까?', code: 'function c() { let n = 0; return function () { return n = n + ____ } }\nlet next = c()\nnext()\nnext()\nprint(next())', expect: '3', answer: '1', hint: '1,2,3' },
-      { label: '독립 인스턴스', ask: 'a·b는 별개 카운터. a를 두 번 불러도 b()는 1. b()+? 가 1이 되게 빈칸에 0', code: 'function c() { let n = 0; return function () { n++; return n } }\nlet a = c()\nlet b = c()\na()\na()\nprint(b() + ____)', expect: '1', answer: '0', hint: 'b는 a와 독립 → 1' },
-      { label: '곱셈 팩토리', ask: 'mult(3)의 3을 붙잡는다. triple(4)가 12가 되게 빈칸에 n', code: 'function mult(n) { return function (x) { return x * ____ } }\nlet triple = mult(3)\nprint(triple(4))', expect: '12', answer: 'n', hint: 'x * n' },
-      { label: '누적 합', ask: 'add(10) 뒤 add(20)이 30이 되게 — 인수를 채워라.', code: 'function acc() { let sum = 0; return function (x) { sum = sum + x; return sum } }\nlet add = acc()\nadd(10)\nprint(add(____))', expect: '30', answer: '20', hint: '10 + 20' },
+      { label: '인수+붙잡기', ask: 'adder(5)는 5를 붙잡고 y도 받는다. add5(3)은?', code: 'function adder(x) { return function (y) { return x + y } }\nlet add5 = adder(5)\nprint(add5(3) === ____)', expect: 'true', answer: '8', hint: '5 + 3' },
+      { label: '3회 누적', ask: 'next를 세 번 부르면(매번 +1)?', code: 'function c() { let n = 0; return function () { return n = n + 1 } }\nlet next = c()\nnext()\nnext()\nprint(next() === ____)', expect: 'true', answer: '3', hint: '1,2,3' },
+      { label: '독립 인스턴스', ask: 'a·b는 별개 카운터. a를 두 번 불러도 b()는?', code: 'function c() { let n = 0; return function () { n++; return n } }\nlet a = c()\nlet b = c()\na()\na()\nprint(b() === ____)', expect: 'true', answer: '1', hint: 'b는 a와 독립 → 처음이라 1' },
+      { label: '곱셈 팩토리', ask: 'mult(3)은 3을 붙잡는다. triple(4)는?', code: 'function mult(n) { return function (x) { return x * n } }\nlet triple = mult(3)\nprint(triple(4) === ____)', expect: 'true', answer: '12', hint: '4 × 3' },
+      { label: '누적 합', ask: 'add(10) 뒤 add(20)은? (sum이 쌓인다)', code: 'function acc() { let sum = 0; return function (x) { sum = sum + x; return sum } }\nlet add = acc()\nadd(10)\nprint(add(20) === ____)', expect: 'true', answer: '30', hint: '10 + 20' },
     ],
   }
 
-  // ── 🧠 가비지 컬렉션(gc) : 참조 유지 vs 끊김·재대입 고아 ──
+  // ── 🧠 가비지 컬렉션(gc) : 참조가 남으면 산다·중첩 유지·재대입 고아 예측 ──
   H['gc'] = {
-    pattern: '🔴 어려움 · 참조가 남으면 산다·중첩 참조 유지·재대입 고아',
+    pattern: '🔴 어려움 · 참조가 남으면 산다·중첩 참조 유지·재대입 고아 결과 예측',
     problems: [
-      { label: '한 참조 남으면', ask: 'a=null이어도 b가 가리켜 산다. b.v(1)를 꺼내려면?', code: 'let a = { v: 1 }\nlet b = a\na = null\nprint(b.____)', expect: '1', answer: 'v', hint: 'b.v' },
-      { label: '둘 중 하나만', ask: 'x·y가 o를 가리킨다. x=null이어도 y로 n(9)을 꺼내려면?', code: 'let o = { n: 9 }\nlet x = o\nlet y = o\nx = null\nprint(y.____)', expect: '9', answer: 'n', hint: 'y가 아직 가리킴' },
-      { label: '배열 요소 참조', ask: 'r이 arr[0]을 붙잡았다. arr=null이어도 r.v(5)를 꺼내려면?', code: 'let arr = [{ v: 5 }]\nlet r = arr[0]\narr = null\nprint(r.____)', expect: '5', answer: 'v', hint: 'r이 그 객체를 가리킴' },
-      { label: '중첩 유지', ask: 'c가 root.child를 붙잡았다. root=null이어도 c.v(3)를 꺼내려면?', code: 'let root = { child: { v: 3 } }\nlet c = root.child\nroot = null\nprint(c.____)', expect: '3', answer: 'v', hint: 'c가 자식을 가리킴' },
-      { label: '재대입 고아', ask: 'x를 새 객체로 바꾸면 옛 것은 고아. 지금 x.n(2)을 꺼내려면?', code: 'let x = { n: 1 }\nx = { n: 2 }\nprint(x.____)', expect: '2', answer: 'n', hint: 'x는 이제 {n:2}' },
+      { label: '한 참조 남으면', ask: 'a를 비워도 b가 가리킨다. b.v 는?', code: 'let a = { v: 1 }\nlet b = a\na = null\nprint(b.v === ____)', expect: 'true', answer: '1', hint: 'b가 살림 → GC 안 함',
+        explain: 'GC(가비지 컬렉션)는 <b>아무도 안 가리키는 힙 객체만</b> 치운다. <code>a=null</code>로 a의 화살표를 끊어도 <b>b가 아직 그 객체를 가리키므로</b> 살아남는다. 마지막 참조까지 끊겨야 치워진다.', see: 'ref2', wiki: { label: '쓰레기 수집 (컴퓨터 과학)', url: 'https://ko.wikipedia.org/wiki/쓰레기_수집_(컴퓨터_과학)' },
+        mem: { title: 'a를 끊어도 b가 가리켜 객체는 산다', stackLabel: '📇 이름표 장부', code: ['let a = { v: 1 }', 'let b = a', 'a = null'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'v', value: '1' }] } }, note: 'a·b 둘 다 h1을 가리킨다(참조 2개).' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', value: 'null', bad: true }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'v', value: '1' }] } }, note: '<code>a=null</code> → a의 화살표는 끊김. 하지만 <b>b가 아직 h1을 가리켜 살아남는다</b>(GC 대상 아님).' },
+        ] } },
+      { label: '둘 중 하나만', ask: 'x·y가 같은 객체. x를 비워도 y.n 은?', code: 'let o = { n: 9 }\nlet x = o\nlet y = o\nx = null\nprint(y.n === ____)', expect: 'true', answer: '9', hint: 'y가 아직 가리킴' },
+      { label: '배열 요소 참조', ask: 'r이 arr[0]을 붙잡았다. arr을 비워도 r.v 는?', code: 'let arr = [{ v: 5 }]\nlet r = arr[0]\narr = null\nprint(r.v === ____)', expect: 'true', answer: '5', hint: 'r이 그 객체를 가리킴' },
+      { label: '중첩 유지', ask: 'c가 root.child를 붙잡았다. root을 비워도 c.v 는?', code: 'let root = { child: { v: 3 } }\nlet c = root.child\nroot = null\nprint(c.v === ____)', expect: 'true', answer: '3', hint: 'c가 자식을 가리킴' },
+      { label: '재대입 고아', ask: 'x를 새 객체로 바꾸면 지금 x.n 은?', code: 'let x = { n: 1 }\nx = { n: 2 }\nprint(x.n === ____)', expect: 'true', answer: '2', hint: 'x는 이제 {n:2}' },
     ],
   }
 
