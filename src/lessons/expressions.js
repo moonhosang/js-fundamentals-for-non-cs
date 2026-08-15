@@ -268,6 +268,23 @@
       <div class="card"><div class="file-label">🔬 축약: 2 + 3 > 4 && 10 / 2 === 5</div><div data-m="red-mix"></div></div>
       <div data-m="qz-mix"></div>
 
+      <h3 class="section-title">⑤ 축약 예시 10선 — ★5개는 당신의 예상을 깬다</h3>
+      <p class="section-desc">먼저 <b>머릿속으로 값을 예측</b>하고 ▶ 실행으로 확인하라. <b>★ 표시 5개</b>는 규칙을 알아도 대부분 틀린다 — 축약(왼쪽부터·우선순위·강제변환)이 만드는 함정이다. 몇 개나 맞혔나?</p>
+      <div class="card"><div class="file-label">🔬 10개를 예측하고 실행</div><div data-m="gallery"></div></div>
+
+      <div class="concept">
+        <p class="concept-lead">😲 예상을 깨는 5 — 인식 밖에 있던 규칙들</p>
+        <ul class="section-list">
+          <li>★ <code>3 &gt; 2 &gt; 1</code> → <b>false</b>: 왼쪽부터 <code>(3&gt;2)=true</code>, 그다음 <code>true &gt; 1</code>에서 <b>true가 숫자 1로 강제</b> → <code>1 &gt; 1 = false</code>. <b>비교는 사슬로 안 된다</b>(수학의 "2와 3 사이"가 아님).</li>
+          <li>★ <code>2 ** 3 ** 2</code> → <b>512</b>: 지수 <code>**</code>만 <b>오른쪽부터</b> → <code>3**2=9</code> 먼저, <code>2**9=512</code>. 다른 연산자는 왼쪽부터인데 <b>지수만 반대</b>(<code>(2**3)**2=64</code> 아님).</li>
+          <li>★ <code>typeof typeof 42</code> → <b>"string"</b>: 안쪽 <code>typeof 42</code>가 <b>"number"</b>(문자열)로 접히고, <code>typeof "number"</code> → <b>"string"</b>. typeof는 <b>항상 문자열</b>을 낳는다.</li>
+          <li>★ <code>"5" + 1</code> → <b>"51"</b> 인데 <code>"5" - 1</code> → <b>4</b>: 피연산자는 같은데 <b>+는 이어붙이고 −는 숫자로 강제</b>. 연산자마다 강제변환이 다르다.</li>
+          <li>★ <code>0.1 + 0.2</code> → <b>0.30000000000000004</b>: 컴퓨터는 소수를 <b>2진법</b>으로 저장해 딱 안 떨어진다. (그래서 돈은 <b>정수(원 단위)</b>로 계산!)</li>
+        </ul>
+      </div>
+      <div class="card"><div class="file-label">🔬 ★ 3 > 2 > 1 이 왜 false인지 — 한 겹씩</div><div data-m="red-chain"></div></div>
+      <div class="card"><div class="file-label">🔬 ★ 2 ** 3 ** 2 — 지수는 오른쪽부터</div><div data-m="red-exp"></div></div>
+
       ${nav('3-3', 4, '3-5')}
     `
     root.querySelector('[data-m="red2"]').append(ExprReduce({
@@ -323,6 +340,45 @@
       options: ['<code>3 > 4</code> (왼쪽부터)', '<code>2 + 3</code> (산수가 비교보다 먼저)', '<code>2 + 3 > 4</code> 통째로'],
       answer: 1,
       explain: '<b>산수(<code>+</code>)가 비교(<code>&gt;</code>)보다 우선순위가 높다</b> → <code>2+3=5</code> 먼저, 그다음 <code>5 &gt; 4 = true</code>. 문법 계층: 산수가 비교 규칙 안쪽에 있다.',
+    }))
+    root.querySelector('[data-m="gallery"]').append(Runner({
+      showBox: false,
+      code: [
+        '// ① 곱셈 둘 먼저(term)',
+        'print(2 * 3 + 4 * 5)              // 26',
+        '// ② 괄호 둘 — 각각 접힌 뒤 곱',
+        'print((2 + 3) * (4 - 1))          // 15',
+        '// ③ 인자 안 계산 먼저',
+        'print(Math.max(1, 2 * 3, 10 / 5)) // 6',
+        '// ④ 비교 둘 먼저, 그다음 &&',
+        'print(10 > 5 && 3 < 1)            // false',
+        '// ⑤ 메서드 호출(factor) 먼저',
+        'print("Hi, " + "bob".toUpperCase())  // "Hi, BOB"',
+        '',
+        '// ───── ★ 여기부터 예상을 깬다 ─────',
+        'print(3 > 2 > 1)          // ★ false?!  (사슬 비교 안 됨)',
+        'print(2 ** 3 ** 2)        // ★ 512?!    (지수는 오른쪽부터)',
+        'print(typeof typeof 42)   // ★ "string"?! (typeof는 문자열)',
+        'print("5" + 1, "5" - 1)   // ★ "51"  4  (+와 −가 다름)',
+        'print(0.1 + 0.2)          // ★ 0.30000000000000004?!',
+      ].join('\n'),
+    }))
+    root.querySelector('[data-m="red-chain"]').append(ExprReduce({
+      title: '3 > 2 > 1  (왜 false?)',
+      steps: [
+        { code: 'const r = 3 > 2 > 1', mark: '3 > 2', note: '비교도 <b>왼쪽부터</b> → <b>3 &gt; 2</b> 먼저. 이건 <b>true</b>.' },
+        { code: 'const r = true > 1', mark: 'true > 1', note: '이제 <b>true &gt; 1</b>. 비교에서 <b>true는 숫자 1로 강제</b>된다(2강 형변환).' },
+        { code: 'const r = 1 > 1', mark: '1 > 1', note: '<b>1 &gt; 1</b> 은 <b>false</b>(1은 1보다 크지 않다).' },
+        { code: 'const r = false', note: '그래서 <code>3 &gt; 2 &gt; 1</code> 은 <b>false</b>. 수학처럼 "2와 3 사이"로 읽히지 않는다 — <b>비교는 사슬이 안 된다</b>. (원했다면 <code>3 &gt; 2 && 2 &gt; 1</code>)' },
+      ],
+    }))
+    root.querySelector('[data-m="red-exp"]').append(ExprReduce({
+      title: '2 ** 3 ** 2  (지수는 오른쪽 결합)',
+      steps: [
+        { code: 'const r = 2 ** 3 ** 2', mark: '3 ** 2', note: '거의 모든 연산자는 왼쪽부터지만 <b>지수 <code>**</code>는 오른쪽부터</b>(오른쪽 결합) → 안쪽 <b>3 ** 2</b> 먼저.' },
+        { code: 'const r = 2 ** 9', mark: '2 ** 9', note: '<code>3 ** 2 = 9</code>. 이제 <b>2 ** 9</b>.' },
+        { code: 'const r = 512', note: '<code>2의 9제곱 = 512</code>. 만약 왼쪽부터 <code>(2**3)**2</code> 였다면 <b>64</b> — 지수만 방향이 반대라 결과가 크게 갈린다.' },
+      ],
     }))
     wireGoto(root)
   }
