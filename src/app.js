@@ -145,6 +145,7 @@
     checkMode: load('checkMode', 'study'),
     sidebarOpen: load('sidebarOpen', 'true') !== 'false',
     openChapters: new Set(CHAPTERS.map((_, i) => i)),
+    openSteps: new Set(), // 하위 단계(3-1…·5-1…)를 펼친 부모 강의 id. 기본 접힘.
   }
   const CHECK_MODES = [
     { key: 'study', label: '📖 진도', get: () => state.study, k: 'doneStudy' },
@@ -262,9 +263,17 @@
       if (open) {
         const sec = document.createElement('div')
         sec.className = 'toc-sections'
+        // 하위 단계(3-1…·5-1…) 아코디언: 부모 강의(3·5)를 펼쳤거나 지금 그 안에 있을 때만 하위를 보인다.
+        const curId = state.currentId
+        const curParent = (typeof curId === 'string' && /-\d+$/.test(curId)) ? curId.replace(/-\d+$/, '') : null
+        const stepOpen = (p) => state.openSteps.has(String(p)) || String(p) === String(curId) || String(p) === String(curParent)
+        const hasSteps = (id) => ch.items.some((it) => typeof it === 'string' && new RegExp('^' + id + '-\\d+$').test(it))
         ch.items.forEach((id) => {
           const l = byId[id]
           if (!l) return
+          // 접힌 부모의 하위 단계면 렌더하지 않는다.
+          const isSub = typeof id === 'string' && /-\d+$/.test(id) && byId[id.replace(/-\d+$/, '')]
+          if (isSub && !stepOpen(id.replace(/-\d+$/, ''))) return
           const row = document.createElement('div')
           row.className = 'toc-item-row'
           // 체크박스: 개념 서브내비(step)만 빼고 항상 표시. 각 항목은 '제 종류'의 집계셋에 연결
@@ -287,13 +296,23 @@
           }
           const btn = document.createElement('button')
           // 하위 항목(부모-번호 꼴, 예: 3-1)이면 부모 아래로 들여쓴다. 개념 단계(lesson)와 드릴(practice)은 색으로 구분.
-          const isSub = typeof id === 'string' && /-\d+$/.test(id) && byId[id.replace(/-\d+$/, '')]
           const subCls = isPracticeKind(l) ? ' toc-item-practice' : (isSub ? ' toc-item-substep' : '')
           btn.className = 'toc-item' + (id === state.currentId ? ' active' : '') + subCls
           const flag = hasContent(id) ? '' : '<span class="toc-flag" title="준비 중">🚧</span>'
           btn.innerHTML = `<span class="toc-item-title">${flag}${l.title}</span><span class="toc-item-sub">${l.subtitle}</span>`
           btn.onclick = () => go(id)
           row.append(btn)
+          // 하위 단계가 있는 부모 강의(3·5)엔 펼침/접기 토글을 단다.
+          if (hasSteps(id)) {
+            const open2 = stepOpen(id)
+            const chev = document.createElement('button')
+            chev.className = 'toc-step-toggle' + (open2 ? ' open' : '')
+            chev.textContent = '▸'
+            chev.title = open2 ? '하위 단계 접기' : '하위 단계 펼치기'
+            chev.setAttribute('aria-label', chev.title)
+            chev.onclick = (e) => { e.stopPropagation(); const k = String(id); state.openSteps.has(k) ? state.openSteps.delete(k) : state.openSteps.add(k); renderToc() }
+            row.append(chev)
+          }
           sec.append(row)
         })
         chDiv.append(sec)

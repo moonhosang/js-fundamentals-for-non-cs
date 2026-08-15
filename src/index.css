@@ -145,6 +145,10 @@ nav {
 /* 목차 항목 = 체크박스 + 이동 버튼 */
 .toc-item-row { display: flex; align-items: center; gap: 4px; }
 .toc-item-row .toc-item { flex: 1; min-width: 0; }
+/* 하위 단계 펼침/접기 토글 (부모 강의 3·5) */
+.toc-step-toggle { flex: none; background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 11px; line-height: 1; padding: 4px 6px; border-radius: 6px; transition: transform .15s, color .15s; }
+.toc-step-toggle:hover { color: #cbd5e1; background: rgba(255, 255, 255, 0.06); }
+.toc-step-toggle.open { transform: rotate(90deg); color: var(--brand); }
 .toc-check {
   flex: none;
   width: 15px;
