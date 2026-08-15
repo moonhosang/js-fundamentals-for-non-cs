@@ -259,9 +259,22 @@
       <div class="card"><div class="file-label">🔬 축약: score>=90 ? "A" : score>=80 ? "B" : "C"  (score=85)</div><div data-m="red-tern"></div></div>
       <div class="card"><div class="file-label">🔬 직접 바꿔 실행 — score를 95·75·50으로 바꿔 보라</div><div data-m="tern-run"></div></div>
 
-      <h3 class="section-title">③ if의 (조건)도 표현식 — 먼저 값으로 접힌다</h3>
-      <p class="section-desc"><code>if</code>는 <b>문</b>(값을 안 냄)이지만, 괄호 안 <b>(조건)은 표현식</b>이다. 그래서 <b>조건이 먼저 하나의 값(참/거짓)으로 접혀야</b> if가 어느 갈림길로 갈지 정한다. (3-1의 "식 vs 문"이 여기서 만난다.)</p>
+      <h3 class="section-title">③ if·while·for·switch의 (조건)도 전부 표현식 — 완전히 똑같이 접힌다</h3>
+      <p class="section-desc"><code>if</code>·<code>for</code>·<code>while</code>·<code>switch</code>는 <b>문</b>(값을 안 냄)이지만, 괄호 안 <b>(조건)은 표현식</b>이다. 그래서 <b>조건이 먼저 하나의 값으로 접혀야</b> 갈림길·반복 여부가 정해진다. (3-1의 "식 vs 문"이 여기서 만난다.)</p>
       <div class="card"><div class="file-label">🔬 축약: if (age >= 19 && hasTicket) { … }  (age=20, hasTicket=true)</div><div data-m="red-if"></div></div>
+
+      <span class="learn-tag">📎 반복·분기의 괄호 <code>(…)</code>은 전부 같은 '값 자리' — <b>여기서 배운 축약이 어디서나 완벽히 동일</b>하게 일어난다(새로 외울 것 0)</span>
+      <div class="card">
+        <div class="file-label">🧩 같은 자리, 같은 규칙 — 조건은 어디서나 표현식</div>
+        <div class="bnf">
+          <div class="bnf-rule">if&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="bnf-rec">(score >= 80)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 조건 → 참/거짓</span></div>
+          <div class="bnf-rule">while&nbsp;&nbsp;<span class="bnf-rec">(n < 10)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 조건 → 참/거짓 (매 반복 다시 접힘)</span></div>
+          <div class="bnf-rule">for&nbsp;&nbsp;&nbsp;&nbsp;(i = 0; <span class="bnf-rec">i &lt; 3</span>; i++)&nbsp;&nbsp;<span style="opacity:.65">← 가운데 → 참/거짓 (매 반복)</span></div>
+          <div class="bnf-rule">switch&nbsp;<span class="bnf-rec">(day % 7)</span>&nbsp; { … }&nbsp;&nbsp;<span style="opacity:.65">← 값 → 각 case와 === 비교</span></div>
+        </div>
+        <p class="section-desc" style="margin:8px 0 0">전부 <b>같은 축약</b>이다 — 산수·비교·논리·삼항·함수호출이 그 안에서 똑같이 접힌다. 문(if/for/switch)이 달라도 <b>(괄호 안)은 늘 표현식 하나</b>. 새 규칙이 아니라 <b>이미 배운 그 규칙</b>이다.</p>
+      </div>
+      <div class="card"><div class="file-label">🔬 조건이 값으로 접히는 걸 직접 — if·for·switch 자리</div><div data-m="cond-run"></div></div>
 
       <h3 class="section-title">④ 산수·비교·논리가 섞여도 — 우선순위 순으로</h3>
       <p class="section-desc">한 줄에 <b>산수(<code>+ / </code>) · 비교(<code>&gt; ===</code>) · 논리(<code>&amp;&amp;</code>)</b>가 다 섞여도 규칙은 하나 — <b>우선순위 높은 것부터</b> 접는다: <b>산수 → 비교 → 논리</b> 순. 실타래를 안쪽 매듭부터 푸는 것과 같다.</p>
@@ -279,7 +292,7 @@
           <li>★ <code>2 ** 3 ** 2</code> → <b>512</b>: 지수 <code>**</code>만 <b>오른쪽부터</b> → <code>3**2=9</code> 먼저, <code>2**9=512</code>. 다른 연산자는 왼쪽부터인데 <b>지수만 반대</b>(<code>(2**3)**2=64</code> 아님).</li>
           <li>★ <code>typeof typeof 42</code> → <b>"string"</b>: 안쪽 <code>typeof 42</code>가 <b>"number"</b>(문자열)로 접히고, <code>typeof "number"</code> → <b>"string"</b>. typeof는 <b>항상 문자열</b>을 낳는다.</li>
           <li>★ <code>"5" + 1</code> → <b>"51"</b> 인데 <code>"5" - 1</code> → <b>4</b>: 피연산자는 같은데 <b>+는 이어붙이고 −는 숫자로 강제</b>. 연산자마다 강제변환이 다르다.</li>
-          <li>★ <code>0.1 + 0.2</code> → <b>0.30000000000000004</b>: 컴퓨터는 소수를 <b>2진법</b>으로 저장해 딱 안 떨어진다. (그래서 돈은 <b>정수(원 단위)</b>로 계산!)</li>
+          <li>★ <code>1 + 2 + "3"</code> → <b>"33"</b>: <b>왼쪽부터</b> 접힌다 — <code>1+2=3</code> 먼저, 그다음 <code>3 + "3"</code>은 <b>글자를 만나 이어붙이기</b> → "33". (6도 "123"도 아니다)</li>
         </ul>
       </div>
       <div class="card"><div class="file-label">🔬 ★ 3 > 2 > 1 이 왜 false인지 — 한 겹씩</div><div data-m="red-chain"></div></div>
@@ -316,6 +329,19 @@
         '    : "F")            // 85 → "B"  (오른쪽 결합: else가 또 삼항)',
       ].join('\n'),
     }))
+    root.querySelector('[data-m="cond-run"]').append(Runner({
+      showBox: false,
+      code: [
+        'let score = 85, n = 5, day = 9',
+        '',
+        'print(score >= 80)   // true   ← if (…) · while (…) 의 그 조건 자리',
+        'print(n < 10)        // true   ← for (…; 조건; …) 가운데도 같은 자리',
+        'print(day % 7)       // 2      ← switch (…) 값도 표현식 → case 2: 와 === 비교',
+        '',
+        '// for의 조건은 매 반복 "다시" 접힌다 — i가 0,1,2 → true, 3 → false(종료)',
+        'for (let i = 0; i < 3; i++) print("i=" + i + " → " + (i < 3))',
+      ].join('\n'),
+    }))
     root.querySelector('[data-m="red-if"]').append(ExprReduce({
       title: 'if (age >= 19 && hasTicket) { 입장() }   // age = 20, hasTicket = true',
       steps: [
@@ -344,23 +370,17 @@
     root.querySelector('[data-m="gallery"]').append(Runner({
       showBox: false,
       code: [
-        '// ① 곱셈 둘 먼저(term)',
-        'print(2 * 3 + 4 * 5)              // 26',
-        '// ② 괄호 둘 — 각각 접힌 뒤 곱',
-        'print((2 + 3) * (4 - 1))          // 15',
-        '// ③ 인자 안 계산 먼저',
-        'print(Math.max(1, 2 * 3, 10 / 5)) // 6',
-        '// ④ 비교 둘 먼저, 그다음 &&',
+        'print(2 * 3 + 4 * 5)              // 26   (곱셈 먼저)',
+        'print((2 + 3) * (4 - 1))          // 15   (괄호 둘)',
+        'print(Math.max(1, 2 * 3, 10 / 5)) // 6    (인자 안 계산)',
         'print(10 > 5 && 3 < 1)            // false',
-        '// ⑤ 메서드 호출(factor) 먼저',
         'print("Hi, " + "bob".toUpperCase())  // "Hi, BOB"',
         '',
-        '// ───── ★ 여기부터 예상을 깬다 ─────',
-        'print(3 > 2 > 1)          // ★ false?!  (사슬 비교 안 됨)',
-        'print(2 ** 3 ** 2)        // ★ 512?!    (지수는 오른쪽부터)',
-        'print(typeof typeof 42)   // ★ "string"?! (typeof는 문자열)',
-        'print("5" + 1, "5" - 1)   // ★ "51"  4  (+와 −가 다름)',
-        'print(0.1 + 0.2)          // ★ 0.30000000000000004?!',
+        'print(3 > 2 > 1)         // ★ false   (사슬 비교 안 됨)',
+        'print(2 ** 3 ** 2)       // ★ 512     (지수 오른쪽부터)',
+        'print(typeof typeof 42)  // ★ "string"',
+        'print("5" + 1, "5" - 1)  // ★ "51"  4 (+와 −가 다름)',
+        'print(1 + 2 + "3")       // ★ "33"    (왼쪽부터, 글자 만나면 이어붙임)',
       ].join('\n'),
     }))
     root.querySelector('[data-m="red-chain"]').append(ExprReduce({
