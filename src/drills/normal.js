@@ -220,51 +220,51 @@
     ],
   }
 
-  // ── 🕸️ G1 그래프(graph) : 더 긴 경로·별칭 경로 ──
+  // ── 🕸️ G1 그래프(graph) : 더 긴 경로·경로로 변경 결과 예측 ──
   N['graph'] = {
-    pattern: '🟡 보통 · 더 긴 화살표 경로·별칭 경로로 변경',
+    pattern: '🟡 보통 · 더 긴 화살표 경로·경로로 바꾼 결과 예측',
     problems: [
-      { label: '두 단계', ask: 'a.b.c(5)를 꺼내려면 마지막 속성?', code: 'let a = { b: { c: 5 } }\nprint(a.b.____)', expect: '5', answer: 'c', hint: 'a.b.c' },
-      { label: '세 단계', ask: 'p.next.next.v(9)를 꺼내려면 마지막 속성?', code: 'let p = { next: { next: { v: 9 } } }\nprint(p.next.next.____)', expect: '9', answer: 'v', hint: 'p.next.next.v' },
-      { label: '경로로 변경', ask: 'y.ref는 x. y.ref.n을 7로 바꾸면 x.n은? 빈칸에 y.ref', code: 'let x = { n: 1 }\nlet y = { ref: x }\n____.n = 7\nprint(x.n)', expect: '7', answer: 'y.ref', hint: 'y.ref = x' },
-      { label: '리더 이름', ask: 't.leader(=p)의 이름을 꺼내려면?', code: 'let p = { name: "김" }\nlet t = { leader: p }\nprint(t.leader.____)', expect: '"김"', answer: 'name', hint: '.name' },
-      { label: '링크 값', ask: 'g.link.val(3)을 꺼내려면 마지막 속성?', code: 'let g = { link: { val: 3 } }\nprint(g.link.____)', expect: '3', answer: 'val', hint: 'g.link.val' },
+      { label: '두 단계', ask: 'a.b.c 는?', code: 'let a = { b: { c: 5 } }\nprint(a.b.c === ____)', expect: 'true', answer: '5', hint: 'a.b.c' },
+      { label: '세 단계', ask: 'p.next.next.v 는?', code: 'let p = { next: { next: { v: 9 } } }\nprint(p.next.next.v === ____)', expect: 'true', answer: '9', hint: 'p.next.next.v' },
+      { label: '경로로 변경', ask: 'y.ref는 x. y.ref.n=5 후 x.n은?', code: 'let x = { n: 1 }\nlet y = { ref: x }\ny.ref.n = 5\nprint(x.n === ____)', expect: 'true', answer: '5', hint: 'y.ref = x' },
+      { label: '링크 값', ask: 'g.link.val 은?', code: 'let g = { link: { val: 3 } }\nprint(g.link.val === ____)', expect: 'true', answer: '3', hint: 'g.link.val' },
+      { label: '데이터 값', ask: 'node.data.v 은?', code: 'let node = { data: { v: 8 } }\nprint(node.data.v === ____)', expect: 'true', answer: '8', hint: 'node.data.v' },
     ],
   }
 
-  // ── 🕸️ G2 친구 목록(friends) : 배열 속 객체 변형 ──
+  // ── 🕸️ G2 친구 목록(friends) : 배열 속 객체 값·공유 변경 예측 ──
   N['friends'] = {
-    pattern: '🟡 보통 · 배열 속 객체 별칭·인덱스 변형',
+    pattern: '🟡 보통 · 배열 속 객체의 값·별칭 변경 결과 예측',
     problems: [
-      { label: '두 번째 n', ask: 'ppl[1].n(2)을 꺼내려면 어떤 속성?', code: 'let ppl = [{ n: 1 }, { n: 2 }]\nprint(ppl[1].____)', expect: '2', answer: 'n', hint: 'ppl[1].n' },
-      { label: '이름', ask: 'list[0]의 이름("가")을 꺼내려면?', code: 'let list = [{ name: "가" }]\nprint(list[0].____)', expect: '"가"', answer: 'name', hint: 'list[0].name' },
-      { label: '배열 별칭', ask: 'arr[0]은 m과 같은 객체. arr[0].hp를 0으로 하면 m.hp는? 빈칸에 arr[0]', code: 'let m = { hp: 9 }\nlet arr = [m]\n____.hp = 0\nprint(m.hp)', expect: '0', answer: 'arr[0]', hint: 'arr[0] = m' },
-      { label: '첫 id', ask: 'u[0]의 id(5)를 꺼내려면?', code: 'let u = [{ id: 5 }, { id: 6 }]\nprint(u[0].____)', expect: '5', answer: 'id', hint: 'u[0].id' },
-      { label: '두 번째 item', ask: 'c[1]의 item("우유")을 꺼내려면?', code: 'let c = [{ item: "빵" }, { item: "우유" }]\nprint(c[1].____)', expect: '"우유"', answer: 'item', hint: 'c[1].item' },
+      { label: '두 번째 n', ask: 'ppl[1].n 은?', code: 'let ppl = [{ n: 1 }, { n: 2 }]\nprint(ppl[1].n === ____)', expect: 'true', answer: '2', hint: 'ppl[1].n' },
+      { label: '이름', ask: 'list[0].name 은?', code: 'let list = [{ name: "가" }]\nprint(list[0].name === "____")', expect: 'true', answer: '가', hint: 'list[0].name' },
+      { label: '배열 별칭', ask: 'arr[0]은 m과 같은 객체. arr[0].hp=0 후 m.hp는?', code: 'let m = { hp: 9 }\nlet arr = [m]\narr[0].hp = 0\nprint(m.hp === ____)', expect: 'true', answer: '0', hint: 'arr[0] = m' },
+      { label: '첫 id', ask: 'u[0].id 는?', code: 'let u = [{ id: 5 }, { id: 6 }]\nprint(u[0].id === ____)', expect: 'true', answer: '5', hint: 'u[0].id' },
+      { label: '두 번째 item', ask: 'c[1].item 은?', code: 'let c = [{ item: "빵" }, { item: "우유" }]\nprint(c[1].item === "____")', expect: 'true', answer: '우유', hint: 'c[1].item' },
     ],
   }
 
-  // ── 🕸️ G3 계통도(family) : 좌우·중첩 경로 ──
+  // ── 🕸️ G3 계통도(family) : 좌우·중첩 트리 경로 값 예측 ──
   N['family'] = {
-    pattern: '🟡 보통 · 좌우 자식·중첩 트리 경로',
+    pattern: '🟡 보통 · 좌우 자식·중첩 트리 경로 끝의 값을 예측',
     problems: [
-      { label: '엄마 이름', ask: 'me.mom의 이름("엄마")을 꺼내려면?', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.____)', expect: '"엄마"', answer: 'name', hint: 'me.mom.name' },
-      { label: '왼쪽', ask: 'r.left.val(5)에 닿으려면 r 다음 어떤 속성?', code: 'let r = { left: { val: 5 } }\nprint(r.____.val)', expect: '5', answer: 'left', hint: 'r.left.val' },
-      { label: '손자', ask: '2대 아래 손자 이름을 꺼내려면 마지막 속성?', code: 'let a = { child: { child: { name: "손자" } } }\nprint(a.child.child.____)', expect: '"손자"', answer: 'name', hint: '.name' },
-      { label: '오른쪽', ask: 'r.right.val(8)을 꺼내려면 마지막 속성?', code: 'let r = { right: { val: 8 } }\nprint(r.right.____)', expect: '8', answer: 'val', hint: 'r.right.val' },
-      { label: '노드 데이터', ask: 't.node.data(3)를 꺼내려면 마지막 속성?', code: 'let t = { node: { data: 3 } }\nprint(t.node.____)', expect: '3', answer: 'data', hint: 't.node.data' },
+      { label: '엄마 이름', ask: 'me.mom.name 은?', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.name === "____")', expect: 'true', answer: '엄마', hint: 'me.mom.name' },
+      { label: '왼쪽', ask: 'r.left.val 은?', code: 'let r = { left: { val: 5 } }\nprint(r.left.val === ____)', expect: 'true', answer: '5', hint: 'r.left.val' },
+      { label: '자식 이름', ask: 'p.child.name 은?', code: 'let p = { child: { name: "자식" } }\nprint(p.child.name === "____")', expect: 'true', answer: '자식', hint: 'p.child.name' },
+      { label: '오른쪽', ask: 'r.right.val 은?', code: 'let r = { right: { val: 8 } }\nprint(r.right.val === ____)', expect: 'true', answer: '8', hint: 'r.right.val' },
+      { label: '노드 데이터', ask: 't.node.data 은?', code: 'let t = { node: { data: 3 } }\nprint(t.node.data === ____)', expect: 'true', answer: '3', hint: 't.node.data' },
     ],
   }
 
-  // ── 🕸️ G4 순환(cycle) : 두 단계 순환 경로 ──
+  // ── 🕸️ G4 순환(cycle) : 순환 관계 한두 단계 경로 값 예측 ──
   N['cycle'] = {
-    pattern: '🟡 보통 · 순환 관계에서 한두 단계 경로',
+    pattern: '🟡 보통 · 순환 관계에서 한두 단계 따라간 값을 예측',
     problems: [
-      { label: 'a.to.v', ask: 'a.to(=b)의 v(5)를 꺼내려면?', code: 'let a = {}\nlet b = {}\na.to = b\nb.v = 5\nprint(a.to.____)', expect: '5', answer: 'v', hint: 'a.to = b' },
-      { label: 'x.p.id', ask: 'x.p(=y)의 id(2)를 꺼내려면?', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.p = y\nprint(x.p.____)', expect: '2', answer: 'id', hint: 'x.p = y' },
-      { label: '자기 순환', ask: 'n.self(=자기)의 v(7)를 꺼내려면?', code: 'let n = {}\nn.self = n\nn.v = 7\nprint(n.self.____)', expect: '7', answer: 'v', hint: 'self = n' },
-      { label: 'b.back.n', ask: 'b.back(=a)의 n(3)을 꺼내려면?', code: 'let a = { n: 3 }\nlet b = { back: a }\nprint(b.back.____)', expect: '3', answer: 'n', hint: 'b.back = a' },
-      { label: 'p.q.name', ask: 'p.q(=q)의 name("큐")을 꺼내려면?', code: 'let p = {}\nlet q = { name: "큐" }\np.q = q\nprint(p.q.____)', expect: '"큐"', answer: 'name', hint: 'p.q = q' },
+      { label: 'a.to.v', ask: 'a.to=b, b.v=5. a.to.v 는?', code: 'let a = {}\nlet b = {}\na.to = b\nb.v = 5\nprint(a.to.v === ____)', expect: 'true', answer: '5', hint: 'a.to = b' },
+      { label: 'x.p.id', ask: 'x.p=y, y.id=2. x.p.id 는?', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.p = y\nprint(x.p.id === ____)', expect: 'true', answer: '2', hint: 'x.p = y' },
+      { label: 'a.next.n', ask: 'a.next=b, b.n=4. a.next.n 는?', code: 'let a = {}\nlet b = { n: 4 }\na.next = b\nprint(a.next.n === ____)', expect: 'true', answer: '4', hint: 'a.next = b' },
+      { label: 'b.back.n', ask: 'b.back=a, a.n=3. b.back.n 는?', code: 'let a = { n: 3 }\nlet b = { back: a }\nprint(b.back.n === ____)', expect: 'true', answer: '3', hint: 'b.back = a' },
+      { label: '자기 순환', ask: 'node.self=node, node.id=9. node.self.id 는?', code: 'let node = { id: 9 }\nnode.self = node\nprint(node.self.id === ____)', expect: 'true', answer: '9', hint: 'self = node' },
     ],
   }
 

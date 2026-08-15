@@ -252,51 +252,56 @@
     ],
   }
 
-  // ── 🕸️ G1 그래프(graph) : 화살표 경로 따라가기 ──
+  // ── 🕸️ G1 그래프(graph) : 화살표 경로를 따라간 값·공유 효과를 예측 ──
   E['graph'] = {
-    pattern: '🟢 쉬움 · 화살표(참조)를 따라 경로로 값에 닿기',
+    pattern: '🟢 쉬움 · 화살표(참조)를 따라간 값·공유 노드의 변경 효과를 예측',
     problems: [
-      { label: 'me.friend로 바꾸면?', ask: 'me.friend는 효니를 가리킨다. me.friend.hair를 "숏컷"으로 바꾸면 효니 본인은? 빈칸에 me.friend를 넣고 ▶확인', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\n____.hair = "숏컷"\nprint(hyoni.hair)', expect: '"숏컷"', answer: 'me.friend', hint: 'me.friend = 효니(같은 사람)' },
-      { label: '화살표 따라', ask: 'a.next 안의 값 7을 꺼내려면 어떤 속성?', code: 'let a = { next: { val: 7 } }\nprint(a.next.____)', expect: '7', answer: 'val', hint: 'a.next.val' },
-      { label: 'y.ref로 바꾸면?', ask: 'y.ref는 x를 가리킨다. y.ref.n을 9로 바꾸면 x.n은? 빈칸에 y.ref를 넣고 ▶확인', code: 'let x = { n: 1 }\nlet y = { ref: x }\n____.n = 9\nprint(x.n)', expect: '9', answer: 'y.ref', hint: 'y.ref = x(같은 객체)' },
-      { label: '리더 이름', ask: 'team.leader(=p)의 이름을 꺼내려면?', code: 'let p = { name: "김" }\nlet team = { leader: p }\nprint(team.leader.____)', expect: '"김"', answer: 'name', hint: '.name' },
-      { label: '2중 중첩', ask: '2중 중첩 안의 v(3)를 꺼내려면?', code: 'let root = { child: { child: { v: 3 } } }\nprint(root.child.child.____)', expect: '3', answer: 'v', hint: '.v' },
+      { label: '효니를 바꾸면?', ask: 'me.friend는 효니를 가리킨다. me.friend.hair를 바꾸면 효니 본인은?', code: 'let hyoni = { hair: "긴머리" }\nlet me = { friend: hyoni }\nme.friend.hair = "숏컷"\nprint(hyoni.hair === "____")', expect: 'true', answer: '숏컷', hint: 'me.friend = 효니(같은 사람)',
+        explain: '<code>me.friend</code>는 <b>효니와 같은 힙 객체</b>를 가리킨다(참조). 그래서 <code>me.friend.hair</code>를 고치면 <b>효니.hair도 함께</b> 바뀐다 — 이름이 둘이어도 같은 사람.', see: 'ref2', wiki: { label: '객체 그래프', url: 'https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)' },
+        mem: { title: 'me.friend와 효니는 같은 객체 — 한쪽을 고치면 함께 바뀐다', stackLabel: '📇 이름표 장부', code: ['let hyoni = { hair: "긴머리" }', 'let me = { friend: hyoni }', 'me.friend.hair = "숏컷"'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'me', ref: 'h2' }] }], heap: { h1: { label: '효니', fields: [{ key: 'hair', value: '"긴머리"' }] }, h2: { fields: [{ key: 'friend', ref: 'h1' }] } }, note: 'me.friend가 <b>효니(h1)를 가리킨다</b>. hyoni·me.friend 둘 다 h1.' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'me', ref: 'h2' }] }], heap: { h1: { label: '효니', fields: [{ key: 'hair', value: '"숏컷"', bad: true }] }, h2: { fields: [{ key: 'friend', ref: 'h1' }] } }, note: '<code>me.friend.hair="숏컷"</code> → h1을 고침 → <b>hyoni.hair도 "숏컷"</b>.' },
+        ] } },
+      { label: '화살표 따라', ask: 'a.next.val 은?', code: 'let a = { next: { val: 7 } }\nprint(a.next.val === ____)', expect: 'true', answer: '7', hint: 'a.next.val' },
+      { label: 'y.ref로 바꾸면?', ask: 'y.ref는 x를 가리킨다. y.ref.n=9 후 x.n은?', code: 'let x = { n: 1 }\nlet y = { ref: x }\ny.ref.n = 9\nprint(x.n === ____)', expect: 'true', answer: '9', hint: 'y.ref = x(같은 객체)' },
+      { label: '리더 이름', ask: 'team.leader.name 은?', code: 'let p = { name: "김" }\nlet team = { leader: p }\nprint(team.leader.name === "____")', expect: 'true', answer: '김', hint: 'leader가 p' },
+      { label: '2중 중첩', ask: 'root.child.child.v 은?', code: 'let root = { child: { child: { v: 3 } } }\nprint(root.child.child.v === ____)', expect: 'true', answer: '3', hint: '끝까지 따라감' },
     ],
   }
 
-  // ── 🕸️ G2 친구 목록(friends) : 배열 안 사람 객체 ──
+  // ── 🕸️ G2 친구 목록(friends) : 배열 안 사람 객체의 값·공유 효과 예측 ──
   E['friends'] = {
-    pattern: '🟢 쉬움 · 배열 안 사람 객체에 닿는 경로',
+    pattern: '🟢 쉬움 · 배열 안 사람 객체의 값·공유 변경 효과를 예측',
     problems: [
-      { label: 'list[0]으로 바꾸면?', ask: 'list[0]은 minji와 같은 객체다. list[0].name을 "X"로 바꾸면 minji.name은? 빈칸에 list[0]을 넣고 ▶확인', code: 'let minji = { name: "민지" }\nlet list = [minji]\n____.name = "X"\nprint(minji.name)', expect: '"X"', answer: 'list[0]', hint: 'list[0] = minji(같은 객체)' },
-      { label: '두 번째 나이', ask: 'people의 두 번째 사람 나이(30)를 꺼내려면?', code: 'let people = [{ age: 20 }, { age: 30 }]\nprint(people[1].____)', expect: '30', answer: 'age', hint: '.age' },
-      { label: 'arr[0]으로 바꾸면?', ask: 'arr[0]은 a와 같은 객체다. arr[0].hp를 50으로 바꾸면 a.hp는? 빈칸에 arr[0]을 넣고 ▶확인', code: 'let a = { hp: 100 }\nlet arr = [a]\n____.hp = 50\nprint(a.hp)', expect: '50', answer: 'arr[0]', hint: 'arr[0] = a(같은 객체)' },
-      { label: 'id 찾기', ask: 'id가 2인 사람은 몇 번째? (0부터)', code: 'let users = [{ id: 1 }, { id: 2 }]\nprint(users[____].id)', expect: '2', answer: '1', hint: '두 번째 = 1' },
-      { label: '항목', ask: 'cart 0번 객체의 item을 꺼내려면?', code: 'let cart = [{ item: "빵" }]\nprint(cart[0].____)', expect: '"빵"', answer: 'item', hint: '.item' },
+      { label: 'list[0]으로 바꾸면?', ask: 'list[0]은 minji와 같은 객체다. list[0].name을 바꾸면 minji.name은?', code: 'let minji = { name: "민지" }\nlet list = [minji]\nlist[0].name = "X"\nprint(minji.name === "____")', expect: 'true', answer: 'X', hint: 'list[0] = minji(같은 객체)' },
+      { label: '두 번째 나이', ask: 'people[1].age 는?', code: 'let people = [{ age: 20 }, { age: 30 }]\nprint(people[1].age === ____)', expect: 'true', answer: '30', hint: '두 번째 사람' },
+      { label: 'arr[0]으로 바꾸면?', ask: 'arr[0]은 a와 같은 객체. arr[0].hp=50 후 a.hp는?', code: 'let a = { hp: 100 }\nlet arr = [a]\narr[0].hp = 50\nprint(a.hp === ____)', expect: 'true', answer: '50', hint: 'arr[0] = a(같은 객체)' },
+      { label: '두 번째 id', ask: 'users[1].id 는?', code: 'let users = [{ id: 1 }, { id: 2 }]\nprint(users[1].id === ____)', expect: 'true', answer: '2', hint: '두 번째' },
+      { label: '항목', ask: 'cart[0].item 은?', code: 'let cart = [{ item: "빵" }]\nprint(cart[0].item === "____")', expect: 'true', answer: '빵', hint: '.item' },
     ],
   }
 
-  // ── 🕸️ G3 계통도(family) : 트리 경로 ──
+  // ── 🕸️ G3 계통도(family) : 트리 경로 끝의 값을 예측 ──
   E['family'] = {
-    pattern: '🟢 쉬움 · 트리에서 원하는 사람/값에 닿는 경로',
+    pattern: '🟢 쉬움 · 트리 경로를 따라간 끝의 값을 예측',
     problems: [
-      { label: '할머니', ask: 'me → 엄마 → 할머니. 할머니 이름에 닿으려면 me.parent 다음 어떤 속성?', code: 'let grandma = { name: "할머니" }\nlet mom = { parent: grandma }\nlet me = { parent: mom }\nprint(me.parent.____.name)', expect: '"할머니"', answer: 'parent', hint: '엄마의 parent = 할머니' },
-      { label: '손자', ask: '2대 아래 손자 이름을 꺼내려면?', code: 'let a = { child: { child: { name: "손자" } } }\nprint(a.child.child.____)', expect: '"손자"', answer: 'name', hint: '.name' },
-      { label: '왼쪽', ask: 'root의 왼쪽(left) 안 val을 꺼내려면 어떤 속성?', code: 'let root = { left: { val: 5 } }\nprint(root.____.val)', expect: '5', answer: 'left', hint: '.left' },
-      { label: '엄마 이름', ask: 'me.mom의 이름을 꺼내려면?', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.____)', expect: '"엄마"', answer: 'name', hint: '.name' },
-      { label: '깊은 데이터', ask: 'tree.node 다음 한 단계 더 들어가 data에 닿으려면?', code: 'let tree = { node: { node: { data: 7 } } }\nprint(tree.node.____.data)', expect: '7', answer: 'node', hint: 'node를 한 번 더' },
+      { label: '2대 위', ask: 'me.parent.parent.name 은? (2대 위)', code: 'let grandma = { name: "할머니" }\nlet mom = { parent: grandma }\nlet me = { parent: mom }\nprint(me.parent.parent.name === "____")', expect: 'true', answer: '할머니', hint: '엄마의 parent' },
+      { label: '2대 아래', ask: 'a.child.child.name 은?', code: 'let a = { child: { child: { name: "손자" } } }\nprint(a.child.child.name === "____")', expect: 'true', answer: '손자', hint: '자식의 자식' },
+      { label: '왼쪽', ask: 'root.left.val 은?', code: 'let root = { left: { val: 5 } }\nprint(root.left.val === ____)', expect: 'true', answer: '5', hint: 'root.left.val' },
+      { label: '엄마 이름', ask: 'me.mom.name 은?', code: 'let me = { mom: { name: "엄마" } }\nprint(me.mom.name === "____")', expect: 'true', answer: '엄마', hint: 'me.mom.name' },
+      { label: '깊은 데이터', ask: 'tree.node.node.data 은?', code: 'let tree = { node: { node: { data: 7 } } }\nprint(tree.node.node.data === ____)', expect: 'true', answer: '7', hint: 'node를 두 번' },
     ],
   }
 
-  // ── 🕸️ G4 순환(cycle) : 서로 가리켜도 경로로 도달 ──
+  // ── 🕸️ G4 순환(cycle) : 순환 경로를 따라간 값을 예측 ──
   E['cycle'] = {
-    pattern: '🟢 쉬움 · 순환(서로 가리킴)에서도 경로를 따라가면 도달',
+    pattern: '🟢 쉬움 · 순환(서로 가리킴)에서도 경로를 따라간 값을 예측',
     problems: [
-      { label: '왕복', ask: 'a.to(=b)의 val을 꺼내려면?', code: 'let a = {}\nlet b = {}\na.to = b\nb.to = a\nb.val = 9\nprint(a.to.____)', expect: '9', answer: 'val', hint: 'a.to = b' },
-      { label: '서로 가리킴', ask: 'x.peer(=y)의 id를 꺼내려면?', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.peer = y\ny.peer = x\nprint(x.peer.____)', expect: '2', answer: 'id', hint: 'x.peer = y' },
-      { label: '자기 순환', ask: 'node.self(=자기 자신)의 v를 꺼내려면?', code: 'let node = {}\nnode.self = node\nnode.v = 7\nprint(node.self.____)', expect: '7', answer: 'v', hint: 'self = node' },
-      { label: '앞뒤 연결', ask: 'b.back(=a)의 n을 꺼내려면?', code: 'let a = { n: 3 }\nlet b = { back: a }\na.fwd = b\nprint(b.back.____)', expect: '3', answer: 'n', hint: 'b.back = a' },
-      { label: '큐 이름', ask: 'p.q(=q)의 name을 꺼내려면?', code: 'let p = {}\nlet q = {}\np.q = q\nq.p = p\nq.name = "큐"\nprint(p.q.____)', expect: '"큐"', answer: 'name', hint: 'p.q = q' },
+      { label: '왕복', ask: 'a.to=b, b.to=a, b.val=9. a.to.val 은?', code: 'let a = {}\nlet b = {}\na.to = b\nb.to = a\nb.val = 9\nprint(a.to.val === ____)', expect: 'true', answer: '9', hint: 'a.to = b' },
+      { label: '서로 가리킴', ask: 'x.peer=y, y.peer=x. x.peer.id 는? (y.id=2)', code: 'let x = { id: 1 }\nlet y = { id: 2 }\nx.peer = y\ny.peer = x\nprint(x.peer.id === ____)', expect: 'true', answer: '2', hint: 'x.peer = y' },
+      { label: '자기 순환', ask: 'node.self=node, node.v=7. node.self.v 는?', code: 'let node = {}\nnode.self = node\nnode.v = 7\nprint(node.self.v === ____)', expect: 'true', answer: '7', hint: 'self = node' },
+      { label: '앞뒤 연결', ask: 'b.back=a, a.n=3. b.back.n 은?', code: 'let a = { n: 3 }\nlet b = { back: a }\nprint(b.back.n === ____)', expect: 'true', answer: '3', hint: 'b.back = a' },
+      { label: '큐 이름', ask: 'p.q=q, q.name="큐". p.q.name 은?', code: 'let p = {}\nlet q = { name: "큐" }\np.q = q\nprint(p.q.name === "____")', expect: 'true', answer: '큐', hint: 'p.q = q' },
     ],
   }
 
