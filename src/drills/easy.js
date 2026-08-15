@@ -16,15 +16,15 @@
     ],
   }
 
-  // ── 2강 · 계산과 문자열 : 템플릿 리터럴 ${변수} ──
+  // ── 2강 · 계산과 문자열 : + 와 템플릿의 결과를 예측 ──
   E['2'] = {
-    pattern: '🟢 쉬움 · 템플릿 `...${____}...` 자리에 ${변수} 넣기 반복',
+    pattern: '🟢 쉬움 · 이어붙이기·템플릿의 결과를 스스로 예측',
     problems: [
-      { label: '안녕 ${name}', ask: 'name(="민지")을 넣어 "안녕, 민지님"이 나오게.', code: 'let name = "민지"\nprint(`안녕, ____님`)', expect: '"안녕, 민지님"', answer: '${name}', hint: '자리에 넣을 땐 ${이름}' },
-      { label: '여기는 ${city}', ask: 'city(="서울")를 넣어 "여기는 서울 입니다"가 나오게.', code: 'let city = "서울"\nprint(`여기는 ____ 입니다`)', expect: '"여기는 서울 입니다"', answer: '${city}', hint: '${city}' },
-      { label: '장바구니 ${count}', ask: 'count(=3)를 넣어 "장바구니에 3개"가 나오게.', code: 'let count = 3\nprint(`장바구니에 ____개`)', expect: '"장바구니에 3개"', answer: '${count}', hint: '숫자도 ${ } 안에 그대로' },
-      { label: '가격 ${price}', ask: 'price(=5000)를 넣어 "가격: 5000원"이 나오게.', code: 'let price = 5000\nprint(`가격: ____원`)', expect: '"가격: 5000원"', answer: '${price}', hint: '${price}' },
-      { label: '${user}님 환영', ask: 'user(="지훈")를 넣어 "지훈님 환영해요"가 나오게.', code: 'let user = "지훈"\nprint(`____님 환영해요`)', expect: '"지훈님 환영해요"', answer: '${user}', hint: '문장 맨 앞에도 ${ }' },
+      { label: '숫자 덧셈', ask: '3 + 4 는?', code: 'print((3 + 4) === ____)', expect: 'true', answer: '7', hint: '둘 다 숫자 → 계산' },
+      { label: '글자+숫자', ask: '"3" + 4 는? (글자+숫자)', code: 'print(("3" + 4) === "____")', expect: 'true', answer: '34', hint: '글자로 이어붙임 → "34"' },
+      { label: '글자+글자', ask: '"가" + "나" 는?', code: 'print(("가" + "나") === "____")', expect: 'true', answer: '가나', hint: '이어붙이기' },
+      { label: '템플릿', ask: 'n이 5일 때 `${n}점` 은?', code: 'let n = 5\nprint((`${n}점`) === "____")', expect: 'true', answer: '5점', hint: '${n} 자리에 5' },
+      { label: '두 글자', ask: '"ab" + "cd" 는?', code: 'print(("ab" + "cd") === "____")', expect: 'true', answer: 'abcd', hint: '이어붙이기' },
     ],
   }
 
@@ -52,15 +52,15 @@
     ],
   }
 
-  // ── 5강 · 함수 : 정의·호출·인수·return 기본 ──
+  // ── 5강 · 함수 : 함수의 반환값을 예측 ──
   E['5'] = {
-    pattern: '🟢 쉬움 · 함수 정의·호출·인수·return 기본 반복',
+    pattern: '🟢 쉬움 · 함수를 부르면 무엇이 돌아오는지 예측',
     problems: [
-      { label: '정의 키워드', ask: '함수를 만드는 키워드는? 빈칸을 채우세요.', code: '____ hi() { return 7 }\nprint(hi())', expect: '7', answer: 'function', hint: '함수 정의 = function' },
-      { label: '호출의 ( )', ask: '함수를 실행(호출)하려면 이름 뒤에 뭘 붙이나?', code: 'function hi() { return "야" }\nprint(hi____)', expect: '"야"', answer: '()', hint: '이름() 로 부른다' },
-      { label: '인수 넣기', ask: 'dbl에 값을 넣어 10이 나오게. 무슨 값?', code: 'function dbl(n) { return n * 2 }\nprint(dbl(____))', expect: '10', answer: '5', hint: 'n*2=10이면 n은?' },
-      { label: 'return', ask: '결과를 돌려주는 키워드는? (없으면 undefined)', code: 'function add(a, b) { ____ a + b }\nprint(add(2, 3))', expect: '5', answer: 'return', hint: '값을 돌려줌 = return' },
-      { label: '매개변수 쓰기', ask: '받은 name을 인사말에 넣으세요.', code: 'function g(name) { return "hi " + ____ }\nprint(g("z"))', expect: '"hi z"', answer: 'name', hint: '매개변수 이름 그대로' },
+      { label: '두 인수 합', ask: 'add는 두 인수를 더한다. add(2, 3)은?', code: 'function add(a, b) { return a + b }\nprint(add(2, 3) === ____)', expect: 'true', answer: '5', hint: '2 + 3' },
+      { label: '2배', ask: 'dbl은 2배. dbl(4)는?', code: 'function dbl(n) { return n * 2 }\nprint(dbl(4) === ____)', expect: 'true', answer: '8', hint: '4 × 2' },
+      { label: '문자 반환', ask: 'greet는 이름에 "님"을 붙인다. greet("z")는?', code: 'function greet(n) { return n + "님" }\nprint(greet("z") === "____")', expect: 'true', answer: 'z님', hint: '"z" + "님"' },
+      { label: '제곱', ask: 'sq는 제곱. sq(5)는?', code: 'function sq(x) { return x * x }\nprint(sq(5) === ____)', expect: 'true', answer: '25', hint: '5 × 5' },
+      { label: 'return 없으면', ask: 'return이 없는 함수는 무엇을 돌려주나?', code: 'function f() { let x = 1 }\nprint(f() === ____)', expect: 'true', answer: 'undefined', hint: '돌려줄 게 없으면 undefined' },
     ],
   }
 
@@ -76,15 +76,15 @@
     ],
   }
 
-  // ── 7강 · 반복과 map : for·map·filter·reduce 기본 ──
+  // ── 7강 · 반복과 map : map·filter·reduce의 결과를 예측 ──
   E['7'] = {
-    pattern: '🟢 쉬움 · for·map·filter·reduce 기본형 반복',
+    pattern: '🟢 쉬움 · map·filter·reduce·forEach의 결과를 스스로 예측',
     problems: [
-      { label: 'for 조건', ask: '배열을 끝까지 훑으려면 i는 무엇보다 작아야 할까? (개수)', code: 'let a = [1, 2, 3]\nfor (let i = 0; i < a.____; i++) { print(a[i]) }', expect: '1\n2\n3', answer: 'length', hint: '개수 = .length' },
-      { label: 'map ×2', ask: '각 요소를 2배로 만들어 [2,4,6]이 되게.', code: 'let n = [1, 2, 3]\nlet d = n.map(function (x) { return x * ____ })\nprint(d)', expect: '[2,4,6]', answer: '2', hint: 'x * 2' },
-      { label: 'map +1', ask: '각 요소에 1을 더해 [2,3,4]가 되게 — return에 무엇을?', code: 'let n = [1, 2, 3]\nlet d = n.map(function (x) { return ____ })\nprint(d)', expect: '[2,3,4]', answer: 'x + 1', hint: 'x + 1' },
-      { label: 'filter >2', ask: '2보다 큰 것만 남겨 [3,4]가 되게.', code: 'let n = [1, 2, 3, 4]\nlet r = n.filter(function (x) { return x > ____ })\nprint(r)', expect: '[3,4]', answer: '2', hint: 'x > 2' },
-      { label: 'reduce 합', ask: '누적값 a에 b를 더해 합계 60이 되게 — 무슨 연산?', code: 'let n = [10, 20, 30]\nlet s = n.reduce(function (a, b) { return a ____ b }, 0)\nprint(s)', expect: '60', answer: '+', hint: '더하기' },
+      { label: 'map 첫 요소', ask: '각 요소를 2배 한 배열의 첫 요소는?', code: 'print([1, 2, 3].map(x => x * 2)[0] === ____)', expect: 'true', answer: '2', hint: '1 × 2' },
+      { label: 'map 마지막', ask: '각 요소에 +1 한 배열의 마지막 요소는?', code: 'print([1, 2, 3].map(x => x + 1)[2] === ____)', expect: 'true', answer: '4', hint: '3 + 1' },
+      { label: 'filter 개수', ask: '2보다 큰 것만 거른 배열의 개수는?', code: 'print([1, 2, 3, 4].filter(x => x > 2).length === ____)', expect: 'true', answer: '2', hint: '3,4 → 2개' },
+      { label: 'reduce 합', ask: '[10,20,30] 을 다 더하면?', code: 'print([10, 20, 30].reduce((a, b) => a + b, 0) === ____)', expect: 'true', answer: '60', hint: '10+20+30' },
+      { label: 'forEach 합', ask: 'forEach로 sum에 다 더하면?', code: 'let sum = 0\nlet nums = [1, 2, 3]\nnums.forEach(x => sum = sum + x)\nprint(sum === ____)', expect: 'true', answer: '6', hint: '1+2+3' },
     ],
   }
 

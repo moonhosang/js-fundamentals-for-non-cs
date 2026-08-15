@@ -16,15 +16,15 @@
     ],
   }
 
-  // ── 2강 · 계산과 문자열 : 템플릿 나머지 + 이어붙이기 ──
+  // ── 2강 · 계산과 문자열 : 왼쪽부터 결합·문자열 메서드 예측 ──
   N['2'] = {
-    pattern: '🟡 보통 · 템플릿에 숫자·문장 앞자리 넣기 변형',
+    pattern: '🟡 보통 · 왼쪽부터 결합·length·템플릿 계산·대문자 예측',
     problems: [
-      { label: '오늘의 과일 ${fruit}', ask: 'fruit(="사과")를 넣어 "오늘의 과일: 사과"가 나오게.', code: 'let fruit = "사과"\nprint(`오늘의 과일: ____`)', expect: '"오늘의 과일: 사과"', answer: '${fruit}', hint: '${fruit}' },
-      { label: '점수 ${score}', ask: 'score(=95)를 넣어 "점수는 95점"이 나오게.', code: 'let score = 95\nprint(`점수는 ____점`)', expect: '"점수는 95점"', answer: '${score}', hint: '숫자도 ${ } 안에' },
-      { label: '${team}팀', ask: 'team(="파랑")을 넣어 "파랑팀 화이팅"이 나오게.', code: 'let team = "파랑"\nprint(`____팀 화이팅`)', expect: '"파랑팀 화이팅"', answer: '${team}', hint: '문장 맨 앞에도 ${ }' },
-      { label: '남은 자리 ${seat}', ask: 'seat(=7)을 넣어 "남은 자리 7개"가 나오게.', code: 'let seat = 7\nprint(`남은 자리 ____개`)', expect: '"남은 자리 7개"', answer: '${seat}', hint: '${seat}' },
-      { label: '${who} 로그인', ask: 'who(="관리자")를 넣어 "관리자님이 로그인"이 나오게.', code: 'let who = "관리자"\nprint(`____님이 로그인`)', expect: '"관리자님이 로그인"', answer: '${who}', hint: '문장 맨 앞에도 ${ }' },
+      { label: '왼쪽부터', ask: '1 + 2 + "3" 는? (왼쪽부터 접힌다)', code: 'print((1 + 2 + "3") === "____")', expect: 'true', answer: '33', hint: '1+2=3 → 3+"3"="33"' },
+      { label: '첫 만남이 글자', ask: '"3" + 2 + 1 는? (첫 만남이 글자면)', code: 'print(("3" + 2 + 1) === "____")', expect: 'true', answer: '321', hint: '"3"+2="32", +1="321"' },
+      { label: '글자 수', ask: '"abc" 의 글자 수는?', code: 'print(("abc".length) === ____)', expect: 'true', answer: '3', hint: '.length' },
+      { label: '템플릿 계산', ask: 'a=2, b=3일 때 `합 ${a + b}` 은?', code: 'let a = 2\nlet b = 3\nprint((`합 ${a + b}`) === "____")', expect: 'true', answer: '합 5', hint: '${a+b}=5' },
+      { label: '대문자', ask: '"hi".toUpperCase() 는?', code: 'print(("hi".toUpperCase()) === "____")', expect: 'true', answer: 'HI', hint: '전부 대문자' },
     ],
   }
 
@@ -52,15 +52,15 @@
     ],
   }
 
-  // ── 5강 · 함수 : 반환 담기·화살표·여러 인수·전역 ──
+  // ── 5강 · 함수 : 중첩 호출·화살표·조건 반환·전역 참조 예측 ──
   N['5'] = {
-    pattern: '🟡 보통 · 반환값 담기·화살표·여러 인수·전역 참조',
+    pattern: '🟡 보통 · 중첩 호출·화살표·조건 반환·전역 참조 결과 예측',
     problems: [
-      { label: '반환값 담기', ask: 'sq(4)의 결과를 r에 담으세요. 무슨 함수를 부르나?', code: 'function sq(x) { return x * x }\nlet r = ____(4)\nprint(r)', expect: '16', answer: 'sq', hint: 'sq를 호출' },
-      { label: 'return 없으면', ask: 'x*2를 돌려주도록 빈칸을. (없으면 undefined)', code: 'function f(x) { ____ x * 2 }\nprint(f(3))', expect: '6', answer: 'return', hint: '돌려주려면 return' },
-      { label: '화살표 함수', ask: '화살표 함수로 n의 2배. 연산자는?', code: 'const dbl = (n) => n ____ 2\nprint(dbl(6))', expect: '12', answer: '*', hint: '2배 = 곱하기' },
-      { label: '두 인수', ask: 'add(4, ?)가 10이 되게 두 번째 인수를 채우세요.', code: 'function add(a, b) { return a + b }\nprint(add(4, ____))', expect: '10', answer: '6', hint: '4 + ? = 10' },
-      { label: '전역 쓰기', ask: '함수가 전역 base를 더한다. add5(?)가 15가 되게.', code: 'let base = 10\nfunction add5(n) { return n + base }\nprint(add5(____))', expect: '15', answer: '5', hint: 'n + 10 = 15' },
+      { label: '중첩 호출', ask: 'twice는 2배. twice(twice(3))은?', code: 'function twice(n) { return n * 2 }\nprint(twice(twice(3)) === ____)', expect: 'true', answer: '12', hint: '3→6→12' },
+      { label: '화살표', ask: '화살표 함수 dbl. dbl(6)은?', code: 'const dbl = n => n * 2\nprint(dbl(6) === ____)', expect: 'true', answer: '12', hint: '6 × 2' },
+      { label: '세금 계산', ask: 'tax는 10%를 더한다. tax(100)은?', code: 'function tax(p) { return p + p * 0.1 }\nprint(tax(100) === ____)', expect: 'true', answer: '110', hint: '100 + 10' },
+      { label: '조건 반환', ask: 'sign은 양수면 "+", 아니면 "-". sign(-2)는?', code: 'function sign(n) { return n > 0 ? "+" : "-" }\nprint(sign(-2) === "____")', expect: 'true', answer: '-', hint: '-2는 양수 아님' },
+      { label: '전역 참조', ask: 'base=10을 더하는 함수. addBase(5)는?', code: 'let base = 10\nfunction addBase(n) { return n + base }\nprint(addBase(5) === ____)', expect: 'true', answer: '15', hint: '5 + 10' },
     ],
   }
 
@@ -76,15 +76,15 @@
     ],
   }
 
-  // ── 7강 · 반복과 map : forEach·map원본·짝수·reduce곱·메서드 ──
+  // ── 7강 · 반복과 map : 원본 불변·짝수 개수·곱 누적·체이닝 예측 ──
   N['7'] = {
-    pattern: '🟡 보통 · forEach 누적·map은 원본 그대로·짝수 filter·reduce 곱',
+    pattern: '🟡 보통 · map은 원본 불변·짝수 개수·곱 누적·체이닝 결과 예측',
     problems: [
-      { label: 'forEach 합', ask: 'sum에 각 x를 더해 6이 되게 — 무슨 연산?', code: 'let nums = [1, 2, 3]\nlet sum = 0\nnums.forEach(function (x) { sum = sum ____ x })\nprint(sum)', expect: '6', answer: '+', hint: 'sum + x' },
-      { label: 'map 원본', ask: 'map을 써도 원본 n의 개수는 그대로 3. 개수를 꺼내려면?', code: 'let n = [1, 2, 3]\nn.map(function (x) { return x * 2 })\nprint(n.____)', expect: '3', answer: 'length', hint: 'map은 원본 안 바꿈' },
-      { label: 'filter 짝수', ask: '짝수만 남기려면 나머지가 무엇과 같아야? [2,4,6]', code: 'let n = [1, 2, 3, 4, 5, 6]\nlet r = n.filter(function (x) { return x % 2 === ____ })\nprint(r)', expect: '[2,4,6]', answer: '0', hint: '짝수 = 나머지 0' },
-      { label: 'reduce 곱', ask: '다 곱해서 24가 되게 — 시작값은? (곱셈의 시작)', code: 'let n = [2, 3, 4]\nlet p = n.reduce(function (a, b) { return a * b }, ____)\nprint(p)', expect: '24', answer: '1', hint: '곱셈 시작값 = 1' },
-      { label: 'map 메서드', ask: '각 글자를 대문자로 바꿔 ["A","B"]가 되게 — 무슨 메서드?', code: 'let names = ["a", "b"]\nlet up = names.map(function (s) { return s.____() })\nprint(up)', expect: '["A","B"]', answer: 'toUpperCase', hint: '대문자 = toUpperCase' },
+      { label: 'map은 원본 불변', ask: 'map은 원본을 안 바꾼다. map 후 원본 n의 개수는?', code: 'let n = [1, 2, 3]\nn.map(x => x * 2)\nprint(n.length === ____)', expect: 'true', answer: '3', hint: '새 배열을 만들 뿐' },
+      { label: '짝수 개수', ask: '짝수만 거른 개수는?', code: 'print([1, 2, 3, 4, 5, 6].filter(x => x % 2 === 0).length === ____)', expect: 'true', answer: '3', hint: '2,4,6 → 3개' },
+      { label: '곱 누적', ask: '곱을 누적하면? (시작 1)', code: 'print([2, 3, 4].reduce((a, b) => a * b, 1) === ____)', expect: 'true', answer: '24', hint: '2×3×4' },
+      { label: '대문자 변환', ask: '각 글자를 대문자로 바꾼 배열의 첫 요소는?', code: 'print(["a", "b"].map(s => s.toUpperCase())[0] === "____")', expect: 'true', answer: 'A', hint: '"a" → "A"' },
+      { label: '체이닝', ask: '1보다 큰 것만 걸러 2배 한 배열의 첫 요소는?', code: 'print([1, 2, 3].filter(x => x > 1).map(x => x * 2)[0] === ____)', expect: 'true', answer: '4', hint: '[2,3]→[4,6]→첫째 4' },
     ],
   }
 

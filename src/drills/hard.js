@@ -16,15 +16,15 @@
     ],
   }
 
-  // ── 2강 · 계산과 문자열 : 템플릿 속 계산·형변환·메서드 ──
+  // ── 2강 · 계산과 문자열 : 연산자별 강제 변환 함정 ──
   H['2'] = {
-    pattern: '🔴 어려움 · 템플릿 속 계산·문자열 메서드·형 결합',
+    pattern: '🔴 어려움 · +는 글자로, -·*는 숫자로 — 연산자마다 다른 강제 변환',
     problems: [
-      { label: '템플릿 속 계산', ask: '"합 5"가 나오게 — a에 무엇을 더할까?', code: 'let a = 2\nlet b = 3\nprint(`합 ${a + ____}`)', expect: '"합 5"', answer: 'b', hint: 'a + b = 5' },
-      { label: '문자열 + 숫자', ask: '"점수 90"이 나오게 숫자를 이어붙여라.', code: 'print("점수 " + ____)', expect: '"점수 90"', answer: '90', hint: '문자 + 숫자 → 문자' },
-      { label: '가격 계산', ask: '"3000원"이 나오게 — p에 무엇을 곱할까?', code: 'let p = 1000\nprint(`${p * ____}원`)', expect: '"3000원"', answer: '3', hint: '1000 * 3' },
-      { label: '글자 수', ask: '"abc"의 글자 수 3을 구하려면?', code: 'print("abc".____)', expect: '3', answer: 'length', hint: '문자열도 .length' },
-      { label: '대문자', ask: '"hi"를 "HI"로 바꾸려면 무슨 메서드?', code: 'print("hi".____())', expect: '"HI"', answer: 'toUpperCase', hint: '대문자 = toUpperCase' },
+      { label: '* 는 숫자로', ask: '"5" * 2 는? (곱하기는 숫자로 강제)', code: 'print(("5" * 2) === ____)', expect: 'true', answer: '10', hint: '"5"→5, 5×2' },
+      { label: '+ "" 는 글자로', ask: '10 + "" 는? (숫자 + 빈 글자)', code: 'print((10 + "") === "____")', expect: 'true', answer: '10', hint: '글자로 변함 → "10"' },
+      { label: '글자도 인덱스', ask: '"abc"[1] 는? (글자도 번호로 접근)', code: 'print(("abc"[1]) === "____")', expect: 'true', answer: 'b', hint: '0:a,1:b' },
+      { label: 'split 개수', ask: '"a,b,c".split(",") 의 개수는?', code: 'print(("a,b,c".split(",").length) === ____)', expect: 'true', answer: '3', hint: '쉼표로 3조각' },
+      { label: 'Number 변환', ask: 'Number("12") + 3 는?', code: 'print((Number("12") + 3) === ____)', expect: 'true', answer: '15', hint: '"12"→숫자 12, +3' },
     ],
   }
 
@@ -52,15 +52,15 @@
     ],
   }
 
-  // ── 5강 · 함수 : 중첩 호출·조건 반환·함수를 값으로·콜백 ──
+  // ── 5강 · 함수 : 스코프·함수를 값으로·인수는 복사·조기 반환 ──
   H['5'] = {
-    pattern: '🔴 어려움 · 중첩 호출·조건 반환·함수를 반환·콜백 연결',
+    pattern: '🔴 어려움 · 지역 vs 전역·함수를 반환·인수는 복사·조기 반환 예측',
     problems: [
-      { label: '중첩 호출', ask: 'inc는 +1. inc(inc(?))가 5가 되려면 안쪽 인수는?', code: 'function inc(n) { return n + 1 }\nprint(inc(inc(____)))', expect: '5', answer: '3', hint: 'inc(inc(3)) = 5' },
-      { label: '조건 반환', ask: 'big(2)가 "작은"이 나오게 — else 쪽을 채워라.', code: 'function big(n) { return n > 5 ? "큰" : "____" }\nprint(big(2))', expect: '"작은"', answer: '작은', hint: '2 < 5 → else' },
-      { label: '함수를 반환', ask: '안쪽 함수가 7을 돌려주게.', code: 'function make() { return function () { return ____ } }\nprint(make()())', expect: '7', answer: '7', hint: '안쪽 return 7' },
-      { label: '콜백 연결', ask: 'map(d) 결과의 개수 2를 구하려면?', code: 'function d(n) { return n * 2 }\nprint([1, 2].map(d).____)', expect: '2', answer: 'length', hint: 'map 결과도 배열 → .length' },
-      { label: '문자열 반환', ask: 'greet("민지")가 "민지님"이 되게 붙일 글자는?', code: 'function greet(n) { return n + "____" }\nprint(greet("민지"))', expect: '"민지님"', answer: '님', hint: 'n + "님"' },
+      { label: '지역 우선', ask: '함수 안 n=1, 밖 n=9. f()는? (지역이 우선)', code: 'let n = 9\nfunction f() { let n = 1; return n }\nprint(f() === ____)', expect: 'true', answer: '1', hint: '안쪽 n을 본다' },
+      { label: '함수를 반환', ask: '함수가 함수를 돌려준다. make()()는?', code: 'function make() { return function () { return 7 } }\nprint(make()() === ____)', expect: 'true', answer: '7', hint: '부른 함수가 또 부른다' },
+      { label: '인수는 복사', ask: '인수는 복사(원시). f 안에서 x=0 해도 a는?', code: 'function f(x) { x = 0 }\nlet a = 5\nf(a)\nprint(a === ____)', expect: 'true', answer: '5', hint: '원본은 안전' },
+      { label: '조기 반환', ask: '조기 반환. f(-1) (양수면 "양", 아니면 "음")은?', code: 'function f(n) { if (n > 0) return "양"; return "음" }\nprint(f(-1) === "____")', expect: 'true', answer: '음', hint: '-1은 아래 return' },
+      { label: '콜백', ask: '콜백. [1,2,3].map(dbl) 의 첫 요소는?', code: 'function dbl(n) { return n * 2 }\nprint([1, 2, 3].map(dbl)[0] === ____)', expect: 'true', answer: '2', hint: '1 × 2' },
     ],
   }
 
@@ -76,15 +76,15 @@
     ],
   }
 
-  // ── 7강 · 반복과 map : 체이닝·find·some·every·reduce max ──
+  // ── 7강 · 반복과 map : reduce 함정·find·every·집계·forEach 반환 ──
   H['7'] = {
-    pattern: '🔴 어려움 · 체이닝·find·some·every·reduce로 최댓값',
+    pattern: '🔴 어려움 · 시작값 없는 reduce·find·every·객체 배열 집계·forEach는 undefined',
     problems: [
-      { label: '체이닝', ask: '1보다 큰 것만 2배 한 배열의 개수(3)를 구하려면?', code: 'let n = [1, 2, 3, 4]\nprint(n.filter(x => x > 1).map(x => x * 2).____)', expect: '3', answer: 'length', hint: 'filter→map 결과의 .length' },
-      { label: '처음 찾기', ask: '7보다 큰 첫 값(10)을 찾으려면 무슨 메서드?', code: 'let n = [5, 10, 15]\nprint(n.____(x => x > 7))', expect: '10', answer: 'find', hint: '조건 맞는 첫 값 = find' },
-      { label: '하나라도?', ask: '2보다 큰 게 하나라도 있나? true — 무슨 메서드?', code: 'let n = [1, 2, 3]\nprint(n.____(x => x > 2))', expect: 'true', answer: 'some', hint: '하나라도 = some' },
-      { label: '모두?', ask: '전부 짝수인가? true — 무슨 메서드?', code: 'let n = [2, 4, 6]\nprint(n.____(x => x % 2 === 0))', expect: 'true', answer: 'every', hint: '모두 = every' },
-      { label: '최댓값(reduce)', ask: '가장 큰 값(7)이 나오게 — 작을 때 어느 쪽을 남길까?', code: 'let n = [3, 7, 2]\nprint(n.reduce((a, b) => a > b ? a : ____, 0))', expect: '7', answer: 'b', hint: 'a가 작으면 b를 남긴다' },
+      { label: 'reduce 시작값 없음', ask: '요소가 하나면 시작값 없는 reduce는? [5].reduce((a,b)=>a+b)', code: 'print([5].reduce((a, b) => a + b) === ____)', expect: 'true', answer: '5', hint: '더할 짝이 없어 그대로 5' },
+      { label: 'find', ask: '7보다 큰 첫 값은?', code: 'print([5, 10, 15].find(x => x > 7) === ____)', expect: 'true', answer: '10', hint: '조건 맞는 첫 값' },
+      { label: 'every', ask: '전부 0보다 큰가?', code: 'print([1, 2, 3].every(x => x > 0) === ____)', expect: 'true', answer: 'true', hint: '모두 만족 → true' },
+      { label: '객체 배열 집계', ask: '나이만 뽑아 다 더하면?', code: 'print([{ age: 20 }, { age: 30 }].map(p => p.age).reduce((a, b) => a + b, 0) === ____)', expect: 'true', answer: '50', hint: '20 + 30' },
+      { label: 'forEach 반환', ask: 'forEach는 무엇을 돌려주나?', code: 'let r = [1, 2].forEach(x => x)\nprint(r === ____)', expect: 'true', answer: 'undefined', hint: 'forEach는 반환이 없다' },
     ],
   }
 
