@@ -189,35 +189,35 @@
   H['passval'] = {
     pattern: '🔴 어려움 · 원시값은 반환+재대입해야 바뀐다(원본은 여전히 안전)',
     problems: [
-      { label: '반환+재대입', ask: 'dbl은 2배를 돌려준다. a가 10이 되게 하려면 a에 무엇을 다시 담을까?', code: 'function dbl(n) { return n * 2 }\nlet a = 5\na = dbl(____)\nprint(a)', expect: '10', answer: 'a', hint: 'a = dbl(a)' },
-      { label: '원본 확인', ask: 'f가 받은 값을 0으로 해도 a는 7. a===? 가 참이 되게 빈칸에 7', code: 'function f(n) { n = 0 }\nlet a = 7\nf(a)\nprint(a === ____)', expect: 'true', answer: '7', hint: '원본 안전' },
-      { label: '두 번 전달', ask: 'f가 받은 값을 99로 해도 a는 3. a+? 가 3이 되게 빈칸에 0', code: 'function f(n) { n = 99 }\nlet a = 3\nf(a)\nf(a)\nprint(a + ____)', expect: '3', answer: '0', hint: '3 + 0' },
-      { label: '문자 안전', ask: 'f가 받은 글자에 "!"를 붙여도 t는 "hi". t+"?" 가 "hi!"가 되게 빈칸에 !', code: 'function f(s) { s = s + "!" }\nlet t = "hi"\nf(t)\nprint(t + "____")', expect: '"hi!"', answer: '!', hint: 't는 "hi" 그대로' },
-      { label: '반환값 더하기', ask: 'inc(a)는 5를 준다. a는 그대로 4라 inc(a)+a는? 빈칸에 a', code: 'function inc(n) { return n + 1 }\nlet a = 4\nprint(inc(a) + ____)', expect: '9', answer: 'a', hint: '5 + 4' },
+      { label: '반환+재대입', ask: '원시는 반환+재대입해야 바뀐다. a = dbl(a) 후 a는?', code: 'function dbl(n) { return n * 2 }\nlet a = 5\na = dbl(a)\nprint(a === ____)', expect: 'true', answer: '10', hint: 'a에 반환값을 다시 담아야' },
+      { label: '원본 확인', ask: 'f가 0으로 해도 a === 7 인가?', code: 'function f(n) { n = 0 }\nlet a = 7\nf(a)\nprint((a === 7) === ____)', expect: 'true', answer: 'true', hint: '원본 안전' },
+      { label: '두 번 전달', ask: 'f를 두 번 불러도 a는?', code: 'function f(n) { n = 99 }\nlet a = 3\nf(a)\nf(a)\nprint(a === ____)', expect: 'true', answer: '3', hint: '복사본만 바뀜' },
+      { label: '문자 안전', ask: 'f가 "!"를 붙여도 t는?', code: 'function f(s) { s = s + "!" }\nlet t = "hi"\nf(t)\nprint(t === "____")', expect: 'true', answer: 'hi', hint: 't는 그대로' },
+      { label: '반환값 더하기', ask: 'a=4. inc(a) + a 는? (a는 안 변함)', code: 'function inc(n) { return n + 1 }\nlet a = 4\nprint((inc(a) + a) === ____)', expect: 'true', answer: '9', hint: '5 + 4' },
     ],
   }
 
   // ── 🧠 M6 참조 전달(passobj) : 중첩·배열 속성·공유 참조 ──
   H['passobj'] = {
-    pattern: '🔴 어려움 · 함수가 중첩 속성·배열 속성을 바꾸고, 공유 참조도 함께',
+    pattern: '🔴 어려움 · 속성값(원시)만 넘기면 안전·매개변수 재대입은 안 샌다 — 함정',
     problems: [
-      { label: '속성 0으로', ask: 'z는 받은 것 c를 0으로. d.c를 꺼내려면 어떤 속성?', code: 'function z(o) { o.c = 0 }\nlet d = { c: 5 }\nz(d)\nprint(d.____)', expect: '0', answer: 'c', hint: 'd.c' },
-      { label: '중첩 변경', ask: 'f는 받은 것의 pet.hp를 0으로. me.pet의 무엇을 꺼내면 0?', code: 'function f(o) { o.pet.hp = 0 }\nlet me = { pet: { hp: 9 } }\nf(me)\nprint(me.pet.____)', expect: '0', answer: 'hp', hint: 'me.pet.hp' },
-      { label: '배열 속성', ask: 'f는 받은 것의 list에 push. d.list의 개수(2)를 구하려면?', code: 'function f(o) { o.list.push(9) }\nlet d = { list: [1] }\nf(d)\nprint(d.list.____)', expect: '2', answer: 'length', hint: 'd.list.length' },
-      { label: '반환 없이 변경', ask: 'grow는 받은 것 n을 2배로. d.n(10)을 꺼내려면?', code: 'function grow(o) { o.n = o.n * 2 }\nlet d = { n: 5 }\ngrow(d)\nprint(d.____)', expect: '10', answer: 'n', hint: 'd.n' },
-      { label: '공유 참조도', ask: 'b는 a의 별칭. f(a)가 a.v를 1로 바꾸면 b.v는? 빈칸에 v', code: 'function f(o) { o.v = 1 }\nlet a = { v: 0 }\nlet b = a\nf(a)\nprint(b.____)', expect: '1', answer: 'v', hint: 'a·b 같은 객체' },
+      { label: '객체는 샌다', ask: '객체를 넘겨 속성을 바꾸면? z 후 d.c는?', code: 'function z(o) { o.c = 0 }\nlet d = { c: 5 }\nz(d)\nprint(d.c === ____)', expect: 'true', answer: '0', hint: '같은 객체 → 샌다' },
+      { label: '속성값만 넘기면?', ask: '속성값(원시)만 넘기면 안전. f(d.n) 후 d.n은?', code: 'function f(x) { x = 0 }\nlet d = { n: 5 }\nf(d.n)\nprint(d.n === ____)', expect: 'true', answer: '5', hint: 'd.n의 값(5)이 복사됨 → 안전' },
+      { label: '재대입은 안 샌다', ask: '매개변수를 새 객체로 재대입하면? f가 o={n:99}. d.n은?', code: 'function f(o) { o = { n: 99 } }\nlet d = { n: 5 }\nf(d)\nprint(d.n === ____)', expect: 'true', answer: '5', hint: 'o가 딴 객체를 가리킬 뿐 d와 무관' },
+      { label: '중첩 변경', ask: 'f가 pet.name을 바꾸면 me.pet.name은?', code: 'function f(o) { o.pet.name = "루비" }\nlet me = { pet: { name: "콩이" } }\nf(me)\nprint(me.pet.name === "____")', expect: 'true', answer: '루비', hint: '중첩도 공유' },
+      { label: '배열 속성', ask: 'f가 arr[0]=9로 하면 arr[0]은?', code: 'function f(a) { a[0] = 9 }\nlet arr = [1, 2]\nf(arr)\nprint(arr[0] === ____)', expect: 'true', answer: '9', hint: '같은 배열' },
     ],
   }
 
   // ── 🧠 M7 배열 전달(passarr) : 누적·요소 수정·map은 원본유지 ──
   H['passarr'] = {
-    pattern: '🔴 어려움 · 여러 번 push·요소 수정·map은 원본을 안 바꿈(대비)',
+    pattern: '🔴 어려움 · 여러 push·map은 원본 불변·재대입은 안 샌다 — 함정',
     problems: [
-      { label: '두 번 호출', ask: 'f는 push(1). 두 번 부른 뒤 arr 개수(3)를 구하려면?', code: 'function f(a) { a.push(1) }\nlet arr = [0]\nf(arr)\nf(arr)\nprint(arr.____)', expect: '3', answer: 'length', hint: '1 + 2번 push' },
-      { label: 'map은 원본유지', ask: 'f 안 map은 새 배열만 만들 뿐 원본은 그대로. arr 개수(2)를 구하려면?', code: 'function f(a) { a.map(x => x * 2) }\nlet arr = [1, 2]\nf(arr)\nprint(arr.____)', expect: '2', answer: 'length', hint: 'map은 원본 안 바꿈' },
-      { label: '요소 수정', ask: 'f는 0번을 +1. arr[0]이 10이 되었으니 꺼내려면 몇 번?', code: 'function f(a) { a[0] = a[0] + 1 }\nlet arr = [9]\nf(arr)\nprint(arr[____])', expect: '10', answer: '0', hint: 'arr[0]' },
-      { label: '별칭 전달', ask: 'ref는 arr의 별칭. f(ref)가 push하면 arr 개수(2)를 구하려면?', code: 'function f(a) { a.push(5) }\nlet arr = [1]\nlet ref = arr\nf(ref)\nprint(arr.____)', expect: '2', answer: 'length', hint: 'ref·arr 같은 배열' },
-      { label: '비우기', ask: 'clr은 받은 배열을 비운다. arr의 개수(0)를 구하려면?', code: 'function clr(a) { a.length = 0 }\nlet arr = [1, 2, 3]\nclr(arr)\nprint(arr.____)', expect: '0', answer: 'length', hint: 'arr.length' },
+      { label: '두 번 호출', ask: 'f는 push(1). 두 번 부른 뒤 arr의 개수는?', code: 'function f(a) { a.push(1) }\nlet arr = [0]\nf(arr)\nf(arr)\nprint(arr.length === ____)', expect: 'true', answer: '3', hint: '1 + 2번 push' },
+      { label: 'map은 원본유지', ask: 'f 안 map은 새 배열만 만든다. 원본 arr의 개수는?', code: 'function f(a) { a.map(x => x * 2) }\nlet arr = [1, 2]\nf(arr)\nprint(arr.length === ____)', expect: 'true', answer: '2', hint: 'map은 원본 안 바꿈' },
+      { label: '재대입은 안 샌다', ask: '매개변수를 새 배열로 재대입하면? f가 a=[]. arr의 개수는?', code: 'function f(a) { a = [] }\nlet arr = [1, 2, 3]\nf(arr)\nprint(arr.length === ____)', expect: 'true', answer: '3', hint: 'a가 딴 배열을 가리킬 뿐' },
+      { label: '별칭 전달', ask: 'ref는 arr의 별칭. f(ref) 후 arr의 개수는?', code: 'function f(a) { a.push(5) }\nlet arr = [1]\nlet ref = arr\nf(ref)\nprint(arr.length === ____)', expect: 'true', answer: '2', hint: 'ref·arr 같은 배열' },
+      { label: '요소 수정', ask: 'f가 0번을 +1로 하면 arr[0]은?', code: 'function f(a) { a[0] = a[0] + 1 }\nlet arr = [9]\nf(arr)\nprint(arr[0] === ____)', expect: 'true', answer: '10', hint: '9 + 1' },
     ],
   }
 

@@ -184,39 +184,39 @@
     ],
   }
 
-  // ── 🧠 M5 값 전달(passval) : 여러 상황에서 원본 안전 ──
+  // ── 🧠 M5 값 전달(passval) : 여러 상황에서 원본 안전 예측 ──
   N['passval'] = {
-    pattern: '🟡 보통 · 곱·빼기·문자·불리언을 넘겨도 원본 안전',
+    pattern: '🟡 보통 · 곱·빼기·문자·불리언을 넘겨도 원본이 어떻게 되는지 예측',
     problems: [
-      { label: '곱해도 안전', ask: 'f는 받은 값을 2배로. a(5)는? 빈칸에 2를 넣고 ▶확인', code: 'function f(n) { n = n * ____ }\nlet a = 5\nf(a)\nprint(a)', expect: '5', answer: '2', hint: '원본 안전' },
-      { label: '리셋해도 안전', ask: 'reset은 받은 값을 0으로. s(100)는? 빈칸에 0을 넣고 ▶확인', code: 'function reset(x) { x = ____ }\nlet s = 100\nreset(s)\nprint(s)', expect: '100', answer: '0', hint: '원본 안전' },
-      { label: '더해도 안전', ask: 'g는 받은 값에 5를 더한다. n(10)는? 빈칸에 5를 넣고 ▶확인', code: 'function g(v) { v = v + ____ }\nlet n = 10\ng(n)\nprint(n)', expect: '10', answer: '5', hint: '복사본만 바뀜' },
-      { label: '글자도 안전', ask: 'clr은 받은 글자를 바꾼다. name("민지")은? 빈칸에 아무 글자를 넣고 ▶확인', code: 'function clr(s) { s = "____" }\nlet name = "민지"\nclr(name)\nprint(name)', expect: '"민지"', answer: 'x', hint: '원본 안전' },
-      { label: '불리언도 안전', ask: 'h는 받은 값을 false로. flag(true)는? 빈칸에 false를 넣고 ▶확인', code: 'function h(b) { b = ____ }\nlet flag = true\nh(flag)\nprint(flag)', expect: 'true', answer: 'false', hint: '원본 안전' },
+      { label: '곱해도 안전', ask: 'f가 2배 해도 a는?', code: 'function f(n) { n = n * 2 }\nlet a = 5\nf(a)\nprint(a === ____)', expect: 'true', answer: '5', hint: '원본 안전' },
+      { label: '리셋해도 안전', ask: 'reset이 0으로 해도 s는?', code: 'function reset(x) { x = 0 }\nlet s = 100\nreset(s)\nprint(s === ____)', expect: 'true', answer: '100', hint: '원본 안전' },
+      { label: '더해도 안전', ask: 'g가 +5 해도 n은?', code: 'function g(v) { v = v + 5 }\nlet n = 10\ng(n)\nprint(n === ____)', expect: 'true', answer: '10', hint: '복사본만 바뀜' },
+      { label: '글자도 안전', ask: 'clr이 글자 바꿔도 name은?', code: 'function clr(s) { s = "x" }\nlet name = "민지"\nclr(name)\nprint(name === "____")', expect: 'true', answer: '민지', hint: '원본 안전' },
+      { label: '불리언도 안전', ask: 'h가 false로 해도 flag는?', code: 'function h(b) { b = false }\nlet flag = true\nh(flag)\nprint(flag === ____)', expect: 'true', answer: 'true', hint: '원본 안전' },
     ],
   }
 
-  // ── 🧠 M6 참조 전달(passobj) : 여러 속성 변경 ──
+  // ── 🧠 M6 참조 전달(passobj) : 여러 속성 변경 결과 예측 ──
   N['passobj'] = {
-    pattern: '🟡 보통 · 그 객체를 넘겨 여러 속성을 바꾼다',
+    pattern: '🟡 보통 · 객체를 넘겨 속성·중첩·배열·공유를 바꾸면 원본 예측',
     problems: [
-      { label: 'n 설정', ask: 'f는 받은 것의 n을 5로. a.n도 바뀌게 하려면?', code: 'function f(o) { o.n = 5 }\nlet a = { n: 0 }\nf(____)\nprint(a.n)', expect: '5', answer: 'a', hint: 'a를 넘긴다' },
-      { label: '이름', ask: 'setName은 받은 것 이름을 바꾼다. p.name도 바뀌게 하려면?', code: 'function setName(u) { u.name = "지훈" }\nlet p = { name: "x" }\nsetName(____)\nprint(p.name)', expect: '"지훈"', answer: 'p', hint: 'p를 넘긴다' },
-      { label: '회복', ask: 'heal은 받은 것 hp를 100으로. e.hp도 바뀌게 하려면?', code: 'function heal(c) { c.hp = 100 }\nlet e = { hp: 1 }\nheal(____)\nprint(e.hp)', expect: '100', answer: 'e', hint: 'e를 넘긴다' },
-      { label: '완료', ask: 'fin은 받은 것 done을 true로. task.done도 바뀌게 하려면?', code: 'function fin(t) { t.done = true }\nlet task = { done: false }\nfin(____)\nprint(task.done)', expect: 'true', answer: 'task', hint: 'task를 넘긴다' },
-      { label: '증가', ask: 'add는 받은 것 x를 +1. d.x가 10이 되게 하려면?', code: 'function add(o) { o.x = o.x + 1 }\nlet d = { x: 9 }\nadd(____)\nprint(d.x)', expect: '10', answer: 'd', hint: 'd를 넘긴다' },
+      { label: 'n 설정', ask: 'f가 n=5로 하면 a.n은?', code: 'function f(o) { o.n = 5 }\nlet a = { n: 0 }\nf(a)\nprint(a.n === ____)', expect: 'true', answer: '5', hint: '같은 객체' },
+      { label: '중첩 변경', ask: 'f가 pet.hp=0 하면 me.pet.hp는?', code: 'function f(o) { o.pet.hp = 0 }\nlet me = { pet: { hp: 9 } }\nf(me)\nprint(me.pet.hp === ____)', expect: 'true', answer: '0', hint: '중첩도 공유' },
+      { label: '배열 속성', ask: 'f가 list.push 하면 d.list의 개수는?', code: 'function f(o) { o.list.push(9) }\nlet d = { list: [1] }\nf(d)\nprint(d.list.length === ____)', expect: 'true', answer: '2', hint: '같은 배열' },
+      { label: '2배', ask: 'grow가 n을 2배로 하면 d.n은?', code: 'function grow(o) { o.n = o.n * 2 }\nlet d = { n: 5 }\ngrow(d)\nprint(d.n === ____)', expect: 'true', answer: '10', hint: '5 × 2' },
+      { label: '공유 참조', ask: 'f(a)가 a.v=1로. b는 a의 별칭. b.v는?', code: 'function f(o) { o.v = 1 }\nlet a = { v: 0 }\nlet b = a\nf(a)\nprint(b.v === ____)', expect: 'true', answer: '1', hint: 'a·b 같은 객체' },
     ],
   }
 
-  // ── 🧠 M7 배열 전달(passarr) : 여러 조작 ──
+  // ── 🧠 M7 배열 전달(passarr) : push·수정·비우기 결과 예측 ──
   N['passarr'] = {
-    pattern: '🟡 보통 · 그 배열을 넘겨 push·수정·비우기',
+    pattern: '🟡 보통 · 배열을 넘겨 push·수정·비우기 하면 원본 예측',
     problems: [
-      { label: '빈 배열에 push', ask: 'add는 받은 배열에 9를 push. a[0]이 9가 되게 하려면?', code: 'function add(l) { l.push(9) }\nlet a = []\nadd(____)\nprint(a[0])', expect: '9', answer: 'a', hint: 'a를 넘긴다' },
-      { label: '비우기', ask: 'clr은 받은 배열을 비운다. items가 비게 하려면?', code: 'function clr(a) { a.length = 0 }\nlet items = [1, 2]\nclr(____)\nprint(items.length)', expect: '0', answer: 'items', hint: 'items를 넘긴다' },
-      { label: '0번 수정', ask: 'set0은 받은 배열 0번을 7로. arr[0]이 바뀌게 하려면?', code: 'function set0(a) { a[0] = 7 }\nlet arr = [1, 2]\nset0(____)\nprint(arr[0])', expect: '7', answer: 'arr', hint: 'arr을 넘긴다' },
-      { label: '항목 추가', ask: 'grow는 받은 배열에 항목을 더한다. cart가 늘어나게 하려면?', code: 'function grow(l) { l.push("새") }\nlet cart = ["빵"]\ngrow(____)\nprint(cart.length)', expect: '2', answer: 'cart', hint: 'cart를 넘긴다' },
-      { label: '두 번 push', ask: 'fill은 받은 배열에 둘을 push. n의 개수가 2가 되게 하려면?', code: 'function fill(a) { a.push(1); a.push(2) }\nlet n = []\nfill(____)\nprint(n.length)', expect: '2', answer: 'n', hint: 'n을 넘긴다' },
+      { label: '빈 배열에 push', ask: 'add(a) 후 a[0]은?', code: 'function add(l) { l.push(9) }\nlet a = []\nadd(a)\nprint(a[0] === ____)', expect: 'true', answer: '9', hint: '같은 배열' },
+      { label: '비우기', ask: 'clr 후 items의 개수는?', code: 'function clr(a) { a.length = 0 }\nlet items = [1, 2]\nclr(items)\nprint(items.length === ____)', expect: 'true', answer: '0', hint: '같은 배열' },
+      { label: '0번 수정', ask: 'set0 후 arr[0]은?', code: 'function set0(a) { a[0] = 7 }\nlet arr = [1, 2]\nset0(arr)\nprint(arr[0] === ____)', expect: 'true', answer: '7', hint: '같은 배열' },
+      { label: '항목 추가', ask: 'grow 후 cart의 개수는?', code: 'function grow(l) { l.push("새") }\nlet cart = ["빵"]\ngrow(cart)\nprint(cart.length === ____)', expect: 'true', answer: '2', hint: '같은 배열' },
+      { label: '두 번 push', ask: 'fill 후 n의 개수는?', code: 'function fill(a) { a.push(1); a.push(2) }\nlet n = []\nfill(n)\nprint(n.length === ____)', expect: 'true', answer: '2', hint: '둘 push' },
     ],
   }
 

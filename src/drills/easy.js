@@ -211,39 +211,44 @@
     ],
   }
 
-  // ── 🧠 M5 값 전달(passval) : 원본은 안전 ──
+  // ── 🧠 M5 값 전달(passval) : 함수에 넘겨 바꿔도 원본을 예측 ──
   E['passval'] = {
-    pattern: '🟢 쉬움 · 값(원시)을 넘겨 바꿔도 원본은 안전',
+    pattern: '🟢 쉬움 · 원시값을 함수에 넘겨 바꿔도 원본이 어떻게 되는지 예측',
     problems: [
-      { label: '돈은 안전?', ask: 'tear가 받은 bill을 0으로 만든다. tear(money) 뒤 원본 money(100)는? 빈칸에 0을 넣고 ▶확인', code: 'function tear(bill){ bill = ____ }\nlet money = 100\ntear(money)\nprint(money)', expect: '100', answer: '0', hint: '복사본이 전달됨 → 원본 안전' },
-      { label: '점수는 안전?', ask: 'reset이 받은 값을 999로 만든다. score(50)는? 빈칸에 999를 넣고 ▶확인', code: 'function reset(n){ n = ____ }\nlet score = 50\nreset(score)\nprint(score)', expect: '50', answer: '999', hint: '원본 안전' },
-      { label: '더해도 안전?', ask: 'add1이 받은 값에 5를 더한다. a(10)는? 빈칸에 5를 넣고 ▶확인', code: 'function add1(x){ x = x + ____ }\nlet a = 10\nadd1(a)\nprint(a)', expect: '10', answer: '5', hint: '복사본만 바뀜' },
-      { label: '반으로 해도?', ask: 'half가 받은 값을 0으로 만든다. price(200)는? 빈칸에 0을 넣고 ▶확인', code: 'function half(v){ v = ____ }\nlet price = 200\nhalf(price)\nprint(price)', expect: '200', answer: '0', hint: '원본 안전' },
-      { label: '지워도 안전?', ask: 'clear가 받은 값을 빈 글자로 만든다. name("민지")은? 빈칸에 ""(빈 문자열)을 넣고 ▶확인', code: 'function clear(s){ s = ____ }\nlet name = "민지"\nclear(name)\nprint(name)', expect: '"민지"', answer: '""', hint: '원본 안전' },
+      { label: '돈은 안전?', ask: 'f가 받은 값을 0으로 해도 원본 money는?', code: 'function f(bill) { bill = 0 }\nlet money = 100\nf(money)\nprint(money === ____)', expect: 'true', answer: '100', hint: '복사본이 전달됨 → 원본 안전' },
+      { label: '점수는 안전?', ask: 'reset이 999로 해도 score는?', code: 'function reset(n) { n = 999 }\nlet score = 50\nreset(score)\nprint(score === ____)', expect: 'true', answer: '50', hint: '원본 안전' },
+      { label: '더해도 안전?', ask: 'add1이 +5 해도 a는?', code: 'function add1(x) { x = x + 5 }\nlet a = 10\nadd1(a)\nprint(a === ____)', expect: 'true', answer: '10', hint: '복사본만 바뀜' },
+      { label: '반으로 해도?', ask: 'half가 0으로 해도 price는?', code: 'function half(v) { v = 0 }\nlet price = 200\nhalf(price)\nprint(price === ____)', expect: 'true', answer: '200', hint: '원본 안전' },
+      { label: '지워도 안전?', ask: 'clear가 빈 글자로 해도 name은?', code: 'function clear(s) { s = "" }\nlet name = "민지"\nclear(name)\nprint(name === "____")', expect: 'true', answer: '민지', hint: '원본 안전' },
     ],
   }
 
-  // ── 🧠 M6 참조 전달(passobj) : 그 객체를 넘기면 원본이 바뀐다 ──
+  // ── 🧠 M6 참조 전달(passobj) : 객체를 넘겨 바꾸면 원본을 예측 ──
   E['passobj'] = {
-    pattern: '🟢 쉬움 · "그 객체"를 넘기면 함수 안에서 원본이 바뀐다',
+    pattern: '🟢 쉬움 · 객체를 함수에 넘겨 속성을 바꾸면 원본이 어떻게 되는지 예측',
     problems: [
-      { label: '지갑', ask: 'pay는 받은 지갑의 money를 0으로. wallet.money도 0이 되게 하려면 pay에 무엇을 넘길까?', code: 'function pay(acc){ acc.money = 0 }\nlet wallet = { money: 100 }\npay(____)\nprint(wallet.money)', expect: '0', answer: 'wallet', hint: '그 객체를 넘기면 공유' },
-      { label: '이름 변경', ask: 'rename은 받은 객체 이름을 바꾼다. user.name도 바뀌게 하려면?', code: 'function rename(u){ u.name = "지훈" }\nlet user = { name: "민지" }\nrename(____)\nprint(user.name)', expect: '"지훈"', answer: 'user', hint: 'user를 넘긴다' },
-      { label: 'hp', ask: 'grow는 받은 것의 hp를 999로. hero.hp도 바뀌게 하려면?', code: 'function grow(p){ p.hp = 999 }\nlet hero = { hp: 100 }\ngrow(____)\nprint(hero.hp)', expect: '999', answer: 'hero', hint: 'hero를 넘긴다' },
-      { label: '완료', ask: 'done은 받은 것의 ok를 true로. task.ok도 바뀌게 하려면?', code: 'function done(t){ t.ok = true }\nlet task = { ok: false }\ndone(____)\nprint(task.ok)', expect: 'true', answer: 'task', hint: 'task를 넘긴다' },
-      { label: '0으로', ask: 'zero는 받은 것의 count를 0으로. data.count도 바뀌게 하려면?', code: 'function zero(o){ o.count = 0 }\nlet data = { count: 99 }\nzero(____)\nprint(data.count)', expect: '0', answer: 'data', hint: 'data를 넘긴다' },
+      { label: '지갑', ask: 'pay가 wallet.money를 0으로. wallet.money는?', code: 'function pay(acc) { acc.money = 0 }\nlet wallet = { money: 100 }\npay(wallet)\nprint(wallet.money === ____)', expect: 'true', answer: '0', hint: '같은 객체를 공유 → 원본도 0',
+        explain: '객체를 넘기면 <b>주소(참조)를 복사</b>해 전달한다. 그래서 함수 안 <code>acc</code>와 밖 <code>wallet</code>은 <b>같은 힙 객체</b> — <code>acc.money=0</code>이 <code>wallet.money</code>도 0으로. (원시값이었다면 복사라 원본이 안전 — M5.)', see: 'passval', wiki: { label: '참조에 의한 호출', url: 'https://ko.wikipedia.org/wiki/값에_의한_호출' },
+        mem: { title: '왜 wallet.money도 0인가 — acc와 wallet은 같은 힙 객체', stackLabel: '📇 이름표 장부', code: ['let wallet = { money: 100 }', 'pay(wallet)   // acc = wallet', 'acc.money = 0'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'wallet', ref: 'h1' }] }, { name: 'pay', slots: [{ name: 'acc', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] } }, note: 'pay 호출 → 주소를 복사 → <code>acc</code>도 <b>같은 h1</b>을 가리킨다.' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'wallet', ref: 'h1' }] }, { name: 'pay', slots: [{ name: 'acc', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'money', value: '0', bad: true }] } }, note: '<code>acc.money = 0</code> → h1을 고침 → <b>wallet.money도 0</b>.' },
+        ] } },
+      { label: '이름 변경', ask: 'rename 후 user.name은?', code: 'function rename(u) { u.name = "지훈" }\nlet user = { name: "민지" }\nrename(user)\nprint(user.name === "____")', expect: 'true', answer: '지훈', hint: '같은 객체' },
+      { label: 'hp', ask: 'grow 후 hero.hp는?', code: 'function grow(p) { p.hp = 999 }\nlet hero = { hp: 100 }\ngrow(hero)\nprint(hero.hp === ____)', expect: 'true', answer: '999', hint: '같은 객체' },
+      { label: '완료', ask: 'done 후 task.ok는?', code: 'function done(t) { t.ok = true }\nlet task = { ok: false }\ndone(task)\nprint(task.ok === ____)', expect: 'true', answer: 'true', hint: '같은 객체' },
+      { label: '0으로', ask: 'zero 후 data.count는?', code: 'function zero(o) { o.count = 0 }\nlet data = { count: 99 }\nzero(data)\nprint(data.count === ____)', expect: 'true', answer: '0', hint: '같은 객체' },
     ],
   }
 
-  // ── 🧠 M7 배열 전달(passarr) : 그 배열을 넘기면 원본이 바뀐다 ──
+  // ── 🧠 M7 배열 전달(passarr) : 배열을 넘겨 바꾸면 원본을 예측 ──
   E['passarr'] = {
-    pattern: '🟢 쉬움 · "그 배열"을 넘기면 함수 안에서 원본이 바뀐다',
+    pattern: '🟢 쉬움 · 배열을 함수에 넘겨 바꾸면 원본이 어떻게 되는지 예측',
     problems: [
-      { label: 'push', ask: 'add는 받은 배열에 push한다. arr이 늘어나게 하려면 무엇을 넘길까?', code: 'function add(list){ list.push(9) }\nlet arr = [1, 2]\nadd(____)\nprint(arr.length)', expect: '3', answer: 'arr', hint: 'arr을 넘기면 같은 배열' },
-      { label: '빈 배열에', ask: 'fill9는 받은 배열에 9를 push. nums에 들어가게 하려면?', code: 'function fill9(a){ a.push(9) }\nlet nums = []\nfill9(____)\nprint(nums[0])', expect: '9', answer: 'nums', hint: 'nums를 넘긴다' },
-      { label: '비우기', ask: 'reset은 받은 배열을 비운다. items가 비게 하려면?', code: 'function reset(a){ a.length = 0 }\nlet items = [1, 2, 3]\nreset(____)\nprint(items.length)', expect: '0', answer: 'items', hint: 'items를 넘긴다' },
-      { label: '항목 추가', ask: 'grow는 받은 배열에 항목을 더한다. cart가 늘어나게 하려면?', code: 'function grow(list){ list.push("새") }\nlet cart = ["빵"]\ngrow(____)\nprint(cart.length)', expect: '2', answer: 'cart', hint: 'cart를 넘긴다' },
-      { label: '0번 수정', ask: 'double0은 받은 배열의 0번을 2배로. arr[0]이 바뀌게 하려면?', code: 'function double0(a){ a[0] = a[0] * 2 }\nlet arr = [5, 6]\ndouble0(____)\nprint(arr[0])', expect: '10', answer: 'arr', hint: 'arr을 넘긴다' },
+      { label: 'push', ask: 'add가 push하면 원본 arr의 개수는?', code: 'function add(list) { list.push(9) }\nlet arr = [1, 2]\nadd(arr)\nprint(arr.length === ____)', expect: 'true', answer: '3', hint: '같은 배열 → arr도 늘어남' },
+      { label: '빈 배열에', ask: 'fill9(nums) 후 nums[0]은?', code: 'function fill9(a) { a.push(9) }\nlet nums = []\nfill9(nums)\nprint(nums[0] === ____)', expect: 'true', answer: '9', hint: '같은 배열' },
+      { label: '비우기', ask: 'reset이 비우면 items의 개수는?', code: 'function reset(a) { a.length = 0 }\nlet items = [1, 2, 3]\nreset(items)\nprint(items.length === ____)', expect: 'true', answer: '0', hint: '같은 배열' },
+      { label: '항목 추가', ask: 'grow가 push하면 cart의 개수는?', code: 'function grow(list) { list.push("새") }\nlet cart = ["빵"]\ngrow(cart)\nprint(cart.length === ____)', expect: 'true', answer: '2', hint: '같은 배열' },
+      { label: '0번 수정', ask: 'double0 후 arr[0]은?', code: 'function double0(a) { a[0] = a[0] * 2 }\nlet arr = [5, 6]\ndouble0(arr)\nprint(arr[0] === ____)', expect: 'true', answer: '10', hint: '같은 배열' },
     ],
   }
 
