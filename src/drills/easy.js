@@ -124,27 +124,32 @@
     ],
   }
 
-  // ── 🧠 M1 램(ram) : 재할당·null·복사 독립·typeof ──
+  // ── 🧠 M1 램(ram) : 재할당·복사 독립·typeof 결과를 예측 ──
   E['ram'] = {
-    pattern: '🟢 쉬움 · 재할당·null·복사 독립·typeof 기본',
+    pattern: '🟢 쉬움 · 재할당·복사 독립·typeof 결과를 스스로 예측',
     problems: [
-      { label: 'let 재할당', ask: 'x(10)를 15로 만들려면 얼마를 더해야 할까?', code: 'let x = 10\nx = x + ____\nprint(x)', expect: '15', answer: '5', hint: '15 - 10' },
-      { label: 'null로 비우기', ask: 'memo를 "값을 일부러 비움" 상태로. (0이나 빈 글자 말고)', code: 'let memo = "메모"\nmemo = ____\nprint(memo)', expect: 'null', answer: 'null', hint: '의도적 빈 값' },
-      { label: '복사=독립', ask: 'b를 99로 바꿔 보세요. 그러면 a는? (▶ 확인)', code: 'let a = 10\nlet b = a\nb = ____\nprint(a)', expect: '10', answer: '99', hint: '원시값은 복사라 a는 안 변함' },
-      { label: 'typeof', ask: '결과가 "number"가 나오게 — 어떤 값을? (숫자)', code: 'print(typeof ____)', expect: '"number"', answer: '99', hint: '아무 숫자' },
-      { label: '문자열', ask: '화면에 토끼가 나오게 — 문자열은 어떻게 쓰지?', code: 'let name = ____\nprint(name)', expect: '"토끼"', answer: '"토끼"', hint: '따옴표로 감싼다' },
+      { label: '재할당', ask: 'x=10 다음 x=x+5 하면 x는?', code: 'let x = 10\nx = x + 5\nprint(x === ____)', expect: 'true', answer: '15', hint: '10 + 5' },
+      { label: '숫자 타입', ask: '숫자 값의 타입 이름은?', code: 'print((typeof 99) === "____")', expect: 'true', answer: 'number', hint: '숫자 = number' },
+      { label: '복사는 독립', ask: 'b를 99로 바꿔도 a는? (b=a로 복사한 뒤)', code: 'let a = 10\nlet b = a\nb = 99\nprint(a === ____)', expect: 'true', answer: '10', hint: '원시값은 복사 → a는 그대로',
+        explain: '원시값(숫자·문자·불리언)은 <code>=</code>로 넘길 때 <b>값을 각자 셀에 복제</b>한다. 그래서 b의 셀을 99로 바꿔도 a의 셀은 10 그대로. (만약 객체였다면 <b>주소를 공유</b>해 함께 바뀐다 — M4-2 참조=공유.)', see: 'ref2', wiki: { label: '원시 자료형', url: 'https://ko.wikipedia.org/wiki/원시_자료형' },
+        mem: { title: '왜 a는 10 그대로인가 — 원시값은 각자 셀로 복사', stackLabel: '📇 이름표 장부', code: ['let a = 10', 'let b = a', 'b = 99'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', value: '10' }, { name: 'b', value: '10' }] }], heap: {}, note: '<code>let b = a</code> → 값 10을 <b>b의 셀에 복제</b>. a·b는 <b>각자 셀</b>(별개).' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', value: '10' }, { name: 'b', value: '99', bad: true }] }], heap: {}, note: '<code>b = 99</code>는 <b>b의 셀만</b> 바꾼다. <b>a는 10 그대로</b> — 서로 독립.' },
+        ] } },
+      { label: 'null', ask: 'memo를 "일부러 비움"으로 만들면? (0이나 빈 글자 말고)', code: 'let memo = "메모"\nmemo = null\nprint(memo === ____)', expect: 'true', answer: 'null', hint: '의도적 빈 값' },
+      { label: '글자 타입', ask: '글자 값의 타입 이름은?', code: 'print((typeof "hi") === "____")', expect: 'true', answer: 'string', hint: '글자 = string' },
     ],
   }
 
-  // ── 🧠 M4-1 값=복사(ref) : 한쪽 바꿔도 원본 그대로 ──
+  // ── 🧠 M4-1 값=복사(ref) : 한쪽 바꾼 뒤 원본을 예측 ──
   E['ref'] = {
-    pattern: '🟢 쉬움 · 원시값은 복사 — 한쪽을 바꿔도 원본 그대로',
+    pattern: '🟢 쉬움 · 원시값은 복사 — 한쪽을 바꾼 뒤 원본이 어떻게 되는지 예측',
     problems: [
-      { label: 'y를 바꾸면 x는?', ask: 'y를 99로 바꿔 보세요. 그러면 x는? (▶ 확인)', code: 'let x = 10\nlet y = x\ny = ____\nprint(x)', expect: '10', answer: '99', hint: '복사라 x는 그대로 10' },
-      { label: 'a를 바꾸면 b는?', ask: 'a를 100으로 바꿔 보세요. 그러면 b는? (▶ 확인)', code: 'let a = 5\nlet b = a\na = ____\nprint(b)', expect: '5', answer: '100', hint: 'b는 자기 값 5 그대로' },
-      { label: '돈을 바꾸면?', ask: 'money2를 0으로 바꿔 보세요. money1은? (▶ 확인)', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = ____\nprint(money1)', expect: '200', answer: '0', hint: '숫자는 복사 → money1 그대로' },
-      { label: '글자를 바꾸면?', ask: 's2를 "어피치"로 바꿔 보세요. s1은? (▶ 확인)', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = ____\nprint(s1)', expect: '"무지"', answer: '"어피치"', hint: '문자열도 복사 → s1 그대로' },
-      { label: '꺼낸 값을 바꾸면?', ask: 'a.num을 꺼내 담은 b를 20으로 바꿔 보세요. a.num은? (▶ 확인)', code: 'let a = { num: 10 }\nlet b = a.num\nb = ____\nprint(a.num)', expect: '10', answer: '20', hint: '꺼낼 때 복사 → a.num 그대로' },
+      { label: 'y 바꾸면 x는?', ask: 'y=x 로 복사한 뒤 y=99 하면 x는?', code: 'let x = 10\nlet y = x\ny = 99\nprint(x === ____)', expect: 'true', answer: '10', hint: '복사라 x는 그대로' },
+      { label: 'a 바꾸면 b는?', ask: 'b=a 로 복사한 뒤 a=100 하면 b는?', code: 'let a = 5\nlet b = a\na = 100\nprint(b === ____)', expect: 'true', answer: '5', hint: 'b는 자기 값 그대로' },
+      { label: '돈 바꾸면?', ask: 'money2=money1 뒤 money2=0 하면 money1은?', code: 'let money1 = 200\nlet money2 = money1\nmoney2 = 0\nprint(money1 === ____)', expect: 'true', answer: '200', hint: '복사 → money1 그대로' },
+      { label: '글자 바꾸면?', ask: 's2=s1 뒤 s2="어피치" 하면 s1은?', code: 'let s1 = "무지"\nlet s2 = s1\ns2 = "어피치"\nprint(s1 === "____")', expect: 'true', answer: '무지', hint: '문자열도 복사' },
+      { label: '꺼낸 값 바꾸면?', ask: 'a.num을 꺼낸 b를 20으로 바꾸면 a.num은?', code: 'let a = { num: 10 }\nlet b = a.num\nb = 20\nprint(a.num === ____)', expect: 'true', answer: '10', hint: '꺼낼 때 복사' },
     ],
   }
 

@@ -114,7 +114,22 @@
     ansBtn.onclick = () => {
       input.value = p.answer
       feedback.className = 'drill-answer'
-      feedback.innerHTML = '정답 예시: <code>' + p.answer.replace(/</g, '&lt;') + '</code>'
+      // 정답 + '왜 그런가' 설명(explain, 없으면 hint) + (필요 시) 개념 다시 보기·위키 링크
+      let html = '정답 예시: <code>' + p.answer.replace(/</g, '&lt;') + '</code>'
+      const why = p.explain || p.hint
+      if (why) html += '<div class="drill-explain">💡 ' + why + '</div>'
+      const links = []
+      if (p.see) links.push('<a class="drill-link" data-see="' + p.see + '" role="button" tabindex="0">📖 개념 다시 보기</a>')
+      if (p.wiki && p.wiki.url) links.push('<a class="drill-link" href="' + p.wiki.url + '" target="_blank" rel="noopener noreferrer">📚 ' + (p.wiki.label || '위키') + ' ↗</a>')
+      if (links.length) html += '<div class="drill-links">' + links.join('') + '</div>'
+      feedback.innerHTML = html
+      const seeLink = feedback.querySelector('[data-see]')
+      if (seeLink) {
+        const go = () => { const t = seeLink.getAttribute('data-see'); const id = /^\d+$/.test(t) ? Number(t) : t; if (window.goLesson) window.goLesson(id); else location.hash = '#' + id }
+        seeLink.onclick = go
+        seeLink.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go() } })
+      }
+      revealMem() // 포기하고 정답을 봐도 메모리 증명(있으면)을 함께 드러낸다
     }
 
     card._focus = () => { try { input.focus() } catch {} }
