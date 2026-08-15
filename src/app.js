@@ -245,6 +245,20 @@
   }
 
   // ── 렌더: 목차 ────────────────────────────────────────────
+  // 현재 항목이 속한 챕터(와 하위단계 부모)를 펼침 집합에 넣는다 — 탐색하면 자동으로 보이게.
+  // renderToc가 아니라 '탐색 시점'에만 부른다(렌더마다 부르면 수동 접기가 되살아나 못 접음).
+  function revealCurrent() {
+    const id = state.currentId
+    const ci = CHAPTERS.findIndex((c) => c.items.includes(id))
+    if (ci >= 0) state.openChapters.add(ci)
+    const sid = String(id)
+    if (/-\d+$/.test(sid) && byId[sid.replace(/-\d+$/, '')]) {
+      state.openSteps.add(sid.replace(/-\d+$/, '')) // 하위단계 페이지면 부모를 펼침
+    } else if (CHAPTERS.some((c) => c.items.some((it) => typeof it === 'string' && new RegExp('^' + sid + '-\\d+$').test(it)))) {
+      state.openSteps.add(sid) // 하위단계를 가진 부모 강의면 자신을 펼침
+    }
+  }
+
   function renderToc() {
     toc.innerHTML = ''
     const homeBtn = document.createElement('button')
@@ -255,8 +269,9 @@
 
     const set = activeMode().get()
     CHAPTERS.forEach((ch, ci) => {
-      const hasCurrent = ch.items.includes(state.currentId)
-      const open = state.openChapters.has(ci) || hasCurrent
+      // 펼침 여부는 openChapters 집합만으로 결정 — 현재 챕터도 수동으로 접을 수 있게.
+      // (탐색 시엔 revealCurrent()가 해당 챕터를 미리 집합에 넣어 자동으로 열어 둔다.)
+      const open = state.openChapters.has(ci)
       const chDiv = document.createElement('div')
       chDiv.className = 'toc-chapter'
       const head = document.createElement('button')
@@ -268,10 +283,9 @@
       if (open) {
         const sec = document.createElement('div')
         sec.className = 'toc-sections'
-        // 하위 단계(3-1…·5-1…) 아코디언: 부모 강의(3·5)를 펼쳤거나 지금 그 안에 있을 때만 하위를 보인다.
-        const curId = state.currentId
-        const curParent = (typeof curId === 'string' && /-\d+$/.test(curId)) ? curId.replace(/-\d+$/, '') : null
-        const stepOpen = (p) => state.openSteps.has(String(p)) || String(p) === String(curId) || String(p) === String(curParent)
+        // 하위 단계(3-1…·5-1…) 아코디언: openSteps 집합에 부모가 있을 때만 하위를 보인다.
+        // (탐색 시 revealCurrent()가 부모를 미리 넣어 자동으로 펼치되, ▸로 수동 접기는 항상 허용.)
+        const stepOpen = (p) => state.openSteps.has(String(p))
         const hasSteps = (id) => ch.items.some((it) => typeof it === 'string' && new RegExp('^' + id + '-\\d+$').test(it))
         ch.items.forEach((id) => {
           const l = byId[id]
@@ -466,6 +480,7 @@
   let firstSync = true
   function go(id) {
     state.currentId = id
+    revealCurrent()
     const target = '#' + id
     if (location.hash !== target) {
       if (firstSync) history.replaceState(null, '', target)
@@ -484,12 +499,13 @@
 
   window.addEventListener('hashchange', () => {
     const h = hashToId()
-    if (validId(h) && h !== state.currentId) { state.currentId = h; renderToc(); renderPage() }
+    if (validId(h) && h !== state.currentId) { state.currentId = h; revealCurrent(); renderToc(); renderPage() }
   })
   window.addEventListener('resize', () => { backdrop.hidden = !state.sidebarOpen || window.innerWidth > 720 })
 
   // ── 최초 그리기 ───────────────────────────────────────────
   setSidebar(state.sidebarOpen)
+  revealCurrent()
   renderCheckTabs()
   renderProgress()
   renderToc()
