@@ -88,39 +88,39 @@
     ],
   }
 
-  // ── 8강 · 객체 : 만들고 · 점으로 꺼내고 · 바꾸고 · 추가하기 ──
+  // ── 8강 · 객체 : 속성 값을 예측 ──
   E['8'] = {
-    pattern: '🟢 쉬움 · 객체를 만들고 점(.)으로 꺼내기 — 값만 바꿔 반복',
+    pattern: '🟢 쉬움 · 객체에서 점(.)으로 꺼낸 값을 예측',
     problems: [
-      { label: '만들기', ask: 'p.name이 "민지"가 되게 값을 채워라.', code: 'let p = { name: "____" }\nprint(p.name)', expect: '"민지"', answer: '민지', hint: '따옴표 안에 민지' },
-      { label: '점으로 꺼내기', ask: 'u의 나이(24)를 꺼내려면 어떤 이름?', code: 'let u = { age: 24 }\nprint(u.____)', expect: '24', answer: 'age', hint: 'u.age' },
-      { label: '다른 속성 꺼내기', ask: 'car의 브랜드("기아")를 꺼내려면 어떤 이름?', code: 'let car = { brand: "기아", year: 2020 }\nprint(car.____)', expect: '"기아"', answer: 'brand', hint: 'car.brand' },
-      { label: '값 바꾸기', ask: 'u.hp를 50으로 바꿔 출력되게.', code: 'let u = { hp: 100 }\nu.hp = ____\nprint(u.hp)', expect: '50', answer: '50', hint: 'u.hp = 50' },
-      { label: '속성 추가', ask: 'o에 color를 "빨강"으로 추가해 출력되게.', code: 'let o = {}\no.color = "____"\nprint(o.color)', expect: '"빨강"', answer: '빨강', hint: '따옴표 안에 빨강' },
+      { label: '점으로 꺼내기', ask: 'u.age 는?', code: 'let u = { age: 24 }\nprint(u.age === ____)', expect: 'true', answer: '24', hint: 'age 값' },
+      { label: '다른 속성', ask: 'car.brand 는?', code: 'let car = { brand: "기아", year: 2020 }\nprint(car.brand === "____")', expect: 'true', answer: '기아', hint: 'brand 값' },
+      { label: '값 바꾸기', ask: '바꾼 뒤 u.hp 는?', code: 'let u = { hp: 100 }\nu.hp = 50\nprint(u.hp === ____)', expect: 'true', answer: '50', hint: '방금 넣은 값' },
+      { label: '속성 추가', ask: '추가한 뒤 o.color 는?', code: 'let o = {}\no.color = "빨강"\nprint(o.color === "____")', expect: 'true', answer: '빨강', hint: '방금 추가한 값' },
+      { label: '없는 키', ask: 'u엔 name만 있다. u.age 는?', code: 'let u = { name: "민지" }\nprint(u.age === ____)', expect: 'true', answer: 'undefined', hint: '없는 키 = undefined' },
     ],
   }
 
-  // ── 9강 · DOM : 요소 만들고 글자/스타일 바꾸기 기본 ──
+  // ── 9강 · DOM : 요소 속성을 바꾼 뒤 그 값을 예측 ──
   E['9'] = {
-    pattern: '🟢 쉬움 · 요소 만들고 textContent·style·className·id 바꾸기 반복',
+    pattern: '🟢 쉬움 · textContent·style·className·id를 바꾼 뒤 그 값을 예측',
     problems: [
-      { label: '글자 넣기', ask: 'el의 글자를 "안녕"으로 만들어 출력되게.', code: 'let el = document.createElement("div")\nel.textContent = "____"\nprint(el.textContent)', expect: '"안녕"', answer: '안녕', hint: 'textContent = "안녕"' },
-      { label: 'box 글자', ask: 'box(화면 영역)의 글자를 "완료"로 바꿔 출력되게.', code: 'box.textContent = "____"\nprint(box.textContent)', expect: '"완료"', answer: '완료', hint: 'box.textContent = "완료"' },
-      { label: '색 바꾸기', ask: 'el의 글자색을 "red"로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.style.color = "____"\nprint(el.style.color)', expect: '"red"', answer: 'red', hint: 'style.color = "red"' },
-      { label: '클래스', ask: 'el의 class 이름을 "on"으로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.className = "____"\nprint(el.className)', expect: '"on"', answer: 'on', hint: 'className = "on"' },
-      { label: '아이디', ask: 'el의 id를 "title"로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.id = "____"\nprint(el.id)', expect: '"title"', answer: 'title', hint: 'id = "title"' },
+      { label: '글자', ask: 'el.textContent 는?', code: 'let el = document.createElement("div")\nel.textContent = "안녕"\nprint(el.textContent === "____")', expect: 'true', answer: '안녕', hint: '방금 넣은 글자' },
+      { label: '색', ask: 'el.style.color 는?', code: 'let el = document.createElement("div")\nel.style.color = "red"\nprint(el.style.color === "____")', expect: 'true', answer: 'red', hint: '방금 정한 색' },
+      { label: '클래스', ask: 'el.className 는?', code: 'let el = document.createElement("div")\nel.className = "on"\nprint(el.className === "____")', expect: 'true', answer: 'on', hint: '방금 정한 클래스' },
+      { label: '아이디', ask: 'el.id 는?', code: 'let el = document.createElement("div")\nel.id = "title"\nprint(el.id === "____")', expect: 'true', answer: 'title', hint: '방금 정한 id' },
+      { label: '붙인 개수', ask: 'span 하나를 붙이면 자식 개수는?', code: 'let box2 = document.createElement("div")\nbox2.append(document.createElement("span"))\nprint(box2.children.length === ____)', expect: 'true', answer: '1', hint: '하나 붙임' },
     ],
   }
 
-  // ── 10강 · 실전 캡스톤 : 배운 조각 한 문제씩(기본) ──
+  // ── 10강 · 실전 캡스톤 : 배운 조각의 결과를 예측(기본) ──
   E['10'] = {
-    pattern: '🟢 쉬움 · 값·문자열·배열·객체·함수·DOM 기본을 한 문제씩',
+    pattern: '🟢 쉬움 · 값·문자열·배열·객체·함수·DOM의 결과를 한 문제씩 예측',
     problems: [
-      { label: '값·문자열', ask: '변수 name을 인사말에 끼워 "안녕, 민지님"이 나오게.', code: 'let name = "민지"\nprint("안녕, " + ____ + "님")', expect: '"안녕, 민지님"', answer: 'name', hint: '변수 name을 이어붙인다' },
-      { label: '배열 개수', ask: '사람이 몇 명인지(3) 구하려면 배열의 무엇?', code: 'let users = ["민지", "지훈", "서연"]\nprint(users.____)', expect: '3', answer: 'length', hint: '.length' },
-      { label: '객체 속성', ask: '"콩이는 3살"이 나오게 나이 속성을 꺼내라.', code: 'let p = { name: "콩이", age: 3 }\nprint(p.name + "는 " + p.____ + "살")', expect: '"콩이는 3살"', answer: 'age', hint: 'p.age' },
-      { label: 'DOM 글자', ask: '요소의 글자를 "명함"으로 만들어 출력되게.', code: 'let el = document.createElement("div")\nel.textContent = "____"\nprint(el.textContent)', expect: '"명함"', answer: '명함', hint: 'textContent = "명함"' },
-      { label: '함수 반환', ask: 'greet("지훈")이 "지훈님 환영!"이 되게 인자를 넣어라.', code: 'function greet(n) { return n + "님 환영!" }\nprint(greet("____"))', expect: '"지훈님 환영!"', answer: '지훈', hint: 'greet에 "지훈"' },
+      { label: '값·문자열', ask: 'name="민지"일 때 "안녕, " + name + "님" 은?', code: 'let name = "민지"\nprint(("안녕, " + name + "님") === "____")', expect: 'true', answer: '안녕, 민지님', hint: '이어붙이기' },
+      { label: '배열 개수', ask: 'users의 개수는?', code: 'let users = ["민지", "지훈", "서연"]\nprint(users.length === ____)', expect: 'true', answer: '3', hint: '세 명' },
+      { label: '객체 속성', ask: 'p.name + "는 " + p.age + "살" 은?', code: 'let p = { name: "콩이", age: 3 }\nprint((p.name + "는 " + p.age + "살") === "____")', expect: 'true', answer: '콩이는 3살', hint: '속성을 이어붙임' },
+      { label: 'DOM 글자', ask: 'el.textContent 는?', code: 'let el = document.createElement("div")\nel.textContent = "명함"\nprint(el.textContent === "____")', expect: 'true', answer: '명함', hint: '방금 넣은 글자' },
+      { label: '함수 반환', ask: 'greet("지훈") 은?', code: 'function greet(n) { return n + "님 환영!" }\nprint(greet("지훈") === "____")', expect: 'true', answer: '지훈님 환영!', hint: 'n + "님 환영!"' },
     ],
   }
 
@@ -321,15 +321,15 @@
     ],
   }
 
-  // ── 🧬 클래스(class) : 틀 만들고 new 로 찍어 속성 꺼내기 ──
+  // ── 🧬 클래스(class) : new 로 만든 인스턴스의 속성/메서드 결과를 예측 ──
   E['class'] = {
-    pattern: '🟢 쉬움 · constructor·this·new 로 인스턴스 만들고 속성 꺼내기',
+    pattern: '🟢 쉬움 · new 로 만든 인스턴스의 속성·메서드 결과를 예측',
     problems: [
-      { label: '인스턴스 속성', ask: 'new C().n 이 5가 되게 this.n에 담을 값은?', code: 'class C { constructor() { this.n = ____ } }\nprint(new C().n)', expect: '5', answer: '5', hint: 'this.n = 5' },
-      { label: '생성자 인수', ask: '이름을 넘겨 new Dog().name이 "콩이"가 되게.', code: 'class Dog { constructor(name) { this.name = name } }\nprint(new Dog("____").name)', expect: '"콩이"', answer: '콩이', hint: 'new Dog("콩이")' },
-      { label: 'new 키워드', ask: '인스턴스를 만드는 키워드는? 빈칸을 채워라.', code: 'class C { constructor() { this.v = 7 } }\nlet c = ____ C()\nprint(c.v)', expect: '7', answer: 'new', hint: 'new C()' },
-      { label: 'this 속성', ask: 'new P(24)의 나이를 꺼내려면 어떤 속성?', code: 'class P { constructor(a) { this.age = a } }\nprint(new P(24).____)', expect: '24', answer: 'age', hint: '.age' },
-      { label: '기본값', ask: 'c의 hp(100)를 꺼내려면 어떤 속성?', code: 'class C { constructor() { this.hp = 100 } }\nlet c = new C()\nprint(c.____)', expect: '100', answer: 'hp', hint: 'c.hp' },
+      { label: '인스턴스 속성', ask: 'new C().n 은?', code: 'class C { constructor() { this.n = 5 } }\nprint(new C().n === ____)', expect: 'true', answer: '5', hint: 'constructor의 this.n' },
+      { label: '생성자 인수', ask: '만든 인스턴스의 name 은?', code: 'class Dog { constructor(name) { this.name = name } }\nlet d = new Dog("콩이")\nprint(d.name === "____")', expect: 'true', answer: '콩이', hint: '넘긴 인수' },
+      { label: 'age 속성', ask: '만든 인스턴스의 age 는?', code: 'class P { constructor(a) { this.age = a } }\nlet p = new P(24)\nprint(p.age === ____)', expect: 'true', answer: '24', hint: '넘긴 인수' },
+      { label: '기본값', ask: 'new C().hp 은?', code: 'class C { constructor() { this.hp = 100 } }\nprint(new C().hp === ____)', expect: 'true', answer: '100', hint: 'constructor의 this.hp' },
+      { label: '메서드', ask: 'new Dog().bark() 은?', code: 'class Dog { bark() { return "멍" } }\nprint(new Dog().bark() === "____")', expect: 'true', answer: '멍', hint: 'bark의 반환' },
     ],
   }
 })()

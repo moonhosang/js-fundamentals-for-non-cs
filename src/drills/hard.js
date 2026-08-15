@@ -88,39 +88,39 @@
     ],
   }
 
-  // ── 8강 · 객체 : 메서드·키 개수·깊은 중첩·reduce·조건 결합 ──
+  // ── 8강 · 객체 : 메서드·깊은 중첩·reduce·조건 결합·this 결과 예측 ──
   H['8'] = {
-    pattern: '🔴 어려움 · 메서드·깊은 중첩·reduce·조건 결합 — 응용',
+    pattern: '🔴 어려움 · 메서드·깊은 중첩·reduce 집계·조건 결합·this 결과 예측',
     problems: [
-      { label: '메서드', ask: 'dog의 bark 메서드를 불러 "멍"이 나오게 — 빈칸에 메서드 이름?', code: 'let dog = { bark: function () { return "멍" } }\nprint(dog.____())', expect: '"멍"', answer: 'bark', hint: 'dog.bark()' },
-      { label: '키 개수', ask: '객체의 이름(키) 개수 2를 구하려면? (Object.keys의 무엇?)', code: 'let o = { a: 1, b: 2 }\nprint(Object.keys(o).____)', expect: '2', answer: 'length', hint: '.length' },
-      { label: '깊은 중첩', ask: 'data 안 첫 사람의 펫 이름("콩이")까지 닿으려면 마지막 칸에?', code: 'let data = { users: [{ pet: { name: "콩이" } }] }\nprint(data.users[0].pet.____)', expect: '"콩이"', answer: 'name', hint: 'data.users[0].pet.name' },
-      { label: '나이 합(reduce)', ask: '사람들의 나이 합(54)이 나오게 — 각 사람의 무엇을 더할까?', code: 'let ppl = [{ age: 24 }, { age: 30 }]\nprint(ppl.reduce((s, p) => s + p.____, 0))', expect: '54', answer: 'age', hint: 's + p.age' },
-      { label: '조건 결합', ask: 'vip면 이름 뒤에 별이 붙어 "민지⭐"가 나오게 — vip가 참일 때 값?', code: 'let p = { name: "민지", vip: true }\nprint(p.name + (p.vip ? "____" : ""))', expect: '"민지⭐"', answer: '⭐', hint: 'true면 "⭐"' },
+      { label: '메서드', ask: 'dog.bark() 는?', code: 'let dog = { bark: function () { return "멍" } }\nprint(dog.bark() === "____")', expect: 'true', answer: '멍', hint: 'bark의 반환' },
+      { label: '깊은 중첩', ask: 'data.users[0].pet.name 은?', code: 'let data = { users: [{ pet: { name: "콩이" } }] }\nprint(data.users[0].pet.name === "____")', expect: 'true', answer: '콩이', hint: '끝까지 따라감' },
+      { label: '나이 합(reduce)', ask: '사람들의 나이를 다 더하면?', code: 'let ppl = [{ age: 24 }, { age: 30 }]\nprint(ppl.reduce((s, p) => s + p.age, 0) === ____)', expect: 'true', answer: '54', hint: '24 + 30' },
+      { label: '조건 결합', ask: 'vip면 이름 뒤에 별을 붙인다. 결과는?', code: 'let p = { name: "민지", vip: true }\nprint((p.name + (p.vip ? "⭐" : "")) === "____")', expect: 'true', answer: '민지⭐', hint: 'vip라 별 붙음' },
+      { label: 'this 메서드', ask: 'c.hi() 는? (hi는 "나는 "+this.name 반환)', code: 'let c = { name: "민지", hi() { return "나는 " + this.name } }\nprint(c.hi() === "____")', expect: 'true', answer: '나는 민지', hint: 'this.name = "민지"' },
     ],
   }
 
-  // ── 9강 · DOM : innerHTML·연속 클릭·스타일·다중 붙이기·속성 ──
+  // ── 9강 · DOM : innerHTML·스타일·속성·append는 '이동' 함정 예측 ──
   H['9'] = {
-    pattern: '🔴 어려움 · innerHTML+querySelector·연속 클릭·다중 append·속성',
+    pattern: '🔴 어려움 · innerHTML 안 찾기·스타일·속성·append는 이동(중복 아님) 예측',
     problems: [
-      { label: 'innerHTML 안 찾기', ask: '넣은 <p>의 글자("hi")를 꺼내려면 p의 무엇?', code: 'let el = document.createElement("div")\nel.innerHTML = "<p>hi</p>"\nprint(el.querySelector("p").____)', expect: '"hi"', answer: 'textContent', hint: 'p.textContent' },
-      { label: '두 번 클릭', ask: '두 번 눌러 n이 2가 되게 — 한 번 더 누르는 함수는?', code: 'let n = 0\nlet b = document.createElement("button")\nb.addEventListener("click", () => n++)\nb.click()\nb.____()\nprint(n)', expect: '2', answer: 'click', hint: 'b.click() 두 번' },
-      { label: '크기 스타일', ask: 'el의 너비를 "10px"로 정해 출력되게.', code: 'let el = document.createElement("div")\nel.style.width = "____"\nprint(el.style.width)', expect: '"10px"', answer: '10px', hint: 'style.width = "10px"' },
-      { label: '둘 붙이기', ask: 'span 둘을 붙였을 때 자식 개수(2)를 구하려면?', code: 'let box2 = document.createElement("div")\nbox2.append(document.createElement("span"), document.createElement("span"))\nprint(box2.children.____)', expect: '2', answer: 'length', hint: 'children.length' },
-      { label: '속성 넣기', ask: 'href를 "#"로 넣어 다시 꺼내면 "#". 빈칸에 넣을 값은?', code: 'let el = document.createElement("a")\nel.setAttribute("href", "____")\nprint(el.getAttribute("href"))', expect: '"#"', answer: '#', hint: 'setAttribute("href", "#")' },
+      { label: 'innerHTML 안 찾기', ask: '넣은 <p>의 글자는?', code: 'let el = document.createElement("div")\nel.innerHTML = "<p>hi</p>"\nprint(el.querySelector("p").textContent === "____")', expect: 'true', answer: 'hi', hint: 'p 안의 글자' },
+      { label: '크기 스타일', ask: 'el.style.width 는?', code: 'let el = document.createElement("div")\nel.style.width = "10px"\nprint(el.style.width === "____")', expect: 'true', answer: '10px', hint: '방금 정한 너비' },
+      { label: '속성', ask: 'getAttribute("href") 는?', code: 'let el = document.createElement("a")\nel.setAttribute("href", "#")\nprint(el.getAttribute("href") === "____")', expect: 'true', answer: '#', hint: '방금 넣은 값' },
+      { label: 'append는 이동', ask: '같은 span을 두 번 append하면 자식 개수는? (같은 요소는 이동일 뿐)', code: 'let box2 = document.createElement("div")\nlet s = document.createElement("span")\nbox2.append(s)\nbox2.append(s)\nprint(box2.children.length === ____)', expect: 'true', answer: '1', hint: '복제가 아니라 이동 → 1개' },
+      { label: '숫자+글자', ask: 'el.textContent = 90 + "점" 은?', code: 'let el = document.createElement("div")\nel.textContent = 90 + "점"\nprint(el.textContent === "____")', expect: 'true', answer: '90점', hint: '숫자가 문자로' },
     ],
   }
 
-  // ── 10강 · 실전 캡스톤 : 카드 문자열·배지·filter·메서드·DOM 결합 ──
+  // ── 10강 · 실전 캡스톤 : 카드 문자열·배지·filter·메서드·DOM 결과 예측 ──
   H['10'] = {
-    pattern: '🔴 어려움 · 카드 문자열·조건 배지·filter·메서드·DOM 결합',
+    pattern: '🔴 어려움 · 카드 문자열·조건 배지·filter 집계·메서드·DOM 결과 예측',
     problems: [
-      { label: '카드 문자열', ask: '"민지(24)"가 나오게 나이 속성을 꺼내라.', code: 'let u = { name: "민지", age: 24 }\nprint(u.name + "(" + u.____ + ")")', expect: '"민지(24)"', answer: 'age', hint: 'u.age' },
-      { label: 'VIP 배지', ask: 'vip면 "민지⭐"가 나오게 — 참일 때 붙일 값?', code: 'let u = { name: "민지", vip: true }\nprint(u.name + (u.vip ? "____" : ""))', expect: '"민지⭐"', answer: '⭐', hint: 'true면 "⭐"' },
-      { label: '거르고 세기', ask: '25살 초과가 몇 명(1)인지 세려면 filter 뒤에 무엇?', code: 'let ppl = [{ age: 20 }, { age: 30 }]\nprint(ppl.filter(p => p.age > 25).____)', expect: '1', answer: 'length', hint: 'filter 결과의 .length' },
-      { label: '메서드', ask: 'dog의 bark를 불러 "멍"이 나오게 — 메서드 이름?', code: 'let dog = { bark: function () { return "멍" } }\nprint(dog.____())', expect: '"멍"', answer: 'bark', hint: 'dog.bark()' },
-      { label: 'DOM + 숫자', ask: '화면 글자를 "90점"으로 — 숫자 자리에 무엇?', code: 'let el = document.createElement("div")\nel.textContent = ____ + "점"\nprint(el.textContent)', expect: '"90점"', answer: '90', hint: '숫자 90 → 자동 문자' },
+      { label: '카드 문자열', ask: 'u.name + "(" + u.age + ")" 는?', code: 'let u = { name: "민지", age: 24 }\nprint((u.name + "(" + u.age + ")") === "____")', expect: 'true', answer: '민지(24)', hint: '이어붙이기' },
+      { label: 'VIP 배지', ask: 'vip면 별을 붙인다. 결과는?', code: 'let u = { name: "민지", vip: true }\nprint((u.name + (u.vip ? "⭐" : "")) === "____")', expect: 'true', answer: '민지⭐', hint: 'vip라 별 붙음' },
+      { label: '거르고 세기', ask: '25살 초과는 몇 명?', code: 'let ppl = [{ age: 20 }, { age: 30 }]\nprint(ppl.filter(p => p.age > 25).length === ____)', expect: 'true', answer: '1', hint: '30살 한 명' },
+      { label: '메서드', ask: 'dog.bark() 는?', code: 'let dog = { bark: function () { return "멍" } }\nprint(dog.bark() === "____")', expect: 'true', answer: '멍', hint: 'bark의 반환' },
+      { label: 'DOM + 숫자', ask: 'el.textContent = 90 + "점" 은?', code: 'let el = document.createElement("div")\nel.textContent = 90 + "점"\nprint(el.textContent === "____")', expect: 'true', answer: '90점', hint: '숫자가 문자로' },
     ],
   }
 
@@ -304,15 +304,19 @@
     ],
   }
 
-  // ── 🧬 클래스(class) : 인스턴스 독립·메서드+조건·상속·instanceof ──
+  // ── 🧬 클래스(class) : 인스턴스 독립·상속·instanceof·인스턴스도 그냥 객체 ──
   H['class'] = {
-    pattern: '🔴 어려움 · 인스턴스 독립·메서드+조건·extends 상속·instanceof',
+    pattern: '🔴 어려움 · 인스턴스는 각자 힙 객체(독립)·상속·instanceof·typeof',
     problems: [
-      { label: '인스턴스 독립', ask: 'a·b는 각자 다른 객체. a.n=9로 바꿔도 b.n은? 빈칸에 n', code: 'class C { constructor() { this.n = 0 } }\nlet a = new C()\nlet b = new C()\na.n = 9\nprint(b.____)', expect: '0', answer: 'n', hint: '각자 힙 객체 → b는 0' },
-      { label: '메서드+조건', ask: 'new P(15).grade()가 "청소년"이 되게 — else 쪽을 채워라.', code: 'class P { constructor(a) { this.age = a } grade() { return this.age >= 19 ? "성인" : "____" } }\nprint(new P(15).grade())', expect: '"청소년"', answer: '청소년', hint: '15 < 19 → else' },
-      { label: '상속(extends)', ask: 'B는 A를 물려받는다. new B()가 A의 hi()를 쓰게 — 메서드 이름?', code: 'class A { hi() { return "A" } }\nclass B extends A {}\nprint(new B().____())', expect: '"A"', answer: 'hi', hint: '물려받은 hi()' },
-      { label: '인스턴스 배열', ask: '두 번째 인스턴스의 이름("나")을 꺼내려면 어떤 속성?', code: 'class D { constructor(n) { this.name = n } }\nlet ds = [new D("가"), new D("나")]\nprint(ds[1].____)', expect: '"나"', answer: 'name', hint: 'ds[1].name' },
-      { label: 'instanceof', ask: 'c가 C의 인스턴스인지 확인해 true가 나오게 — 무슨 연산자?', code: 'class C {}\nlet c = new C()\nprint(c ____ C)', expect: 'true', answer: 'instanceof', hint: 'c instanceof C' },
+      { label: '인스턴스 독립', ask: 'a·b는 각자 다른 객체. a.n=9로 바꿔도 b.n은?', code: 'class C { constructor() { this.n = 0 } }\nlet a = new C()\nlet b = new C()\na.n = 9\nprint(b.n === ____)', expect: 'true', answer: '0', hint: '각자 힙 객체 → b는 0',
+        mem: { title: 'new 마다 힙에 새 객체 — a와 b는 다른 객체', stackLabel: '📇 이름표 장부', code: ['let a = new C()', 'let b = new C()', 'a.n = 9'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'C', fields: [{ key: 'n', value: '0' }] }, h2: { label: 'C', fields: [{ key: 'n', value: '0' }] } }, note: 'new 두 번 → <b>힙에 서로 다른 객체</b> h1, h2. a·b는 별칭이 아니다.' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'C', fields: [{ key: 'n', value: '9', bad: true }] }, h2: { label: 'C', fields: [{ key: 'n', value: '0' }] } }, note: '<code>a.n = 9</code>는 h1만 고침. <b>b(h2).n은 0 그대로</b>.' },
+        ] } },
+      { label: '상속(extends)', ask: 'B는 A를 물려받는다. new B().hi() 는?', code: 'class A { hi() { return "A" } }\nclass B extends A {}\nprint(new B().hi() === "____")', expect: 'true', answer: 'A', hint: '물려받은 hi()' },
+      { label: '인스턴스 배열', ask: 'ds[1].name 은?', code: 'class D { constructor(n) { this.name = n } }\nlet ds = [new D("가"), new D("나")]\nprint(ds[1].name === "____")', expect: 'true', answer: '나', hint: '두 번째 인스턴스' },
+      { label: 'instanceof', ask: 'c instanceof C 는?', code: 'class C {}\nlet c = new C()\nprint((c instanceof C) === ____)', expect: 'true', answer: 'true', hint: 'C로 만든 c' },
+      { label: '그냥 객체', ask: 'typeof (new C()) 는? (인스턴스도 특별하지 않다)', code: 'class C {}\nprint((typeof (new C())) === "____")', expect: 'true', answer: 'object', hint: '인스턴스 = 그냥 객체' },
     ],
   }
 })()

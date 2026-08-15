@@ -88,39 +88,39 @@
     ],
   }
 
-  // ── 8강 · 객체 : 없는 키·중첩·배열 안 객체·대괄호·조합 출력 ──
+  // ── 8강 · 객체 : 중첩·배열 안 객체·대괄호·조합 결과를 예측 ──
   N['8'] = {
-    pattern: '🟡 보통 · 없는 키·중첩·배열 안 객체·대괄호 — 한 겹 더',
+    pattern: '🟡 보통 · 중첩·배열 안 객체·대괄호·속성 조합의 결과를 예측',
     problems: [
-      { label: '없는 키', ask: 'u엔 name만 있다. u.age(없는 이름)를 꺼내면? 빈칸에 age를 넣고 ▶확인', code: 'let u = { name: "민지" }\nprint(u.____)', expect: 'undefined', answer: 'age', hint: '없는 키 = undefined' },
-      { label: '중첩', ask: 'me.pet.name이 "콩이"가 되게 안쪽을 채워라.', code: 'let me = { pet: { name: "____" } }\nprint(me.pet.name)', expect: '"콩이"', answer: '콩이', hint: '제일 안쪽 name' },
-      { label: '배열 안 객체', ask: '두 번째 사람의 이름(지훈)을 꺼내려면 어떤 속성?', code: 'let users = [{ name: "민지" }, { name: "지훈" }]\nprint(users[1].____)', expect: '"지훈"', answer: 'name', hint: 'users[1].name' },
-      { label: '대괄호(공백 키)', ask: '"my key"처럼 공백 있는 이름은 대괄호로! 값 7을 꺼내려면 빈칸에?', code: 'let o = { "my key": 7 }\nprint(o[____])', expect: '7', answer: '"my key"', hint: 'o["my key"]' },
-      { label: '속성 조합 출력', ask: '"민지(24)"가 나오게 나이 속성을 꺼내라.', code: 'let p = { name: "민지", age: 24 }\nprint(p.name + "(" + p.____ + ")")', expect: '"민지(24)"', answer: 'age', hint: 'p.age' },
+      { label: '중첩', ask: 'me.pet.name 은?', code: 'let me = { pet: { name: "콩이" } }\nprint(me.pet.name === "____")', expect: 'true', answer: '콩이', hint: '안쪽 name' },
+      { label: '배열 안 객체', ask: 'users[1].name 은?', code: 'let users = [{ name: "민지" }, { name: "지훈" }]\nprint(users[1].name === "____")', expect: 'true', answer: '지훈', hint: '두 번째 사람' },
+      { label: '대괄호(공백 키)', ask: 'o["my key"] 는?', code: 'let o = { "my key": 7 }\nprint(o["my key"] === ____)', expect: 'true', answer: '7', hint: '대괄호로 접근' },
+      { label: '속성 조합', ask: '이름과 나이를 이으면? name(age)', code: 'let p = { name: "민지", age: 24 }\nprint((p.name + "(" + p.age + ")") === "____")', expect: 'true', answer: '민지(24)', hint: '이어붙이기' },
+      { label: '키 개수', ask: '객체의 키(속성) 개수는?', code: 'let o = { a: 1, b: 2 }\nprint(Object.keys(o).length === ____)', expect: 'true', answer: '2', hint: 'a, b → 2개' },
     ],
   }
 
-  // ── 9강 · DOM : 태그이름·붙이기·클릭·숫자→글자 ──
+  // ── 9강 · DOM : tagName·숫자 강제·클릭 결과를 예측 ──
   N['9'] = {
-    pattern: '🟡 보통 · tagName(대문자)·append·click·숫자→문자',
+    pattern: '🟡 보통 · tagName(대문자)·숫자→문자·클릭 횟수 결과를 예측',
     problems: [
-      { label: '태그 이름', ask: 'tagName이 "BUTTON"(대문자!)이 되려면 어떤 태그로 만들까?', code: 'let el = document.createElement("____")\nprint(el.tagName)', expect: '"BUTTON"', answer: 'button', hint: 'tagName은 항상 대문자로 나온다' },
-      { label: '붙이기', ask: 'c를 box2 안에 붙여 자식 1개가 되게 — 무슨 함수?', code: 'let box2 = document.createElement("div")\nlet c = document.createElement("span")\nbox2.____(c)\nprint(box2.children.length)', expect: '1', answer: 'append', hint: 'box2.append(c)' },
-      { label: '클릭 실행', ask: '버튼을 눌러 n이 1이 되게 — 버튼을 누르는 함수는?', code: 'let n = 0\nlet btn = document.createElement("button")\nbtn.addEventListener("click", function () { n = 1 })\nbtn.____()\nprint(n)', expect: '1', answer: 'click', hint: 'btn.click() 이 클릭을 흉내낸다' },
-      { label: '숫자→글자', ask: '화면 글자를 "90점"으로 만들려면 숫자 자리에 무엇?', code: 'let el = document.createElement("div")\nel.textContent = ____ + "점"\nprint(el.textContent)', expect: '"90점"', answer: '90', hint: '숫자 90은 자동으로 문자가 된다' },
-      { label: '이벤트 종류', ask: '"클릭" 이벤트를 듣게 하려면 첫 칸에 무슨 이름?', code: 'let ok = 0\nlet btn = document.createElement("button")\nbtn.addEventListener("____", function () { ok = 1 })\nbtn.click()\nprint(ok)', expect: '1', answer: 'click', hint: 'addEventListener("click", ...)' },
+      { label: '태그 이름', ask: 'button으로 만든 요소의 tagName 은? (대문자!)', code: 'let el = document.createElement("button")\nprint(el.tagName === "____")', expect: 'true', answer: 'BUTTON', hint: 'tagName은 항상 대문자' },
+      { label: '숫자→문자', ask: 'textContent에 숫자를 넣으면? (문자가 된다)', code: 'let el = document.createElement("div")\nel.textContent = 90 + ""\nprint(el.textContent === "____")', expect: 'true', answer: '90', hint: '숫자 90 → 문자 "90"' },
+      { label: '클릭', ask: '한 번 클릭하면 n은?', code: 'let n = 0\nlet b = document.createElement("button")\nb.addEventListener("click", () => n = 1)\nb.click()\nprint(n === ____)', expect: 'true', answer: '1', hint: '리스너가 1로' },
+      { label: '두 번 클릭', ask: '두 번 클릭하면 n은?', code: 'let n = 0\nlet b = document.createElement("button")\nb.addEventListener("click", () => n++)\nb.click()\nb.click()\nprint(n === ____)', expect: 'true', answer: '2', hint: '매번 +1' },
+      { label: '둘 붙이기', ask: 'span 둘을 붙이면 자식 개수는?', code: 'let box2 = document.createElement("div")\nbox2.append(document.createElement("span"), document.createElement("span"))\nprint(box2.children.length === ____)', expect: 'true', answer: '2', hint: '둘 붙임' },
     ],
   }
 
   // ── 10강 · 실전 캡스톤 : 조건·map·이벤트·객체배열·reduce ──
   N['10'] = {
-    pattern: '🟡 보통 · 조건·map 변환·이벤트·객체 배열·reduce 합',
+    pattern: '🟡 보통 · 조건·map·이벤트·객체 배열·reduce 결과를 예측',
     problems: [
-      { label: '조건', ask: '나이 15는 성인이 아니다 — else 쪽 글자를 "청소년"으로.', code: 'let age = 15\nprint(age >= 19 ? "성인" : "____")', expect: '"청소년"', answer: '청소년', hint: '15 < 19 → else 쪽' },
-      { label: 'map 변환', ask: '나이를 1씩 올린 next에서 20→21을 꺼내려면 몇 번?', code: 'let ages = [10, 20]\nlet next = ages.map(a => a + 1)\nprint(next[____])', expect: '21', answer: '1', hint: '두 번째 = 번호 1' },
-      { label: '이벤트', ask: '버튼을 눌러 clicked가 1이 되게 — 클릭을 흉내내는 함수?', code: 'let clicked = 0\nlet b = document.createElement("button")\nb.addEventListener("click", () => clicked++)\nb.____()\nprint(clicked)', expect: '1', answer: 'click', hint: 'b.click()' },
-      { label: '객체 배열', ask: '목록 첫 사람의 이름(민지)을 꺼내려면 어떤 속성?', code: 'let ppl = [{ name: "민지" }, { name: "지훈" }]\nprint(ppl[0].____)', expect: '"민지"', answer: 'name', hint: 'ppl[0].name' },
-      { label: 'reduce 합', ask: '두 값을 더해 30이 되게 — 무슨 연산?', code: 'let a = [10, 20]\nprint(a.reduce((s, x) => s ____ x, 0))', expect: '30', answer: '+', hint: 's + x' },
+      { label: '조건', ask: '나이 15일 때 등급은? (19세 이상이면 "성인")', code: 'let age = 15\nprint((age >= 19 ? "성인" : "청소년") === "____")', expect: 'true', answer: '청소년', hint: '15 < 19 → else' },
+      { label: 'map 변환', ask: '나이를 1씩 올린 배열의 두 번째는?', code: 'let ages = [10, 20]\nprint(ages.map(a => a + 1)[1] === ____)', expect: 'true', answer: '21', hint: '20 + 1' },
+      { label: '이벤트', ask: '한 번 클릭하면 clicked는?', code: 'let clicked = 0\nlet b = document.createElement("button")\nb.addEventListener("click", () => clicked++)\nb.click()\nprint(clicked === ____)', expect: 'true', answer: '1', hint: '+1' },
+      { label: '객체 배열', ask: '목록 첫 사람의 name 은?', code: 'let ppl = [{ name: "민지" }, { name: "지훈" }]\nprint(ppl[0].name === "____")', expect: 'true', answer: '민지', hint: 'ppl[0].name' },
+      { label: 'reduce 합', ask: '두 값을 다 더하면?', code: 'let a = [10, 20]\nprint(a.reduce((s, x) => s + x, 0) === ____)', expect: 'true', answer: '30', hint: '10 + 20' },
     ],
   }
 
@@ -304,15 +304,15 @@
     ],
   }
 
-  // ── 🧬 클래스(class) : 메서드·this·여러 인수·속성 변경 ──
+  // ── 🧬 클래스(class) : 메서드·this·여러 인수·조건 메서드 결과 예측 ──
   N['class'] = {
-    pattern: '🟡 보통 · 메서드 호출·this로 자기 속성·여러 인수·인스턴스 변경',
+    pattern: '🟡 보통 · 메서드·this로 자기 속성·여러 인수·조건 메서드 결과 예측',
     problems: [
-      { label: '메서드 호출', ask: 'new Dog()의 bark를 불러 "멍"이 나오게 — 메서드 이름?', code: 'class Dog { bark() { return "멍" } }\nprint(new Dog().____())', expect: '"멍"', answer: 'bark', hint: '.bark()' },
-      { label: 'this 쓰는 메서드', ask: 'hi()가 "hi z"를 돌려주게 — 메서드 이름?', code: 'class P { constructor(n) { this.name = n } hi() { return "hi " + this.name } }\nprint(new P("z").____())', expect: '"hi z"', answer: 'hi', hint: '.hi()' },
-      { label: '속성 변경', ask: 'c.hp를 50으로 바꿔 출력되게.', code: 'class C { constructor() { this.hp = 100 } }\nlet c = new C()\nc.hp = ____\nprint(c.hp)', expect: '50', answer: '50', hint: 'c.hp = 50' },
-      { label: '두 인수', ask: 'new Pt(2,3)의 y(3)를 꺼내려면 어떤 속성?', code: 'class Pt { constructor(x, y) { this.x = x; this.y = y } }\nprint(new Pt(2, 3).____)', expect: '3', answer: 'y', hint: '.y' },
-      { label: '계산 메서드', ask: 'new Box(5)의 값을 2배로 돌려주는 메서드는?', code: 'class Box { constructor(n) { this.n = n } dbl() { return this.n * 2 } }\nprint(new Box(5).____())', expect: '10', answer: 'dbl', hint: '.dbl()' },
+      { label: 'this 쓰는 메서드', ask: 'new P("z").hi() 는? (hi는 "hi "+this.name 반환)', code: 'class P { constructor(n) { this.name = n } hi() { return "hi " + this.name } }\nprint(new P("z").hi() === "____")', expect: 'true', answer: 'hi z', hint: '"hi " + "z"' },
+      { label: '속성 변경', ask: '바꾼 뒤 c.hp 는?', code: 'class C { constructor() { this.hp = 100 } }\nlet c = new C()\nc.hp = 50\nprint(c.hp === ____)', expect: 'true', answer: '50', hint: '방금 넣은 값' },
+      { label: '두 인수', ask: 'new Pt(2, 3).y 는?', code: 'class Pt { constructor(x, y) { this.x = x; this.y = y } }\nprint(new Pt(2, 3).y === ____)', expect: 'true', answer: '3', hint: '두 번째 인수' },
+      { label: '계산 메서드', ask: 'new Box(5).dbl() 는? (dbl은 n×2)', code: 'class Box { constructor(n) { this.n = n } dbl() { return this.n * 2 } }\nprint(new Box(5).dbl() === ____)', expect: 'true', answer: '10', hint: '5 × 2' },
+      { label: '조건 메서드', ask: '나이 15일 때 grade() 는? (19세 이상이면 "성인")', code: 'class P { constructor(a) { this.age = a } grade() { return this.age >= 19 ? "성인" : "청소년" } }\nprint(new P(15).grade() === "____")', expect: 'true', answer: '청소년', hint: '15 < 19' },
     ],
   }
 })()
