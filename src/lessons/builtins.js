@@ -23,7 +23,7 @@
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 이 페이지 쓰는 법</span>
         <p>JS엔 값·배열·객체를 다루는 <b>이미 만들어진 도구</b>가 딸려 있다. 분류별 표로 <b>무엇을 하는지</b> 훑고, 각 예제를 <b>실행</b>해 결과를 눈으로 본다. 드릴에서 막히면 이 페이지로 온다.</p>
-        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a> · <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/연산자_(프로그래밍)" target="_blank" rel="noopener noreferrer">연산자 ↗</a></p>
+        <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/자료형" target="_blank" rel="noopener noreferrer">자료형 ↗</a> · <a href="https://ko.wikipedia.org/wiki/배열" target="_blank" rel="noopener noreferrer">배열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/연산자_(프로그래밍)" target="_blank" rel="noopener noreferrer">연산자 ↗</a> · <a href="https://ko.wikipedia.org/wiki/형_변환" target="_blank" rel="noopener noreferrer">형 변환(캐스팅) ↗</a></p>
       </div>
 
       <div class="card" style="border-color:var(--brand)">
@@ -96,9 +96,51 @@
       ])}
       <div class="card"><div class="file-label">🔬 실행</div><div data-m="obj"></div></div>
 
+      <h3 class="section-title">⑦ 형 변환(캐스팅) — 타입을 바꾸기</h3>
+      <p class="section-desc"><b>캐스팅</b> = 값의 타입을 바꾸는 것. 두 가지다 — <b>내가 직접</b>(명시적: <code>Number()</code>·<code>String()</code>·<code>Boolean()</code>) 하거나, <b>연산자가 알아서</b>(암묵적: <code>"5" - 1</code>에서 문자열을 숫자로). 암묵적 변환이 <b>표현식의 함정</b> 대부분을 만든다(→ 3강에서 축약으로 확인).</p>
+      <span class="learn-tag">🙋 명시적 — 내가 함수로 직접 바꾼다</span>
+      ${tbl([
+        ['Number(x)', '숫자로. 빈칸/공백은 0, 못 바꾸면 <b>NaN</b>', 'Number("12")', '12'],
+        ['Number(x)', '', 'Number("abc")', 'NaN'],
+        ['String(x)', '문자열로', 'String(12)', '"12"'],
+        ['Boolean(x)', '참/거짓으로(truthy/falsy → ⑧)', 'Boolean(0)', 'false'],
+        ['parseInt(s)', '앞쪽 <b>정수</b>만 뽑음(뒤 글자 무시)', 'parseInt("12px")', '12'],
+        ['parseFloat(s)', '앞쪽 <b>소수</b>만 뽑음', 'parseFloat("3.14x")', '3.14'],
+        ['`${x}`', '템플릿도 문자열로 캐스팅', '`값:${12}`', '"값:12"'],
+      ])}
+      <span class="learn-tag">🤖 암묵적(coercion) — 연산자가 알아서 바꾼다 · <b>표현식 함정의 근원</b></span>
+      ${tbl([
+        ['+ (한쪽이 문자열)', '숫자를 문자열로 → <b>이어붙임</b>', '1 + "2"', '"12"'],
+        ['- * / % (산술)', '문자열을 <b>숫자로</b> 강제', '"5" - 1', '4'],
+        ['- * /', '', '"6" * "2"', '12'],
+        ['+ (true/null)', 'true→1, null→0, undefined→NaN', 'true + 1', '2'],
+        ['&gt; &lt; (비교)', '양쪽을 숫자로', 'true > 0', 'true'],
+        ['== (느슨한 같음)', '타입 맞춰 강제(그래서 <b>=== 권장</b>)', '1 == "1"', 'true'],
+        ['=== (엄격한 같음)', '강제 안 함 → 타입 다르면 false', '1 === "1"', 'false'],
+      ])}
+      <div class="card"><div class="file-label">🔬 실행 — 명시적 vs 암묵적</div><div data-m="cast"></div></div>
+
+      <h3 class="section-title">⑧ truthy / falsy — 조건에서 참·거짓으로 취급되는 값</h3>
+      <p class="section-desc"><code>if</code>·<code>||</code>·<code>&amp;&amp;</code>·삼항의 조건은 꼭 <code>true</code>/<code>false</code>가 아니어도 된다 — 아무 값이나 오면 JS가 <b>참 같은가(truthy) / 거짓 같은가(falsy)</b>로 본다. <b>falsy는 딱 8개</b>, <b>나머지는 전부 truthy</b>. 이 8개만 외우면 된다.</p>
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">❌ falsy — 이 8개가 전부 (나머지는 다 truthy)</div>
+        <p class="section-desc" style="margin:0"><code>false</code> · <code>0</code> · <code>-0</code> · <code>0n</code>(BigInt 0) · <code>""</code>(빈 문자열) · <code>null</code> · <code>undefined</code> · <code>NaN</code></p>
+      </div>
+      <span class="learn-tag">⚠️ 헷갈리는 <b>truthy</b> — 이건 다 <b>참</b>이다: <code>"0"</code> · <code>"false"</code> · <code>" "</code>(공백) · <code>[]</code>(빈 배열) · <code>{}</code>(빈 객체) · <code>-1</code></span>
+      ${tbl([
+        ['if (x)', 'x가 truthy면 실행', 'if ("0") …', '실행됨(문자열은 truthy)'],
+        ['a || b', 'a가 falsy면 b (기본값 패턴)', '"" || "익명"', '"익명"'],
+        ['a || b', 'a가 truthy면 a', '"홍길동" || "익명"', '"홍길동"'],
+        ['a && b', 'a가 truthy면 b (가드 패턴)', '1 && "OK"', '"OK"'],
+        ['a && b', 'a가 falsy면 a', '0 && "OK"', '0'],
+        ['!x', 'truthy/falsy를 뒤집어 <b>진짜 boolean</b>', '![]', 'false'],
+        ['!!x', '두 번 뒤집어 <b>truthy 판정만</b> 얻기', '!!"hi"', 'true'],
+      ])}
+      <div class="card"><div class="file-label">🔬 실행 — falsy 8개 & truthy 함정</div><div data-m="truthy"></div></div>
+
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
-        <p class="section-desc" style="margin-top:0">내장 기능은 <b>값·배열·객체에 딸린 도구</b>다. 외우기보다 <b>①이런 게 있다 ②원본을 바꾸나(push·pop·sort) 새 값을 주나(map·filter·slice·includes)</b>를 안다. 화면 기능(<code>createElement</code>·<code>querySelector</code>·<code>addEventListener</code>)은 <b>9강 DOM</b>에서 다룬다.</p>
+        <p class="section-desc" style="margin-top:0">내장 기능은 <b>값·배열·객체에 딸린 도구</b>다. 외우기보다 <b>①이런 게 있다 ②원본을 바꾸나(push·pop·sort) 새 값을 주나(map·filter·slice·includes)</b>를 안다. <b>캐스팅</b>은 명시적(<code>Number()</code>…)과 암묵적(연산자가 강제) 둘, <b>falsy는 딱 8개</b>. 이 변환이 <b>표현식 축약에 어떻게 끼어드는지는 3강</b>에서 눈으로 본다. 화면 기능(<code>createElement</code>·<code>querySelector</code>·<code>addEventListener</code>)은 <b>9강 DOM</b>.</p>
       </div>
     `
 
@@ -142,6 +184,32 @@
       'print(Object.keys(o).length)  // 2',
       'delete o.a',
       'print(o.a)               // undefined  (지워짐)',
+    ].join('\n') }))
+    root.querySelector('[data-m="cast"]').append(Runner({ showBox: false, code: [
+      '// 🙋 명시적 — 내가 직접',
+      'print(Number("12") + 3)       // 15   (문자 → 숫자)',
+      'print(Number("abc"))          // NaN  (못 바꾸면)',
+      'print(String(12) + "!")       // "12!"',
+      'print(parseInt("12px"))       // 12   (앞 정수만)',
+      '',
+      '// 🤖 암묵적 — 연산자가 알아서 (같은 "5"인데 다르다)',
+      'print("5" + 1)                // "51"  (+는 이어붙임)',
+      'print("5" - 1)                // 4     (−는 숫자로 강제)',
+      'print(true + 1)               // 2     (true → 1)',
+      'print(1 == "1", 1 === "1")    // true false  (==는 강제, ===는 안 함)',
+    ].join('\n') }))
+    root.querySelector('[data-m="truthy"]').append(Runner({ showBox: false, code: [
+      '// ❌ falsy 8개 — 전부 false 취급',
+      'print(Boolean(false), Boolean(0), Boolean(""))       // false false false',
+      'print(Boolean(null), Boolean(undefined), Boolean(NaN)) // false false false',
+      '',
+      '// ⚠️ truthy 함정 — 이건 다 true다!',
+      'print(Boolean("0"), Boolean("false"), Boolean(" "))  // true true true',
+      'print(Boolean([]), Boolean({}))                      // true true',
+      '',
+      '// 실전 패턴',
+      'print("" || "익명")           // "익명"  (빈값이면 기본값)',
+      'print(0 && "실행")            // 0       (앞이 falsy면 멈춤)',
     ].join('\n') }))
   }
 })()

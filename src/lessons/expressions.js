@@ -281,6 +281,12 @@
       <div class="card"><div class="file-label">🔬 축약: 2 + 3 > 4 && 10 / 2 === 5</div><div data-m="red-mix"></div></div>
       <div data-m="qz-mix"></div>
 
+      <h3 class="section-title">③′ 타입이 섞이면 — 강제변환(coercion)이 끼어든다</h3>
+      <p class="section-desc">축약 도중 <b>타입이 다른 두 값</b>이 만나면, 연산자가 <b>한쪽을 강제로 바꾼다</b>. 규칙: <code>+</code>는 <b>한쪽이 문자열이면 이어붙이기</b>(숫자→문자), 그 외 산술 <code>- * / %</code>·비교는 <b>숫자로</b> 강제. 그래서 같은 <code>"5"</code>인데 <code>"5" + 1 = "51"</code>, <code>"5" - 1 = 4</code>로 갈린다.
+      <button class="inline-goto" data-goto="builtins">형 변환·강제변환 표 자세히 → 레퍼런스 ⑦</button></p>
+      <div class="card"><div class="file-label">🔬 축약: 1 + 2 + "3"  — 왼쪽부터, 글자를 만나는 순간 바뀐다</div><div data-m="red-coerce"></div></div>
+      <div data-m="qz-coerce"></div>
+
       <h3 class="section-title">④ 축약 예시 10선 — ★5개는 당신의 예상을 깬다</h3>
       <p class="section-desc">먼저 <b>머릿속으로 값을 예측</b>하고 ▶ 실행으로 확인하라. <b>★ 표시 5개</b>는 규칙을 알아도 대부분 틀린다 — 축약(왼쪽부터·우선순위·강제변환)이 만드는 함정이다. 몇 개나 맞혔나?</p>
       <div class="card"><div class="file-label">🔬 10개를 예측하고 실행</div><div data-m="gallery"></div></div>
@@ -345,6 +351,20 @@
       options: ['<code>3 > 4</code> (왼쪽부터)', '<code>2 + 3</code> (산수가 비교보다 먼저)', '<code>2 + 3 > 4</code> 통째로'],
       answer: 1,
       explain: '<b>산수(<code>+</code>)가 비교(<code>&gt;</code>)보다 우선순위가 높다</b> → <code>2+3=5</code> 먼저, 그다음 <code>5 &gt; 4 = true</code>. 문법 계층: 산수가 비교 규칙 안쪽에 있다.',
+    }))
+    root.querySelector('[data-m="red-coerce"]').append(ExprReduce({
+      title: '1 + 2 + "3"  (타입이 섞이면?)',
+      steps: [
+        { code: 'const r = 1 + 2 + "3"', mark: '1 + 2', note: '왼쪽부터 → <b>1 + 2</b> 는 둘 다 숫자라 그냥 산수 → <b>3</b>.' },
+        { code: 'const r = 3 + "3"', mark: '3 + "3"', note: '이제 <b>숫자 3 + 문자열 "3"</b> → <code>+</code>는 한쪽이 문자열이면 <b>숫자를 문자로 강제</b>(coercion)해 이어붙인다.' },
+        { code: 'const r = "33"', note: '완성 = <b>"33"</b>. 6도 "123"도 아니다 — 강제변환은 <b>왼쪽부터·만나는 순간</b> 일어난다. 순서가 결과를 바꾼다.' },
+      ],
+    }))
+    root.querySelector('[data-m="qz-coerce"]').append(Quiz({
+      q: '<code>"5" - 1</code> 의 값은?',
+      options: ['<code>"51"</code> (이어붙임)', '<code>4</code> (숫자로 강제)', '<code>NaN</code>'],
+      answer: 1,
+      explain: '<code>−</code>는 문자열을 <b>숫자로 강제</b> → <code>"5"→5</code>, <code>5 − 1 = <b>4</b></code>. (<code>+</code>였다면 이어붙여 <code>"51"</code> — 연산자마다 강제 방향이 다르다.)',
     }))
     root.querySelector('[data-m="gallery"]').append(Runner({
       showBox: false,
@@ -472,6 +492,11 @@
         <p class="section-desc" style="margin:8px 0 0">전부 <b>같은 축약</b>이다 — 산수·비교·논리·삼항·함수호출이 그 안에서 똑같이 접힌다. 문(if/for/switch)이 달라도 <b>(괄호 안)은 늘 표현식 하나</b>. 새 규칙이 아니라 <b>이미 배운 그 규칙</b>이다.</p>
       </div>
       <div class="card"><div class="file-label">🔬 조건이 값으로 접히는 걸 직접 — if·for·switch 자리</div><div data-m="cond-run"></div></div>
+
+      <h3 class="section-title">조건은 <code>true</code>/<code>false</code>가 아니어도 된다 — truthy/falsy로 접힌다</h3>
+      <p class="section-desc">조건 자리엔 <b>아무 값</b>이 와도 된다 — JS가 <b>참 같은가(truthy)/거짓 같은가(falsy)</b>로 접는다. <b>falsy는 딱 8개</b>(<code>false 0 -0 0n "" null undefined NaN</code>), <b>나머지는 전부 truthy</b>. 함정: <code>"0"</code>·<code>" "</code>·<code>[]</code>는 <b>truthy</b>(그래서 <code>if("0")</code>은 실행된다). <code>||</code>·<code>&amp;&amp;</code>도 이 축약을 그대로 쓴다.
+      <button class="inline-goto" data-goto="builtins">truthy/falsy 표 자세히 → 레퍼런스 ⑧</button></p>
+      <div class="card"><div class="file-label">🔬 축약: name || "익명"   (name = "")</div><div data-m="red-truthy"></div></div>
       ${nav('3-5', 6, '3-7')}
     `
     root.querySelector('[data-m="red-if"]').append(ExprReduce({
@@ -494,6 +519,14 @@
         '// for의 조건은 매 반복 "다시" 접힌다 — i가 0,1,2 → true, 3 → false(종료)',
         'for (let i = 0; i < 3; i++) print("i=" + i + " → " + (i < 3))',
       ].join('\n'),
+    }))
+    root.querySelector('[data-m="red-truthy"]').append(ExprReduce({
+      title: 'name || "익명"   // name = ""',
+      steps: [
+        { code: 'const who = name || "익명"', mark: 'name', note: 'name(<code>""</code>)을 넣는다. <code>||</code>는 <b>왼쪽부터 truthy/falsy로</b> 본다.' },
+        { code: 'const who = "" || "익명"', mark: '""', note: '<b>""(빈 문자열)은 falsy 8개 중 하나</b> → 왼쪽이 "거짓 같음" → <code>||</code>는 <b>오른쪽</b>을 값으로.' },
+        { code: 'const who = "익명"', note: '완성 = <b>"익명"</b>. 이게 "빈 값이면 기본값" 패턴. (name이 <code>"홍길동"</code>이면 truthy → 왼쪽 그대로 <code>"홍길동"</code>, 오른쪽은 안 봄)' },
+      ],
     }))
     wireGoto(root)
   }
