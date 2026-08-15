@@ -206,12 +206,12 @@
     }))
 
     root.querySelector('[data-m="mem"]').append(MemoryModel({
-      title: '🧠 메모리 모델 — 스택(Stack)과 힙(Heap), 값이 사는 두 방',
+      title: '🧠 값이 사는 곳 — 변수(이름표)와 값 메모리',
       code: ['let primary = "#3B82F6"', 'let title = "안녕, 반가워"', 'let card = { name: "명함" }'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }] }], heap: {}, note: '변수 primary는 <b>스택(Stack)</b>에 산다 — 왼쪽이 스택, 오른쪽이 <b>힙(Heap)</b>. 이 <b>두 방</b>이 곧 "메모리 모델"이다.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }] }], heap: {}, note: '숫자·글자 같은 <b>작은 값</b>은 이렇게 <b>스택</b>에 놓인다. 힙은 아직 비어 있다.' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }, { name: 'card', ref: 'h1' }] }], heap: { h1: { label: '{ name: "명함" }' } }, note: '<b>큰 묶음</b>(객체 <code>{ }</code> 같은 것)은 <b>힙</b>에 산다 — card는 스택에서 힙을 <b>가리킨다</b>(화살표). 스택·힙을 각각 자세힌 🧠 메모리 기초에서.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }] }], heap: {}, note: '값 <b>"#3B82F6"</b>은 <b>값 메모리</b>(오른쪽)에 셀로 놓이고, 변수 primary(왼쪽 장부)는 그 셀을 <b>가리킨다</b>(장부엔 이름+화살표).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }] }], heap: {}, note: '숫자·글자 같은 값도 <b>각자 값 메모리 셀</b>에 놓이고, 변수가 그 셀을 가리킨다. (장부엔 이름+화살표만)' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }, { name: 'card', ref: 'h1' }] }], heap: { h1: { label: '{ name: "명함" }' } }, note: '<b>객체</b>(<code>{ }</code> 같은 큰 묶음)도 값 메모리에 살고, card가 그걸 <b>가리킨다</b>(화살표). 원시값 셀과 객체가 값 메모리에서 어떻게 나뉘는지는 🧠 메모리 기초(M2·M3)에서.' },
       ],
     }))
 

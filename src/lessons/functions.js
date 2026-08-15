@@ -360,7 +360,7 @@
       steps: [
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }], heap: {}, note: '<code>shout(5)</code> 호출 직전.' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }, { name: 'shout', slots: [{ name: 'x', value: '5' }, { name: 'big', value: '500' }] }], heap: {}, note: 'shout 프레임: x=5, big=500 <b>계산만</b>. 그런데 <b>return이 없다</b>.' },
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: 'undefined', bad: true }] }], heap: {}, note: '끝까지 return이 없으면 함수는 <b>자동으로 undefined</b>를 돌려준다. big(지역)은 사라지고 <b>r엔 undefined</b>. ✗ 값이 없다.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: 'undefined' }] }], heap: {}, note: '끝까지 return이 없으면 함수는 <b>자동으로 undefined</b>를 돌려준다(에러가 아니라 <b>정상적인 "값 없음"</b>). big(지역)은 사라지고 <b>r엔 undefined</b>.' },
       ],
     }))
     root.querySelector('[data-m="r2"]').append(Runner({ showBox: false, code: [

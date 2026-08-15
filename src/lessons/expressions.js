@@ -462,7 +462,7 @@
     root.querySelector('[data-m="red-log"]').append(ExprReduce({
       title: 'console.log( shippingFee(1) + shippingFee(2) ,  discounted(30000, memberRate("gold")) )',
       steps: [
-        { code: 'console.log(shippingFee(1) + shippingFee(2), discounted(30000, memberRate("gold")))', mark: 'shippingFee(1) + shippingFee(2)', note: '콤마 <b>왼쪽 전체가 첫 번째 인자</b>(표현식1), 오른쪽이 <b>두 번째 인자</b>(표현식2). 서로 <b>독립</b> — 왼쪽부터 완전히 접는다.' },
+        { code: 'console.log(shippingFee(1) + shippingFee(2), discounted(30000, memberRate("gold")))', mark: 'shippingFee(1)', note: '콤마 <b>왼쪽 전체가 첫 번째 인자</b>(표현식1), 오른쪽이 <b>두 번째 인자</b>(표현식2). 서로 <b>독립</b> — 왼쪽부터, 그 안에서도 <b>맨 왼쪽 <code>shippingFee(1)</code>부터</b> 접는다.' },
         { code: 'console.log(500 + shippingFee(2), discounted(30000, memberRate("gold")))', mark: 'shippingFee(2)', note: '첫 인자 안: <code>shippingFee(1)</code>=500. 다음 <code>shippingFee(2)</code>=1000.' },
         { code: 'console.log(500 + 1000, discounted(30000, memberRate("gold")))', mark: '500 + 1000', note: '500 + 1000 = <b>1500</b> → 첫 인자(표현식1) 완성.' },
         { code: 'console.log(1500, discounted(30000, memberRate("gold")))', mark: 'memberRate("gold")', note: '이제 <b>두 번째 인자</b>(별개 표현식) 차례. 안쪽 <code>memberRate("gold")</code>=0.2.' },

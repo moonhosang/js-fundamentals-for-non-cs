@@ -92,14 +92,14 @@
     steps: [
       { line: 7, stack: [{ name: 'main', slots: [{ name: 'next', value: '(대기)', bad: true }] }, { name: 'makeCounter', slots: [{ name: 'count', value: '0' }] }], heap: {},
         note: 'makeCounter() 호출 → 지역변수 <b>count = 0</b> (makeCounter 장부에). 보통이면 함수가 끝날 때 사라질 값이다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'next', value: '(대기)', bad: true }] }, { name: 'makeCounter', slots: [{ name: 'count', value: '0' }] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '0' }] } },
-        note: 'return 하는 <b>안쪽 함수가 count를 붙잡는다</b>(참조). → count가 못 죽는다. <b>값 메모리로 옮겨져</b> 클로저에 담긴다.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'next', value: '(대기)', bad: true }] }, { name: 'makeCounter', slots: [] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '0' }] } },
+        note: 'return 하는 <b>안쪽 함수가 count를 붙잡는다</b> → 하나뿐인 <b>count가 makeCounter 장부에서 값 메모리로 이사</b>한다(복사가 아니라 <b>이동</b> — count는 여전히 하나). 그래서 makeCounter가 끝나도 안 사라진다.' },
       { line: 7, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '0' }] } },
         note: 'makeCounter 장부는 <b>pop(사라짐)</b> — 그런데 <b>count는 값 메모리에 살아남았다!</b> next가 그 클로저(안쪽 함수 + count)를 가리킨다. 이게 클로저 — 사라졌어야 할 장부가 안 사라진 것.' },
-      { line: 8, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '1' }] } },
-        note: 'next() → 살아있는 count를 +1 → <b>1</b>. 밖에선 count를 <b>직접 못 보는데</b>(숨겨짐), next()로만 만진다.' },
-      { line: 9, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '2' }] } },
-        note: '또 next() → <b>2</b>. count가 프레임과 함께 사라지지 않고 <b>기억</b>된다. 이게 클로저의 힘 — 상태를 숨겨 보관.' },
+      { line: 8, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }, { name: '(익명)', slots: [] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '1' }] } },
+        note: 'next() 호출 → <b>(익명) 프레임이 push</b>돼 실행된다(호출=push, 끝나면 pop). 그 함수가 클로저의 <b>count를 +1 → 1</b>. 밖에선 count를 직접 못 보고 next()로만 만진다.' },
+      { line: 9, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }, { name: '(익명)', slots: [] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '2' }] } },
+        note: '또 next() → 다시 <b>프레임 push</b> → count <b>+1 → 2</b>. count가 프레임과 함께 사라지지 않고 <b>기억</b>된다 — 이게 클로저의 힘(상태를 숨겨 보관).' },
     ],
   }
 

@@ -262,8 +262,8 @@
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', value: '10' }] }], heap: {},
           note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 화살표가 값 메모리의 <b>10</b>을 가리킨다(장부엔 이름+화살표).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }] }], heap: {},
-          note: '<code>score = 20</code> → score의 <b>화살표가 10 셀 → 20 셀</b>로 옮겨간다(재할당). let이라 가능.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', value: '20', bad: true }] }], heap: {},
+          note: '<code>score = 20</code> → score가 가리키는 <b>값이 20으로 바뀐다</b>(재할당). let이라 가능. (원시값의 불변·화살표 이동은 🧠 M4에서 정밀하게)' },
         { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
           note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 화살표가 값 메모리의 3.14를 가리킨다. 이 <b>화살표는 🔒 잠긴다</b>.' },
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
@@ -640,7 +640,7 @@
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }] }], heap: {}, note: 'x는 값 메모리의 <b>10</b>을 가리킨다(원시값도 값 메모리에, 장부엔 이름+화살표).' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '10' }] }], heap: {}, note: '😵 착각: "x·y가 <b>같은 10 셀 하나</b>를 같이 가리킨다"? ❌ 아니다. 원시값은 불변이라 대입하면 <b>각자 셀로 복사</b> — y는 <b>자기 10 셀</b>을 가리킨다. <b>셀이 둘</b>이다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → y의 화살표가 <b>20 셀</b>로 옮겨간다. <b>x는 그대로 10</b>. 애초에 별개의 두 셀이라 x는 안 움직인다 → "같은 10 셀에 같이 붙어있다"는 그림은 <b>틀렸다</b>.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → <b>y 칸의 값만 20으로 바뀐다</b>. <b>x는 그대로 10</b>. 애초에 별개의 두 셀이라 x는 안 움직인다 → "같은 10 셀에 같이 붙어있다"는 그림은 <b>틀렸다</b>.' },
     ],
   }
   // 객체 속성끼리 숫자 복사 — 객체가 껴도 숫자면 복사(안 공유)
@@ -1350,7 +1350,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
     ],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: '아빠 지갑(객체) money 10만.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', value: '100000' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: 'myNote = dad.money → 지갑 <b>금액(숫자)만 값으로 복사</b>. myNote는 <b>지갑을 가리키지 않는다</b>(화살표 아님, 그냥 숫자).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', value: '100000' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: 'myNote = dad.money → 지갑 <b>금액(숫자)만 값으로 복사</b>. myNote는 <b>지갑 객체(h1)를 가리키지 않고</b> — 자기만의 <b>숫자 셀(10만)</b>을 가리킨다(그래서 지갑과 무관).' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', value: '70000', bad: true }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: '내 수첩(myNote)만 70000. <b>아빠 지갑은 그대로 10만!</b> 숫자를 베낀 것뿐이라 지갑과 무관 = <b>원시값은 복사</b>(공유 안 됨).' },
     ],
   }
