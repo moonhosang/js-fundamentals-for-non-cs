@@ -65,6 +65,23 @@
     const feedback = document.createElement('div')
     card.append(feedback)
 
+    // 🧠 예측 → 관찰(시뮬레이션) → 설명: 정답을 맞히면 '왜 그런가'를 메모리 모델로 드러낸다.
+    // (스포일러 방지 — 풀기 전엔 숨김. p.mem 이 있는 문제만.)
+    const memHost = document.createElement('div')
+    memHost.className = 'drill-mem'
+    memHost.hidden = true
+    card.append(memHost)
+    function revealMem() {
+      if (!p.mem || memHost.dataset.shown || typeof MemoryModel !== 'function') return
+      memHost.dataset.shown = '1'
+      memHost.hidden = false
+      const label = document.createElement('div')
+      label.className = 'file-label'
+      label.textContent = '🧠 왜 그런가 — 메모리에서 확인 (이름표 장부 │ 값 메모리)'
+      memHost.append(label)
+      try { memHost.append(MemoryModel(p.mem)) } catch {}
+    }
+
     function check() {
       feedback.className = ''
       input.classList.remove('ok', 'bad')
@@ -80,6 +97,7 @@
         feedback.textContent = '✅ 정답! 출력 → ' + got.replace(/\n/g, ' / ')
         input.classList.add('ok')
         card.classList.add('solved')
+        revealMem()
         if (!solvedOnce) { solvedOnce = true; if (onSolved) onSolved() }
       } else {
         feedback.className = 'drill-feedback bad'

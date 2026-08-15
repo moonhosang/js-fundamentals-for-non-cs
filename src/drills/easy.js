@@ -148,15 +148,32 @@
     ],
   }
 
-  // ── 🧠 M4-2 참조=공유(ref2) : 별칭으로 바꾼 뒤 원본을 예측 ──
+  // ── 🧠 M4-2 참조=공유(ref2) : 별칭으로 바꾼 뒤 원본을 예측 → 메모리로 증명 ──
   E['ref2'] = {
-    pattern: '🟢 쉬움 · 별칭(같은 객체)으로 바꾼 뒤, 원본이 어떻게 되는지 예측',
+    pattern: '🟢 쉬움 · 별칭(같은 객체)으로 바꾼 뒤, 원본이 어떻게 되는지 예측 (맞히면 메모리로 왜 그런지 확인)',
     problems: [
-      { label: '별칭 변경', ask: 'b는 a와 같은 객체다. b.n을 9로 바꾸면 a.n은?', code: 'let a = { n: 1 }\nlet b = a\nb.n = 9\nprint(a.n === ____)', expect: 'true', answer: '9', hint: '같은 객체라 a.n도 바뀐다' },
-      { label: 'hp 깎기', ask: 'p2는 p1과 같은 객체. p2.hp를 50으로 깎으면 p1.hp는?', code: 'let p1 = { hp: 100 }\nlet p2 = p1\np2.hp = 50\nprint(p1.hp === ____)', expect: 'true', answer: '50', hint: '같은 객체' },
+      { label: '별칭 변경', ask: 'b는 a와 같은 객체다. b.n을 9로 바꾸면 a.n은?', code: 'let a = { n: 1 }\nlet b = a\nb.n = 9\nprint(a.n === ____)', expect: 'true', answer: '9', hint: '같은 객체라 a.n도 바뀐다',
+        mem: { title: '왜 a.n도 9인가 — b는 a의 별칭(같은 힙 객체)', stackLabel: '📇 이름표 장부', code: ['let a = { n: 1 }', 'let b = a', 'b.n = 9'], steps: [
+          { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] } }, note: 'a는 힙 객체 h1을 가리킨다.' },
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] } }, note: '<code>let b = a</code> → 주소만 복사 → b도 <b>같은 h1</b>(별칭).' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '9', bad: true }] } }, note: '<code>b.n = 9</code>는 h1을 고친다. a도 같은 h1이라 <b>a.n도 9</b>.' },
+        ] } },
+      { label: 'hp 깎기', ask: 'p2는 p1과 같은 객체. p2.hp를 50으로 깎으면 p1.hp는?', code: 'let p1 = { hp: 100 }\nlet p2 = p1\np2.hp = 50\nprint(p1.hp === ____)', expect: 'true', answer: '50', hint: '같은 객체',
+        mem: { title: '왜 p1.hp도 50인가 — p2는 p1의 별칭', stackLabel: '📇 이름표 장부', code: ['let p1 = { hp: 100 }', 'let p2 = p1', 'p2.hp = 50'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'p1', ref: 'h1' }, { name: 'p2', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: 'p1·p2가 <b>같은 h1</b>을 가리킨다(별칭).' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'p1', ref: 'h1' }, { name: 'p2', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '50', bad: true }] } }, note: '<code>p2.hp = 50</code> → h1을 고침 → <b>p1.hp도 50</b>.' },
+        ] } },
       { label: '배열 별칭', ask: 'c는 arr과 같은 배열. c에 하나 push하면 원본 arr 개수는?', code: 'let arr = [1, 2]\nlet c = arr\nc.push(9)\nprint(arr.length === ____)', expect: 'true', answer: '3', hint: '같은 배열 → 함께 늘어남' },
-      { label: '이름 변경', ask: 'r은 u와 같은 객체. r.name을 "지훈"으로 바꾸면 u.name은?', code: 'let u = { name: "민지" }\nlet r = u\nr.name = "지훈"\nprint(u.name === "____")', expect: 'true', answer: '지훈', hint: '같은 객체' },
-      { label: 'v 변경', ask: 'y는 x와 같은 객체. y.v를 5로 바꾸면 x.v는?', code: 'let x = { v: 1 }\nlet y = x\ny.v = 5\nprint(x.v === ____)', expect: 'true', answer: '5', hint: '같은 객체' },
+      { label: '이름 변경', ask: 'r은 u와 같은 객체. r.name을 "지훈"으로 바꾸면 u.name은?', code: 'let u = { name: "민지" }\nlet r = u\nr.name = "지훈"\nprint(u.name === "____")', expect: 'true', answer: '지훈', hint: '같은 객체',
+        mem: { title: '왜 u.name도 "지훈"인가 — r은 u의 별칭', stackLabel: '📇 이름표 장부', code: ['let u = { name: "민지" }', 'let r = u', 'r.name = "지훈"'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }, { name: 'r', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } }, note: 'u·r이 <b>같은 h1</b>(별칭).' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }, { name: 'r', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"지훈"', bad: true }] } }, note: '<code>r.name = "지훈"</code> → h1을 고침 → <b>u.name도 "지훈"</b>.' },
+        ] } },
+      { label: 'v 변경', ask: 'y는 x와 같은 객체. y.v를 5로 바꾸면 x.v는?', code: 'let x = { v: 1 }\nlet y = x\ny.v = 5\nprint(x.v === ____)', expect: 'true', answer: '5', hint: '같은 객체',
+        mem: { title: '왜 x.v도 5인가 — y는 x의 별칭', stackLabel: '📇 이름표 장부', code: ['let x = { v: 1 }', 'let y = x', 'y.v = 5'], steps: [
+          { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', ref: 'h1' }, { name: 'y', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'v', value: '1' }] } }, note: 'x·y가 <b>같은 h1</b>(별칭).' },
+          { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', ref: 'h1' }, { name: 'y', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'v', value: '5', bad: true }] } }, note: '<code>y.v = 5</code> → h1을 고침 → <b>x.v도 5</b>.' },
+        ] } },
     ],
   }
 
