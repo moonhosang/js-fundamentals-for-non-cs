@@ -40,15 +40,15 @@
     ],
   }
 
-  // ── 4강 · 조건 : truthy/falsy + 삼항 ──
+  // ── 4강 · 조건 : truthy/falsy를 스스로 예측 (비어 보여도 '있는 것'?) ──
   N['4'] = {
-    pattern: '🟡 보통 · truthy/falsy 함정 + 삼항',
+    pattern: '🟡 보통 · Boolean(값)의 결과를 예측 — "비어 보이는 것"의 함정',
     problems: [
-      { label: 'Boolean("") → false', ask: '빈 문자열은 falsy → false. 빈칸에 빈 문자열을.', code: 'print(Boolean(____))', expect: 'false', answer: '""', hint: '빈 글자: ""' },
-      { label: 'Boolean(0) → false', ask: '숫자 0은 falsy → false.', code: 'print(Boolean(____))', expect: 'false', answer: '0', hint: '0은 falsy' },
-      { label: 'Boolean([]) → true(함정)', ask: '빈 배열은 truthy(함정!) → true.', code: 'print(Boolean(____))', expect: 'true', answer: '[]', hint: '빈 배열 [] 도 "있는 것"' },
-      { label: 'Boolean("false") → true(함정)', ask: '글자 "false"는 truthy → true. (진짜 false 아님)', code: 'print(Boolean(____))', expect: 'true', answer: '"false"', hint: '따옴표 친 글자는 있는 것' },
-      { label: '삼항 → "성인"', ask: '20세는 18 이상 → "성인"이 나오게 빈칸을.', code: 'let age = 20\nprint(age >= 18 ? ____ : "미성년")', expect: '"성인"', answer: '"성인"', hint: '조건 ? 참일때 : 거짓일때' },
+      { label: 'Boolean(0)', ask: '숫자 0을 Boolean()에 넣으면 참일까 거짓일까?', code: 'print(Boolean(0) === ____)', expect: 'true', answer: 'false', hint: '0은 falsy → false' },
+      { label: 'Boolean("")', ask: '빈 문자열 "" 은?', code: 'print(Boolean("") === ____)', expect: 'true', answer: 'false', hint: '빈 글자는 falsy' },
+      { label: 'Boolean([])', ask: '빈 배열 [] 은? (비어 보이지만 "객체"다)', code: 'print(Boolean([]) === ____)', expect: 'true', answer: 'true', hint: '빈 배열도 truthy — 함정' },
+      { label: 'Boolean("false")', ask: '글자 "false" 는? (진짜 false 가 아니라 5글자 문자열)', code: 'print(Boolean("false") === ____)', expect: 'true', answer: 'true', hint: '따옴표 친 글자는 truthy' },
+      { label: 'Boolean(" ")', ask: '공백 한 칸 " " 은? (눈엔 비어 보인다)', code: 'print(Boolean(" ") === ____)', expect: 'true', answer: 'true', hint: '공백도 글자 1개 → truthy' },
     ],
   }
 

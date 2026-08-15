@@ -40,15 +40,15 @@
     ],
   }
 
-  // ── 4강 · 조건 : && · || · 삼항 · 단축평가 ──
+  // ── 4강 · 조건 : 강제 변환·단축평가·평가 순서·NaN (아는 문법도 틀리는 것들) ──
   H['4'] = {
-    pattern: '🔴 어려움 · &&·||·삼항·단축평가(기본값)',
+    pattern: '🔴 어려움 · 결과를 예측 — 강제 변환·단축평가·평가 순서·NaN 함정',
     problems: [
-      { label: 'AND', ask: 'true와 무엇을 &&하면 false가 될까?', code: 'print(true && ____)', expect: 'false', answer: 'false', hint: '하나라도 false면 false' },
-      { label: 'OR', ask: 'false와 무엇을 ||하면 true가 될까?', code: 'print(false || ____)', expect: 'true', answer: 'true', hint: '하나라도 true면 true' },
-      { label: '조합 조건', ask: '5>3 이고 2<? 가 참이 되게 — 2보다 큰 수를.', code: 'print(5 > 3 && 2 < ____)', expect: 'true', answer: '4', hint: '2 < 4' },
-      { label: '삼항 else', ask: 'n(3)은 5보다 크지 않다 — else 쪽을 "작음"으로.', code: 'let n = 3\nprint(n > 5 ? "큼" : "____")', expect: '"작음"', answer: '작음', hint: '3 < 5 → else' },
-      { label: '기본값(||)', ask: '0은 falsy → 오른쪽이 결과. "기본"이 나오게.', code: 'print(0 || "____")', expect: '"기본"', answer: '기본', hint: 'falsy면 오른쪽 값' },
+      { label: '&&는 값을 돌려준다', ask: '&&는 불리언이 아니라 "피연산자"를 돌려준다. 1 && 2 의 값은?', code: 'print((1 && 2) === ____)', expect: 'true', answer: '2', hint: '둘 다 참이면 뒤쪽(2)을 돌려준다' },
+      { label: '||는 값을 돌려준다', ask: '||는 참인 쪽 "피연산자"를 돌려준다. 0 || "안녕" 의 값은?', code: 'print((0 || "안녕") === ____)', expect: 'true', answer: '"안녕"', hint: '0은 falsy → 오른쪽 값 자체' },
+      { label: '비교 체인', ask: '2 > 1 > 0 의 결과는? (왼쪽부터: 앞이 true가 되고, 그 true가 다시...)', code: 'print((2 > 1 > 0) === ____)', expect: 'true', answer: 'true', hint: '(2>1)=true → true>0 → 1>0 → true' },
+      { label: 'NaN 함정', ask: 'NaN === NaN 의 결과는? (자기 자신과 비교)', code: 'print((NaN === NaN) === ____)', expect: 'true', answer: 'false', hint: 'NaN은 자기 자신과도 같지 않다' },
+      { label: '느슨한 ==', ask: '느슨한 == 로 "" 와 0 을 비교하면? (양쪽을 숫자로 강제 변환)', code: 'print(("" == 0) === ____)', expect: 'true', answer: 'true', hint: '""→0, 0==0 → true' },
     ],
   }
 

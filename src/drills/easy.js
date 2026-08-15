@@ -40,15 +40,15 @@
     ],
   }
 
-  // ── 4강 · 조건 : 비교 연산자 ──
+  // ── 4강 · 조건 : 비교의 결과를 스스로 예측 (답은 문제에 없음) ──
   E['4'] = {
-    pattern: '🟢 쉬움 · 비교 연산자를 채워 true/false 맞히기 반복',
+    pattern: '🟢 쉬움 · 비교의 결과(참/거짓)를 스스로 계산해 채운다 (=== true 면 정답)',
     problems: [
-      { label: '10 __ 5 → true', ask: '10이 5보다 크면 true. 빈칸을 채우세요.', code: 'print(10 ____ 5)', expect: 'true', answer: '>', hint: '크다: >' },
-      { label: '3 __ 3 → true(엄격)', ask: '3과 3이 같으면 true. 엄격한 같음을 쓰세요.', code: 'print(3 ____ 3)', expect: 'true', answer: '===', hint: '값+타입 같음: ===' },
-      { label: '"5" __ 5 → false', ask: '글자 "5"와 숫자 5는 타입이 달라 false가 되게(엄격 비교).', code: 'print("5" ____ 5)', expect: 'false', answer: '===', hint: '===면 타입까지 봐서 false' },
-      { label: '7 __ 10 → true', ask: '7이 10보다 작거나 같으면 true.', code: 'print(7 ____ 10)', expect: 'true', answer: '<=', hint: '작거나 같다: <=' },
-      { label: '9 __ 4 → true(다름)', ask: '9와 4가 다르면 true. 다름을 쓰세요.', code: 'print(9 ____ 4)', expect: 'true', answer: '!==', hint: '다르다: !==' },
+      { label: '10 > 5', ask: '10은 5보다 큰가? 결과(참/거짓)를 넣어라.', code: 'print((10 > 5) === ____)', expect: 'true', answer: 'true', hint: '참이면 true' },
+      { label: '3 >= 3', ask: '3은 3보다 크거나 같은가? (>= 에 주의)', code: 'print((3 >= 3) === ____)', expect: 'true', answer: 'true', hint: '같아도 >= 는 참' },
+      { label: '5 !== 5', ask: '5와 5는 서로 "다른가"? (!== = 다름)', code: 'print((5 !== 5) === ____)', expect: 'true', answer: 'false', hint: '같으니 "다르다"는 거짓' },
+      { label: '"5" === 5', ask: '문자 "5"와 숫자 5는 (타입까지 보는 ===로) 같은가?', code: 'print(("5" === 5) === ____)', expect: 'true', answer: 'false', hint: '타입이 달라 false' },
+      { label: '7 <= 10', ask: '7은 10보다 작거나 같은가?', code: 'print((7 <= 10) === ____)', expect: 'true', answer: 'true', hint: '참' },
     ],
   }
 
