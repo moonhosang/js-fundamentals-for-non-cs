@@ -106,26 +106,24 @@
   // 사이드바 목차 — 개념 강의 + 그 강의의 실습 문제들을 명시적으로 배치한다.
   // 🧠 메모리 챕터도 이제 개념 + 실습(드릴) — items에 P()로 실습 항목 전개(tag로 '파트' 대신 아이콘 표시).
   const P = (base) => practiceItemsFor(base).map((pi) => pi.id)
-  // 목차는 두 갈래(track)로 나뉜다.
-  //  ① 본 코스 — 1강→10강까지 끊김 없는 한 줄기(파트 1~4). 이것만으로 완주된다.
-  //  ② 🧠 원리 심화(선택) — 메모리·그래프·클래스·심화·레퍼런스. 끝에 모아 둔다.
-  //     번호 흐름을 끊지 않으려고 뒤로 뺐고, 각 심화엔 after:N("N강 배운 뒤 보면 좋아요")을 단다.
-  //     (예전엔 1강↔2강 사이에 심화 11개가 벽처럼 끼어 흐름이 끊겼다 → 별도 트랙으로 분리.)
+  // 목차 = 파트 4개 + 레퍼런스. 원리 심화(메모리·그래프·클래스·콜스택)는 별도 트랙이
+  // 아니라 '자기 파트 안의 자연스러운 챕터'로 녹인다.
+  //  - 메모리 기초 → 파트1(값과 메모리): 값을 배웠으니 "그 값이 어디 사는가".
+  //  - 메모리 심화(콜스택·클로저·GC) → 파트2 끝: 함수(5강)를 배웠으니 프레임의 삶/죽음.
+  //  - 객체 그래프·클래스 → 파트3 끝: 객체(8강)를 배웠으니 참조 그래프·클래스.
+  // 이러면 사이드바 최상위는 파트1~4만 보여 흐름이 깔끔하고(예전엔 1강↔2강 사이에 심화
+  // 11개가 벽처럼 끼어 끊겼다), 파트를 펼치면 심화가 제 자리에 자연히 이어진다.
   const CHAPTERS = [
-    // ── ① 본 코스 (1강 → 10강) ─────────────────────────────
-    { n: '1', title: '값·타입과 변수', items: [1, ...P(1)] },
-    // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다.
-    { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5)] },
-    { n: '3', title: '여러 값과 반복', items: [6, ...P(6), 7, ...P(7), 8, ...P(8)] },
+    { n: '1', title: '값과 메모리', items: [1, ...P(1), 'ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
+    // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다. 함수 뒤에 메모리 심화.
+    { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5), 'callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
+    // 객체(8강) 뒤에 그래프·클래스.
+    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class')] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
-    // ── ② 🧠 원리 심화 (선택 · 본 코스로 완주 가능) ──────────
-    // deep:true → 사이드바에 '원리 심화' 구분선. after:N → 배너에 "N강 배운 뒤 보면 좋아요".
-    { tag: '🧠', title: '메모리 기초', optional: true, deep: true, after: 1, items: ['ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
-    { tag: '🕸️', title: '객체 그래프', optional: true, deep: true, after: 8, items: ['graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle')] },
-    { tag: '🧬', title: '클래스', optional: true, deep: true, after: 8, items: ['class', ...P('class')] },
-    { tag: '🧠', title: '메모리 심화', optional: true, deep: true, after: 5, items: ['callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
-    { tag: '📚', title: '레퍼런스', deep: true, items: ['builtins'] },
+    { tag: '📚', title: '레퍼런스', items: ['builtins'] },
   ]
+  // 원리 심화 개념 강의 → "급하면 다음 파트로" 건너뛰기 배너의 이동 목적지(파트 안에 있지만 선택).
+  const DEEP_SKIP = { ram: 2, stack: 2, heap: 2, ref: 2, ref2: 2, passval: 2, passobj: 2, passarr: 2, callstack: 6, closure: 6, gc: 6, graph: 9, friends: 9, family: 9, cycle: 9, class: 9 }
 
   const kindOf = (l) => (l && l.kind) || 'lesson'
   const hasContent = (id) => {
@@ -151,8 +149,7 @@
     practice: loadSet('donePractice'),
     checkMode: load('checkMode', 'study'),
     sidebarOpen: load('sidebarOpen', 'true') !== 'false',
-    // 본 코스는 기본 펼침, 원리 심화(deep)는 기본 접힘 — 번호 흐름을 먼저 눈에 띄게.
-    openChapters: new Set(CHAPTERS.map((c, i) => (c.deep ? -1 : i)).filter((i) => i >= 0)),
+    openChapters: new Set(CHAPTERS.map((_, i) => i)),
     openSteps: new Set(), // 하위 단계(3-1…·5-1…)를 펼친 부모 강의 id. 기본 접힘.
   }
   const CHECK_MODES = [
@@ -257,15 +254,7 @@
     toc.append(homeBtn)
 
     const set = activeMode().get()
-    const firstDeepIdx = CHAPTERS.findIndex((c) => c.deep)
     CHAPTERS.forEach((ch, ci) => {
-      // 본 코스 ↔ 원리 심화 경계에 구분선(트랙 헤더)을 얹는다.
-      if (ci === firstDeepIdx) {
-        const div = document.createElement('div')
-        div.className = 'toc-track-divider'
-        div.innerHTML = '<span>🧠 원리 심화</span><small>선택 · 원할 때</small>'
-        toc.append(div)
-      }
       const hasCurrent = ch.items.includes(state.currentId)
       const open = state.openChapters.has(ci) || hasCurrent
       const chDiv = document.createElement('div')
@@ -338,16 +327,16 @@
   }
 
   // ── 렌더: 본문 ────────────────────────────────────────────
-  // 원리 심화(선택) 챕터 입구 — 본 코스로 완주 가능함 + "언제 보면 좋은지" 안내 배너.
-  function deepBanner(ch) {
+  // 원리 심화 개념 강의 입구 — 파트 안 자연스러운 챕터지만, 급하면 다음 파트로 건너뛰게 안내.
+  function deepBanner(skipTo) {
     const el = document.createElement('div')
     el.className = 'skip-banner'
     const msg = document.createElement('span')
-    msg.innerHTML = `🧭 <b>원리 심화 (선택)</b> — 본 코스 1~10강만으로도 완주됩니다. 이 파트는 <b>${ch.after}강</b>을 배운 뒤 곁들이면 가장 잘 이해돼요 <b>(급하면 지금 건너뛰어도 OK)</b>.`
+    msg.innerHTML = '🧭 <b>원리 심화</b> — 값·객체가 메모리에서 어떻게 사는지 깊이 보는 장이에요. 이 커리큘럼의 핵심이지만, <b>급하면 다음 파트로 건너뛰어도</b> 됩니다 <b>(언제든 돌아오세요)</b>.'
     const btn = document.createElement('button')
     btn.className = 'chip on'
-    btn.textContent = `📘 본 코스 ${ch.after}강으로 →`
-    btn.onclick = () => go(ch.after)
+    btn.textContent = `${skipTo}강으로 건너뛰기 →`
+    btn.onclick = () => go(skipTo)
     el.append(msg, btn)
     return el
   }
@@ -357,9 +346,9 @@
     if (state.currentId === 'home') { page.append(renderHome()); return }
     const l = byId[state.currentId]
     if (!l) { page.append(renderHome()); return }
-    // 선택·심화 챕터면 상단에 '원리 심화(선택)' 배너를 (레슨과 별도 호스트로) 얹는다.
-    const ch = CHAPTERS.find((c) => c.items.includes(state.currentId))
-    if (ch && ch.optional && ch.after != null) page.append(deepBanner(ch))
+    // 원리 심화 개념 강의면 상단에 '건너뛰기' 배너를 (레슨과 별도 호스트로) 얹는다.
+    const skipTo = DEEP_SKIP[String(state.currentId)]
+    if (skipTo != null) page.append(deepBanner(skipTo))
     const host = document.createElement('div')
     page.append(host)
     try {
@@ -441,11 +430,7 @@
 
   function renderHome() {
     const sec = document.createElement('section')
-    const firstDeepIdx = CHAPTERS.findIndex((c) => c.deep)
-    const cards = CHAPTERS.map((ch, ci) => {
-      const divider = ci === firstDeepIdx
-        ? '<div class="home-track-divider">🧠 원리 심화 <small>선택 · 본 코스(1~10강)로 완주 가능 · 원할 때 곁들이세요</small></div>'
-        : ''
+    const cards = CHAPTERS.map((ch) => {
       const btns = ch.items.map((id) => {
         const l = byId[id]
         if (!l) return ''
@@ -455,7 +440,7 @@
           <span class="home-card-sub">${l.subtitle}</span>
         </button>`
       }).join('')
-      return `${divider}<div class="card"><div class="file-label">${ch.tag ? ch.tag : '파트 ' + ch.n} · ${ch.title}</div><div class="home-grid">${btns}</div></div>`
+      return `<div class="card"><div class="file-label">${ch.tag ? ch.tag : '파트 ' + ch.n} · ${ch.title}</div><div class="home-grid">${btns}</div></div>`
     }).join('')
     sec.innerHTML = `
       <header class="lesson-header">
