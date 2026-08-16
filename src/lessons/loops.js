@@ -31,6 +31,14 @@
       <span class="learn-tag">📎 i를 0부터 length 전까지 1씩 — arr[i]로 꺼낸다 (번호는 0부터, 6강)</span>
       <div class="card"><div class="file-label">🔬 for로 순서대로</div><div data-m="for"></div></div>
 
+      <h3 class="section-title">🔁 for가 '도는' 원리 — 조건이 매 바퀴 접힌다 (⏱ 시간 시뮬레이션)</h3>
+      <span class="learn-tag">📎 <code>if</code>·<code>for</code>·<code>while</code>의 (괄호 안)은 전부 <b>표현식</b> → <b>expr → factor(축약) → 참/거짓(truthy·falsy)</b>으로 접혀 갈림/반복을 정한다</span>
+      <p class="section-desc">한 번 봐선 안 붙는다 — <b>다음 ▶을 눌러 시간 순서대로</b> 밟아 보라. 먼저 <b>if</b>(딱 한 번 검사), 그다음 <b>for</b>(조건이 거짓이 될 때까지 매 바퀴 다시 검사).</p>
+      <div class="card"><div class="file-label">🔬 if — 조건이 한 번 접힌다:  if (age >= 19)  ·  age = 20</div><div data-m="cond-if"></div></div>
+      <div class="card"><div class="file-label">🔬 for — 매 바퀴 조건이 다시 접힌다:  for (i=0; i&lt;3; i++)</div><div data-m="cond-for"></div></div>
+      <div data-m="qz-loop"></div>
+      <p class="section-desc">🔑 <b>if는 딱 한 번, for는 매 바퀴</b> 조건을 다시 접는다 — 그래서 for엔 '시간'이 흐른다. 괄호 안 원리는 셋 다 <b>완전히 같다</b>(값 → 참/거짓). 더 깊이: <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button> · <button class="inline-goto" data-goto="4">4강 · 조건</button> · <button class="inline-goto" data-goto="3-6">3-6 · 조건도 표현식</button>.</p>
+
       <h3 class="section-title">② forEach — 각 요소에 '실행'만 (값은 안 돌려줌)</h3>
       <span class="learn-tag">📎 forEach는 각 요소로 함수를 실행할 뿐 — 결과를 안 돌려준다(undefined). 변환하려면 map!</span>
       <div class="card"><div class="file-label">🔬 forEach로 각각 출력</div><div data-m="foreach"></div></div>
@@ -75,6 +83,38 @@
       '  print(nums[i])                          // 10, 20, 30',
       '}',
     ].join('\n') }))
+
+    // ⏱ 조건이 expr → factor → 참/거짓으로 접히는 '시간 시뮬레이션' — if(1회)와 for(매 바퀴). 위젯 재사용.
+    root.querySelector('[data-m="cond-if"]').append(ExprReduce({
+      title: 'if (age >= 19)   // age = 20',
+      steps: [
+        { code: 'if ( age >= 19 )', mark: 'age >= 19', note: '① 괄호 안은 <b>표현식</b> — 먼저 값 하나로 접는다(3강 축약).' },
+        { code: 'if ( 20 >= 19 )', mark: '20 >= 19', note: '② age에 지금 값 <b>20</b>을 넣는다.' },
+        { code: 'if ( true )', note: '③ <b>factor 비교</b> → <b>true</b>. 조건 자리에선 이 값을 <b>truthy/falsy로</b> 본다 → <b style="color:var(--green)">✅ 참(truthy)</b>.' },
+        { code: '✅ 참  →  입장() 실행', note: '조건이 <b>참</b> → 몸통 <b>실행</b>(거짓이면 건너뜀). if는 이 검사를 <b>딱 한 번</b> 한다.' },
+      ],
+    }))
+    root.querySelector('[data-m="cond-for"]').append(ExprReduce({
+      title: 'for (let i = 0; i < 3; i++)  total += i     // total: 0',
+      steps: [
+        { code: 'i = 0 ,  total = 0', note: '🚦 시작. 반복은 <b>매 바퀴 조건 (i < 3)</b>을 먼저 검사한다 — 그게 바로 <b>표현식</b>이다.' },
+        { code: 'i < 3     // i = 0', mark: 'i < 3', note: '<b>1바퀴</b> · ① <b>표현식</b> → i에 0을 넣는다.' },
+        { code: '0 < 3', mark: '0 < 3', note: '① → ② <b>factor 비교</b>로 축약.' },
+        { code: 'true  →  ✅ 참  →  몸통 실행', note: '② → ③ <b>true</b> → <b style="color:var(--green)">참(truthy)</b> → total = 0 + 0 = <b>0</b>. 그다음 <b>i++ → i = 1</b>, 다시 조건으로.' },
+        { code: 'i < 3     // i = 1', mark: 'i < 3', note: '<b>2바퀴</b> · 같은 과정 반복 — i에 1을 넣는다.' },
+        { code: '1 < 3  →  true  →  ✅ 참', note: '<b style="color:var(--green)">참</b> → total = 0 + 1 = <b>1</b>. i++ → i = 2.' },
+        { code: 'i < 3     // i = 2', mark: 'i < 3', note: '<b>3바퀴</b> — i에 2를 넣는다.' },
+        { code: '2 < 3  →  true  →  ✅ 참', note: '<b style="color:var(--green)">참</b> → total = 1 + 2 = <b>3</b>. i++ → i = 3.' },
+        { code: 'i < 3     // i = 3', mark: 'i < 3', note: '<b>4바퀴 검사</b> — i에 3을 넣는다.' },
+        { code: '3 < 3  →  false  →  ❌ 거짓', note: '<b style="color:var(--red)">거짓(falsy)</b> → 반복 <b>종료</b>. 최종 total = <b>3</b>. 조건이 거짓이 되는 순간 for가 멈춘다.' },
+      ],
+    }))
+    root.querySelector('[data-m="qz-loop"]').append(Quiz({
+      q: '<code>for (let i = 0; i &lt; 3; i++)</code> 는 몸통을 <b>몇 번</b> 실행하나?',
+      options: ['2번', '3번 (i = 0, 1, 2)', '4번'],
+      answer: 1,
+      explain: '조건 <code>i &lt; 3</code>이 <b>참인 동안</b>만 실행 — i=0·1·2에서 참이라 <b>3번</b>, i=3에서 <code>3 &lt; 3 = 거짓</code>이라 멈춘다.',
+    }))
 
     root.querySelector('[data-m="foreach"]').append(Runner({ showBox: false, code: [
       'let fruits = ["사과", "배", "귤"]',
@@ -151,8 +191,9 @@
       'print(products.length + "개 상품")',
     ].join('\n') }))
 
-    const cta = root.querySelector('[data-goto]')
-    if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    root.querySelectorAll('[data-goto]').forEach((el) => {
+      el.onclick = () => { const t = el.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    })
   }
 
   // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
