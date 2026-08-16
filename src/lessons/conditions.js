@@ -35,6 +35,10 @@
         <div class="file-label">🔬 === 는 예측 가능, == 는 함정</div>
         <div data-m="cmp"></div>
       </div>
+      <div class="card">
+        <div class="file-label">⏱ 단계 추적 — <code>"5" == 5</code> 는 왜 true? (다음 ▶)</div>
+        <div data-m="red-cmp"></div>
+      </div>
       <ul class="section-list">
         <li><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> — 크기 비교. <code>===</code> 같음 · <code>!==</code> 다름.</li>
         <li><b><code>"5" === 5</code> → false</b> (글자 vs 숫자, 타입 다름). <b><code>"5" == 5</code> → true</b> (==가 타입을 바꿔 비교 = 함정).</li>
@@ -45,6 +49,10 @@
       <div class="card">
         <div class="file-label">🔬 점수 → 등급 (값 + 화면 배지)</div>
         <div data-m="ifel"></div>
+      </div>
+      <div class="card">
+        <div class="file-label">⏱ 단계 추적 — if 사다리가 갈래를 고르기까지 (score = 85, 다음 ▶)</div>
+        <div data-m="red-if"></div>
       </div>
 
       <h3 class="section-title">③ truthy / falsy — 값의 '있냐/없냐'</h3>
@@ -65,12 +73,20 @@
         <div class="file-label">🔬 Boolean()로 참·거짓을 찍어 보기</div>
         <div data-m="tf"></div>
       </div>
+      <div class="card">
+        <div class="file-label">⏱ 단계 추적 — <code>if ("0")</code>은 왜 실행되나 (다음 ▶)</div>
+        <div data-m="red-tf"></div>
+      </div>
 
       <h3 class="section-title">④ 삼항 — 한 줄 갈림길</h3>
       <span class="learn-tag">📎 조건 ? 참일때 : 거짓일때 — 실무에서 매우 자주 쓴다</span>
       <div class="card">
         <div class="file-label">🔬 나이 → 라벨 (한 줄로)</div>
         <div data-m="tern"></div>
+      </div>
+      <div class="card">
+        <div class="file-label">⏱ 단계 추적 — 삼항이 값으로 접힌다 (age = 20, 다음 ▶)</div>
+        <div data-m="red-tern"></div>
       </div>
 
       <h3 class="section-title">⑤ switch — 값 하나로 여러 갈래</h3>
@@ -125,6 +141,42 @@
         'print("5" == 5)    // true  — ==는 타입을 바꿔 비교 (함정!)',
         'print(0 == "")     // true  — == 함정',
       ].join('\n'),
+    }))
+
+    // ⏱ 각 예시코드를 '다음 ▶'로 한 단계씩 추적 — ExprReduce 재사용(위젯 수정 없이).
+    root.querySelector('[data-m="red-cmp"]').append(ExprReduce({
+      title: '"5" == 5   (== 는 타입을 맞춰 강제 — 함정)',
+      steps: [
+        { code: '"5" == 5', mark: '"5" == 5', note: '<code>==</code>는 <b>타입이 다르면 맞춰서 강제</b>한다(함정). 문자열 "5"를 숫자로.' },
+        { code: '5 == 5', mark: '5 == 5', note: '이제 <b>5 == 5</b> — 같은 숫자끼리.' },
+        { code: 'true', note: '→ <b>true</b>. 그래서 <code>"5" == 5</code>는 참. 만약 <code>"5" === 5</code>였다면 <b>타입이 달라</b> 볼 것도 없이 <b style="color:var(--red)">false</b> — <code>===</code>는 강제를 안 한다. <b>그래서 항상 ===.</b>' },
+      ],
+    }))
+    root.querySelector('[data-m="red-if"]').append(ExprReduce({
+      title: 'if (score >= 90) … else if (score >= 80) …   // score = 85',
+      steps: [
+        { code: 'if ( 85 >= 90 )', mark: '85 >= 90', note: 'score(85)를 넣고 <b>맨 위 조건부터</b>. <b>85 >= 90</b>?' },
+        { code: 'if ( false )', note: '<b style="color:var(--red)">false</b> → 이 갈래(<code>"A"</code>)는 건너뛰고 <b>else if</b>로.' },
+        { code: 'else if ( 85 >= 80 )', mark: '85 >= 80', note: '다음 조건. <b>85 >= 80</b>?' },
+        { code: 'else if ( true )', note: '<b style="color:var(--green)">true</b> → 이 갈래 실행 → grade = <b>"B"</b>. 뒤 <code>else</code>는 <b>안 본다</b>.' },
+        { code: 'grade = "B"', note: 'if 사다리는 <b>위에서부터 참인 첫 갈래</b>만 실행하고 멈춘다.' },
+      ],
+    }))
+    root.querySelector('[data-m="red-tf"]').append(ExprReduce({
+      title: 'if ("0") { … }   ("0"은 따옴표 있는 글자)',
+      steps: [
+        { code: 'if ( "0" )', mark: '"0"', note: '조건 자리에 값 <code>"0"</code>(빈 문자열이 아닌 <b>글자</b>)이 왔다. 불리언이 아니면 <b>truthy/falsy</b>로 본다.' },
+        { code: 'if ( truthy )', note: 'falsy는 빈 문자열 <code>""</code>뿐 — <code>"0"</code>은 <b>글자가 있으니</b> <b style="color:var(--green)">✅ truthy</b>. (숫자 0과 헷갈리지 말 것)' },
+        { code: '✅ 참  →  실행', note: '그래서 <code>if("0")</code>은 <b>실행된다</b>. falsy 8개가 아니면 전부 truthy.' },
+      ],
+    }))
+    root.querySelector('[data-m="red-tern"]').append(ExprReduce({
+      title: 'age >= 18 ? "성인" : "미성년"   // age = 20',
+      steps: [
+        { code: '20 >= 18 ? "성인" : "미성년"', mark: '20 >= 18', note: 'age(20)를 넣고 <b>조건부터</b> 접는다(삼항도 조건이 먼저).' },
+        { code: 'true ? "성인" : "미성년"', mark: 'true ? "성인" : "미성년"', note: '<b>20 >= 18 = true</b> → 삼항은 조건이 참이면 <b>? 뒤(참일 때)</b>를 고른다.' },
+        { code: '"성인"', note: '→ <b>"성인"</b>. <code>"미성년"</code>은 버린다. 삼항은 <b>값을 낳는 표현식</b>(3강)이라 <code>let label = …</code>로 담긴다.' },
+      ],
     }))
 
     root.querySelector('[data-m="ifel"]').append(Runner({
