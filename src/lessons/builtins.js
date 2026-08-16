@@ -285,6 +285,7 @@
       ])}
       <div class="card"><div class="file-label">🔬 실행 — falsy 8개 & truthy 함정</div><div data-m="truthy"></div></div>
       <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>"" || "익명"</code> 의 참·거짓 판정 (다음 ▶)</div><div data-m="sim-truthy"></div></div>
+      <div class="card"><div class="file-label">⏱ 응용 — 후보가 셋: <code>nick || name || "익명"</code> (기본값 사슬)</div><div data-m="sim-chain"></div></div>
 
       <h3 class="section-title">🎯 반복 드릴 — 값만 바꿔 손에 붙이기</h3>
       <span class="learn-tag">📎 예측해서 빈칸을 채워라 — <code>+</code>vs<code>-</code> 강제 · falsy 판별 · <code>==</code>vs<code>===</code> (틀리면 다시)</span>
@@ -374,6 +375,17 @@
         { code: 'const who = "" || "익명"', mark: '""', note: '① <code>||</code>는 <b>왼쪽부터 truthy/falsy로</b> 본다. <b>""(빈 문자열)은 falsy 8개 중 하나</b>.' },
         { code: '"" 는 falsy  →  ❌ 거짓  →  오른쪽 사용', note: '② 왼쪽이 <b style="color:var(--red)">거짓(falsy)</b>이라 <code>||</code>는 <b>오른쪽</b>으로 넘어간다(단락 평가).' },
         { code: 'const who = "익명"', note: '③ = <b>"익명"</b>. "빈 값이면 기본값" 패턴. (name이 <code>"홍길동"</code>이면 <b style="color:var(--green)">truthy</b> → 왼쪽 그대로)' },
+      ],
+    }))
+    // ⏱ 응용 — 후보 셋의 기본값 사슬. ||를 이어 쓰면 왼→오로 훑어 '처음 만난 truthy'에서 멈춘다(단락).
+    root.querySelector('[data-m="sim-chain"]').append(ExprReduce({
+      title: 'const 표시이름 = nick || name || "익명"   // nick = "", name = "홍길동"',
+      steps: [
+        { code: 'const 표시이름 = nick || name || "익명"', mark: 'nick', note: '① 후보가 <b>셋</b>. <code>||</code>는 언제나 <b>왼쪽부터</b> 훑는다. 첫 후보 <code>nick</code> = <b>""</b>(별명 안 정함).' },
+        { code: '"" || name || "익명"', mark: '""', note: '② <b>""은 falsy</b> → 이 후보는 버리고 <b>다음 후보</b>로 넘어간다.' },
+        { code: 'name || "익명"', mark: 'name', note: '③ 다음 후보 <code>name</code> = <b>"홍길동"</b>. 이건 truthy일까?' },
+        { code: '"홍길동" || "익명"', mark: '"홍길동"', note: '④ <b>"홍길동"은 truthy</b> → <b>여기서 멈춘다(단락)</b>. 오른쪽 <code>"익명"</code>은 <b>보지도 않는다</b>.' },
+        { code: 'const 표시이름 = "홍길동"', note: '⑤ = <b>"홍길동"</b>. 여러 후보를 <b>왼→오</b>로 훑어 <b>처음 만난 truthy</b>를 고른다 — <b>기본값 사슬(fallback chain)</b>. 별명 있으면 별명, 없으면 실명, 그것도 없으면 <code>"익명"</code>.' },
       ],
     }))
     // 🎯 반복 드릴 — 예측 패턴(빈칸=예측값, 맞으면 true). 값만 바꿔 여러 번.
