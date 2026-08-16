@@ -1357,6 +1357,39 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
     ],
   }
 
+  // 부모는 둘 — 한 객체(me)가 father·mother 두 참조를 가진다 (다중 엣지)
+  const SCENARIO_TWO_PARENTS = {
+    title: '부모는 둘 — me가 father·mother 두 개를 가리킨다',
+    code: [
+      'let dad = { name: "아빠" }',
+      'let mom = { name: "엄마" }',
+      'let me  = { name: "나", father: dad, mother: mom }',
+    ],
+    steps: [
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] } }, note: '아빠 객체.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] } }, note: '엄마 객체도.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'me', ref: 'h3' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '<b>me 하나가 화살표 둘</b> — <code>father</code>→아빠, <code>mother</code>→엄마. 한 객체는 참조를 <b>여러 개</b> 가질 수 있다. (①에선 아빠만 <code>parent</code>로 그렸지만, 실은 부모가 둘.)' },
+    ],
+  }
+  // 관계는 parent만이 아니다 — 삼촌의 형의 와이프 = 엄마 = me.mother (두 경로가 한 노드에 수렴 = 별칭)
+  const SCENARIO_RELATION = {
+    title: '삼촌의 형의 와이프 = ? — 두 경로가 한 사람에 수렴(별칭)',
+    code: [
+      'let dad   = { name: "아빠" }',
+      'let mom   = { name: "엄마" }',
+      'let uncle = { name: "삼촌", brother: dad }  // 삼촌의 형 = 아빠',
+      'let me    = { name: "나", father: dad, mother: mom }',
+      'dad.wife  = mom                            // 아빠의 와이프 = 엄마',
+    ],
+    steps: [
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] } }, note: '아빠.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] } }, note: '엄마.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] } }, note: '삼촌의 <code>brother</code>(형) = 아빠 → 삼촌에서 아빠로 화살표.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] }, h4: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '나 → <code>father</code>=아빠, <code>mother</code>=엄마.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'wife', ref: 'h2' }] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] }, h4: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '아빠의 <code>wife</code> = 엄마. 이제 걸어 보자 — <code>uncle.brother.wife</code>: 삼촌→형(아빠)→와이프 = <b>엄마(h2)</b>. 그런데 <code>me.mother</code>도 <b>엄마(h2)</b> → <b>두 경로가 같은 상자에 수렴</b>! 문장은 달라도 메모리에선 <b>같은 객체(별칭)</b>.' },
+    ],
+  }
+
   window.Lessons['family'] = function render(root) {
     root.innerHTML = `
       <header class="lesson-header">
@@ -1399,12 +1432,31 @@ me.parent.name          // "아빠"      (한 칸 위)
 me.parent.parent.name   // "할아버지"  (두 칸 위)
 me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)</pre>
       </div>
+      <div class="card"><div class="file-label">🔬 진짜 출력해 보기 — "아빠의 아빠"(두 칸 위)까지 거슬러</div><div data-m="climb"></div></div>
       <p class="section-desc">🔑 이 <b>트리 모양</b>이 실전에 그대로 쓰인다 — <b>조직도</b>(사원→팀장→임원), <b>카테고리</b>(소분류→대분류), <b>댓글의 답글</b>, <b>폴더 구조</b>. 전부 객체가 부모를 가리키는 계통도다.</p>
+
+      <h3 class="section-title">⑤ 엄마는? — 부모는 둘 (한 객체가 참조 여럿)</h3>
+      <span class="learn-tag">📎 ①에선 아빠만 그렸다. 실은 me가 father·mother 둘을 가리킨다 — 노드 하나에 화살표 여럿</span>
+      <p class="section-desc">계통도를 아빠 쪽(<code>parent</code>)만으로 그렸지만, 실제 가족엔 <b>엄마</b>도 있다. me에 <code>father</code>·<code>mother</code>를 주면
+      <b>한 사람(객체)이 여러 관계로 이어진다</b> — 이게 그래프의 본모습(참조는 개수 제한이 없다).</p>
+      <div data-m="twoParents"></div>
+      <div class="card"><div class="file-label">🔬 두 부모를 각각 따라가기</div><div data-m="twoParentsRun"></div></div>
+
+      <h3 class="section-title">⑥ 🧩 삼촌의 형의 와이프는? — 서로 다른 길이 같은 사람에 (별칭)</h3>
+      <span class="learn-tag">📎 관계엔 여러 종류(부모·형제·배우자) — 각각이 화살표(키)다. 다른 경로가 같은 노드에 도착하면 = 별칭</span>
+      <p class="section-desc">관계는 <code>parent</code>만이 아니다 — <b>형제(brother)·배우자(wife)</b>도 각각 화살표다. 재미난 퀴즈:
+      <b>"삼촌의 형의 와이프"</b>는 누구? 삼촌 → 형(=아빠) → 와이프(=엄마). 그런데 그 엄마는 <b>내 엄마(<code>me.mother</code>)와 같은 사람</b>이다.
+      완전히 다른 문장(경로)이 <b>메모리에선 같은 상자 하나</b>에 도착한다. ▶로 화살표가 <b>수렴</b>하는 걸 보라.</p>
+      <div data-m="relation"></div>
+      <div class="card"><div class="file-label">🔬 두 경로가 정말 같은지 === 로 증명</div><div data-m="relationRun"></div></div>
+      <p class="section-desc">🔑 <code>uncle.brother.wife === me.mother</code> → <b>true</b>. 겉보기 경로는 "삼촌의 형의 와이프" vs "내 엄마"로 딴판이어도,
+      가리키는 건 <b>하나의 엄마 객체</b>. 서로 다른 경로가 한 노드를 가리키는 게 <b>별칭(alias)</b> — G1에서 본 별칭이 그래프로 커진 모습이다.</p>
 
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">객체 참조로 <b>트리(계통도)</b>를 만든다. 자식이 부모를 가리키고, <code>.parent.parent</code>로 거슬러 오른다.
-        여러 자식이 <b>같은 부모</b>를 가리키면 그 부모는 하나의 객체(참조).</p>
+        여러 자식이 <b>같은 부모</b>를 가리키면 그 부모는 하나의 객체(참조). 한 객체는 <b>참조를 여럿</b>(father·mother·brother·wife) 가질 수 있고,
+        <b>서로 다른 경로가 같은 노드에 도착</b>하면 그게 <b>별칭</b>이다.</p>
       </div>
 
       <div class="practice-cta">
@@ -1415,6 +1467,41 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
     root.querySelector('[data-m="family"]').append(MemoryModel(SCENARIO_FAMILY))
     root.querySelector('[data-m="familyMoney"]').append(MemoryModel(SCENARIO_FAMILY_MONEY))
     root.querySelector('[data-m="primCopy"]').append(MemoryModel(SCENARIO_PRIM_COPY))
+    root.querySelector('[data-m="climb"]').append(Runner({
+      showBox: false,
+      code: [
+        'let grandpa = { name: "할아버지" }',
+        'let dad = { name: "아빠", parent: grandpa }',
+        'let me  = { name: "나", parent: dad }',
+        'print(me.parent.name)          // "아빠"     (한 칸 위)',
+        'print(me.parent.parent.name)   // "할아버지"  (두 칸 위!)',
+      ].join('\n'),
+    }))
+    root.querySelector('[data-m="twoParents"]').append(MemoryModel(SCENARIO_TWO_PARENTS))
+    root.querySelector('[data-m="twoParentsRun"]').append(Runner({
+      showBox: false,
+      code: [
+        'let dad = { name: "아빠" }',
+        'let mom = { name: "엄마" }',
+        'let me  = { name: "나", father: dad, mother: mom }',
+        'print(me.father.name)   // "아빠"',
+        'print(me.mother.name)   // "엄마"  (한 객체가 화살표 둘)',
+      ].join('\n'),
+    }))
+    root.querySelector('[data-m="relation"]').append(MemoryModel(SCENARIO_RELATION))
+    root.querySelector('[data-m="relationRun"]').append(Runner({
+      showBox: false,
+      code: [
+        'let dad   = { name: "아빠" }',
+        'let mom   = { name: "엄마" }',
+        'let uncle = { name: "삼촌", brother: dad }',
+        'let me    = { name: "나", father: dad, mother: mom }',
+        'dad.wife  = mom',
+        'print(uncle.brother.wife.name)          // "엄마"  (삼촌→형→와이프)',
+        'print(me.mother.name)                   // "엄마"  (나→엄마)',
+        'print(uncle.brother.wife === me.mother) // true — 같은 사람(별칭)!',
+      ].join('\n'),
+    }))
     root.querySelector('[data-m="qzg3"]').append(Quiz({ q: '<code>me.parent</code>는 엄마, 엄마의 <code>parent</code>는 할머니. <code>me.parent.parent</code>는?', options: ['엄마', '할머니', '나'], answer: 1, explain: '화살표를 <b>두 번</b> 따라간다 — me→엄마→할머니. 이게 <b>트리(그래프) 탐색</b>.' }))
     wireCTA(root)
   }

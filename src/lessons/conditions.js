@@ -12,7 +12,7 @@
       <header class="lesson-header">
         <span class="badge">4강</span>
         <h2>조건 — 갈림길</h2>
-        <p>참(true)이냐 거짓(false)이냐에 따라 코드의 <b>길을 가른다</b>. 비교로 참·거짓을 만들고, <code>if</code>로 갈림길을, 삼항으로 한 줄 갈림길을 만든다.</p>
+        <p>참(true)이냐 거짓(false)이냐에 따라 코드의 <b>길을 가른다</b>. 비교로 참·거짓을 만들고, <code>if</code>로 갈림길을, 삼항으로 한 줄 갈림길을 만든다. <b>조건 자리에 오는 값은 결국 <code>true</code>/<code>false</code> 딱 둘로 접힌다</b> — 이미 불리언이면 그대로, 아니면 <b>truthy/falsy 규칙</b>으로 정해진다(항상 그렇다). <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환 →</button></p>
       </header>
 
       <div class="lesson-goal">
