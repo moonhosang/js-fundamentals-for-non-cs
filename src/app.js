@@ -72,6 +72,13 @@
     { id: 'builtins-5', badge: '⑤', title: '⑤ 객체', subtitle: 'Object.keys · delete', step: true },
     // 📐 규칙(도구 아님) — truthy/falsy + 형 변환(캐스팅). 3강 축약·4강 조건이 이리로 링크(SSOT).
     { id: 'coercion', badge: '📐 규칙', title: '참·거짓과 형 변환', subtitle: 'truthy/falsy(8개) · 캐스팅' },
+    // 🔀 제어 흐름 조합·중첩 (개별 문은 4강·7강 · 여기선 겹쳐 쓰기) — 서브레슨은 인라인 드릴(tiered 아님).
+    { id: 'cf', badge: '🔀 제어', title: '제어 흐름 · 조합과 중첩', subtitle: 'if·switch·for를 겹쳐 쓰기' },
+    { id: 'cf-1', badge: '🔀', title: 'cf-1 · if 사다리', subtitle: 'else if · else — 여러 갈래', step: true },
+    { id: 'cf-2', badge: '🔀', title: 'cf-2 · 중첩 if', subtitle: 'if 안의 if · && 대비', step: true },
+    { id: 'cf-3', badge: '🔀', title: 'cf-3 · 반복 × 조건', subtitle: 'for 안의 if · 목록 거르기', step: true },
+    { id: 'cf-4', badge: '🔀', title: 'cf-4 · 중첩 반복', subtitle: 'for 안의 for · 격자·구구단', step: true },
+    { id: 'cf-5', badge: '🔀', title: 'cf-5 · if × switch', subtitle: '조건으로 고르고 다시 분기', step: true },
   ]
   // 번호(N강)의 단일 출처(SSOT): 숫자 id에서 badge·title을 파생한다.
   // → 강의를 재배치할 땐 여기 id만 바꾸면 badge·title·목차가 다 따라온다.
@@ -125,7 +132,7 @@
     // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다. 함수 뒤에 메모리 심화.
     { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5), 'callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     // 객체(8강) 뒤에 그래프·클래스.
-    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class')] },
+    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class'), 'cf', 'cf-1', 'cf-2', 'cf-3', 'cf-4', 'cf-5'] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
     { tag: '📚', title: '레퍼런스', items: ['builtins', 'builtins-1', 'builtins-2', 'builtins-3', 'builtins-4', 'builtins-5', 'coercion'] },
   ]
