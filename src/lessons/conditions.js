@@ -110,8 +110,12 @@
       비교가 엄격해서 글자 <code>"3"</code>과 숫자 <code>3</code>이 다른 것도 ①비교와 같은 실이다
       <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button>. 아래에서 그 대조 과정을 <b>한 단계씩</b> 밟아 보자.</p>
       <div class="card">
-        <div class="file-label">⏱ 시간 시뮬레이션 — switch(day)가 갈래를 고르기까지</div>
+        <div class="file-label">⏱ 시간 시뮬레이션 ① — <code>const day = 2</code> (case에 맞을 때 · 다음 ▶)</div>
         <div data-m="sw-red"></div>
+      </div>
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">⏱ 시간 시뮬레이션 ② — <code>const day = 0</code> (아무 case도 안 맞음 → default · 다음 ▶)</div>
+        <div data-m="sw-red2"></div>
       </div>
       <div class="card">
         <div class="file-label">🔬 요일 안내 — switch ↔ if는 같은 일 · break를 지우면?</div>
@@ -297,11 +301,50 @@
         {
           code: 'switch ( 2 ) {\n  case 1: ✗ 거짓 — 통과\n  case 2: print("화요일"); break\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
           mark: 'default:',
-          note: '만약 day가 9였다면? — 1·2·3 전부 <b style="color:var(--red)">거짓</b> → <b>default</b>("그 외 전부")가 잡는다. if의 마지막 <code>else</code>와 같은 안전망이다.',
+          note: '<b>default</b>는 <b>아무 case도 안 맞을 때</b>의 안전망(if의 마지막 <code>else</code>). day=2는 case 2에서 이미 걸렸으니 여기까진 안 온다 — <b>안 맞는 경우는 바로 아래 ②(day=0) 시뮬레이션</b>에서 직접 본다.',
         },
         {
           code: '→ "화요일" 출력, switch 끝.',
           note: '정리 — ① 괄호 안 expr을 <b>값으로 접고</b> ② 위에서부터 case와 <b>===</b> ③ 맞으면 실행 ④ <b>break로 탈출</b>. <code>if (day === 1) … else if (day === 2) …</code>와 <b>완전히 같은 일</b>이다.',
+        },
+      ],
+    }))
+    root.querySelector('[data-m="sw-red2"]').append(ExprReduce({
+      title: 'switch(day) — day에 0이 들어 있을 때 (아무 case도 안 맞는다)',
+      steps: [
+        {
+          code: 'switch ( day ) {\n  case 1: print("월요일"); break\n  case 2: print("화요일"); break\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
+          mark: '( day )',
+          note: '이번엔 <code>const day = 0</code>. 똑같이 괄호 안을 <b>먼저 값으로 접는다</b>.',
+        },
+        {
+          code: 'switch ( 0 ) {\n  case 1: print("월요일"); break\n  case 2: print("화요일"); break\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
+          mark: '( 0 )',
+          note: 'day → <b>0</b>. 이 값 하나를 들고 <b>위에서부터</b> case와 <b>=== 대조</b>.',
+        },
+        {
+          code: 'switch ( 0 ) {\n  case 1: print("월요일"); break\n  case 2: print("화요일"); break\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
+          mark: 'case 1:',
+          note: '<code>0 === 1</code> → <b style="color:var(--red)">거짓</b> — 통과.',
+        },
+        {
+          code: 'switch ( 0 ) {\n  case 1: ✗ 거짓 — 통과\n  case 2: print("화요일"); break\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
+          mark: 'case 2:',
+          note: '<code>0 === 2</code> → <b style="color:var(--red)">거짓</b> — 통과.',
+        },
+        {
+          code: 'switch ( 0 ) {\n  case 1: ✗ 거짓 — 통과\n  case 2: ✗ 거짓 — 통과\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
+          mark: 'case 3:',
+          note: '<code>0 === 3</code> → <b style="color:var(--red)">거짓</b> — 통과. <b>case가 다 떨어졌다!</b>',
+        },
+        {
+          code: 'switch ( 0 ) {\n  case 1: ✗ 거짓 — 통과\n  case 2: ✗ 거짓 — 통과\n  case 3: ✗ 거짓 — 통과\n  default: print("그 외")\n}',
+          mark: 'default:',
+          note: '1·2·3 <b>전부 거짓</b> → <b style="color:var(--green)">default</b>가 잡는다 — 아무 case도 안 맞을 때의 <b>안전망</b>(if의 마지막 <code>else</code>와 같다).',
+        },
+        {
+          code: '→ "그 외" 출력, switch 끝.',
+          note: '맞는 case가 없으면 <b>default</b>. 만약 default<b>도</b> 없었다면? — <b>아무것도 안 하고</b> switch를 조용히 빠져나간다(에러 아님). 그래서 default를 두면 "예상 못 한 값"을 놓치지 않는다.',
         },
       ],
     }))
