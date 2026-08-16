@@ -1332,12 +1332,14 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'let me     = { name: "나",   parent: dad }',
       'let sister = { name: "동생", parent: dad }',
       'me.parent.money = me.parent.money - 30000   // 내가 3만원 씀',
+      'sister.parent.money = sister.parent.money - 90000  // 동생이 9만원짜리 삼',
     ],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]) }, note: '아빠 객체 — money 10만원(가족 지갑).' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]) }, note: '나.parent = 아빠.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '동생도 parent가 아빠 → 나·동생이 <b>같은 아빠 지갑</b>을 가리킨다(화살표 둘).' },
       { line: 3, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '70000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '내가 <code>me.parent</code>(=아빠) 지갑에서 3만원 씀 → 아빠.money <b>70000</b>. <b>동생이 봐도 sister.parent.money는 70000</b>! 같은 아빠(객체)라서 = <b>참조 증명</b>.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '-20000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '이번엔 <b>동생</b>이 <code>sister.parent</code>(=<b>같은 아빠</b>) 지갑에서 9만원 씀. 근데 지갑은 이미 <b>70000</b>(내가 3만 씀)에서 출발 → 70000 - 90000 = <b>-20000, 펑크!</b> 내 3만 + 동생 9만 = 12만이 <b>하나의 money 셀</b>에서 빠졌다. 각자 지갑(복사)이면 10만-9만=+1만이라 절대 안 나올 결과 → 둘이 <b>한 지갑을 공유(참조)</b>한 증거. (공유는 편하지만 서로 모르고 쓰면 펑크난다.)' },
     ],
   }
   // 대비 — 객체 속 '원시값(금액 숫자)'을 꺼내 적으면 복사(공유 안 됨). 지갑 vs 수첩에 베낀 숫자.
@@ -1379,7 +1381,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       <h3 class="section-title">② 💳 아빠 지갑에서 사면? — 구매로 참조 증명</h3>
       <span class="learn-tag">📎 나·동생이 같은 아빠를 가리킨다 → 내가 쓰면 동생이 봐도 줄어든다</span>
       <p class="section-desc">가장 실감나는 증거 — 아빠가 <b>가족 지갑(money)</b>을 가졌다고 하자. 내가 <code>me.parent.money</code>에서 3만원을 쓰면?
-      복사본이면 나만 줄겠지만, <b>참조</b>라 <b>동생이 봐도 아빠 지갑이 줄어 있다</b>. ▶로 확인하라.</p>
+      복사본이면 나만 줄겠지만, <b>참조</b>라 <b>동생이 봐도 아빠 지갑이 줄어 있다</b>. 이어서 <b>동생</b>이 9만원을 쓰면? 이미 줄어든 <b>7만원에서 또</b> 빠져 <b>펑크(-2만)</b>난다 — 둘이 한 지갑을 헐기 때문. ▶로 확인하라.</p>
       <div data-m="familyMoney"></div>
 
       <h3 class="section-title">③ 근데 '금액'만 꺼내 적으면? — 숫자는 복사(공유 안 됨)</h3>
