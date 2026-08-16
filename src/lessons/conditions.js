@@ -299,13 +299,8 @@
           note: '<b>break = 탈출</b> — 여기서 switch 전체를 빠져나온다. ⚠️ break가 없으면 <b>아래 case 코드로 줄줄 샌다(fall-through)</b> — 비교도 없이! (아까 🔮 1번 문제가 바로 이것)',
         },
         {
-          code: 'switch ( 2 ) {\n  case 1: ✗ 거짓 — 통과\n  case 2: print("화요일"); break\n  case 3: print("수요일"); break\n  default: print("그 외")\n}',
-          mark: 'default:',
-          note: '<b>default</b>는 <b>아무 case도 안 맞을 때</b>의 안전망(if의 마지막 <code>else</code>). day=2는 case 2에서 이미 걸렸으니 여기까진 안 온다 — <b>안 맞는 경우는 바로 아래 ②(day=0) 시뮬레이션</b>에서 직접 본다.',
-        },
-        {
           code: '→ "화요일" 출력, switch 끝.',
-          note: '정리 — ① 괄호 안 expr을 <b>값으로 접고</b> ② 위에서부터 case와 <b>===</b> ③ 맞으면 실행 ④ <b>break로 탈출</b>. <code>if (day === 1) … else if (day === 2) …</code>와 <b>완전히 같은 일</b>이다.',
+          note: '정리 — ① 괄호 안 expr을 <b>값으로 접고</b> ② 위에서부터 case와 <b>===</b> ③ 맞으면 실행 ④ <b>break로 탈출</b>. <code>if (day === 1) … else if (day === 2) …</code>와 <b>완전히 같은 일</b>이다. (아무 case도 안 맞으면? → 바로 아래 <b>②(day=0)</b>에서 <code>default</code>가 잡는 걸 직접 본다)',
         },
       ],
     }))
