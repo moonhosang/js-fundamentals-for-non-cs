@@ -476,11 +476,16 @@
           : '<span class="bt-check ghost"></span>'
         const flag = hasContent(id) ? '' : '<span class="bt-flag" title="준비 중">🚧</span>'
         const stext = (l.title + ' ' + (l.subtitle || '')).replace(/<[^>]+>/g, '').replace(/"/g, '').toLowerCase()
-        return `<div class="bt-row${sub}" data-go="${id}" data-s="${stext}">
-          ${check}
-          <span class="bt-title">${flag}${l.title}</span>
-          <span class="bt-dots"></span>
-          <span class="bt-sub">${l.subtitle || ''}</span>
+        const tiers = track ? practiceItemsFor(id) : [] // 이 강의의 난이도 드릴(있으면)
+        const drills = tiers.length ? `<div class="bt-drills">🎯 ${tiers.map((p) =>
+          `<button class="bt-tier" data-go="${p.id}">${p.badge} ${p.title} <span class="bt-tier-n">${p.subtitle}</span></button>`).join('')}</div>` : ''
+        return `<div class="bt-item" data-s="${stext}">
+          <div class="bt-row${sub}" data-go="${id}">
+            ${check}
+            <span class="bt-title">${flag}${l.title}</span>
+            <span class="bt-dots"></span>
+            <span class="bt-sub">${l.subtitle || ''}</span>
+          </div>${drills}
         </div>`
       }).join('')
       const label = ch.tag ? `${ch.tag} ${ch.title}` : `파트 ${ch.n} · ${ch.title}`
@@ -500,9 +505,9 @@
       <div class="book-toc">${parts}</div>
       <p class="section-desc" style="margin-top:16px">👉 <b>1강 · 값과 타입, 변수</b>부터 시작하세요.</p>
     `
-    // 행 클릭 → 이동
-    sec.querySelectorAll('.bt-row[data-go]').forEach((row) => {
-      row.onclick = () => { const v = row.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
+    // 행/드릴칩 클릭 → 이동
+    sec.querySelectorAll('.bt-row[data-go], .bt-tier[data-go]').forEach((el) => {
+      el.onclick = (e) => { e.stopPropagation(); const v = el.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
     })
     // ✓ 클릭 → 읽음 토글(전파 차단), 파트 카운터·상단 진도 갱신
     sec.querySelectorAll('.bt-check[data-check]').forEach((chk) => {
@@ -527,9 +532,9 @@
       const q = search.value.trim().toLowerCase()
       sec.querySelectorAll('.bt-part').forEach((part) => {
         let any = false
-        part.querySelectorAll('.bt-row').forEach((row) => {
-          const hit = !q || (row.getAttribute('data-s') || '').includes(q)
-          row.classList.toggle('bt-hide', !hit); if (hit) any = true
+        part.querySelectorAll('.bt-item').forEach((item) => {
+          const hit = !q || (item.getAttribute('data-s') || '').includes(q)
+          item.classList.toggle('bt-hide', !hit); if (hit) any = true
         })
         part.classList.toggle('bt-hide', !any)
       })
