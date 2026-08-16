@@ -1395,7 +1395,7 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       <header class="lesson-header">
         <span class="badge">🕸️ G3</span>
         <h2>계통도 — 트리 (가계도)</h2>
-        <p>사람 객체가 <code>parent</code>로 부모 객체를 가리키면, 힙에 <b>트리(계통도)</b>가 생긴다. 별칭·목록에 이은 객체 그래프의 정점.</p>
+        <p>사람 객체가 <b>관계(참조)</b>로 다른 사람을 가리키면 — 부모(<code>parent</code>)·형제·배우자 — 힙에 <b>트리(계통도)</b>, 나아가 <b>그래프</b>가 생긴다. 별칭·목록에 이은 객체 그래프의 정점.</p>
       </header>
 
       <div class="lesson-goal">
