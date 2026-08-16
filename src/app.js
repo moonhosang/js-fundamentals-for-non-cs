@@ -461,21 +461,30 @@
     // 책 목차 스타일 — 파트 헤딩 아래 강의를 '제목 …… 부제' 행으로. 드릴 티어(base:tier)는 숨겨 개념만.
     const isDrillId = (id) => typeof id === 'string' && id.includes(':')
     const parentOf = (id) => (typeof id === 'string' && /-\d+$/.test(id)) ? id.replace(/-\d+$/, '') : null
+    const trackable = (id, l) => !isDrillId(id) && l && !l.step // 진도 대상(개념 강의, step 하위 제외)
     const parts = CHAPTERS.map((ch) => {
+      let done = 0, total = 0
       const rows = ch.items.map((id) => {
         if (isDrillId(id)) return ''
         const l = byId[id]
         if (!l) return ''
         const sub = parentOf(id) && byId[parentOf(id)] ? ' sub' : ''
+        const track = trackable(id, l)
+        if (track) { total++; if (state.study.has(id)) done++ }
+        const check = track
+          ? `<span class="bt-check${state.study.has(id) ? ' on' : ''}" data-check="${id}" role="button" tabindex="0" title="읽음 표시(클릭)">${state.study.has(id) ? '✓' : '○'}</span>`
+          : '<span class="bt-check ghost"></span>'
         const flag = hasContent(id) ? '' : '<span class="bt-flag" title="준비 중">🚧</span>'
-        return `<button class="bt-row${sub}" data-go="${id}">
+        const stext = (l.title + ' ' + (l.subtitle || '')).replace(/<[^>]+>/g, '').replace(/"/g, '').toLowerCase()
+        return `<div class="bt-row${sub}" data-go="${id}" data-s="${stext}">
+          ${check}
           <span class="bt-title">${flag}${l.title}</span>
           <span class="bt-dots"></span>
           <span class="bt-sub">${l.subtitle || ''}</span>
-        </button>`
+        </div>`
       }).join('')
       const label = ch.tag ? `${ch.tag} ${ch.title}` : `파트 ${ch.n} · ${ch.title}`
-      return `<div class="bt-part"><div class="bt-part-head">${label}</div>${rows}</div>`
+      return `<div class="bt-part"><div class="bt-part-head"><span>${label}</span><span class="bt-part-count" data-ct>${done}/${total}</span></div>${rows}</div>`
     }).join('')
     sec.innerHTML = `
       <header class="lesson-header">
@@ -485,14 +494,46 @@
       </header>
       <div class="lesson-goal">
         <span class="lesson-goal-tag">이렇게 배워요</span>
-        <p>모든 강의는 <b>규칙 설명 → 라이브 실행(값·화면 둘 다) → 유형 드릴 ×5</b> 순서예요. 아래는 <b>책 목차</b>처럼 훑는 전체 지도 — 제목을 누르면 그 강의로, 실습(쉬움·보통·어려움)은 왼쪽 사이드바나 강의 끝에서 열려요.</p>
+        <p>모든 강의는 <b>규칙 설명 → 라이브 실행(값·화면 둘 다) → 유형 드릴 ×5</b> 순서예요. 아래는 <b>책 목차</b>처럼 훑는 전체 지도 — 제목을 누르면 그 강의로, <b>✓를 눌러 읽음 표시</b>, 위 칸에서 <b>검색</b>도 돼요.</p>
       </div>
+      <input class="bt-search" type="search" placeholder="🔍 강의 검색 — 제목·설명으로 (예: 스택, map, 중첩, truthy)">
       <div class="book-toc">${parts}</div>
       <p class="section-desc" style="margin-top:16px">👉 <b>1강 · 값과 타입, 변수</b>부터 시작하세요.</p>
     `
-    sec.querySelectorAll('[data-go]').forEach((b) => {
-      b.onclick = () => { const v = b.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
+    // 행 클릭 → 이동
+    sec.querySelectorAll('.bt-row[data-go]').forEach((row) => {
+      row.onclick = () => { const v = row.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
     })
+    // ✓ 클릭 → 읽음 토글(전파 차단), 파트 카운터·상단 진도 갱신
+    sec.querySelectorAll('.bt-check[data-check]').forEach((chk) => {
+      const toggle = (e) => {
+        e.stopPropagation()
+        const id = chk.getAttribute('data-check')
+        state.study.has(id) ? state.study.delete(id) : state.study.add(id)
+        saveSet('doneStudy', state.study)
+        const on = state.study.has(id)
+        chk.classList.toggle('on', on); chk.textContent = on ? '✓' : '○'
+        const part = chk.closest('.bt-part'), ct = part.querySelector('[data-ct]')
+        const checks = part.querySelectorAll('.bt-check[data-check]')
+        ct.textContent = [...checks].filter((c) => c.classList.contains('on')).length + '/' + checks.length
+        renderProgress()
+      }
+      chk.onclick = toggle
+      chk.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e) } }
+    })
+    // 검색 → 제목·설명 실시간 필터(빈 파트는 접음)
+    const search = sec.querySelector('.bt-search')
+    search.oninput = () => {
+      const q = search.value.trim().toLowerCase()
+      sec.querySelectorAll('.bt-part').forEach((part) => {
+        let any = false
+        part.querySelectorAll('.bt-row').forEach((row) => {
+          const hit = !q || (row.getAttribute('data-s') || '').includes(q)
+          row.classList.toggle('bt-hide', !hit); if (hit) any = true
+        })
+        part.classList.toggle('bt-hide', !any)
+      })
+    }
     return sec
   }
 
