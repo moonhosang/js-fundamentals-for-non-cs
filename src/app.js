@@ -63,8 +63,15 @@
       plan: ['요소 선택 querySelector', 'textContent · style 로 바꾸기', '버튼 클릭에 반응 addEventListener', '유형 드릴 ×10'] },
     { id: 10, name: '실전 미니앱', subtitle: '배운 걸 합쳐 하나 만들기',
       plan: ['컬러 팔레트 생성기 or 디지털 명함 카드', '지금까지의 값·배열·함수·DOM 총동원', '단계별로 조립'] },
-    // 📚 내장 기능 레퍼런스 — 드릴이 쓰는 typeof·sort·Object.keys 등을 한곳에.
-    { id: 'builtins', badge: '📚 레퍼런스', title: '내장 기능', subtitle: 'typeof·배열·문자열·객체 도구 모음' },
+    // 📚 레퍼런스 — 내장 기능(도구)은 분류별 서브페이지(builtins-1~5, step), 참·거짓/형변환은 규칙 항목(coercion).
+    { id: 'builtins', badge: '📚 레퍼런스', title: '내장 기능', subtitle: '분류별 도구 카탈로그(개요)' },
+    { id: 'builtins-1', badge: '①', title: '① 타입·판별', subtitle: 'typeof · instanceof · NaN', step: true },
+    { id: 'builtins-2', badge: '②', title: '② 숫자·수학', subtitle: 'Number · Math · ** · %', step: true },
+    { id: 'builtins-3', badge: '③', title: '③ 문자열', subtitle: 'length · toUpperCase · split', step: true },
+    { id: 'builtins-4', badge: '④', title: '④ 배열', subtitle: 'push/pop · map/filter/reduce', step: true },
+    { id: 'builtins-5', badge: '⑤', title: '⑤ 객체', subtitle: 'Object.keys · delete', step: true },
+    // 📐 규칙(도구 아님) — truthy/falsy + 형 변환(캐스팅). 3강 축약·4강 조건이 이리로 링크(SSOT).
+    { id: 'coercion', badge: '📐 규칙', title: '참·거짓과 형 변환', subtitle: 'truthy/falsy(8개) · 캐스팅' },
   ]
   // 번호(N강)의 단일 출처(SSOT): 숫자 id에서 badge·title을 파생한다.
   // → 강의를 재배치할 땐 여기 id만 바꾸면 badge·title·목차가 다 따라온다.
@@ -120,7 +127,7 @@
     // 객체(8강) 뒤에 그래프·클래스.
     { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class')] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
-    { tag: '📚', title: '레퍼런스', items: ['builtins'] },
+    { tag: '📚', title: '레퍼런스', items: ['builtins', 'builtins-1', 'builtins-2', 'builtins-3', 'builtins-4', 'builtins-5', 'coercion'] },
   ]
   // 원리 심화 개념 강의 → "급하면 다음 파트로" 건너뛰기 배너의 이동 목적지(파트 안에 있지만 선택).
   const DEEP_SKIP = { ram: 2, stack: 2, heap: 2, ref: 2, ref2: 2, passval: 2, passobj: 2, passarr: 2, callstack: 6, closure: 6, gc: 6, graph: 9, friends: 9, family: 9, cycle: 9, class: 9 }

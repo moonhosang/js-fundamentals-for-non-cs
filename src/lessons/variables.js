@@ -59,7 +59,7 @@
         <div class="file-label">🔬 typeof — 값의 타입 이름을 확인하는 내장 기능</div>
         <div data-m="typeof"></div>
       </div>
-      <p class="section-desc"><code>typeof 값</code>은 그 값의 <b>타입 이름</b>을 문자열로 돌려준다(실습에서 자주 만난다). <code>typeof</code>·<code>sort</code>·<code>Object.keys</code> 같은 <b>이미 만들어진 도구</b>는 <button class="inline-goto" data-goto="builtins">📚 내장 기능 레퍼런스</button>에 한곳에 모아 뒀다.</p>
+      <p class="section-desc"><code>typeof 값</code>은 그 값의 <b>타입 이름</b>을 문자열로 돌려준다(실습에서 자주 만난다). <code>typeof</code>·<code>sort</code>·<code>Object.keys</code> 같은 <b>이미 만들어진 도구</b>는 <button class="inline-goto" data-goto="builtins-1">📚 내장 기능 · 타입 판별</button>에 모아 뒀다.</p>
 
       <div data-m="qz1"></div>
 

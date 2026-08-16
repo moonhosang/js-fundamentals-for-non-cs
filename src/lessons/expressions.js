@@ -283,7 +283,7 @@
 
       <h3 class="section-title">③′ 타입이 섞이면 — 강제변환(coercion)이 끼어든다</h3>
       <p class="section-desc">축약 도중 <b>타입이 다른 두 값</b>이 만나면, 연산자가 <b>한쪽을 강제로 바꾼다</b>. 규칙: <code>+</code>는 <b>한쪽이 문자열이면 이어붙이기</b>(숫자→문자), 그 외 산술 <code>- * / %</code>·비교는 <b>숫자로</b> 강제. 그래서 같은 <code>"5"</code>인데 <code>"5" + 1 = "51"</code>, <code>"5" - 1 = 4</code>로 갈린다.
-      <button class="inline-goto" data-goto="builtins">형 변환·강제변환 표 자세히 → 레퍼런스 ⑦</button></p>
+      <button class="inline-goto" data-goto="coercion">형 변환·강제변환 표 자세히 → 참·거짓과 형 변환</button></p>
       <div class="card"><div class="file-label">🔬 축약: 1 + 2 + "3"  — 왼쪽부터, 글자를 만나는 순간 바뀐다</div><div data-m="red-coerce"></div></div>
       <div data-m="qz-coerce"></div>
 
@@ -495,7 +495,7 @@
 
       <h3 class="section-title">조건은 <code>true</code>/<code>false</code>가 아니어도 된다 — truthy/falsy로 접힌다</h3>
       <p class="section-desc">조건 자리엔 <b>아무 값</b>이 와도 된다 — JS가 <b>참 같은가(truthy)/거짓 같은가(falsy)</b>로 접는다. <b>falsy는 딱 8개</b>(<code>false 0 -0 0n "" null undefined NaN</code>), <b>나머지는 전부 truthy</b>. 함정: <code>"0"</code>·<code>" "</code>·<code>[]</code>는 <b>truthy</b>(그래서 <code>if("0")</code>은 실행된다). <code>||</code>·<code>&amp;&amp;</code>도 이 축약을 그대로 쓴다.
-      <button class="inline-goto" data-goto="builtins">truthy/falsy 표 자세히 → 레퍼런스 ⑧</button></p>
+      <button class="inline-goto" data-goto="coercion">truthy/falsy 표 자세히 → 참·거짓과 형 변환</button></p>
       <div class="card"><div class="file-label">🔬 축약: name || "익명"   (name = "")</div><div data-m="red-truthy"></div></div>
       ${nav('3-5', 6, '3-7')}
     `

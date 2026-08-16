@@ -52,12 +52,13 @@
       <p class="section-desc"><b>문지기</b>라고 생각하라 — 뭔가 들고 있으면(truthy) 통과, 빈손이면(falsy) 막는다.
       그래서 <code>if (name)</code> 은 "이름이 <b>있으면</b>"이란 뜻이 된다.</p>
       <div class="card">
-        <div class="file-label">📄 falsy는 딱 6개 — 나머지는 전부 truthy</div>
+        <div class="file-label">📄 falsy — 자주 만나는 6개 (나머지는 전부 truthy)</div>
         <div class="falsy-grid">
           <div class="falsy-cell">false</div><div class="falsy-cell">0</div><div class="falsy-cell">"" <span>(빈 글자)</span></div>
           <div class="falsy-cell">null</div><div class="falsy-cell">undefined</div><div class="falsy-cell">NaN</div>
         </div>
         <p class="section-desc" style="margin:10px 0 0">⚠️ 함정 — 이건 전부 <b>truthy</b>(있는 것): <code>"0"</code>·<code>"false"</code>(글자!) · <code>[]</code>(빈 배열) · <code>{}</code>(빈 객체).</p>
+        <p class="section-desc" style="margin:6px 0 0">정확히는 <code>-0</code>·<code>0n</code>(BigInt 0)을 더해 <b>딱 8개</b>가 falsy의 전부다. 규칙·형 변환 표는 <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button>에 모아 뒀다.</p>
       </div>
       <div class="card">
         <div class="file-label">🔬 Boolean()로 참·거짓을 찍어 보기</div>
@@ -155,8 +156,9 @@
       ].join('\n'),
     }))
 
-    const cta = root.querySelector('[data-goto]')
-    if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    root.querySelectorAll('[data-goto]').forEach((el) => {
+      el.onclick = () => { const t = el.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    })
   }
 
   // 드릴은 난이도별 파일(ADR 0008): src/drills/{easy,normal,hard}.js 의 window.Drills.
