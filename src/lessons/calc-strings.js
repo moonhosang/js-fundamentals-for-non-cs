@@ -56,6 +56,14 @@
         <li><code>"5" * 2</code> → <code>10</code> (곱셈엔 글자를 숫자로 바꿔줌)</li>
         <li>일부러 바꾸기: <code>Number("5")</code> → 숫자 5 · <code>String(5)</code> → 글자 "5"</li>
       </ul>
+      <p class="section-desc">정확한 <b>형 변환·강제변환 규칙</b>(<code>==</code> vs <code>===</code>, truthy/falsy까지)은 한곳에 모아 뒀다 → <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button></p>
+
+      <h3 class="section-title">⚠️ NaN — 계산이 실패하면 '숫자 아님'(Not-a-Number)</h3>
+      <span class="learn-tag">📎 글자를 숫자로 못 바꾸거나 이상한 계산 → NaN. 함정: NaN은 자기 자신과도 다르다</span>
+      <div data-m="qz-nan1"></div>
+      <div data-m="qz-nan2"></div>
+      <div class="card"><div class="file-label">🔬 NaN은 어디서 나오나 + 자기와도 다름</div><div data-m="nan"></div></div>
+      <p class="section-desc">🔑 <code>NaN === NaN</code>이 <b>false</b>라 <code>x === NaN</code>으로는 못 잡는다 — <code>Number.isNaN(x)</code>로 검사한다. (NaN은 에러로 안 터지고 <b>조용히 퍼져</b> 계산을 오염시키는 게 진짜 함정.)</p>
 
       <h3 class="section-title">④ 화면으로 — 계산 결과를 카드에</h3>
       <span class="learn-tag">📎 값을 화면(box)에 붙여, 계산이 '보이게' 만든다</span>
@@ -119,6 +127,29 @@
       ].join('\n'),
     }))
 
+    root.querySelector('[data-m="qz-nan1"]').append(Quiz({
+      q: '<code>Number("삼")</code> 처럼 글자를 숫자로 <b>못</b> 바꾸면?',
+      options: ['<code>0</code>', '<code>NaN</code> (숫자 아님)', '에러(터진다)'],
+      answer: 1,
+      explain: '숫자로 바꿀 수 없으면 <b>NaN</b>(Not-a-Number). 에러로 안 터지고 <b>조용히 NaN이 퍼져</b> 이후 계산을 오염시키는 게 함정.',
+    }))
+    root.querySelector('[data-m="qz-nan2"]').append(Quiz({
+      q: '<code>NaN === NaN</code> (같은 NaN끼리) 의 결과는?',
+      options: ['<code>true</code> (같은 값이니까)', '<code>false</code> (자기 자신과도 다르다!)', '에러'],
+      answer: 1,
+      explain: '<b>NaN은 정해진 값이 없어</b> 유일하게 <b>자기 자신과도 같지 않다</b>. 그래서 <code>x === NaN</code>은 늘 false → 검사는 <code>Number.isNaN(x)</code>로.',
+    }))
+    root.querySelector('[data-m="nan"]').append(Runner({
+      showBox: false,
+      code: [
+        'print(Number("삼"))                 // NaN  (글자를 숫자로 못 바꿈)',
+        'print(0 / 0)                        // NaN',
+        'print(10 - "가")                    // NaN  (숫자 아닌 걸 빼기)',
+        'print(NaN === NaN)                  // false — 자기와도 다르다!',
+        'print(Number.isNaN(Number("삼")))   // true  — 이렇게 검사한다',
+      ].join('\n'),
+    }))
+
     root.querySelector('[data-m="card"]').append(Runner({
       code: [
         'let item = "머그컵"',
@@ -137,7 +168,8 @@
       ].join('\n'),
     }))
 
-    const cta = root.querySelector('[data-goto]')
-    if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    root.querySelectorAll('[data-goto]').forEach((el) => {
+      el.onclick = () => { const t = el.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }
+    })
   }
 })()
