@@ -235,6 +235,13 @@
         <p><code>typeof</code>·<code>sort</code>는 "부르는 도구"지만, 이건 <b>부르지 않아도 언어가 자동으로 적용하는 규칙</b>이다. 그래서 도구 카탈로그에서 뺐다. <b>표현식 함정(3강)</b>과 <b>조건(4강)</b>의 뿌리라 한곳에 모아 둔다.</p>
       </div>
 
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🔮 먼저 예측하고 → 표로 확인 (한 번 봐선 안 붙는다)</div>
+        <p class="section-desc" style="margin:0 0 8px">답을 먼저 맞혀 보라. 틀려도 좋다 — <b>예측하고 확인</b>해야 손에 붙는다.</p>
+        <div data-m="pq1"></div>
+        <div data-m="pq2"></div>
+      </div>
+
       <h3 class="section-title">A. 형 변환(캐스팅) — 타입을 바꾸기</h3>
       <p class="section-desc"><b>캐스팅</b> = 값의 타입을 바꾸는 것. 두 가지다 — <b>내가 직접</b>(명시적: <code>Number()</code>·<code>String()</code>·<code>Boolean()</code>) 하거나, <b>연산자가 알아서</b>(암묵적: <code>"5" - 1</code>에서 문자열을 숫자로). 암묵적 변환이 <b>표현식의 함정</b> 대부분을 만든다.</p>
       <span class="learn-tag">🙋 명시적 — 내가 함수로 직접 바꾼다</span>
@@ -258,6 +265,7 @@
         ['=== (엄격한 같음)', '강제 안 함 → 타입 다르면 false', '1 === "1"', 'false'],
       ])}
       <div class="card"><div class="file-label">🔬 실행 — 명시적 vs 암묵적</div><div data-m="cast"></div></div>
+      <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>"5" - 1</code> 이 접히는 과정 (다음 ▶)</div><div data-m="sim-coerce"></div></div>
 
       <h3 class="section-title">B. truthy / falsy — 조건에서 참·거짓으로 취급되는 값</h3>
       <p class="section-desc"><code>if</code>·<code>||</code>·<code>&amp;&amp;</code>·삼항의 조건은 꼭 <code>true</code>/<code>false</code>가 아니어도 된다 — 아무 값이나 오면 JS가 <b>참 같은가(truthy) / 거짓 같은가(falsy)</b>로 본다(값→불리언 강제). <b>falsy는 딱 8개</b>, <b>나머지는 전부 truthy</b>. 이 8개만 외우면 된다.</p>
@@ -276,6 +284,11 @@
         ['!!x', '두 번 뒤집어 <b>truthy 판정만</b> 얻기', '!!"hi"', 'true'],
       ])}
       <div class="card"><div class="file-label">🔬 실행 — falsy 8개 & truthy 함정</div><div data-m="truthy"></div></div>
+      <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>"" || "익명"</code> 의 참·거짓 판정 (다음 ▶)</div><div data-m="sim-truthy"></div></div>
+
+      <h3 class="section-title">🎯 반복 드릴 — 값만 바꿔 손에 붙이기</h3>
+      <span class="learn-tag">📎 예측해서 빈칸을 채워라 — <code>+</code>vs<code>-</code> 강제 · falsy 판별 · <code>==</code>vs<code>===</code> (틀리면 다시)</span>
+      <div data-m="coerce-drill"></div>
 
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
@@ -314,6 +327,51 @@
       'print("" || "익명")           // "익명"  (빈값이면 기본값)',
       'print(0 && "실행")            // 0       (앞이 falsy면 멈춤)',
     ].join('\n') }))
+
+    // 🔮 예측 먼저(표 보기 전) — 스포일러 없이 감을 깨운다.
+    root.querySelector('[data-m="pq1"]').append(Quiz({
+      q: '먼저 예측 — <code>"5" - 1</code> 의 값은?',
+      options: ['<code>"51"</code> (이어붙임)', '<code>4</code> (숫자로 강제)', '<code>NaN</code>'],
+      answer: 1,
+      explain: '<code>-</code>는 문자열 "5"를 <b>숫자 5로 강제</b> → 5−1=<b>4</b>. (<code>+</code>였다면 이어붙여 "51" — 연산자마다 다르다.)',
+    }))
+    root.querySelector('[data-m="pq2"]').append(Quiz({
+      q: '먼저 예측 — <code>Boolean("0")</code> 은?',
+      options: ['<code>false</code> (0이니까)', '<code>true</code> ("0"은 글자니까)'],
+      answer: 1,
+      explain: '<code>"0"</code>은 <b>빈 문자열이 아닌 글자</b> → <b>truthy</b>. falsy인 문자열은 빈 <code>""</code>뿐. 숫자 0과 헷갈리지 말 것.',
+    }))
+    // ⏱ 시간 시뮬레이션 — ExprReduce 재사용(위젯 수정 없이 시나리오만).
+    root.querySelector('[data-m="sim-coerce"]').append(ExprReduce({
+      title: '"5" - 1   (연산자가 타입을 강제한다)',
+      steps: [
+        { code: 'const r = "5" - 1', mark: '"5" - 1', note: '<code>-</code>(산술)는 문자열을 <b>숫자로 강제</b>한다 — "5"를 숫자 <b>5</b>로.' },
+        { code: 'const r = 5 - 1', mark: '5 - 1', note: '이제 숫자끼리 <b>5 - 1</b>.' },
+        { code: 'const r = 4', note: '= <b>4</b>. 만약 <code>+</code>였다면 <code>"5" + 1</code>은 <b>이어붙여 "51"</b> — 같은 "5"인데 연산자가 강제 방향을 가른다.' },
+      ],
+    }))
+    root.querySelector('[data-m="sim-truthy"]').append(ExprReduce({
+      title: 'name || "익명"   // name = ""',
+      steps: [
+        { code: 'const who = "" || "익명"', mark: '""', note: '① <code>||</code>는 <b>왼쪽부터 truthy/falsy로</b> 본다. <b>""(빈 문자열)은 falsy 8개 중 하나</b>.' },
+        { code: '"" 는 falsy  →  ❌ 거짓  →  오른쪽 사용', note: '② 왼쪽이 <b style="color:var(--red)">거짓(falsy)</b>이라 <code>||</code>는 <b>오른쪽</b>으로 넘어간다(단락 평가).' },
+        { code: 'const who = "익명"', note: '③ = <b>"익명"</b>. "빈 값이면 기본값" 패턴. (name이 <code>"홍길동"</code>이면 <b style="color:var(--green)">truthy</b> → 왼쪽 그대로)' },
+      ],
+    }))
+    // 🎯 반복 드릴 — 예측 패턴(빈칸=예측값, 맞으면 true). 값만 바꿔 여러 번.
+    root.querySelector('[data-m="coerce-drill"]').append(Drill({
+      pattern: '빈칸에 "이 식의 값"을 예측해 넣어라 — 맞으면 true가 출력된다.',
+      problems: [
+        { ask: '문자열 − 숫자: −는 숫자로 강제', code: 'print(("5" - 1) === ____)', expect: 'true', answer: '4', hint: '−는 "5"를 숫자 5로' },
+        { ask: '숫자 + 문자열: +는 이어붙임', code: 'print((1 + "2") === ____)', expect: 'true', answer: '"12"', hint: '문자열이 끼면 붙인다(따옴표 포함!)' },
+        { ask: 'true는 숫자 1로 강제', code: 'print((true + 1) === ____)', expect: 'true', answer: '2', hint: 'true → 1' },
+        { ask: 'falsy 판별: 빈 문자열', code: 'print(Boolean("") === ____)', expect: 'true', answer: 'false', hint: '""는 falsy 8개 중 하나' },
+        { ask: 'truthy 함정: "0"은 글자', code: 'print(Boolean("0") === ____)', expect: 'true', answer: 'true', hint: '"0"은 빈 문자열이 아니다' },
+        { ask: '기본값 패턴 ||', code: 'print(("" || "기본") === ____)', expect: 'true', answer: '"기본"', hint: '왼쪽이 falsy면 오른쪽' },
+        { ask: '== 는 타입을 강제', code: 'print((1 == "1") === ____)', expect: 'true', answer: 'true', hint: '==는 타입 맞춰 강제' },
+        { ask: '=== 는 타입까지 본다', code: 'print((1 === "1") === ____)', expect: 'true', answer: 'false', hint: '숫자 vs 문자열 → 다름' },
+      ],
+    }))
     wireNav(root)
   }
 })()
