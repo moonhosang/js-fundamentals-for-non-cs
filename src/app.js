@@ -165,12 +165,40 @@
     sidebarOpen: load('sidebarOpen', 'true') !== 'false',
     openChapters: new Set(CHAPTERS.map((_, i) => i)),
     openSteps: new Set(), // 하위 단계(3-1…·5-1…)를 펼친 부모 강의 id. 기본 접힘.
+    homeCollapsed: new Set(), // 목차(홈)에서 접은 파트 인덱스. 기본 다 펼침.
   }
   const CHECK_MODES = [
     { key: 'study', label: '📖 진도', get: () => state.study, k: 'doneStudy' },
     { key: 'practice', label: '✏️ 연습', get: () => state.practice, k: 'donePractice' },
   ]
   const activeMode = () => CHECK_MODES.find((m) => m.key === state.checkMode) || CHECK_MODES[0]
+
+  // ── 체크 단일 출처(SSOT) — 사이드바·목차 어디서 눌러도 여기로. 양쪽 UI를 즉시 동기화. ──
+  const isPracticeId = (id) => typeof id === 'string' && id.includes(':') // 드릴(base:tier)
+  // 숫자 id는 사이드바(숫자)·목차(문자 attr) 양쪽에서 오므로 두 형태를 모두 저장/조회한다.
+  const idForms = (id) => { const s = String(id); return /^\d+$/.test(s) ? [s, Number(s)] : [s] }
+  function setDone(id, on) {
+    const isPr = isPracticeId(id)
+    const set = isPr ? state.practice : state.study
+    idForms(id).forEach((f) => (on ? set.add(f) : set.delete(f)))
+    saveSet(isPr ? 'donePractice' : 'doneStudy', set)
+    renderProgress()
+    syncCheckUI(id)
+  }
+  function isDone(id) { const set = isPracticeId(id) ? state.practice : state.study; return idForms(id).some((f) => set.has(f)) }
+  function syncCheckUI(id) {
+    const on = isDone(id)
+    const sel = `[data-cid="${id}"]`
+    if (typeof toc !== 'undefined' && toc) toc.querySelectorAll('input.toc-check' + sel).forEach((inp) => { inp.checked = on })
+    if (typeof page !== 'undefined' && page) {
+      page.querySelectorAll('.bt-check' + sel + ', .bt-tier-check' + sel).forEach((s) => { s.classList.toggle('on', on); s.textContent = on ? '✓' : '○' })
+      page.querySelectorAll('.bt-part').forEach((part) => {
+        const ct = part.querySelector('[data-ct]'); if (!ct) return
+        const cs = part.querySelectorAll('.bt-check[data-cid]')
+        ct.textContent = [...cs].filter((c) => c.classList.contains('on')).length + '/' + cs.length
+      })
+    }
+  }
 
   function hashToId() {
     try {
@@ -314,13 +342,13 @@
           if (!l.step) {
             const isPr = isPracticeKind(l)
             const itemSet = isPr ? state.practice : state.study
-            const itemK = isPr ? 'donePractice' : 'doneStudy'
             const cb = document.createElement('input')
             cb.type = 'checkbox'
             cb.className = 'toc-check'
             cb.checked = itemSet.has(id)
+            cb.dataset.cid = id // 목차와 동기화용 키
             cb.setAttribute('aria-label', `${isPr ? '✏️ 연습' : '📖 진도'}: ${l.title}`)
-            cb.onchange = () => { itemSet.has(id) ? itemSet.delete(id) : itemSet.add(id); saveSet(itemK, itemSet); renderProgress() }
+            cb.onchange = () => setDone(id, cb.checked) // 중앙 토글 → 목차도 즉시 갱신
             row.append(cb)
           } else {
             const blank = document.createElement('span')
@@ -458,38 +486,41 @@
 
   function renderHome() {
     const sec = document.createElement('section')
-    // 책 목차 스타일 — 파트 헤딩 아래 강의를 '제목 …… 부제' 행으로. 드릴 티어(base:tier)는 숨겨 개념만.
-    const isDrillId = (id) => typeof id === 'string' && id.includes(':')
+    // 책 목차 — 파트(접이식) → 강의 행(읽음 ○/✓) → 드릴 칩(각자 완료 ○/✓). 체크는 사이드바와 동기화.
     const parentOf = (id) => (typeof id === 'string' && /-\d+$/.test(id)) ? id.replace(/-\d+$/, '') : null
-    const trackable = (id, l) => !isDrillId(id) && l && !l.step // 진도 대상(개념 강의, step 하위 제외)
-    const parts = CHAPTERS.map((ch) => {
+    const trackable = (id, l) => !isPracticeId(id) && l && !l.step
+    const parts = CHAPTERS.map((ch, ci) => {
       let done = 0, total = 0
       const rows = ch.items.map((id) => {
-        if (isDrillId(id)) return ''
+        if (isPracticeId(id)) return '' // 드릴은 부모 강의 아래 묶어 그린다
         const l = byId[id]
         if (!l) return ''
         const sub = parentOf(id) && byId[parentOf(id)] ? ' sub' : ''
         const track = trackable(id, l)
-        if (track) { total++; if (state.study.has(id)) done++ }
+        const on = track && isDone(id)
+        if (track) { total++; if (on) done++ }
         const check = track
-          ? `<span class="bt-check${state.study.has(id) ? ' on' : ''}" data-check="${id}" role="button" tabindex="0" title="읽음 표시(클릭)">${state.study.has(id) ? '✓' : '○'}</span>`
+          ? `<span class="bt-check${on ? ' on' : ''}" data-cid="${id}" role="button" tabindex="0" title="읽음 표시(클릭)">${on ? '✓' : '○'}</span>`
           : '<span class="bt-check ghost"></span>'
         const flag = hasContent(id) ? '' : '<span class="bt-flag" title="준비 중">🚧</span>'
         const stext = (l.title + ' ' + (l.subtitle || '')).replace(/<[^>]+>/g, '').replace(/"/g, '').toLowerCase()
-        const tiers = track ? practiceItemsFor(id) : [] // 이 강의의 난이도 드릴(있으면)
-        const drills = tiers.length ? `<div class="bt-drills">🎯 ${tiers.map((p) =>
-          `<button class="bt-tier" data-go="${p.id}">${p.badge} ${p.title} <span class="bt-tier-n">${p.subtitle}</span></button>`).join('')}</div>` : ''
+        const tiers = track ? practiceItemsFor(id) : []
+        const drills = tiers.length ? `<div class="bt-drills">🎯 ${tiers.map((p) => {
+          const pon = isDone(p.id)
+          return `<span class="bt-tier"><span class="bt-tier-check${pon ? ' on' : ''}" data-cid="${p.id}" role="button" tabindex="0" title="완료 표시">${pon ? '✓' : '○'}</span><button class="bt-tier-go" data-go="${p.id}">${p.badge} ${p.title} <span class="bt-tier-n">${p.subtitle}</span></button></span>`
+        }).join('')}</div>` : ''
         return `<div class="bt-item" data-s="${stext}">
           <div class="bt-row${sub}" data-go="${id}">
-            ${check}
-            <span class="bt-title">${flag}${l.title}</span>
-            <span class="bt-dots"></span>
-            <span class="bt-sub">${l.subtitle || ''}</span>
+            ${check}<span class="bt-title">${flag}${l.title}</span><span class="bt-dots"></span><span class="bt-sub">${l.subtitle || ''}</span>
           </div>${drills}
         </div>`
       }).join('')
       const label = ch.tag ? `${ch.tag} ${ch.title}` : `파트 ${ch.n} · ${ch.title}`
-      return `<div class="bt-part"><div class="bt-part-head"><span>${label}</span><span class="bt-part-count" data-ct>${done}/${total}</span></div>${rows}</div>`
+      const collapsed = state.homeCollapsed.has(ci) ? ' collapsed' : ''
+      return `<div class="bt-part${collapsed}" data-pi="${ci}">
+        <button class="bt-part-head" data-pi="${ci}"><span class="bt-chev">▸</span><span class="bt-part-label">${label}</span><span class="bt-part-count" data-ct>${done}/${total}</span></button>
+        <div class="bt-part-body">${rows}</div>
+      </div>`
     }).join('')
     sec.innerHTML = `
       <header class="lesson-header">
@@ -499,37 +530,36 @@
       </header>
       <div class="lesson-goal">
         <span class="lesson-goal-tag">이렇게 배워요</span>
-        <p>모든 강의는 <b>규칙 설명 → 라이브 실행(값·화면 둘 다) → 유형 드릴 ×5</b> 순서예요. 아래는 <b>책 목차</b>처럼 훑는 전체 지도 — 제목을 누르면 그 강의로, <b>✓를 눌러 읽음 표시</b>, 위 칸에서 <b>검색</b>도 돼요.</p>
+        <p>아래는 <b>책 목차</b> — 제목을 누르면 그 강의로, <b>○를 눌러 읽음/완료 표시</b>(사이드바와 자동 동기화), <b>파트 제목을 눌러 접기</b>, 위 칸에서 <b>검색</b>도 돼요.</p>
       </div>
       <input class="bt-search" type="search" placeholder="🔍 강의 검색 — 제목·설명으로 (예: 스택, map, 중첩, truthy)">
       <div class="book-toc">${parts}</div>
       <p class="section-desc" style="margin-top:16px">👉 <b>1강 · 값과 타입, 변수</b>부터 시작하세요.</p>
     `
-    // 행/드릴칩 클릭 → 이동
-    sec.querySelectorAll('.bt-row[data-go], .bt-tier[data-go]').forEach((el) => {
+    // 행·드릴 라벨 클릭 → 이동
+    sec.querySelectorAll('.bt-row[data-go], .bt-tier-go[data-go]').forEach((el) => {
       el.onclick = (e) => { e.stopPropagation(); const v = el.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
     })
-    // ✓ 클릭 → 읽음 토글(전파 차단), 파트 카운터·상단 진도 갱신
-    sec.querySelectorAll('.bt-check[data-check]').forEach((chk) => {
-      const toggle = (e) => {
-        e.stopPropagation()
-        const id = chk.getAttribute('data-check')
-        state.study.has(id) ? state.study.delete(id) : state.study.add(id)
-        saveSet('doneStudy', state.study)
-        const on = state.study.has(id)
-        chk.classList.toggle('on', on); chk.textContent = on ? '✓' : '○'
-        const part = chk.closest('.bt-part'), ct = part.querySelector('[data-ct]')
-        const checks = part.querySelectorAll('.bt-check[data-check]')
-        ct.textContent = [...checks].filter((c) => c.classList.contains('on')).length + '/' + checks.length
-        renderProgress()
-      }
+    // 체크(개념 ○/✓ · 드릴 ○/✓) → 중앙 토글(사이드바까지 즉시 동기화)
+    sec.querySelectorAll('.bt-check[data-cid], .bt-tier-check[data-cid]').forEach((chk) => {
+      const toggle = (e) => { e.stopPropagation(); const id = chk.getAttribute('data-cid'); setDone(id, !isDone(id)) }
       chk.onclick = toggle
       chk.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e) } }
     })
-    // 검색 → 제목·설명 실시간 필터(빈 파트는 접음)
+    // 파트 접기/펼치기
+    sec.querySelectorAll('.bt-part-head[data-pi]').forEach((h) => {
+      h.onclick = () => {
+        const i = +h.getAttribute('data-pi')
+        state.homeCollapsed.has(i) ? state.homeCollapsed.delete(i) : state.homeCollapsed.add(i)
+        h.closest('.bt-part').classList.toggle('collapsed')
+      }
+    })
+    // 검색 → 제목·설명 실시간 필터. 검색 중엔 접힘 무시(매칭을 보이게).
+    const bookToc = sec.querySelector('.book-toc')
     const search = sec.querySelector('.bt-search')
     search.oninput = () => {
       const q = search.value.trim().toLowerCase()
+      bookToc.classList.toggle('searching', !!q)
       sec.querySelectorAll('.bt-part').forEach((part) => {
         let any = false
         part.querySelectorAll('.bt-item').forEach((item) => {
