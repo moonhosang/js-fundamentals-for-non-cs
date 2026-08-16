@@ -39,6 +39,7 @@
         <div class="file-label">⏱ 단계 추적 — <code>"5" == 5</code> 는 왜 true? (다음 ▶)</div>
         <div data-m="red-cmp"></div>
       </div>
+      <p class="section-desc">🔎 <b>애초에 왜 <code>"5" == 5</code>가 참/거짓 값으로 바뀌나?</b> — 비교식도 <b>표현식</b>이라, 조건 자리에서 먼저 <b>하나의 값(참/거짓)으로 접힌다</b>(3강: "식은 값을 낳는다" <button class="inline-goto" data-goto="3-1">3-1 · 식 vs 문</button>). 그 접히는 도중 <code>==</code>가 <b>타입을 맞추는 규칙</b>이 형 변환이다 <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button>. 📚 위키: <a href="https://ko.wikipedia.org/wiki/관계_연산자" target="_blank" rel="noopener noreferrer">비교 연산자 ↗</a> · <a href="https://ko.wikipedia.org/wiki/형_변환" target="_blank" rel="noopener noreferrer">형 변환 ↗</a></p>
       <ul class="section-list">
         <li><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> — 크기 비교. <code>===</code> 같음 · <code>!==</code> 다름.</li>
         <li><b><code>"5" === 5</code> → false</b> (글자 vs 숫자, 타입 다름). <b><code>"5" == 5</code> → true</b> (==가 타입을 바꿔 비교 = 함정).</li>
@@ -147,7 +148,7 @@
     root.querySelector('[data-m="red-cmp"]').append(ExprReduce({
       title: '"5" == 5   (== 는 타입을 맞춰 강제 — 함정)',
       steps: [
-        { code: '"5" == 5', mark: '"5" == 5', note: '<code>==</code>는 <b>타입이 다르면 맞춰서 강제</b>한다(함정). 문자열 "5"를 숫자로.' },
+        { code: '"5" == 5', mark: '"5" == 5', note: '비교식도 <b>표현식</b> — 먼저 <b>하나의 값으로 접힌다</b>(3강). 그 도중 <code>==</code>는 <b>타입이 다르면 맞춰서 강제</b>한다(함정): 문자열 "5"를 숫자로.' },
         { code: '5 == 5', mark: '5 == 5', note: '이제 <b>5 == 5</b> — 같은 숫자끼리.' },
         { code: 'true', note: '→ <b>true</b>. 그래서 <code>"5" == 5</code>는 참. 만약 <code>"5" === 5</code>였다면 <b>타입이 달라</b> 볼 것도 없이 <b style="color:var(--red)">false</b> — <code>===</code>는 강제를 안 한다. <b>그래서 항상 ===.</b>' },
       ],
@@ -182,15 +183,15 @@
     root.querySelector('[data-m="ifel"]').append(Runner({
       code: [
         'let score = 85',
-        'let grade',
-        'if (score >= 90)      { grade = "A" }',
-        'else if (score >= 80) { grade = "B" }',
-        'else                  { grade = "C" }',
-        'print(grade)          // "B"',
+        'let grade                          // 아직 빈 이름표 (undefined)',
+        'if (score >= 90)      { grade = "A" }   // 90 이상이면 A',
+        'else if (score >= 80) { grade = "B" }   // 아니고 80 이상이면 B  ← 85는 여기서 멈춘다',
+        'else                  { grade = "C" }   // 위가 다 거짓이면 C',
+        'print(grade)          // "B"  (위에서부터 참인 첫 갈래만)',
         '',
-        '// 화면 배지로',
-        'box.textContent = grade',
-        'box.style.cssText = "font-size:40px;font-weight:800;padding:20px 28px;color:white;border-radius:14px;background:#4D96FF"',
+        '// ─ 화면 배지로: 계산한 grade를 box에 그린다 ─',
+        'box.textContent = grade            // ① 글자를 넣고',
+        'box.style.cssText = "font-size:40px;font-weight:800;padding:20px 28px;color:white;border-radius:14px;background:#4D96FF"   // ② 색·크기 스타일을 입힌다',
       ].join('\n'),
     }))
 
