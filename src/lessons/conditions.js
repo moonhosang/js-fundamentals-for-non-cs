@@ -107,7 +107,7 @@
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">비교(<b>===</b>)로 참/거짓을 만들고 <code>if</code>/삼항으로 길을 가른다.
-        <code>if</code>는 <b>아무 값의 truthy/falsy</b>로도 판단한다 — falsy는 딱 6개(<code>false 0 "" null undefined NaN</code>), 나머지는 다 있는 것(truthy).</p>
+        <code>if</code>는 <b>아무 값의 truthy/falsy</b>로도 판단한다 — falsy는 자주 만나는 6개(<code>false 0 "" null undefined NaN</code>), 정식 8개는 <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button>, 나머지는 다 있는 것(truthy).</p>
       </div>
 
       <div class="practice-cta">
