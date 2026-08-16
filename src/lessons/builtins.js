@@ -290,6 +290,24 @@
       <span class="learn-tag">📎 예측해서 빈칸을 채워라 — <code>+</code>vs<code>-</code> 강제 · falsy 판별 · <code>==</code>vs<code>===</code> (틀리면 다시)</span>
       <div data-m="coerce-drill"></div>
 
+      <h3 class="section-title">C. 값을 고르는 짧은 표기 — 삼항 · <code>||</code> · <code>??</code></h3>
+      <p class="section-desc">조건에 따라 <b>값 하나를 고르는</b> 짧은 표기 셋. <b>삼항</b>은 조건으로, <code>||</code>·<code>??</code>는 "없으면 기본값"으로 고른다.</p>
+      ${tbl([
+        ['a ? b : c', '삼항 — a가 truthy면 b, 아니면 c', '85>=60 ? "합격":"불합격"', '"합격"'],
+        ['a || b', '기본값 — a가 <b>falsy면</b> b (단락 평가)', '"" || "익명"', '"익명"'],
+        ['a ?? b', '널 병합 — a가 <b>null/undefined일 때만</b> b', 'null ?? 10', '10'],
+      ])}
+      <span class="learn-tag">⚠️ <code>||</code>는 <code>0</code>·<code>""</code>·<code>false</code>도 falsy라 <b>날려버린다</b> — "값이 아예 없을 때만"이면 <code>??</code></span>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🔮 먼저 예측 — 같은 <code>count = 0</code> 인데 결과가?</div>
+        <div data-m="pq-def1"></div>
+        <div data-m="pq-def2"></div>
+      </div>
+      <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>0 || 10</code> vs <code>0 ?? 10</code> (다음 ▶)</div><div data-m="sim-default"></div></div>
+      <div class="card"><div class="file-label">🔬 실행 — 삼항·||·?? 나란히</div><div data-m="run-default"></div></div>
+      <p class="section-desc">삼항의 <b>단계 추적</b>(조건→값)은 조건 챕터에 있다 → <button class="inline-goto" data-goto="4">4강 · ④ 삼항</button>. 📚 위키: <a href="https://ko.wikipedia.org/wiki/조건_연산자" target="_blank" rel="noopener noreferrer">삼항 연산자 ↗</a></p>
+      <div data-m="def-drill"></div>
+
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0"><b>형 변환</b>은 명시적(<code>Number()</code>…)과 암묵적(연산자가 강제) 둘, <b>falsy는 딱 8개</b>(나머지 truthy). 둘 다 부르는 도구가 아니라 <b>언어가 자동 적용하는 규칙</b>이다. 이 규칙이 <b>표현식 축약에 끼어드는 건 3강(3-4·3-6)</b>, <b>조건 분기로 쓰이는 건 4강</b>에서 본다.</p>
@@ -370,6 +388,50 @@
         { ask: '기본값 패턴 ||', code: 'print(("" || "기본") === ____)', expect: 'true', answer: '"기본"', hint: '왼쪽이 falsy면 오른쪽' },
         { ask: '== 는 타입을 강제', code: 'print((1 == "1") === ____)', expect: 'true', answer: 'true', hint: '==는 타입 맞춰 강제' },
         { ask: '=== 는 타입까지 본다', code: 'print((1 === "1") === ____)', expect: 'true', answer: 'false', hint: '숫자 vs 문자열 → 다름' },
+      ],
+    }))
+    // C. 값 고르기 — 삼항·||·?? · 핵심은 count=0에서 ||와 ??가 갈리는 것.
+    root.querySelector('[data-m="pq-def1"]').append(Quiz({
+      q: '<code>let count = 0</code> 일 때 <code>count || 10</code> 은?',
+      options: ['<code>0</code> (count 그대로)', '<code>10</code> (0이 falsy라 날아감)', '에러'],
+      answer: 1,
+      explain: '<code>||</code>는 왼쪽을 truthy/falsy로 본다 → <b>0은 falsy</b>라 버리고 <b>10</b>. count가 <b>진짜 0</b>이어도 10으로 바뀐다 — 흔한 버그.',
+    }))
+    root.querySelector('[data-m="pq-def2"]').append(Quiz({
+      q: '이번엔 <code>count ?? 10</code> (여전히 count=0) 은?',
+      options: ['<code>0</code> (0은 null/undefined 아님)', '<code>10</code> (아까처럼)'],
+      answer: 0,
+      explain: '<code>??</code>(널 병합)는 왼쪽이 <b>null 또는 undefined일 때만</b> 오른쪽. <b>0은 둘 다 아니라</b> 그대로 <b>0</b>. "값이 아예 없을 때만 기본값"이면 <code>??</code>.',
+    }))
+    root.querySelector('[data-m="sim-default"]').append(ExprReduce({
+      title: 'count || 10   vs   count ?? 10   // count = 0 (진짜 0)',
+      steps: [
+        { code: 'count || 10', mark: 'count', note: 'count = <b>0</b>. <code>||</code>는 왼쪽을 <b>truthy/falsy</b>로 본다.' },
+        { code: '0 || 10', mark: '0', note: '<b>0은 falsy 8개 중 하나</b> → <code>||</code>는 왼쪽을 버리고 <b>오른쪽</b>으로.' },
+        { code: '10', note: '= <b>10</b>. count가 <b>진짜 0</b>이었는데 <b style="color:var(--red)">10으로 바뀌었다 — 버그!</b> (0을 유효한 값으로 쓸 때 <code>||</code>는 위험)' },
+        { code: 'count ?? 10', mark: 'count', note: '이번엔 <code>??</code>(널 병합). 왼쪽이 <b>null 또는 undefined일 때만</b> 오른쪽을 쓴다.' },
+        { code: '0 ?? 10', mark: '0', note: '<b>0은 null도 undefined도 아니다</b> → 왼쪽을 <b style="color:var(--green)">그대로 유지</b>.' },
+        { code: '0', note: '= <b>0</b>. "값이 <b>아예 없을 때만</b>(null·undefined) 기본값"이 목적이면 <code>??</code>가 정답. (빈 문자열·0을 falsy로 걸러도 되면 <code>||</code>)' },
+      ],
+    }))
+    root.querySelector('[data-m="run-default"]').append(Runner({ showBox: false, code: [
+      'let count = 0',
+      'print(count || 10)   // 10  ← 0이 falsy라 날아감 (함정!)',
+      'print(count ?? 10)   // 0   ← ??는 null/undefined일 때만',
+      '',
+      'print("" || "익명")   // "익명"  ← 빈칸이면 기본값 (여기선 ||가 맞다)',
+      'print(null ?? "기본") // "기본"  ← 값이 아예 없을 때',
+      '',
+      'let score = 85',
+      'print(score >= 60 ? "합격" : "불합격")   // "합격"  ← 삼항: 조건으로 고르기',
+    ].join('\n') }))
+    root.querySelector('[data-m="def-drill"]').append(Drill({
+      pattern: '빈칸에 예측값을 넣어라 — 맞으면 true. (0에서 ||와 ??가 갈린다)',
+      problems: [
+        { ask: '|| : 0은 falsy라 날아감', code: 'print((0 || 10) === ____)', expect: 'true', answer: '10', hint: '0은 falsy' },
+        { ask: '?? : 0은 유지', code: 'print((0 ?? 10) === ____)', expect: 'true', answer: '0', hint: '0은 null/undefined 아님' },
+        { ask: '|| : 빈칸이면 기본값', code: 'print(("" || "익명") === ____)', expect: 'true', answer: '"익명"', hint: '""는 falsy(따옴표!)' },
+        { ask: '삼항 : 조건으로 고르기', code: 'print((5 > 3 ? "y" : "n") === ____)', expect: 'true', answer: '"y"', hint: '5>3 참 → ? 뒤' },
       ],
     }))
     wireNav(root)
