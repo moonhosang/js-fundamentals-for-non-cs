@@ -458,17 +458,24 @@
 
   function renderHome() {
     const sec = document.createElement('section')
-    const cards = CHAPTERS.map((ch) => {
-      const btns = ch.items.map((id) => {
+    // 책 목차 스타일 — 파트 헤딩 아래 강의를 '제목 …… 부제' 행으로. 드릴 티어(base:tier)는 숨겨 개념만.
+    const isDrillId = (id) => typeof id === 'string' && id.includes(':')
+    const parentOf = (id) => (typeof id === 'string' && /-\d+$/.test(id)) ? id.replace(/-\d+$/, '') : null
+    const parts = CHAPTERS.map((ch) => {
+      const rows = ch.items.map((id) => {
+        if (isDrillId(id)) return ''
         const l = byId[id]
         if (!l) return ''
-        const flag = hasContent(id) ? '' : '<span title="준비 중" style="margin-right:4px">🚧</span>'
-        return `<button class="home-card" data-go="${id}">
-          <span class="home-card-title">${flag}${l.title}</span>
-          <span class="home-card-sub">${l.subtitle}</span>
+        const sub = parentOf(id) && byId[parentOf(id)] ? ' sub' : ''
+        const flag = hasContent(id) ? '' : '<span class="bt-flag" title="준비 중">🚧</span>'
+        return `<button class="bt-row${sub}" data-go="${id}">
+          <span class="bt-title">${flag}${l.title}</span>
+          <span class="bt-dots"></span>
+          <span class="bt-sub">${l.subtitle || ''}</span>
         </button>`
       }).join('')
-      return `<div class="card"><div class="file-label">${ch.tag ? ch.tag : '파트 ' + ch.n} · ${ch.title}</div><div class="home-grid">${btns}</div></div>`
+      const label = ch.tag ? `${ch.tag} ${ch.title}` : `파트 ${ch.n} · ${ch.title}`
+      return `<div class="bt-part"><div class="bt-part-head">${label}</div>${rows}</div>`
     }).join('')
     sec.innerHTML = `
       <header class="lesson-header">
@@ -478,11 +485,10 @@
       </header>
       <div class="lesson-goal">
         <span class="lesson-goal-tag">이렇게 배워요</span>
-        <p>모든 강의는 <b>규칙 설명 → 라이브 실행(값·화면 둘 다) → 유형 드릴 ×5</b> 순서예요.
-        코드는 그 자리에서 고쳐 <b>▶ 실행</b>해 볼 수 있고, 결과는 <b>값(print)</b>과 <b>화면(box)</b> 두 가지로 나타나요.</p>
+        <p>모든 강의는 <b>규칙 설명 → 라이브 실행(값·화면 둘 다) → 유형 드릴 ×5</b> 순서예요. 아래는 <b>책 목차</b>처럼 훑는 전체 지도 — 제목을 누르면 그 강의로, 실습(쉬움·보통·어려움)은 왼쪽 사이드바나 강의 끝에서 열려요.</p>
       </div>
-      <div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">${cards}</div>
-      <p class="section-desc" style="margin-top:16px">👉 <b>1강 · 변수</b>부터 시작하세요.</p>
+      <div class="book-toc">${parts}</div>
+      <p class="section-desc" style="margin-top:16px">👉 <b>1강 · 값과 타입, 변수</b>부터 시작하세요.</p>
     `
     sec.querySelectorAll('[data-go]').forEach((b) => {
       b.onclick = () => { const v = b.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
