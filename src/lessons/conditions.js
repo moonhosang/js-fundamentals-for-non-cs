@@ -177,12 +177,14 @@
       ],
     }))
     root.querySelector('[data-m="red-tf2"]').append(ExprReduce({
-      title: 'if ("0" - 0) { … }   (겉은 쌍둥이인데 결과는 반대)',
+      title: 'if ("0" - 0) { … }   — 한 줄에 숨은 변환이 두 번!',
       steps: [
-        { code: 'if ( "0" - 0 )', mark: '"0" - 0', note: '괄호 안은 <b>표현식</b> → truthy/falsy를 보기 <b>전에 먼저 접는다</b>. <code>-</code>는 산술이라 문자열 <code>"0"</code>을 <b>숫자 0으로 강제</b>(형 변환).' },
-        { code: 'if ( 0 - 0 )', mark: '0 - 0', note: '이제 <b>0 - 0</b> — 숫자끼리 뺄셈.' },
-        { code: 'if ( 0 )', mark: '0', note: '= <b>0</b>. 그런데 <code>0</code>은 <b>falsy 8개 중 하나</b>다!' },
-        { code: '❌ 거짓  →  안 실행', note: '<code>if("0")</code>은 실행됐는데 <code>if("0" - 0)</code>은 <b style="color:var(--red)">안 된다</b> — 겉은 쌍둥이지만 <code>- 0</code> 하나가 먼저 <b>숫자 0</b>으로 접어 falsy로 뒤집었다. <b>조건은 늘 먼저 값으로 접힌 뒤 truthy/falsy.</b>' },
+        { code: 'if ( "0" - 0 )', mark: '"0" - 0', note: '<code>if</code>는 문이지만 괄호 안 <code>"0" - 0</code>은 <b>표현식</b> — 참/거짓을 보기 <b>전에 먼저 하나의 값으로 접힌다</b>. 그런데 왼쪽 <code>"0"</code>은 <b>따옴표 있는 문자열(글자)</b>, 오른쪽 <code>0</code>은 <b>숫자</b> — <b>타입이 서로 다르다</b>.' },
+        { code: 'if ( 숫자("0") - 0 )', mark: '숫자("0")', note: '① <b>첫 번째 숨은 변환</b>. 뺄셈 <code>-</code>는 <b>숫자끼리만</b> 할 수 있다 → JS가 문자열 <code>"0"</code>을 <b>몰래 숫자로 바꾼다</b>(<b>암묵적 형 변환 = 캐스팅/coercion</b>, 안에서 <code>Number("0")</code>을 부르는 셈). 눈엔 안 보이지만 반드시 일어난다.' },
+        { code: 'if ( 0 - 0 )', mark: '0 - 0', note: '그 변환(<code>숫자("0")</code>, 실제 함수명은 <code>Number</code>)의 결과는 <b>숫자 0</b> — 글자 "0"이 아니라 진짜 숫자다. 이제 <b>둘 다 숫자</b>가 됐으니 진짜 뺄셈 <code>0 - 0</code>을 한다.' },
+        { code: 'if ( 0 )', mark: '0', note: '<code>0 - 0</code> = <b>0</b>(숫자). 조건이 <b>하나의 값</b>으로 다 접혔다. 여기까지가 "표현식이 값이 되는" 단계.' },
+        { code: 'if ( 0 → ❌거짓 )', mark: '0', note: '② <b>두 번째 숨은 변환</b>. 조건 자리에선 값을 <b>참/거짓으로</b> 봐야 한다(불리언화 = ToBoolean). 그런데 숫자 <b>0은 falsy 8개</b>(<code>false 0 -0 0n "" null undefined NaN</code>) 중 하나 → <b style="color:var(--red)">거짓</b>. (형 변환 규칙은 ③ 위의 📐 참·거짓과 형 변환 참고)' },
+        { code: '❌ 거짓  →  몸통 안 실행', note: '그래서 <code>print("실행!")</code>은 <b>안 돈다</b>. <code>if("0")</code>는 글자 그대로 truthy라 <b>실행됐는데</b>, <code>- 0</code> 하나가 먼저 <b>숫자 0으로 접어</b> falsy로 뒤집은 것. <b>한 줄에 숨은 변환이 두 번</b> — ① 숫자화(뺄셈용) → ② 불리언화(조건용). 겉모습(<code>"0"</code>)이 아니라 <b>접힌 값</b>이 truthy/falsy를 정한다.' },
       ],
     }))
     root.querySelector('[data-m="red-tern"]').append(ExprReduce({
