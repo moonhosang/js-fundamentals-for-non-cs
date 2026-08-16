@@ -58,6 +58,7 @@
 
       <h3 class="section-title">③ truthy / falsy — 값의 '있냐/없냐'</h3>
       <div data-m="qz"></div>
+      <div data-m="qz2"></div>
       <span class="learn-tag">📎 if는 true/false만 받는 게 아니다 — 아무 값이나. 있으면 통과, 없으면 막힘</span>
       <p class="section-desc"><b>문지기</b>라고 생각하라 — 뭔가 들고 있으면(truthy) 통과, 빈손이면(falsy) 막는다.
       그래서 <code>if (name)</code> 은 "이름이 <b>있으면</b>"이란 뜻이 된다.</p>
@@ -77,6 +78,10 @@
       <div class="card">
         <div class="file-label">⏱ 단계 추적 — <code>if ("0")</code>은 왜 실행되나 (다음 ▶)</div>
         <div data-m="red-tf"></div>
+      </div>
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">⏱ 단계 추적 — 🤯 <code>if ("0" - 0)</code>은 왜 <b>반대로</b> 안 되나 (다음 ▶)</div>
+        <div data-m="red-tf2"></div>
       </div>
 
       <h3 class="section-title">④ 삼항 — 한 줄 갈림길</h3>
@@ -171,6 +176,15 @@
         { code: '✅ 참  →  실행', note: '그래서 <code>if("0")</code>은 <b>실행된다</b>. falsy 8개가 아니면 전부 truthy.' },
       ],
     }))
+    root.querySelector('[data-m="red-tf2"]').append(ExprReduce({
+      title: 'if ("0" - 0) { … }   (겉은 쌍둥이인데 결과는 반대)',
+      steps: [
+        { code: 'if ( "0" - 0 )', mark: '"0" - 0', note: '괄호 안은 <b>표현식</b> → truthy/falsy를 보기 <b>전에 먼저 접는다</b>. <code>-</code>는 산술이라 문자열 <code>"0"</code>을 <b>숫자 0으로 강제</b>(형 변환).' },
+        { code: 'if ( 0 - 0 )', mark: '0 - 0', note: '이제 <b>0 - 0</b> — 숫자끼리 뺄셈.' },
+        { code: 'if ( 0 )', mark: '0', note: '= <b>0</b>. 그런데 <code>0</code>은 <b>falsy 8개 중 하나</b>다!' },
+        { code: '❌ 거짓  →  안 실행', note: '<code>if("0")</code>은 실행됐는데 <code>if("0" - 0)</code>은 <b style="color:var(--red)">안 된다</b> — 겉은 쌍둥이지만 <code>- 0</code> 하나가 먼저 <b>숫자 0</b>으로 접어 falsy로 뒤집었다. <b>조건은 늘 먼저 값으로 접힌 뒤 truthy/falsy.</b>' },
+      ],
+    }))
     root.querySelector('[data-m="red-tern"]').append(ExprReduce({
       title: 'age >= 18 ? "성인" : "미성년"   // age = 20',
       steps: [
@@ -200,6 +214,12 @@
       options: ['실행된다 — 글자라 truthy', '안 된다 — 0이니까 falsy'],
       answer: 0,
       explain: 'falsy는 딱 <b>빈 글자 <code>""</code></b>뿐 — <code>"0"</code>은 <b>내용이 있는 글자</b>라 <b>truthy</b>! 숫자 <code>0</code>과 글자 <code>"0"</code>은 다르다. 이게 최대 함정.',
+    }))
+    root.querySelector('[data-m="qz2"]').append(Quiz({
+      q: '🤯 이번엔 <code>if ("0" - 0) { print("실행!") }</code> — 겉은 쌍둥이다. 이건 실행될까?',
+      options: ['실행된다 — 아까처럼 <code>"0"</code>이니까', '안 된다 — <code>"0" - 0</code>이 먼저 <code>0</code>으로 접혀 falsy'],
+      answer: 1,
+      explain: '함정! 괄호 안은 <b>표현식</b>이라 truthy/falsy를 보기 <b>전에 먼저 접힌다</b>: <code>-</code>가 <code>"0"</code>을 숫자로 강제 → <code>0 - 0 = 0</code> → <b>0은 falsy</b> → <b>안 실행</b>. 아까 <code>if("0")</code>은 글자 그대로라 truthy였는데, <code>- 0</code> 하나가 결과를 뒤집는다. <b>조건은 늘 먼저 값으로 접힌 뒤 truthy/falsy.</b>',
     }))
     root.querySelector('[data-m="tf"]').append(Runner({
       showBox: false,
