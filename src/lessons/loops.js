@@ -1,4 +1,4 @@
-// 7강 · 반복과 map (for · forEach · map · filter · reduce)  ── design-principles 규범
+// 7강 · 반복과 map (for · while · forEach · map · filter · reduce)  ── design-principles 규범
 // 오해: map/filter가 원본을 바꾼다?(→ 새 배열!) · forEach도 값을 돌려준다?(→ undefined) · reduce는 마법?(→ 하나로 접기)
 // 왜:  for=번호로 훑기 · forEach=각 요소에 실행(반환X) · map=변환해 새 배열 · filter=조건 통과만 새 배열 · reduce=누적해 하나로
 // 대비: forEach(실행·반환X) vs map(변환·새 배열) · map(전부 변환) vs filter(거르기) · 원본 안 바뀜(map/filter) vs 바뀜(push)
@@ -38,6 +38,17 @@
       <div class="card"><div class="file-label">🔬 for — 매 바퀴 조건이 다시 접힌다:  for (i=0; i&lt;3; i++)</div><div data-m="cond-for"></div></div>
       <div data-m="qz-loop"></div>
       <p class="section-desc">🔑 <b>if는 딱 한 번, for는 매 바퀴</b> 조건을 다시 접는다 — 그래서 for엔 '시간'이 흐른다. 괄호 안 원리는 셋 다 <b>완전히 같다</b>(값 → 참/거짓). 더 깊이: <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button> · <button class="inline-goto" data-goto="4">4강 · 조건</button> · <button class="inline-goto" data-goto="3-6">3-6 · 조건도 표현식</button>.</p>
+
+      <h3 class="section-title">🔁 while — 조건만 남은 반복, 카운터는 내 손으로</h3>
+      <span class="learn-tag">📎 <code>while (조건) { 몸통 }</code> — 매 바퀴 조건을 <b>다시 값으로 접어</b> 참이면 한 바퀴 더 · 단, 카운터는 <b>내가 직접</b> 움직인다</span>
+      <p class="section-desc">☕ 현실 그대로다: <b>커피가 남아 있는 동안(while) 계속 마신다</b> — 한 모금씩 줄여야(<code>n--</code>) 언젠가 끝난다. 줄이지 않으면? 영원히 마신다. 코드도 똑같다. 시뮬레이션을 보기 전에 <b>먼저 예측</b>해 보라.</p>
+      <div data-m="qz-while"></div>
+      <div data-m="qz-while2"></div>
+      <p class="section-desc">이제 <b>다음 ▶으로 한 바퀴씩</b> 밟아 보라 — 위 for(cond-for)와 <b>완전히 같은 리듬</b>이다: 매 바퀴 괄호 안을 다시 접는다.</p>
+      <div class="card"><div class="file-label">🔬 while — 매 바퀴 조건이 다시 접힌다:  while (n &gt; 0)  ·  n = 3</div><div data-m="sim-while"></div></div>
+      <div class="card"><div class="file-label">🔬 진짜 도는 while — 카운트다운 · 잔액이 남는 동안</div><div data-m="while-run"></div></div>
+      <div data-m="while-drill"></div>
+      <p class="section-desc">🔑 <b>while (조건)도 위 for와 같은 심장</b> — 매 바퀴 괄호 안 <b>표현식을 다시 값으로 접어</b>(expr → 참/거짓) 참이면 한 바퀴 더, 거짓이면 끝. 다른 건 딱 하나: for는 <code>(초기화; 조건; 증감)</code>이 한 줄에 모여 있고, while은 <b>카운터를 내 손으로</b>(<code>n--</code>) 움직여야 한다 — 안 움직이면 조건이 영원히 참, <b>무한루프</b>. 고르는 법: <b>몇 번 돌지 미리 알면 for, '언제 끝나는지'를 조건으로만 알면 while</b>(잔액이 남는 동안, 입력이 있는 동안). 괄호 안 원리 복습: <button class="inline-goto" data-goto="3-6">3-6 · 조건도 표현식</button> · <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button>.</p>
 
       <h3 class="section-title">② forEach — 각 요소에 '실행'만 (값은 안 돌려줌)</h3>
       <span class="learn-tag">📎 forEach는 각 요소로 함수를 실행할 뿐 — 결과를 안 돌려준다(undefined). 변환하려면 map!</span>
@@ -114,6 +125,57 @@
       options: ['2번', '3번 (i = 0, 1, 2)', '4번'],
       answer: 1,
       explain: '조건 <code>i &lt; 3</code>이 <b>참인 동안</b>만 실행 — i=0·1·2에서 참이라 <b>3번</b>, i=3에서 <code>3 &lt; 3 = 거짓</code>이라 멈춘다.',
+    }))
+
+    // 🔁 while — for와 같은 심장(매 바퀴 expr→참/거짓), 다른 건 카운터가 내 손이라는 것뿐.
+    root.querySelector('[data-m="qz-while"]').append(Quiz({
+      q: '🔮 예측 — <code>let n = 3; while (n &gt; 0) { n-- }</code> 몸통은 <b>몇 번</b> 실행되나?',
+      options: ['2번', '3번 (n = 3, 2, 1)', '4번 (n = 0까지)'],
+      answer: 1,
+      explain: 'while도 위 for처럼 <b>매 바퀴 <code>n &gt; 0</code>을 다시 접는다</b> — 3&gt;0 참, 2&gt;0 참, 1&gt;0 참, 그리고 <code>0 &gt; 0</code>은 <b>거짓</b>이라 멈춘다. 참이었던 <b>3번</b>만 실행.',
+    }))
+    root.querySelector('[data-m="qz-while2"]').append(Quiz({
+      q: '🔮 예측 — 위 코드에서 <code>n--</code>를 <b>지우면</b> 어떻게 되나?',
+      options: ['그래도 3번 돌고 멈춘다', 'n이 안 변해 한 번만 돈다', '영원히 안 멈춘다 (무한루프)'],
+      answer: 2,
+      explain: '멈춤은 공짜가 아니다 — <b>매 바퀴 조건을 거짓 쪽으로 밀 무언가(<code>n--</code>)가 몸통에 반드시 있어야</b> 한다. n이 영원히 3이면 <code>3 &gt; 0</code>은 매 바퀴 참 → 브라우저 탭이 멈출 때까지 돈다. for는 <code>i++</code>가 괄호 안에 붙박이라 잊기 어렵지만, while은 <b>내 손</b>에 달렸다.',
+    }))
+    root.querySelector('[data-m="sim-while"]').append(ExprReduce({
+      title: 'let n = 3;  while (n > 0) { print(n); n-- }',
+      steps: [
+        { code: 'n = 3', note: '🚦 시작. while도 위 for와 <b>완전히 같은 심장</b> — <b>매 바퀴 괄호 안 (n > 0)</b>을 먼저 값으로 접는다. 초기화는 while <b>바깥</b>에 내가 썼다.' },
+        { code: 'n > 0     // n = 3', mark: 'n > 0', note: '<b>1바퀴</b> · ① 괄호 안은 <b>표현식</b> → n에 지금 값 3을 넣는다.' },
+        { code: '3 > 0  →  true  →  ✅ 참', note: '② <b>factor 비교</b> → <b style="color:var(--green)">참(truthy)</b> → 몸통 실행: print(3), 그리고 <b>n-- → n = 2</b>. 이 n--는 for의 i++와 달리 <b>내가 몸통에 직접 쓴 것</b>이다.' },
+        { code: 'n > 0     // n = 2', mark: 'n > 0', note: '<b>2바퀴</b> · 같은 과정 — n에 2를 넣는다.' },
+        { code: '2 > 0  →  true  →  ✅ 참', note: '<b style="color:var(--green)">참</b> → print(2) → n-- → n = 1.' },
+        { code: 'n > 0     // n = 1', mark: 'n > 0', note: '<b>3바퀴</b> — n에 1을 넣는다.' },
+        { code: '1 > 0  →  true  →  ✅ 참', note: '<b style="color:var(--green)">참</b> → print(1) → n-- → n = 0. n--가 매 바퀴 조건을 <b>거짓 쪽으로</b> 밀어 왔다.' },
+        { code: 'n > 0     // n = 0', mark: 'n > 0', note: '<b>4바퀴 검사</b> — n에 0을 넣는다.' },
+        { code: '0 > 0  →  false  →  ❌ 거짓 → 종료', note: '<b style="color:var(--red)">거짓(falsy)</b> → 반복 <b>종료</b>. 만약 n--가 없었다면 n은 영원히 3 — <b>이 마지막 줄이 영원히 오지 않는다(무한루프)</b>.' },
+      ],
+    }))
+    root.querySelector('[data-m="while-run"]').append(Runner({ showBox: false, code: [
+      'let n = 3',
+      'while (n > 0) {   // 매 바퀴 (n > 0)을 다시 접는다 — 위 시뮬레이션 그대로',
+      '  print(n)        // 3, 2, 1',
+      '  n--             // ★ 내가 직접 줄인다 — 이 줄을 빼먹으면 무한루프!',
+      '}',
+      '',
+      'let money = 10000, cups = 0',
+      'while (money >= 3500) {   // 몇 바퀴일지 미리 모른다 — "잔액이 남는 동안"만 안다',
+      '  money -= 3500           // 커피 한 잔',
+      '  cups++',
+      '}',
+      'print(cups + "잔 마시고 " + money + "원 남음")   // 2잔 마시고 3000원 남음',
+    ].join('\n') }))
+    root.querySelector('[data-m="while-drill"]').append(Drill({
+      pattern: '빈칸에 예측값을 넣어라 — 맞으면 true. (전부 반드시 끝나는 while — 몸통 속 무언가가 조건을 거짓 쪽으로 민다.)',
+      problems: [
+        { ask: '몇 바퀴 도나 — c가 센다', code: 'let n = 3, c = 0; while (n > 0) { n--; c++ } print(c === ____)', expect: 'true', answer: '3', hint: '3>0, 2>0, 1>0 참 — 0>0에서 멈춤' },
+        { ask: '끝난 뒤 n은? (2씩 감소)', code: 'let n = 5; while (n > 0) { n = n - 2 } print(n === ____)', expect: 'true', answer: '-1', hint: '5 → 3 → 1 → -1 — 마지막 검사 -1>0은 거짓' },
+        { ask: '잔액이 남는 동안 — 몇 잔?', code: 'let money = 10000, cups = 0; while (money >= 3500) { money -= 3500; cups++ } print(cups === ____)', expect: 'true', answer: '2', hint: '10000 → 6500 → 3000 — 3000은 3500 미만' },
+        { ask: '문자열이 다 자랄 때까지', code: 'let s = "ha"; while (s.length < 6) { s = s + "ha" } print(s === ____)', expect: 'true', answer: '"hahaha"', hint: '길이 2 → 4 → 6 — 6<6 거짓 (따옴표!)' },
+      ],
     }))
 
     root.querySelector('[data-m="foreach"]').append(Runner({ showBox: false, code: [
