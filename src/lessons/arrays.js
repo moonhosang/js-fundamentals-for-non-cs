@@ -28,6 +28,16 @@
         <code>arr[3]</code>(칸 밖)은 에러가 아니라 <b><code>undefined</code></b>(빈손)를 준다.</p>
       </div>
 
+      <h3 class="section-title">🎯 번호는 0부터 — 예측 → 한 칸씩 → 반복 (⏱ 시뮬레이션)</h3>
+      <span class="learn-tag">📎 한 번 봐선 안 붙는 함정 — 예측하고, 걸어보고, 반복해 손에 붙인다</span>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🔮 먼저 예측 → 확인</div>
+        <div data-m="qz-i1"></div>
+        <div data-m="qz-i2"></div>
+      </div>
+      <div class="card"><div class="file-label">⏱ 한 칸씩 걸어보기 — fruits[0] → [3] (다음 ▶)</div><div data-m="sim-idx"></div></div>
+      <div class="card"><div class="file-label">🎯 반복 드릴 — 예측해서 빈칸 채우기</div><div data-m="idx-drill"></div></div>
+
       <h3 class="section-title">① 만들기 & 꺼내기 — 번호는 0부터</h3>
       <span class="learn-tag">📎 사물함: 0번·1번·2번 … 첫째 = arr[0]</span>
       <div class="card">
@@ -73,6 +83,41 @@
         <button class="chip on" data-goto="6:easy">📝 6강 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
+
+    // 🔮 예측(off-by-one 함정을 표 보기 전에 맞혀 본다)
+    root.querySelector('[data-m="qz-i1"]').append(Quiz({
+      q: '세 개짜리 <code>["사과","배","귤"]</code>의 <b>마지막</b>은 몇 번(인덱스)?',
+      options: ['<code>3</code>번', '<code>2</code>번 (0부터라 length−1)', '<code>1</code>번'],
+      answer: 1,
+      explain: '번호가 <b>0부터</b>라 0·1·2 세 칸 → 마지막은 <code>arr[2]</code>(= length−1 = 3−1 = 2). <code>arr[3]</code>이 아니다.',
+    }))
+    root.querySelector('[data-m="qz-i2"]').append(Quiz({
+      q: '<code>["사과","배","귤"][3]</code> (칸 밖)은?',
+      options: ['에러(터진다)', '<code>undefined</code> (빈손)', '<code>"귤"</code>'],
+      answer: 1,
+      explain: '칸은 0·1·2까지뿐. 없는 번호를 꺼내도 <b>에러가 아니라 <code>undefined</code></b>(빈손)를 준다 — 그래서 조용히 지나가 더 위험한 함정.',
+    }))
+    // ⏱ 시간 시뮬레이션 — 번호로 한 칸씩(0부터), 마지막 [3]에서 칸 밖. ExprReduce 재사용.
+    root.querySelector('[data-m="sim-idx"]').append(ExprReduce({
+      title: 'fruits[i] — 번호로 한 칸씩 (칸: 0·1·2)',
+      steps: [
+        { code: 'fruits = ["사과", "배", "귤"]   // 칸 번호 0·1·2', note: '번호는 <b>0부터</b> 붙는다 — "시작에서 몇 칸 떨어졌나".' },
+        { code: 'fruits[0]  →  "사과"', mark: 'fruits[0]', note: '<b>0번</b> = 0칸 떨어진 시작칸 → "사과"(첫째).' },
+        { code: 'fruits[1]  →  "배"', mark: 'fruits[1]', note: '<b>1번</b> = 한 칸 뒤 → "배".' },
+        { code: 'fruits[2]  →  "귤"', mark: 'fruits[2]', note: '<b>2번</b> = 세 개 중 <b>마지막</b>(length−1 = 3−1 = 2) → "귤".' },
+        { code: 'fruits[3]  →  undefined', mark: 'fruits[3]', note: '<b>3번은 칸 밖</b>(0·1·2뿐) → 에러가 아니라 <b>undefined</b>(빈손). 이게 <b>off-by-one</b> 함정.' },
+      ],
+    }))
+    // 🎯 반복 드릴 — 예측 패턴(빈칸=예측값, 맞으면 true)
+    root.querySelector('[data-m="idx-drill"]').append(Drill({
+      pattern: '빈칸에 "이 값"을 예측해 넣어라 — 맞으면 true가 출력된다.',
+      problems: [
+        { ask: '개수(length)', code: 'print([10, 20, 30].length === ____)', expect: 'true', answer: '3', hint: 'length=개수' },
+        { ask: '첫째 = 0번', code: 'print(["a", "b", "c"][0] === ____)', expect: 'true', answer: '"a"', hint: '0번=시작칸(따옴표!)' },
+        { ask: '마지막 = length−1', code: 'print([10, 20, 30][2] === ____)', expect: 'true', answer: '30', hint: '0부터라 마지막은 2번' },
+        { ask: '칸 밖 = undefined', code: 'print([10, 20, 30][3] === ____)', expect: 'true', answer: 'undefined', hint: '3번은 없다 → 빈손' },
+      ],
+    }))
 
     root.querySelector('[data-m="idx"]').append(Runner({
       showBox: false,
