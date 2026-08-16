@@ -183,13 +183,14 @@
     idForms(id).forEach((f) => (on ? set.add(f) : set.delete(f)))
     saveSet(isPr ? 'donePractice' : 'doneStudy', set)
     renderProgress()
-    syncCheckUI(id)
+    // 사이드바 전체를 state로 재렌더 → 접혀 숨은 챕터의 체크까지 완전 정합. 스크롤은 보존.
+    if (typeof toc !== 'undefined' && toc) { const sc = toc.scrollTop; renderToc(); toc.scrollTop = sc }
+    syncCheckUI(id) // 홈(목차) 체크·파트 카운터는 in-place(홈 스크롤·포커스 방해 없이)
   }
   function isDone(id) { const set = isPracticeId(id) ? state.practice : state.study; return idForms(id).some((f) => set.has(f)) }
-  function syncCheckUI(id) {
+  function syncCheckUI(id) { // 홈(목차) 페이지의 체크·파트 카운터만 in-place 갱신(사이드바는 setDone에서 재렌더)
     const on = isDone(id)
     const sel = `[data-cid="${id}"]`
-    if (typeof toc !== 'undefined' && toc) toc.querySelectorAll('input.toc-check' + sel).forEach((inp) => { inp.checked = on })
     if (typeof page !== 'undefined' && page) {
       page.querySelectorAll('.bt-check' + sel + ', .bt-tier-check' + sel).forEach((s) => { s.classList.toggle('on', on); s.textContent = on ? '✓' : '○' })
       page.querySelectorAll('.bt-part').forEach((part) => {
@@ -505,7 +506,7 @@
         const flag = hasContent(id) ? '' : '<span class="bt-flag" title="준비 중">🚧</span>'
         const stext = (l.title + ' ' + (l.subtitle || '')).replace(/<[^>]+>/g, '').replace(/"/g, '').toLowerCase()
         const tiers = track ? practiceItemsFor(id) : []
-        const drills = tiers.length ? `<div class="bt-drills">🎯 ${tiers.map((p) => {
+        const drills = tiers.length ? `<div class="bt-drills">${tiers.map((p) => {
           const pon = isDone(p.id)
           return `<span class="bt-tier"><span class="bt-tier-check${pon ? ' on' : ''}" data-cid="${p.id}" role="button" tabindex="0" title="완료 표시">${pon ? '✓' : '○'}</span><button class="bt-tier-go" data-go="${p.id}">${p.badge} ${p.title} <span class="bt-tier-n">${p.subtitle}</span></button></span>`
         }).join('')}</div>` : ''
