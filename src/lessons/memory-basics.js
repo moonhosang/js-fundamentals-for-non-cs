@@ -93,7 +93,7 @@
           <li><b>뺀 층 ①</b> CPU 옆 초고속 임시저장 → <a href="https://ko.wikipedia.org/wiki/CPU_캐시" target="_blank" rel="noopener noreferrer">CPU 캐시 ↗</a></li>
           <li><b>뺀 층 ②</b> RAM이 모자라면 디스크를 빌려 씀 → <a href="https://ko.wikipedia.org/wiki/가상_메모리" target="_blank" rel="noopener noreferrer">가상 메모리(디스크 스왑) ↗</a></li>
           <li><b>이름표 장부 쪽</b> 함수가 쌓였다 사라지는 구조 → <a href="https://ko.wikipedia.org/wiki/콜_스택" target="_blank" rel="noopener noreferrer">콜 스택 ↗</a></li>
-          <li><b>값 메모리(힙) 쪽</b> 객체가 사는 곳의 관리 방식 → <a href="https://ko.wikipedia.org/wiki/동적_메모리_할당" target="_blank" rel="noopener noreferrer">동적 메모리 할당 ↗</a></li>
+          <li><b>힙 쪽</b> 객체가 사는 곳의 관리 방식 → <a href="https://ko.wikipedia.org/wiki/동적_메모리_할당" target="_blank" rel="noopener noreferrer">동적 메모리 할당 ↗</a></li>
         </ul>
       </div>
 
@@ -280,7 +280,7 @@
       code: ['let box = { name: "민지" }', 'box = null'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
-          note: '<code>box = { … }</code> — 객체라 실체는 <b>값 메모리(힙)</b>에. 장부의 box 칸엔 <b>주소(화살표)</b>만 담긴다. (원시값과 달리 값이 장부 밖에 있다)',
+          note: '<code>box = { … }</code> — 객체라 실체는 <b>힙</b>에. 장부의 box 칸엔 <b>주소(화살표)</b>만 담긴다. (원시값과 달리 값이 장부 밖에 있다)',
           engine: '객체 리터럴 → 힙 할당 + <b>hidden class(Map/Shape)</b>로 속성 배치. box 슬롯엔 그 객체를 가리키는 <b>(압축)포인터</b>만.' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'box', value: 'null' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }], faded: true } },
           note: '<code>box = null</code> → <b>장부의 box 칸에 null</b>이 써진다(화살표 끊김). <b>값 메모리의 객체는 손 안 대고 그대로</b> — 다만 아무도 안 가리켜 <b>고아(회색) → 나중에 GC 수거</b>. null이 값 메모리에 써지는 게 아니다.',
@@ -401,7 +401,7 @@
       <h3 class="section-title">② 눈으로 — 이름표가 쌓이고, 각자 값을 가진다</h3>
       <span class="learn-tag">📎 경계 분명히 — 스택에 쌓이는 건 <b>데이터</b>가 아니라 <b>이름표(변수)</b>. 이름표 ≠ 값</span>
       <p class="section-desc">스택에 쌓이는 건 <b>이름표(변수)</b>다 — 데이터 자체가 아니라. (M1의 그 <b>이름표 장부</b>가 이거다.) 원시값도 값 메모리에 살고, 이름표가 <b>화살표로</b> 가리킨다(불변이라 복사되면 각자 셀 · 슬롯 = 이름 + 화살표).
-      반대로 <b>큰 묶음(객체)</b>이면 값을 스택에 못 담고 <b>값 메모리(힙)를 참조</b>한다(장부 칸엔 주소만 — 다음 M3). 어느 쪽이든 <b>변수(이름) ≠ 값(데이터)</b>라는 경계가 핵심이다.</p>
+      반대로 <b>큰 묶음(객체)</b>이면 값을 스택에 못 담고 <b>힙을 참조</b>한다(장부 칸엔 주소만 — 다음 M3). 어느 쪽이든 <b>변수(이름) ≠ 값(데이터)</b>라는 경계가 핵심이다.</p>
       <div data-m="slots"></div>
 
       <h3 class="section-title">③ 핵심 성질 — 작업이 끝나면 칸이 통째로 사라진다</h3>
@@ -414,12 +414,12 @@
       <ul class="section-list">
         <li><b>① 규약(스코프)</b> — 지역변수는 "그 함수 <b>안에서만</b> 쓴다"는 약속이다. 함수가 끝나면 밖에선 그 이름으로 <b>접근 자체가 안 된다</b>. 애초에 못 찾으니 지워도 문제없다.</li>
         <li><b>② 더 이상 쓸 곳이 없다</b> — 함수가 끝났다는 건 그 지역변수를 쓸 코드가 <b>더 없다</b>는 뜻. 남겨 둬도 그냥 <b>쓰레기</b>다.</li>
-        <li><b>③ 필요한 건 이미 빼냈다</b> — 바깥이 필요로 하는 값은 <code>return</code>으로 <b>먼저 넘겼다</b>. (원시값은 복사돼 나가고, 객체는 <b>값 메모리(힙)</b>에 있어 살아남는다 — 프레임 장부엔 주소만 있었다.)</li>
+        <li><b>③ 필요한 건 이미 빼냈다</b> — 바깥이 필요로 하는 값은 <code>return</code>으로 <b>먼저 넘겼다</b>. (원시값은 복사돼 나가고, 객체는 <b>힙</b>에 있어 살아남는다 — 프레임 장부엔 주소만 있었다.)</li>
         <li><b>④ LIFO라 안전하다</b> — 항상 <b>맨 위</b>(방금 끝난 것)만 지운다. 그 위엔 아무도 없어서, 이 칸에 <b>기대고 있는 진행 중 작업이 없다</b>. 아래 칸들은 멀쩡.</li>
         <li><b>⑤ 지워야 재사용된다</b> — 안 지우면 스택이 끝없이 쌓여 넘친다(Stack Overflow). 지운 공간을 <b>다음 함수 호출이 재사용</b>한다. (사실 비트를 지우는 게 아니라 "이 위는 없는 셈" 표시만 내려 — 그래서 <b>빠르다</b>.)</li>
         <li><b>⑥ 자동이라 편하다</b> — 개발자가 일일이 안 치워도, 함수만 끝나면 <b>저절로</b> 정리된다.</li>
       </ul>
-      <p class="section-desc">⚠️ <b>딱 하나 예외</b> — 안쪽 함수가 그 지역변수를 <b>붙잡으면</b>(클로저) 안 지워지고 <b>값 메모리(힙)로 옮겨져 살아남는다</b>. 그건 <b>🧠 메모리 심화 · 클로저</b>에서.</p>
+      <p class="section-desc">⚠️ <b>딱 하나 예외</b> — 안쪽 함수가 그 지역변수를 <b>붙잡으면</b>(클로저) 안 지워지고 <b>힙으로 옮겨져 살아남는다</b>. 그건 <b>🧠 메모리 심화 · 클로저</b>에서.</p>
 
       <h3 class="section-title">⑤ 지역변수 vs 전역변수 — 장부에 '층'이 있다</h3>
       <span class="learn-tag">📎 함수 밖 = 전역 장부(오래·어디서나) · 함수 안 = 그 함수 장부(임시·그 안에서만)</span>
@@ -437,7 +437,7 @@
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">스택 = M1의 <b>이름표 장부(변수 영역)</b> = 이름표 슬롯이 <b>LIFO</b>로 쌓이는 빠른 공간. 개념 그림은 이름(장부)과 값(값 메모리)을 갈라 그리지만, <b>원시값은 물리적으론 이 스택 프레임에 이름과 함께</b> 있어 함수가 끝나면 같이 사라진다. 객체만 <b>힙</b>에 따로(장부·값 메모리 셀엔 주소). 즉 <b>값 메모리 = 스택 구역(원시값) + 힙 구역(객체)</b>.
-        <b>작업이 끝나면 그 칸이 통째로 사라진다</b> — 규약상 밖에서 못 쓰고, 필요한 건 이미 빼냈고, 지워야 재사용되니 <b>안전하다</b>. 이게 다음 M3의 "왜 묶음은 값 메모리(힙)에?"로 이어진다.</p>
+        <b>작업이 끝나면 그 칸이 통째로 사라진다</b> — 규약상 밖에서 못 쓰고, 필요한 건 이미 빼냈고, 지워야 재사용되니 <b>안전하다</b>. 이게 다음 M3의 "왜 묶음은 힙에?"로 이어진다.</p>
       </div>
 
       <div class="practice-cta">
@@ -455,7 +455,7 @@
 
   // ══ M3 · 힙 ═════════════════════════════════════════════════
   const SCENARIO_HEAP = {
-    title: '묶음은 값 메모리(힙)에, 장부 칸엔 주소만',
+    title: '묶음은 힙에, 장부 칸엔 주소만',
     stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let tags = ["신상", "세일"]', 'let card = { name: "민지" }'],
     steps: [

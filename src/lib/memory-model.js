@@ -99,6 +99,11 @@
           .hlabel.arr { display:flex; align-items:center; gap:3px; flex-wrap:wrap; }
           .acomma { color:var(--muted,#888); }
           .empty { font-size:12px; color:var(--muted,#9ca3af); font-style:italic; padding:4px 6px; }
+          /* 값 메모리 구역 분리 — 원시값 vs 힙(객체·배열은 항상 힙) */
+          .mem-grp { margin-bottom:6px; }
+          .mem-lbl { font-size:10.5px; font-weight:700; color:var(--muted,#9ca3af); letter-spacing:.03em; margin:0 0 5px 2px; }
+          .mem-heap { margin-top:10px; padding:8px 8px 3px; border:1px dashed var(--border,#e5e7eb); border-radius:12px; background:var(--bg,#f6f7fb); }
+          .mem-heap .mem-lbl { color:var(--brand,#6366f1); }
           .arrows { position:absolute; inset:0; pointer-events:none; overflow:visible; }
           .note { padding:10px 14px; font-size:13px; border-top:1px solid var(--border,#e5e7eb); }
           .note b.k { color:var(--brand,#6366f1); }
@@ -227,7 +232,7 @@
         else if (prev.labels[pc.id] !== sig) anim = ' flash'
         return `<div class="hbox prim${pc.bad ? ' bad' : ''}${anim}" data-heap="${esc(pc.id)}" style="border-color:${PRIM_COLOR}"><span class="hlabel">${esc(pc.value)}</span></div>`
       }).join('')
-      const objHTML = ids.map((id) => {
+      const renderBox = (id) => {
         const c = this._color[id] || '#888'
         const box = heap[id]
         const sig = JSON.stringify([!!box.faded, box.person || 0, box.name || 0, box.items || 0, box.fields || 0, box.label != null ? String(box.label) : 0])
@@ -259,8 +264,18 @@
         const bc = box.prim ? PRIM_COLOR : c
         const tag = box.prim ? '' : `<span class="htag" style="background:${c}">${esc(id)}</span>`
         return `<div class="${cls}${anim}" data-heap="${esc(id)}" style="border-color:${bc}">${tag}${body}</div>`
-      }).join('')
-      $('.heap-body').innerHTML = (primHTML + objHTML) || '<div class="empty">(값 메모리 비어 있음)</div>'
+      }
+      // 값 메모리를 두 구역으로 가른다 — 원시값(스택/힙은 타입·엔진마다 달라 '실제 엔진'서 밝힘)
+      // 과 힙(객체·배열은 언제나 힙). box.prim 인 힙 박스(명시 원시셀)는 원시값 구역으로.
+      const primBoxHTML = ids.filter((id) => heap[id].prim).map(renderBox).join('')
+      const heapBoxHTML = ids.filter((id) => !heap[id].prim).map(renderBox).join('')
+      const primAll = primHTML + primBoxHTML
+      let bodyHTML = ''
+      if (primAll) bodyHTML += heapBoxHTML
+        ? `<div class="mem-grp"><div class="mem-lbl">원시값</div>${primAll}</div>`
+        : primAll
+      if (heapBoxHTML) bodyHTML += `<div class="mem-grp mem-heap"><div class="mem-lbl">🗄️ 힙 · 객체·배열</div>${heapBoxHTML}</div>`
+      $('.heap-body').innerHTML = bodyHTML || '<div class="empty">(값 메모리 비어 있음)</div>'
 
       this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels }
 

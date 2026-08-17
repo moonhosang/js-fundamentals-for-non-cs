@@ -121,7 +121,7 @@
 
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">🔗 M2에서 이어집니다</div>
-        <p class="section-desc" style="margin:0">M2 스코프에서 <code>greet</code> 장부가 pop되면 user·hi(지역변수)가 사라졌다. 클로저는 그 규칙의 <b>예외</b> — 사라졌어야 할 변수가 <b>값 메모리(힙)로 옮겨져 살아남는다</b>.</p>
+        <p class="section-desc" style="margin:0">M2 스코프에서 <code>greet</code> 장부가 pop되면 user·hi(지역변수)가 사라졌다. 클로저는 그 규칙의 <b>예외</b> — 사라졌어야 할 변수가 <b>힙으로 옮겨져 살아남는다</b>.</p>
       </div>
 
       <h3 class="section-title">① 복습 — 보통은 프레임이 pop되며 사라진다</h3>
@@ -177,7 +177,7 @@
       <header class="lesson-header">
         <span class="badge">🧠 심화 · GC</span>
         <h2>가비지 컬렉션 — 값 메모리를 누가 치우나</h2>
-        <p>M1에서 "아무도 안 가리키는 값은 자동으로 치워진다" 예고했다. 그 <b>가비지 컬렉션(GC)</b>을 자세히 — <b>값 메모리(힙)</b>의 청소부다.</p>
+        <p>M1에서 "아무도 안 가리키는 값은 자동으로 치워진다" 예고했다. 그 <b>가비지 컬렉션(GC)</b>을 자세히 — <b>힙</b>의 청소부다.</p>
       </header>
 
       <div data-m="qzgc"></div>
