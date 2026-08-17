@@ -39,6 +39,8 @@
       ;(s.steps || []).forEach((st) => Object.keys(st.heap || {}).forEach((k) => ids.add(k)))
       this._color = {}
       ;[...ids].forEach((id, i) => { this._color[id] = COLORS[i % COLORS.length] })
+      // 명시적 원시값 힙 박스({prim:true})는 값 메모리 색(초록)으로 — 자동 원시셀과 화살표 색 통일.
+      ;(s.steps || []).forEach((st) => Object.entries(st.heap || {}).forEach(([k, box]) => { if (box && box.prim) this._color[k] = PRIM_COLOR }))
       // 원시값 셀(model B, ADR 0007): 슬롯 값을 값 메모리에 둔다 — 셀 id = 'p:'+frame#name, 초록 고정.
       ;(s.steps || []).forEach((st) => (st.stack || []).forEach((f) => (f.slots || []).forEach((sl) => {
         if (!('ref' in sl && sl.ref)) this._color['p:' + f.name + '#' + sl.name] = PRIM_COLOR
@@ -236,6 +238,7 @@
         let body, cls = 'hbox'
         if (box.faded) cls += ' faded'
         if (box.prim) cls += ' prim'
+        if (box.bad) cls += ' bad'
         if (box.person) {
           cls += ' person'
           body = `<span class="pavatar">${esc(box.person)}</span><div class="pinfo"><div class="pname">${esc(box.name)}</div>${fieldRows(box.fields || [], true)}</div>`
