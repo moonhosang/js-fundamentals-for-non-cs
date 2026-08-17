@@ -18,7 +18,7 @@
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p>숫자는 <code>+ - * / %</code>로 계산한다(<b>우선순위</b>는 곱·나눗셈 먼저).
         글자(문자열)는 <code>+</code>로 <b>이어붙이고</b>, 요즘은 <b>템플릿 리터럴</b> <code>\`안녕 \${name}\`</code>로 깔끔하게 끼워 넣는다.
-        <b>주의</b>: 숫자와 글자가 <code>+</code>로 만나면 <b>글자로 변한다</b> — <code>"5" + 3 = "53"</code>.</p>
+        <b>주의</b>: 숫자와 글자가 <code>+</code>로 만나면 숫자가 <b>글자로 만들어져 이어붙는다</b>(원래 숫자는 그대로) — <code>"5" + 3 = "53"</code>.</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/문자열_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">문자열 ↗</a> · <a href="https://ko.wikipedia.org/wiki/부동_소수점" target="_blank" rel="noopener noreferrer">부동소수점(숫자) ↗</a></p>
       </div>
 
@@ -53,7 +53,7 @@
       </div>
       <ul class="section-list">
         <li><code>"5" + 3</code> → <code>"53"</code> (글자가 이김: 이어붙이기)</li>
-        <li><code>"5" * 2</code> → <code>10</code> (곱셈엔 글자를 숫자로 바꿔줌)</li>
+        <li><code>"5" * 2</code> → <code>10</code> (곱셈은 글자를 숫자로 <b>강제해</b> 계산 — 원래 글자는 그대로)</li>
         <li>일부러 바꾸기: <code>Number("5")</code> → 숫자 5 · <code>String(5)</code> → 글자 "5"</li>
       </ul>
       <p class="section-desc">정확한 <b>형 변환·강제변환 규칙</b>(<code>==</code> vs <code>===</code>, truthy/falsy까지)은 한곳에 모아 뒀다 → <button class="inline-goto" data-goto="coercion">📐 참·거짓과 형 변환</button></p>

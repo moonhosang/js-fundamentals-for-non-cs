@@ -258,12 +258,12 @@
     root.querySelector('[data-m="letconst-viz"]').append(MemoryModel({
       title: 'let은 화살표를 옮기고 · const는 잠근다 (값은 값 메모리에)',
       stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
-      code: ['let score = 10', 'score = 20        // let: 값 바꾸기 OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 바꿈'],
+      code: ['let score = 10', 'score = 20        // let: 재할당(담는 값 교체) OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 바꿈'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', value: '10' }] }], heap: {},
           note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 화살표가 값 메모리의 <b>10</b>을 가리킨다(장부엔 이름+화살표).' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', value: '20', bad: true }] }], heap: {},
-          note: '<code>score = 20</code> → score가 가리키는 <b>값이 20으로 바뀐다</b>(재할당). let이라 가능. (원시값의 불변·화살표 이동은 🧠 M4에서 정밀하게)' },
+          note: '<code>score = 20</code> → score가 <b>담은 값이 10에서 20으로 교체</b>된다(재할당). <b>숫자는 불변</b> — 10이 20으로 변신한 게 아니라 화살표(가리키는 값)가 옮겨간 것. let이라 가능. (원시값의 불변·화살표 이동은 🧠 M4에서 정밀하게)' },
         { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
           note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 화살표가 값 메모리의 3.14를 가리킨다. 이 <b>화살표는 🔒 잠긴다</b>.' },
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
@@ -640,7 +640,7 @@
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }] }], heap: {}, note: 'x는 값 메모리의 <b>10</b>을 가리킨다(원시값도 값 메모리에, 장부엔 이름+화살표).' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '10' }] }], heap: {}, note: '😵 착각: "x·y가 <b>같은 10 셀 하나</b>를 같이 가리킨다"? ❌ 아니다. 원시값은 불변이라 대입하면 <b>각자 셀로 복사</b> — y는 <b>자기 10 셀</b>을 가리킨다. <b>셀이 둘</b>이다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → <b>y 칸의 값만 20으로 바뀐다</b>. <b>x는 그대로 10</b>. 애초에 별개의 두 셀이라 x는 안 움직인다 → "같은 10 셀에 같이 붙어있다"는 그림은 <b>틀렸다</b>.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'x', value: '10' }, { name: 'y', value: '20', bad: true }] }], heap: {}, note: 'y=20 → <b>y 칸이 담은 값만 20으로 교체</b>(재할당). <b>x는 그대로 10</b>(숫자는 불변 · y만 새 값을 가리킨다). 애초에 별개의 두 셀이라 x는 안 움직인다 → "같은 10 셀에 같이 붙어있다"는 그림은 <b>틀렸다</b>.' },
     ],
   }
   // 객체 속성끼리 숫자 복사 — 객체가 껴도 숫자면 복사(안 공유)

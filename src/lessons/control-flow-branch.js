@@ -89,7 +89,7 @@
 
     root.querySelector('[data-m="qz1"]').append(Quiz({
       q: '<code>score = 85</code>. 사다리 — <code>if (score >= 90) g="A"; else if (score >= 80) g="B"; else if (score >= 70) g="C"; else g="F"</code>. g는?',
-      options: ['"B" — 참인 첫 갈래에서 멈춘다', '"C" — 85는 70 이상이기도 하니 아래 갈래가 또 담는다', '"B" 그리고 "C" — 참인 갈래가 둘이니 둘 다 실행'],
+      options: ['"B" — 참인 첫 갈래에서 멈춘다', '"C" — 85는 70 이상이기도 하니 아래 갈래가 g를 또 덮어쓴다', '"B" 그리고 "C" — 참인 갈래가 둘이니 둘 다 실행'],
       answer: 0,
       explain: '사다리는 <b>위에서부터</b> — <code>85 >= 90</code> 거짓, <code>85 >= 80</code> <b>참 → 여기서 실행하고 사다리 전체를 빠져나온다</b>. <code>85 >= 70</code>도 참이지만 <b>검사조차 안 한다</b>(4강에서 밟았던 그 길).',
     }))
@@ -106,7 +106,7 @@
         {
           code: 'if (age < 8)       { fare = 0 }\nelse if (age < 14) { fare = 450 }\nelse if (age < 19) { fare = 720 }\nelse               { fare = 1250 }',
           mark: 'age < 8',
-          note: '지금 age에는 <b>10</b>이 들어 있다. 사다리는 <b>맨 위 계단부터</b> — <code>age &lt; 8</code>?',
+          note: '지금 age는 <b>10</b>을 가리킨다. 사다리는 <b>맨 위 계단부터</b> — <code>age &lt; 8</code>?',
         },
         {
           code: 'if (10 < 8)        { fare = 0 }\nelse if (age < 14) { fare = 450 }\nelse if (age < 19) { fare = 720 }\nelse               { fare = 1250 }',
@@ -191,7 +191,7 @@
       pattern: '빈칸에 예측값을 넣어라 — 맞으면 true. (글자 답은 따옴표까지: "A")',
       problems: [
         {
-          ask: '점수 72점 — 사다리는 g에 무엇을 담을까?',
+          ask: '점수 72점 — 사다리는 g를 무엇으로 정할까?',
           code: 'let score = 72, g\nif (score >= 90) { g = "A" }\nelse if (score >= 80) { g = "B" }\nelse if (score >= 70) { g = "C" }\nelse { g = "F" }\nprint((g) === ____)',
           expect: 'true',
           answer: '"C"',
@@ -298,7 +298,7 @@
         {
           code: 'if (loggedIn) {\n  print("어서오세요")\n  if (age >= 19) { print("성인 라운지 입장") }\n}',
           mark: 'loggedIn',
-          note: '관문 ① — <b>건물 문</b>. loggedIn엔 <b>true</b>, age엔 <b>15</b>가 들어 있다.',
+          note: '관문 ① — <b>건물 문</b>. loggedIn은 <b>true</b>, age는 <b>15</b>를 가리킨다.',
         },
         {
           code: 'if (true) {\n  print("어서오세요")\n  if (age >= 19) { print("성인 라운지 입장") }\n}',
@@ -478,7 +478,7 @@
         {
           code: 'if (open) {\n  switch ( menu ) {\n    case 1: print("주문 접수"); break\n    case 2: print("배송 조회"); break\n    default: print("상담사 연결")\n  }\n} else {\n  print("영업시간이 아닙니다")\n}',
           mark: 'open',
-          note: '큰 갈래부터 — <b>"영업 중인가?"</b>는 if의 몫. open엔 <b>true</b>, menu엔 <b>2</b>가 들어 있다.',
+          note: '큰 갈래부터 — <b>"영업 중인가?"</b>는 if의 몫. open은 <b>true</b>, menu는 <b>2</b>를 가리킨다.',
         },
         {
           code: 'if (true) {\n  switch ( menu ) {\n    case 1: print("주문 접수"); break\n    case 2: print("배송 조회"); break\n    default: print("상담사 연결")\n  }\n} else {\n  print("영업시간이 아닙니다")\n}',

@@ -311,7 +311,7 @@
       steps: [
         { code: 'const label = "hi " + Math.max(2, 3 * 2)', mark: '3 * 2', note: '<b>인자도 표현식</b> → 인자 안의 <b>3 * 2</b>가 먼저 값이 돼야 호출할 수 있다(안쪽 먼저).' },
         { code: 'const label = "hi " + Math.max(2, 6)', mark: 'Math.max(2, 6)', note: '인자가 다 값이 됐으니 <b>Math.max(2, 6)</b> 호출 → 6.' },
-        { code: 'const label = "hi " + 6', mark: '"hi " + 6', note: '<b>문자열 + 숫자</b> → 숫자가 문자열로 변해 이어붙는다(2강 형변환). → "hi 6"' },
+        { code: 'const label = "hi " + 6', mark: '"hi " + 6', note: '<b>문자열 + 숫자</b> → 숫자가 문자열로 <b>강제돼(새 값이 만들어져)</b> 이어붙는다(2강 형변환). → "hi 6"' },
         { code: 'const label = "hi 6"', note: '완성. 함수가 껴도 규칙은 같다 — 안쪽부터 접어 올린다.' },
       ],
     }))

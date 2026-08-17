@@ -99,9 +99,9 @@
       </ul>
 
       <h3 class="section-title">④ 바꾸면 안 되는 값 — <code>const</code></h3>
-      <span class="learn-tag">📎 const = 이름 칸에 '다시 담기(재할당)' 금지 — 원시값이면 값을, 객체면 가리키는 포인터를 고정</span>
-      <p class="section-desc">한 번 정하면 안 바뀔 값(예: 세율, 로고 색)은 <code>const</code>로 만든다. const가 막는 건 <b>그 이름 칸에 다른 걸 다시 담는 것(재할당)</b> —
-      담긴 게 <b>원시값</b>이면 그 <b>값</b>을, <b>객체</b>면 그 칸이 <b>가리키는 포인터(메모리 주소)</b>를 고정한다. 실수로 바꾸는 걸 막아 준다. 아래를 실행해 에러를 직접 만나 보라.</p>
+      <span class="learn-tag">📎 const = 이름표를 <b>다른 값으로 못 옮김(재할당 금지)</b> — 값 자체를 얼리는 게 아니다(객체 속은 바뀜)</span>
+      <p class="section-desc">한 번 정하면 다시 안 옮길 값(예: 세율, 로고 색)은 <code>const</code>로 만든다. const가 막는 건 <b>그 이름표를 다른 값에 다시 붙이는 것(재할당)</b> —
+      고정되는 건 <b>"이름표→값" 연결</b>이지 <b>값 자체가 아니다</b>(그래서 <code>const obj</code>여도 <code>obj.x=…</code> 속성 변경은 됨 · M4-2). 실수로 재할당하는 걸 막아 준다. 아래를 실행해 에러를 직접 만나 보라.</p>
       <div class="card">
         <div class="file-label">🔬 const에 다시 담으면?</div>
         <div data-m="v4"></div>
