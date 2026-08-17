@@ -13,10 +13,15 @@
     <thead><tr><th>기능</th><th>하는 일</th><th>예 → 결과</th></tr></thead>
     <tbody>${rows.map(r => `<tr><td>${cell(r[0])}</td><td>${r[1]}</td><td>${cell(r[2])} → ${cell(r[3])}</td></tr>`).join('')}</tbody>
   </table></div>`
-  // 레슨 안 이동 버튼([data-goto])을 배선한다(문자 id → goLesson).
-  const wireNav = (root) => root.querySelectorAll('[data-goto]').forEach((el) => {
-    el.onclick = () => { const v = el.getAttribute('data-goto'); window.goLesson(/^\d+$/.test(v) ? Number(v) : v) }
-  })
+  // 레슨 안 이동 버튼([data-goto]→다른 레슨) · 같은 페이지 앵커([data-scroll]→data-m 위젯으로 스크롤)를 배선.
+  const wireNav = (root) => {
+    root.querySelectorAll('[data-goto]').forEach((el) => {
+      el.onclick = () => { const v = el.getAttribute('data-goto'); window.goLesson(/^\d+$/.test(v) ? Number(v) : v) }
+    })
+    root.querySelectorAll('[data-scroll]').forEach((el) => {
+      el.onclick = () => { const t = root.querySelector('[data-m="' + el.getAttribute('data-scroll') + '"]'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
+    })
+  }
   // 서브페이지 하단 내비게이션(← 목차 · 이전/다음 분류).
   const subNav = (prev, next) => `<div class="practice-nav">
     ${prev ? `<button class="chip" data-goto="${prev[0]}">← ${prev[1]}</button>` : '<button class="chip" data-goto="builtins">← 레퍼런스 목차</button>'}
@@ -286,6 +291,7 @@
       <div class="card"><div class="file-label">🔬 실행 — falsy 8개 & truthy 함정</div><div data-m="truthy"></div></div>
       <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>"" || "익명"</code> 의 참·거짓 판정 (다음 ▶)</div><div data-m="sim-truthy"></div></div>
       <div class="card"><div class="file-label">⏱ 응용 — 후보가 셋: <code>nick || name || "익명"</code> (기본값 사슬)</div><div data-m="sim-chain"></div></div>
+      <span class="learn-tag">🔗 같은 사슬을 <code>??</code>로 하면 훑는 규칙만 다르다 — <code>""</code>·<code>0</code>은 <b>건너뛰지 않고</b> <b>null·undefined일 때만</b> 다음으로. <button class="inline-goto" data-scroll="sim-default"><code>||</code> vs <code>??</code> 대비 보기 ↓</button></span>
 
       <h3 class="section-title">🎯 반복 드릴 — 값만 바꿔 손에 붙이기</h3>
       <span class="learn-tag">📎 예측해서 빈칸을 채워라 — <code>+</code>vs<code>-</code> 강제 · falsy 판별 · <code>==</code>vs<code>===</code> (틀리면 다시)</span>
