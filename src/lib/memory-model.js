@@ -267,7 +267,7 @@
       // 설명
       $('.note').innerHTML = st.note ? `<b class="k">🔑</b> ${st.note}` : ''
       const eng = $('.engine')
-      if (this._layer === 'engine' && st.engine) { eng.hidden = false; eng.innerHTML = `<span class="tag">⚙️ 실제 엔진(V8)</span> ${esc(st.engine)}` }
+      if (this._layer === 'engine' && st.engine) { eng.hidden = false; eng.innerHTML = `<span class="tag">⚙️ 실제 엔진(V8)</span> ${st.engine}` }
       else { eng.hidden = true }
 
       // 버튼 상태 + 카운터

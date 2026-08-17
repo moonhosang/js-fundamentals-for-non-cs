@@ -168,8 +168,8 @@
       title: '배열은 힙에 산다 — 변수는 참조(주소만)',
       code: ['let nums = [10, 20, 30]', 'nums.push(40)'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }] }], heap: { h1: { label: '[10, 20, 30]' } }, note: '배열은 <b>객체</b> → <b>힙</b>에 만들어진다. 변수 nums는 스택에서 힙을 <b>참조</b>(주소만 가진다).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }] }], heap: { h1: { label: '[10, 20, 30, 40]' } }, note: 'push하면 <b>힙의 배열</b>이 커진다. 변수 nums는 그대로 — 같은 배열을 가리킨 채.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }] }], heap: { h1: { label: '[10, 20, 30]' } }, note: '배열은 <b>객체</b> → <b>힙</b>에 만들어진다. 변수 nums는 스택에서 힙을 <b>참조</b>(주소만 가진다).', engine: '배열 리터럴: 힙에 배열 객체 + 연속된 elements backing store를 할당한다. 10·20·30은 작은 정수라 SMI로 빈틈없이(밀집·PACKED_SMI) 저장되고, 이 밀집 상태가 가장 빠르다. 슬롯 nums엔 포인터만.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }] }], heap: { h1: { label: '[10, 20, 30, 40]' } }, note: 'push하면 <b>힙의 배열</b>이 커진다. 변수 nums는 그대로 — 같은 배열을 가리킨 채.', engine: 'push(40): backing store 끝 칸에 40을 덧쓴다(진짜 뮤테이션). 용량이 꽉 차 있으면 더 큰 store를 새로 할당해 원소를 옮긴 뒤 추가한다(분할상환 O(1)). 여전히 밀집 SMI이고, nums 포인터 자체는 그대로.' },
       ],
     }))
 

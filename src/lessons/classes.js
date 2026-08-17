@@ -130,9 +130,9 @@
       stackLabel: '📇 이름표 장부 (변수)',
       code: ['let a = new Cat()', 'let b = new Cat()', 'a.hp = 50'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '<code>new Cat()</code> → 힙에 인스턴스 h1. a가 가리킨다.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] }, h2: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '다시 <code>new</code> → <b>힙에 또 다른 객체</b> h2. b는 h2를 가리킨다(별칭 아님!).' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '50', bad: true }] }, h2: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '<code>a.hp = 50</code> → h1만 바뀐다. h2(b)는 <b>그대로 100</b> — 서로 독립.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '<code>new Cat()</code> → 힙에 인스턴스 h1. a가 가리킨다.', engine: 'new Cat(): 힙에 Cat 인스턴스를 할당하고 프로토타입(Cat.prototype)을 연결한다. 속성 배치는 hidden class(Map/Shape)가 정하고, hp:100은 작은 정수라 SMI로 슬롯에 인라인된다. 변수 a에는 인스턴스로의 압축 포인터만 담긴다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] }, h2: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '다시 <code>new</code> → <b>힙에 또 다른 객체</b> h2. b는 h2를 가리킨다(별칭 아님!).', engine: '두 번째 new Cat(): 힙에 또 다른 객체를 새로 할당한다. 모양이 같아 h1·h2는 같은 hidden class를 공유한다(속성 배치를 재사용). b는 h2로의 포인터 — a와 다른 객체라 별칭이 아니다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '50', bad: true }] }, h2: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '<code>a.hp = 50</code> → h1만 바뀐다. h2(b)는 <b>그대로 100</b> — 서로 독립.', engine: 'a.hp = 50: 기존 슬롯 값을 제자리에서 덮어쓰는 진짜 뮤테이션 — h1의 hp 비트만 바뀐다(50도 SMI라 HeapNumber 승격 없음). hidden class는 그대로라 이 접근은 인라인 캐시(IC)로 가속된다. h2는 손대지 않아 그대로다.' },
       ],
     }))
 

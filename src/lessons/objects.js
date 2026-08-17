@@ -119,9 +119,9 @@
       stackLabel: '📇 이름표 장부 (변수)',
       code: ['let a = { hp: 100 }', 'let b = a', 'b.hp = 50'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: '객체는 <b>힙</b>에. a는 주소만 가진다.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: '<code>let b = a</code> → <b>주소 복사</b> → a·b가 <b>같은 객체</b>(별칭).' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '50' }] } }, note: '<code>b.hp = 50</code> → 같은 객체라 <b>a.hp도 50</b>. 객체는 공유된다(M4).' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: '객체는 <b>힙</b>에. a는 주소만 가진다.', engine: '객체 리터럴 { hp: 100 }: 힙에 객체를 할당하고 hidden class(Shape)가 hp 속성의 오프셋을 정한다. hp:100은 작은 정수라 SMI로 인라인 저장. 슬롯 a에는 이 객체로의 압축 포인터만 담긴다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: '<code>let b = a</code> → <b>주소 복사</b> → a·b가 <b>같은 객체</b>(별칭).', engine: 'let b = a: 객체를 복사하지 않고 포인터(주소)만 복사한다. a·b 두 슬롯이 같은 h1을 가리키는 별칭 — 힙엔 여전히 객체 하나뿐이고 hidden class·오프셋도 그대로 재사용된다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '50' }] } }, note: '<code>b.hp = 50</code> → 같은 객체라 <b>a.hp도 50</b>. 객체는 공유된다(M4).', engine: 'b.hp = 50: 기존 hp 슬롯을 제자리에서 덮어쓴다(속성 추가·삭제가 아니라 hidden class 전이 없음, 50도 SMI). a·b가 같은 h1이라 a.hp로 읽어도 50 — 사본이 아니라 공유이기 때문.' },
       ],
     }))
 

@@ -214,8 +214,8 @@
       stackLabel: '📇 이름표 장부 (변수)',
       code: ['let nums = [1, 2, 3]', 'let doubled = nums.map(n => n * 2)'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }] }], heap: { h1: { label: '[1, 2, 3]' } }, note: 'nums는 값 메모리의 배열 <b>[1,2,3]</b>을 가리킨다.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }, { name: 'doubled', ref: 'h2' }] }], heap: { h1: { label: '[1, 2, 3]' }, h2: { label: '[2, 4, 6]' } }, note: 'map은 <b>새 배열 [2,4,6]</b>을 만들어(h2) doubled가 가리킨다. 원본 <b>[1,2,3](h1)은 그대로</b> — 둘은 다른 배열이다.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }] }], heap: { h1: { label: '[1, 2, 3]' } }, note: 'nums는 값 메모리의 배열 <b>[1,2,3]</b>을 가리킨다.', engine: '원본 배열은 힙에 연속 backing store로 놓인다. 1·2·3은 SMI라 밀집(PACKED_SMI) 저장. 슬롯 nums엔 포인터만.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'nums', ref: 'h1' }, { name: 'doubled', ref: 'h2' }] }], heap: { h1: { label: '[1, 2, 3]' }, h2: { label: '[2, 4, 6]' } }, note: 'map은 <b>새 배열 [2,4,6]</b>을 만들어(h2) doubled가 가리킨다. 원본 <b>[1,2,3](h1)은 그대로</b> — 둘은 다른 배열이다.', engine: 'map: 원본은 읽기만 하고, 길이가 같은 새 배열 h2를 힙에 따로 할당해 채운다. 콜백이 각 요소마다 호출되며 인라인 캐시(IC)로 가속되고, n*2 결과도 SMI라 밀집 저장. h1과 h2는 서로 다른 backing store라 원본은 불변.' },
       ],
     }))
 

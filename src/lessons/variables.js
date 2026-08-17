@@ -197,11 +197,14 @@
       code: ['const user = { name: "민지" }', 'user.name = "지훈"      // 내용 변경 ✅', 'user = { name: "새" }   // 재할당 ❌'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: '🔒 user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
-          note: 'const user → 변수 칸엔 <b>객체를 가리키는 화살표(주소)</b>가 담기고, 그 <b>화살표가 🔒 고정</b>된다. (객체 내용을 잠그는 게 아니라 — 화살표를 잠근다.)' },
+          note: 'const user → 변수 칸엔 <b>객체를 가리키는 화살표(주소)</b>가 담기고, 그 <b>화살표가 🔒 고정</b>된다. (객체 내용을 잠그는 게 아니라 — 화살표를 잠근다.)',
+          engine: '객체는 힙에 할당(형태는 hidden class로 공유 기술). user 슬롯엔 그 주소의 압축 포인터. const는 이 슬롯 재대입(바인딩)만 막을 뿐 — 힙 객체 내용은 못 잠근다.' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: '🔒 user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"지훈"' }] } },
-          note: '<code>user.name = "지훈"</code> → <b>화살표는 그대로</b>, 가리키는 객체의 <b>내용만</b> 바뀐다(민지→지훈). const는 이걸 <b>안 막는다</b> — 화살표를 안 옮겼으니까. ✅' },
+          note: '<code>user.name = "지훈"</code> → <b>화살표는 그대로</b>, 가리키는 객체의 <b>내용만</b> 바뀐다(민지→지훈). const는 이걸 <b>안 막는다</b> — 화살표를 안 옮겼으니까. ✅',
+          engine: '필드 쓰기 = 힙 객체 제자리 수정. "지훈"은 힙에 새 불변 문자열(리터럴 인터닝), name 필드가 그 포인터로 재연결. 키는 그대로라 hidden class 전이 없음. user 슬롯 포인터는 불변 → const 무관.' },
         { line: 2, stack: [{ name: 'main', slots: [{ name: '🔒 user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"지훈"' }] }, h2: { fields: [{ key: 'name', value: '"새"' }], faded: true } },
-          note: '<code>user = { … }</code> → <b>화살표를 다른 객체로 옮기려는 것</b>(재할당). const가 <b>바로 이걸</b> 막는다 → ❌ 에러. (새 객체는 아무도 안 가리켜 회색.)' },
+          note: '<code>user = { … }</code> → <b>화살표를 다른 객체로 옮기려는 것</b>(재할당). const가 <b>바로 이걸</b> 막는다 → ❌ 에러. (새 객체는 아무도 안 가리켜 회색.)',
+          engine: '새 객체 리터럴은 힙에 할당되지만, const 슬롯(바인딩)에 포인터 재대입 시도 → 런타임 TypeError로 거부. 그 새 객체는 아무도 안 가리켜 도달 불가 → GC 대상.' },
       ],
     }))
 
@@ -209,9 +212,12 @@
       title: '🧠 값이 사는 곳 — 변수(이름표)와 값 메모리',
       code: ['let primary = "#3B82F6"', 'let title = "안녕, 반가워"', 'let card = { name: "명함" }'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }] }], heap: {}, note: '값 <b>"#3B82F6"</b>은 <b>값 메모리</b>(오른쪽)에 셀로 놓이고, 변수 primary(왼쪽 장부)는 그 셀을 <b>가리킨다</b>(장부엔 이름+화살표).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }] }], heap: {}, note: '숫자·글자 같은 값도 <b>각자 값 메모리 셀</b>에 놓이고, 변수가 그 셀을 가리킨다. (장부엔 이름+화살표만)' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }, { name: 'card', ref: 'h1' }] }], heap: { h1: { label: '{ name: "명함" }' } }, note: '<b>객체</b>(<code>{ }</code> 같은 큰 묶음)도 값 메모리에 살고, card가 그걸 <b>가리킨다</b>(화살표). 원시값 셀과 객체가 값 메모리에서 어떻게 나뉘는지는 🧠 메모리 기초(M2·M3)에서.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }] }], heap: {}, note: '값 <b>"#3B82F6"</b>은 <b>값 메모리</b>(오른쪽)에 셀로 놓이고, 변수 primary(왼쪽 장부)는 그 셀을 <b>가리킨다</b>(장부엔 이름+화살표).',
+          engine: '문자열 리터럴 "#3B82F6"은 엔진에선 힙에 불변 객체로 저장(리터럴 인터닝 — 같은 리터럴은 한 개를 공유). primary 슬롯엔 그 포인터. 개념 모델의 "값 셀"이 실제론 힙 문자열.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }] }], heap: {}, note: '숫자·글자 같은 값도 <b>각자 값 메모리 셀</b>에 놓이고, 변수가 그 셀을 가리킨다. (장부엔 이름+화살표만)',
+          engine: 'title도 힙에 불변 문자열 + 슬롯 포인터. (작은 정수라면 SMI로 슬롯에 인라인, 소수/큰수라면 HeapNumber 박스가 됐겠지만 — 문자열은 항상 힙+포인터.)' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'primary', value: '"#3B82F6"' }, { name: 'title', value: '"안녕, 반가워"' }, { name: 'card', ref: 'h1' }] }], heap: { h1: { label: '{ name: "명함" }' } }, note: '<b>객체</b>(<code>{ }</code> 같은 큰 묶음)도 값 메모리에 살고, card가 그걸 <b>가리킨다</b>(화살표). 원시값 셀과 객체가 값 메모리에서 어떻게 나뉘는지는 🧠 메모리 기초(M2·M3)에서.',
+          engine: '객체 { name: "명함" }은 힙에 할당(hidden class로 형태 기술), card 슬롯엔 압축 포인터. 원시(문자열)도 힙에 살지만 불변이라 공유 안전, 객체는 가변이라 공유하면 모두가 같은 것을 본다 — M4 참조의 씨앗.' },
       ],
     }))
 

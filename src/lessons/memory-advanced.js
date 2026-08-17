@@ -11,15 +11,15 @@
     code: ['function addTax(price) {', '  return price + price * 0.1', '}', 'let total = addTax(1000)'],
     steps: [
       { line: 3, stack: [{ name: 'main', slots: [] }], heap: {},
-        note: 'addTax(1000)을 호출하려 한다. 지금은 main 프레임만 있다.', engine: '현재 실행 컨텍스트 = main.' },
+        note: 'addTax(1000)을 호출하려 한다. 지금은 main 프레임만 있다.', engine: '현재 실행 컨텍스트 = main 활성 레코드 하나. addTax 프레임은 아직 없음. (스택/힙 배치는 스펙 비강제 — 관찰되는 의미만 고정)' },
       { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'addTax', slots: [{ name: 'price', value: '1000' }] }], heap: {},
         note: 'addTax 호출 → 스택에 <b>addTax 프레임</b>이 쌓인다(push). 인수 1000이 지역변수 price에 담긴다.',
-        engine: '새 활성 레코드(activation record)를 push. price는 이 프레임 소유.' },
+        engine: '호출 = 새 활성 레코드(실행 컨텍스트)를 push. 인자 1000은 값 복사되어 지역 price로 — 작은 정수라 SMI로 프레임 슬롯에 인라인(힙 안 씀). ※SMI 태깅은 V8 방식, JSC/SM은 NaN-boxing.' },
       { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'addTax', slots: [{ name: 'price', value: '1000' }] }], heap: {},
-        note: 'price + price * 0.1 = 1100 을 계산해 <b>반환값 1100</b>을 준비한다.', engine: 'price=1000 → 1100.' },
+        note: 'price + price * 0.1 = 1100 을 계산해 <b>반환값 1100</b>을 준비한다.', engine: 'price(1000) + price*0.1 = 1100. 결과도 작은 정수라 SMI. 반환값은 힙이 아니라 레지스터에 실려 호출자에게 전달된다.' },
       { line: 3, stack: [{ name: 'main', slots: [{ name: 'total', value: '1100' }] }], heap: {},
         note: 'addTax 프레임은 <b>사라지고(pop)</b>, 반환값 1100이 total에 담긴다. 지역변수 price도 함께 사라진다.',
-        engine: '프레임 해제 → price 소멸. (예외: <b>클로저</b>는 이 스코프를 붙잡아 살린다 → 다음 · 클로저)' },
+        engine: '프레임 pop → 활성 레코드 해제, price 슬롯 소멸. 레지스터의 반환값 1100이 total에 안착(SMI). 예외: 클로저면 캡처된 변수가 힙 context로 승격돼 프레임이 죽어도 살아남음 → 다음 · 클로저.' },
     ],
   }
 
@@ -91,15 +91,20 @@
     ],
     steps: [
       { line: 7, stack: [{ name: 'main', slots: [{ name: 'next', value: '(대기)', bad: true }] }, { name: 'makeCounter', slots: [{ name: 'count', value: '0' }] }], heap: {},
-        note: 'makeCounter() 호출 → 지역변수 <b>count = 0</b> (makeCounter 장부에). 보통이면 함수가 끝날 때 사라질 값이다.' },
+        note: 'makeCounter() 호출 → 지역변수 <b>count = 0</b> (makeCounter 장부에). 보통이면 함수가 끝날 때 사라질 값이다.',
+        engine: 'makeCounter 활성 레코드 push. count(0)는 작은 정수라 SMI로 프레임 슬롯에 인라인 — 아직은 평범한 지역변수, 프레임 소유.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'next', value: '(대기)', bad: true }] }, { name: 'makeCounter', slots: [] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '0' }] } },
-        note: 'return 하는 <b>안쪽 함수가 count를 붙잡는다</b> → 하나뿐인 <b>count가 makeCounter 장부에서 값 메모리로 이사</b>한다(복사가 아니라 <b>이동</b> — count는 여전히 하나). 그래서 makeCounter가 끝나도 안 사라진다.' },
+        note: 'return 하는 <b>안쪽 함수가 count를 붙잡는다</b> → 하나뿐인 <b>count가 makeCounter 장부에서 값 메모리로 이사</b>한다(복사가 아니라 <b>이동</b> — count는 여전히 하나). 그래서 makeCounter가 끝나도 안 사라진다.',
+        engine: '반환될 안쪽 함수가 count를 캡처 → 엔진이 count를 힙 context 객체로 승격한다. 이게 "이사"의 실체 — 이제 count는 SMI 인라인이 아니라 힙 셀, 안쪽 함수의 [[Scope]]가 그 셀을 붙잡는다.' },
       { line: 7, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '0' }] } },
-        note: 'makeCounter 장부는 <b>pop(사라짐)</b> — 그런데 <b>count는 값 메모리에 살아남았다!</b> next가 그 클로저(안쪽 함수 + count)를 가리킨다. 이게 클로저 — 사라졌어야 할 장부가 안 사라진 것.' },
+        note: 'makeCounter 장부는 <b>pop(사라짐)</b> — 그런데 <b>count는 값 메모리에 살아남았다!</b> next가 그 클로저(안쪽 함수 + count)를 가리킨다. 이게 클로저 — 사라졌어야 할 장부가 안 사라진 것.',
+        engine: 'makeCounter 프레임 pop → 활성 레코드 해제. 그러나 count는 힙 context에 있어 회수 안 됨 — next → 클로저 → context 경로로 도달 가능. 스택 프레임 소멸 ≠ 캡처 변수 소멸.' },
       { line: 8, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }, { name: '(익명)', slots: [] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '1' }] } },
-        note: 'next() 호출 → <b>(익명) 프레임이 push</b>돼 실행된다(호출=push, 끝나면 pop). 그 함수가 클로저의 <b>count를 +1 → 1</b>. 밖에선 count를 직접 못 보고 next()로만 만진다.' },
+        note: 'next() 호출 → <b>(익명) 프레임이 push</b>돼 실행된다(호출=push, 끝나면 pop). 그 함수가 클로저의 <b>count를 +1 → 1</b>. 밖에선 count를 직접 못 보고 next()로만 만진다.',
+        engine: 'next() 호출 = 익명 함수 활성 레코드 push. 몸통이 힙 context의 count를 읽어 +1 → 1로 갱신(SMI 값 덮어씀). 프레임은 끝나면 pop되지만 힙 context는 그대로 남는다.' },
       { line: 9, stack: [{ name: 'main', slots: [{ name: 'next', ref: 'h1' }] }, { name: '(익명)', slots: [] }], heap: { h1: { person: '🔒', name: '클로저', fields: [{ key: 'count', value: '2' }] } },
-        note: '또 next() → 다시 <b>프레임 push</b> → count <b>+1 → 2</b>. count가 프레임과 함께 사라지지 않고 <b>기억</b>된다 — 이게 클로저의 힘(상태를 숨겨 보관).' },
+        note: '또 next() → 다시 <b>프레임 push</b> → count <b>+1 → 2</b>. count가 프레임과 함께 사라지지 않고 <b>기억</b>된다 — 이게 클로저의 힘(상태를 숨겨 보관).',
+        engine: '또 push/실행/pop. 같은 힙 context의 count를 1 → 2로 갱신. 호출마다 새 프레임이지만 캡처된 count는 하나의 힙 셀을 공유 — 그래서 값이 누적된다.' },
     ],
   }
 
@@ -156,11 +161,14 @@
     code: ['let box = { msg: "안녕" }', 'let a = box        // a도 같은 객체를 가리킴', 'box = null         // box 화살표만 끊음', 'a = null           // 마지막 화살표도 끊음'],
     steps: [
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }, { name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'msg', value: '"안녕"' }] } },
-        note: 'box와 a <b>둘 다</b> 같은 객체를 가리킨다(참조 2개). 객체는 <b>도달 가능</b> — 산다.' },
+        note: 'box와 a <b>둘 다</b> 같은 객체를 가리킨다(참조 2개). 객체는 <b>도달 가능</b> — 산다.',
+        engine: '{ msg } 객체는 힙에 할당(형태는 hidden class로 기술). box·a 슬롯은 같은 압축 포인터를 담는다 — 참조 2개. GC 루트(스택 변수)에서 도달 가능 → 산다.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'box', value: 'null' }, { name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'msg', value: '"안녕"' }] } },
-        note: '<code>box = null</code> → box 화살표만 끊긴다. 하지만 <b>a가 여전히 가리켜</b> 객체는 <b>도달 가능 → 안 치워진다</b>. box=null이 객체를 죽이는 게 아니다!' },
+        note: '<code>box = null</code> → box 화살표만 끊긴다. 하지만 <b>a가 여전히 가리켜</b> 객체는 <b>도달 가능 → 안 치워진다</b>. box=null이 객체를 죽이는 게 아니다!',
+        engine: 'box 슬롯을 null(힙 싱글턴)로 덮어씀 → 포인터 하나만 끊김. a가 아직 도달 경로를 유지 → mark 단계에서 reachable로 표시돼 회수 대상 아님.' },
       { line: 3, stack: [{ name: 'main', slots: [{ name: 'box', value: 'null' }, { name: 'a', value: 'null' }] }], heap: { h1: { fields: [{ key: 'msg', value: '"안녕"' }], faded: true } },
-        note: '<code>a = null</code> → <b>마지막 화살표도 끊김</b> → 이제 <b>아무도 못 닿는다(도달 불가) → GC가 수거</b>(회색). 마지막 참조가 끊겨야 죽는다.' },
+        note: '<code>a = null</code> → <b>마지막 화살표도 끊김</b> → 이제 <b>아무도 못 닿는다(도달 불가) → GC가 수거</b>(회색). 마지막 참조가 끊겨야 죽는다.',
+        engine: '마지막 포인터도 null로 → 어떤 GC 루트에서도 못 닿음(unreachable). 다음 mark-sweep에서 이 힙 칸 회수(원시 인라인 값은 애초에 대상 아님). 회수 "시점"은 엔진 재량 — 즉시 아님.' },
     ],
   }
 

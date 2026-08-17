@@ -260,14 +260,18 @@
       stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
       code: ['let score = 10', 'score = 20        // let: 재할당(담는 값 교체) OK', 'const PI = 3.14', 'PI = 3            // const: ❌ 못 바꿈'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', value: '10' }] }], heap: {},
-          note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 화살표가 값 메모리의 <b>10</b>을 가리킨다(장부엔 이름+화살표).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', value: '20', bad: true }] }], heap: {},
-          note: '<code>score = 20</code> → score가 <b>담은 값이 10에서 20으로 교체</b>된다(재할당). <b>숫자는 불변</b> — 10이 20으로 변신한 게 아니라 화살표(가리키는 값)가 옮겨간 것. let이라 가능. (원시값의 불변·화살표 이동은 🧠 M4에서 정밀하게)' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
-          note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 화살표가 값 메모리의 3.14를 가리킨다. 이 <b>화살표는 🔒 잠긴다</b>.' },
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', value: '20' }, { name: '🔒 PI', value: '3.14' }] }], heap: {},
-          note: '<code>PI = 3</code> → 화살표가 잠겨 <b>다른 값을 못 가리킨다 → ❌ 에러</b>. PI는 그대로 3.14. (score(let)는 화살표를 옮겼지만 PI(const)는 못 옮긴다.)' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'sc10' }] }], heap: { sc10: { label: '10', prim: true } },
+          note: '<code>let score = 10</code> — 장부에 이름 <b>score</b>, 화살표가 값 메모리의 <b>10</b> 셀을 가리킨다(장부엔 이름+화살표).',
+          engine: '<b>10</b>은 <b>SMI(작은 정수)</b> — V8은 힙에 안 두고 score 슬롯 안에 <b>태그 비트로 인라인</b>한다. 여기 \'셀\'·\'화살표\'는 개념 그림. 이 태깅은 <b>V8 방식</b>이고 스펙은 저장 방식을 강제하지 않는다(JSC·SM은 NaN-boxing).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'sc20' }] }], heap: { sc10: { label: '10', prim: true, faded: true }, sc20: { label: '20', prim: true, bad: true } },
+          note: '<code>score = 20</code> → <b>숫자는 불변</b>. 10이 20으로 변신한 게 아니라 score의 <b>화살표가 새 20 셀로 이동</b>하고, 옛 10은 아무도 안 가리켜 <b>버려진다</b>(흐림). let이라 화살표를 옮길 수 있다. (정밀하게는 🧠 M4에서)',
+          engine: '실제 V8: 20도 SMI라 score 슬롯 비트를 <b>10→20으로 제자리 덮어씀</b>(새 힙 셀 할당 없음). 만약 소수였다면 <b>HeapNumber</b> 새 박스+포인터 재연결 — 그땐 개념 그림(새 셀·화살표 이동)이 물리적으로도 맞다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'sc20' }, { name: '🔒 PI', value: '3.14' }] }], heap: { sc10: { label: '10', prim: true, faded: true }, sc20: { label: '20', prim: true } },
+          note: '<code>const PI = 3.14</code> — 장부에 <b>PI</b>, 화살표가 값 메모리의 3.14를 가리킨다. 이 <b>화살표는 🔒 잠긴다</b>. (버려진 10은 아직 회색으로 남아 GC 대기)',
+          engine: '3.14는 <b>소수</b> → <b>HeapNumber</b>(힙의 불변 박스)로 두고 PI 슬롯은 그 <b>포인터</b>. 작은 정수(SMI 인라인)와 달리 <b>진짜 힙 참조</b>다. const는 이 포인터를 <b>못 바꾸게</b> 잠글 뿐 박스 내용과는 무관.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'score', ref: 'sc20' }, { name: '🔒 PI', value: '3.14' }] }], heap: { sc10: { label: '10', prim: true, faded: true }, sc20: { label: '20', prim: true } },
+          note: '<code>PI = 3</code> → 화살표가 잠겨 <b>다른 값을 못 가리킨다 → ❌ 에러</b>. PI는 그대로 3.14. (score(let)는 화살표를 옮겼지만 PI(const)는 못 옮긴다.)',
+          engine: 'const 바인딩은 <b>불변</b> — 재할당(슬롯 포인터 재연결) 시도는 실행 전 <b>TypeError</b>로 막힌다. 이 거부는 <b>스펙이 강제</b>하는 관찰 동작이라 모든 엔진 공통(저장 방식과 달리 결과가 규정됨).' },
       ],
     }))
     root.querySelector('[data-m="boxnull-viz"]').append(MemoryModel({
@@ -276,9 +280,11 @@
       code: ['let box = { name: "민지" }', 'box = null'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'box', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }] } },
-          note: '<code>box = { … }</code> — 객체라 실체는 <b>값 메모리(힙)</b>에. 장부의 box 칸엔 <b>주소(화살표)</b>만 담긴다. (원시값과 달리 값이 장부 밖에 있다)' },
+          note: '<code>box = { … }</code> — 객체라 실체는 <b>값 메모리(힙)</b>에. 장부의 box 칸엔 <b>주소(화살표)</b>만 담긴다. (원시값과 달리 값이 장부 밖에 있다)',
+          engine: '객체 리터럴 → 힙 할당 + <b>hidden class(Map/Shape)</b>로 속성 배치. box 슬롯엔 그 객체를 가리키는 <b>(압축)포인터</b>만.' },
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'box', value: 'null' }] }], heap: { h1: { fields: [{ key: 'name', value: '"민지"' }], faded: true } },
-          note: '<code>box = null</code> → <b>장부의 box 칸에 null</b>이 써진다(화살표 끊김). <b>값 메모리의 객체는 손 안 대고 그대로</b> — 다만 아무도 안 가리켜 <b>고아(회색) → 나중에 GC 수거</b>. null이 값 메모리에 써지는 게 아니다.' },
+          note: '<code>box = null</code> → <b>장부의 box 칸에 null</b>이 써진다(화살표 끊김). <b>값 메모리의 객체는 손 안 대고 그대로</b> — 다만 아무도 안 가리켜 <b>고아(회색) → 나중에 GC 수거</b>. null이 값 메모리에 써지는 게 아니다.',
+          engine: 'box 슬롯 포인터를 <b>null 싱글턴</b>(oddball)으로 교체. null·undefined·true·false는 힙에 <b>단 하나씩</b>만 있어 모든 참조가 그 하나를 가리킨다. 힙의 객체는 참조 0이 되면 GC가 나중에 회수(즉시 아님).' },
       ],
     }))
     root.querySelector('[data-m="letconst"]').append(Runner({
@@ -304,9 +310,9 @@
     stackLabel: '📚 스택 (= M1의 이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let count = 3', 'let ok = true'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '<b>age</b>라는 이름표가 스택에 놓인다 — 값 20을 가진다. (왼쪽 age=이름, 오른쪽 20=값)' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }] }], heap: {}, note: 'count 이름표가 그 위에 쌓인다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }, { name: 'ok', value: 'true' }] }], heap: {}, note: '스택에 쌓이는 건 <b>이름표(변수)</b>다. 원시값도 값 메모리에 살고 이름표가 <b>가리킨다</b> — <b>이름표(age) ≠ 값(20)</b>. 이 경계가 핵심.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '<b>age</b>라는 이름표가 스택에 놓인다 — 값 20을 가진다. (왼쪽 age=이름, 오른쪽 20=값)', engine: '20은 <b>SMI(작은 정수)</b> — V8은 힙에 안 두고 age 슬롯 안에 <b>태그 비트로 인라인</b>. 개념 그림에선 값을 갈라 그리지만 물리적으론 슬롯 안이다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }] }], heap: {}, note: 'count 이름표가 그 위에 쌓인다.', engine: '3도 SMI라 count 슬롯에 인라인. 스택 프레임에 슬롯이 <b>순서대로</b> 붙는다(원시 인라인 값은 GC 대상 아님).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'count', value: '3' }, { name: 'ok', value: 'true' }] }], heap: {}, note: '스택에 쌓이는 건 <b>이름표(변수)</b>다. 원시값도 값 메모리에 살고 이름표가 <b>가리킨다</b> — <b>이름표(age) ≠ 값(20)</b>. 이 경계가 핵심.', engine: 'true는 힙의 <b>싱글턴(oddball) 하나</b> — ok 슬롯은 그 하나를 가리키는 포인터(중복 안 만듦). 이 스택/힙 배치는 <b>스펙 강제 아님</b>, V8 방식일 뿐.' },
     ],
   }
   const SCENARIO_PUSHPOP = {
@@ -324,13 +330,17 @@
     ],
     steps: [
       { line: 7, stack: [{ name: 'main', slots: [{ name: 'say', value: '(대기)', bad: true }] }, { name: 'welcome', slots: [{ name: 'name', value: '"민지"' }] }], heap: {},
-        note: 'welcome("민지") 호출 → 스택에 <b>welcome 칸</b>이 push. 인수 "민지"가 name에. (main의 say는 아직 대기 — 반환을 기다린다)' },
+        note: 'welcome("민지") 호출 → 스택에 <b>welcome 칸</b>이 push. 인수 "민지"가 name에. (main의 say는 아직 대기 — 반환을 기다린다)',
+        engine: '함수 호출 = <b>새 스택 프레임(실행 컨텍스트)</b>을 push. 인자 "민지"의 값을 name 슬롯으로 복사(문자열은 힙 불변 객체라 실제론 포인터 복사).' },
       { line: 4, stack: [{ name: 'main', slots: [{ name: 'say', value: '(대기)', bad: true }] }, { name: 'welcome', slots: [{ name: 'name', value: '"민지"' }] }, { name: 'makeGreeting', slots: [{ name: 'name', value: '"민지"' }] }], heap: {},
-        note: 'welcome 안에서 makeGreeting을 부른다 → <b>또 push</b>. 이제 프레임이 <b>3개</b>(main · welcome · makeGreeting) 쌓였다.' },
+        note: 'welcome 안에서 makeGreeting을 부른다 → <b>또 push</b>. 이제 프레임이 <b>3개</b>(main · welcome · makeGreeting) 쌓였다.',
+        engine: '또 프레임 push — makeGreeting의 name은 <b>이 프레임만의 지역 슬롯</b>. 각 프레임의 name은 이름만 같고 별개 슬롯이다.' },
       { line: 5, stack: [{ name: 'main', slots: [{ name: 'say', value: '(대기)', bad: true }] }, { name: 'welcome', slots: [{ name: 'name', value: '"민지"' }, { name: 'msg', value: '"안녕, 민지님"' }] }], heap: {},
-        note: 'makeGreeting가 값을 반환 → 그 칸이 <b>통째로 pop(사라짐)</b>. 반환값이 welcome의 <b>msg</b>에 담긴다.' },
+        note: 'makeGreeting가 값을 반환 → 그 칸이 <b>통째로 pop(사라짐)</b>. 반환값이 welcome의 <b>msg</b>에 담긴다.',
+        engine: '반환값은 보통 <b>레지스터</b>로 넘어가고, 프레임은 <b>즉시 pop(회수)</b>. "안녕, 민지님"은 이어붙여 만든 <b>새 문자열</b>(힙)이라 프레임이 사라져도 살아남아 msg가 가리킨다.' },
       { line: 7, stack: [{ name: 'main', slots: [{ name: 'say', value: '"🎉 안녕, 민지님"' }] }], heap: {},
-        note: 'welcome도 반환 → <b>pop</b>. name·msg는 <b>사라졌지만</b>, 반환값은 main의 <b>say</b>에 담겼다. <b>프레임은 사라져도 결과는 남는다</b>(return으로 빼냈으니까 — §4의 이유).' },
+        note: 'welcome도 반환 → <b>pop</b>. name·msg는 <b>사라졌지만</b>, 반환값은 main의 <b>say</b>에 담겼다. <b>프레임은 사라져도 결과는 남는다</b>(return으로 빼냈으니까 — §4의 이유).',
+        engine: 'welcome 프레임 pop = name·msg 슬롯 회수(비트를 지우기보다 "이 위는 없는 셈" 표시라 빠름). 반환한 문자열은 힙에 남아 say가 가리킨다. 스택/힙 배치는 스펙 강제 아님.' },
     ],
   }
   // ⑤ 스코프 — 전역 장부 vs 함수 장부(프레임), 접근 범위.
@@ -347,13 +357,17 @@
     ],
     steps: [
       { line: 0, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }], heap: {},
-        note: 'appName은 함수 <b>밖</b>(맨 바깥)에 선언 → <b>전역 장부</b>에 산다. 프로그램 내내 살고 <b>어디서나</b> 접근된다(전역변수).' },
+        note: 'appName은 함수 <b>밖</b>(맨 바깥)에 선언 → <b>전역 장부</b>에 산다. 프로그램 내내 살고 <b>어디서나</b> 접근된다(전역변수).',
+        engine: '"메모장"은 힙의 <b>불변 문자열 객체</b>, appName 슬롯은 그 포인터. 리터럴은 <b>인터닝</b>돼 같은 글자면 공유될 수 있다.' },
       { line: 1, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }, { name: 'greet · 함수 장부', slots: [{ name: 'user', value: '"민지"' }] }], heap: {},
-        note: 'greet("민지") 호출 → <b>새 장부(프레임)가 push</b>. 매개변수 <b>user</b>는 이 <b>greet 장부</b>의 지역변수.' },
+        note: 'greet("민지") 호출 → <b>새 장부(프레임)가 push</b>. 매개변수 <b>user</b>는 이 <b>greet 장부</b>의 지역변수.',
+        engine: '함수 호출 = 새 프레임 push, 인자 값복사(문자열은 포인터 복사)로 user 지역 슬롯 생성. 프레임은 스택 위로 <b>순서대로</b> 쌓인다.' },
       { line: 2, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }, { name: 'greet · 함수 장부', slots: [{ name: 'user', value: '"민지"' }, { name: 'hi', value: '"메모장 · 민지 님"' }] }], heap: {},
-        note: '<b>hi</b>도 greet 장부의 지역변수. 이 안에선 <b>appName(전역)도 보이고</b> user·hi(지역)도 보인다 — 안쪽 장부는 바깥 장부를 <b>참고할 수 있다</b>(스코프).' },
+        note: '<b>hi</b>도 greet 장부의 지역변수. 이 안에선 <b>appName(전역)도 보이고</b> user·hi(지역)도 보인다 — 안쪽 장부는 바깥 장부를 <b>참고할 수 있다</b>(스코프).',
+        engine: '이어붙인 결과는 <b>새 문자열</b>(힙 새 객체) — 원본들은 불변. 바깥 변수 참조는 스코프 체인으로 찾는다(닫아 잡으면 클로저 승격이지만 여기선 아님).' },
       { line: 5, stack: [{ name: 'main · 전역 장부', slots: [{ name: 'appName', value: '"메모장"' }] }], heap: {},
-        note: 'greet 끝 → <b>함수 장부 pop</b>. user·hi(지역변수)는 <b>사라진다</b>. 바깥(전역)에선 hi를 <b>못 쓴다</b>(스코프 밖 = 접근 불가). appName(전역)은 그대로.' },
+        note: 'greet 끝 → <b>함수 장부 pop</b>. user·hi(지역변수)는 <b>사라진다</b>. 바깥(전역)에선 hi를 <b>못 쓴다</b>(스코프 밖 = 접근 불가). appName(전역)은 그대로.',
+        engine: '프레임 pop = user·hi 슬롯 즉시 회수. hi가 가리키던 문자열은 참조가 끊겨 GC 대상(힙 문자열은 회수, 전역 appName·"메모장"은 계속 도달 가능해 생존).' },
     ],
   }
   window.Lessons['stack'] = function render(root) {
@@ -445,9 +459,9 @@
     stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let tags = ["신상", "세일"]', 'let card = { name: "민지" }'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '원시값 age — 이름은 장부에, 값 20은 값 메모리 셀에(물리적으론 한 스택 프레임).', engine: 'SMI 태깅 — 실제론 슬롯에 인라인.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'tags', ref: 'h1' }] }], heap: { h1: { label: '["신상", "세일"]' } }, note: '<b>배열</b>은 힙으로. tags 슬롯엔 <b>주소</b>만 → 힙으로 화살표.', engine: '힙 할당, tags엔 포인터.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'tags', ref: 'h1' }, { name: 'card', ref: 'h2' }] }], heap: { h1: { label: '["신상", "세일"]' }, h2: { label: '{ name: "민지" }' } }, note: '<b>객체</b>도 힙으로. 힙에 박스 둘, 슬롯이 각각을 화살표로 가리킨다.', engine: '힙 할당 + 히든클래스.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '원시값 age — 이름은 장부에, 값 20은 값 메모리 셀에(물리적으론 한 스택 프레임).', engine: '20은 <b>SMI</b> — 힙 아님, age 슬롯에 <b>태그 비트로 인라인</b>. 그래서 오른쪽 힙칸이 비어 있다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'tags', ref: 'h1' }] }], heap: { h1: { label: '["신상", "세일"]' } }, note: '<b>배열</b>은 힙으로. tags 슬롯엔 <b>주소</b>만 → 힙으로 화살표.', engine: '배열 = 힙 할당 + <b>elements backing store</b>(원소가 연속으로). tags 슬롯엔 (압축)포인터.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'tags', ref: 'h1' }, { name: 'card', ref: 'h2' }] }], heap: { h1: { label: '["신상", "세일"]' }, h2: { label: '{ name: "민지" }' } }, note: '<b>객체</b>도 힙으로. 힙에 박스 둘, 슬롯이 각각을 화살표로 가리킨다.', engine: '객체 = 힙 할당 + <b>hidden class(Map/Shape)</b>로 속성 배치. 배열·객체 배치 모두 스펙 강제 아닌 V8 방식.' },
     ],
   }
   const SCENARIO_STACK_FAIL = {
@@ -455,9 +469,9 @@
     stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['function makeCard() {', '  return { name: "민지" }', '}', 'let c = makeCard()'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'makeCard', slots: [{ name: '(객체)', value: '{ name: "민지" }' }] }], heap: {}, note: '<b>상상</b>: 객체를 힙이 아니라 <b>makeCard 칸(스택) 안</b>에 통째로 뒀다.' },
-      { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'makeCard', slots: [{ name: '(객체)', value: '{ name: "민지" }' }] }], heap: {}, note: '이 객체를 <b>밖으로 반환</b>해 c에 담으려 한다.' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'c', value: '💥 사라진 메모리', bad: true }] }], heap: {}, note: 'makeCard가 끝나 칸이 <b>pop(치워짐)</b> → M2에서 봤듯 <b>그 안의 객체도 함께 사라진다</b>. c는 없어진 메모리를 가리킨다 💥. <b>그래서</b> 오래 살아야 할 묶음은 스택이 아니라 <b>힙</b>에 둔다.' },
+      { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'makeCard', slots: [{ name: '(객체)', value: '{ name: "민지" }' }] }], heap: {}, note: '<b>상상</b>: 객체를 힙이 아니라 <b>makeCard 칸(스택) 안</b>에 통째로 뒀다.', engine: '<b>가상의 시나리오</b> — 실제 V8은 객체를 이렇게 프레임 안에 통째로 두지 않고 <b>힙에 할당</b>하고 슬롯엔 포인터만 둔다. 이 그림은 "왜 힙이 필요한가"를 보이려는 반례.' },
+      { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'makeCard', slots: [{ name: '(객체)', value: '{ name: "민지" }' }] }], heap: {}, note: '이 객체를 <b>밖으로 반환</b>해 c에 담으려 한다.', engine: '만약 프레임 안 실물을 반환한다면 그 실체는 프레임에 묶여 있다 — 반환은 보통 레지스터로 값만 넘기는데, 프레임에 사는 큰 묶음은 그렇게 살려낼 수 없다.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'c', value: '💥 사라진 메모리', bad: true }] }], heap: {}, note: 'makeCard가 끝나 칸이 <b>pop(치워짐)</b> → M2에서 봤듯 <b>그 안의 객체도 함께 사라진다</b>. c는 없어진 메모리를 가리킨다 💥. <b>그래서</b> 오래 살아야 할 묶음은 스택이 아니라 <b>힙</b>에 둔다.', engine: '프레임 pop = 그 슬롯 메모리 회수 → 실물이 프레임에 있었다면 <b>dangling(허상) 포인터</b>가 된다. V8이 <b>힙 할당 + GC</b>를 쓰는 이유가 바로 이것 — 힙 객체는 프레임이 사라져도 도달 가능하면 산다.' },
     ],
   }
   // 거꾸로 — 원시값이 힙에 사는 경우(객체 속성). 같은 20이 스택(age)과 힙(card.age)에.
@@ -466,10 +480,10 @@
     stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let age = 20', 'let card = { age: 20, name: "민지" }'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '독립 변수 age의 20은 값 메모리에 <b>자기 셀</b>(스택 구역).' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }] }], heap: {}, note: '독립 변수 age의 20은 값 메모리에 <b>자기 셀</b>(스택 구역).', engine: '20은 <b>SMI</b>라 age 슬롯에 <b>인라인</b>(힙 아님). 원시 인라인 값은 GC 대상이 아니다.' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'age', value: '20' }, { name: 'card', ref: 'h1' }] }],
         heap: { h1: { fields: [{ key: 'age', value: '20' }, { key: 'name', value: '"민지"' }] } },
-        note: 'card 객체(힙 구역) 안의 <b>age: 20</b>은 <b>객체 안 필드</b>. 같은 숫자 20이 한 번은 <b>자기 셀</b>(age·스택 구역), 한 번은 <b>객체 안 필드</b>(card.age·힙 구역)에 산다.' },
+        note: 'card 객체(힙 구역) 안의 <b>age: 20</b>은 <b>객체 안 필드</b>. 같은 숫자 20이 한 번은 <b>자기 셀</b>(age·스택 구역), 한 번은 <b>객체 안 필드</b>(card.age·힙 구역)에 산다.', engine: 'card는 힙 객체(hidden class로 age·name 배치). 그 안의 age: 20도 <b>SMI라 필드 슬롯에 인라인</b> 저장 — 변수 age의 20과는 <b>완전히 다른 위치</b>의 별개 비트.' },
     ],
   }
 
@@ -560,11 +574,11 @@
     title: '값 복사 vs 참조 — 왜 p를 바꿨는데 obj도 바뀌나',
     code: ['let a = 3', 'let b = a', 'let obj = { n: 1 }', 'let p = obj', 'p.n = 9'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }] }], heap: {}, note: 'a는 값 메모리의 3을 가리킨다.', engine: 'SMI 태깅 — 작은 정수는 실제로 슬롯에 인라인. 개념 모델에선 통일해 값 메모리 셀로 본다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }] }], heap: {}, note: 'b엔 a의 <b>값을 복사</b>. a·b는 무관한 3 두 개.', engine: '값 복사 — 별개 슬롯.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }] }], heap: { h1: { label: '{ n: 1 }' } }, note: '객체는 힙에, obj엔 <b>주소</b>만.', engine: '힙 할당, 포인터.' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }, { name: 'p', ref: 'h1' }] }], heap: { h1: { label: '{ n: 1 }' } }, note: 'p엔 obj의 <b>주소를 복사</b> — 둘이 <b>같은 힙 박스</b>(별칭).', engine: '참조 복사. 객체는 하나.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }, { name: 'p', ref: 'h1' }] }], heap: { h1: { label: '{ n: 9 }' } }, note: 'p로 힙을 바꾸면 <b>obj로 봐도 9</b> — 같은 박스니까. (a·b는 그대로) ← 흔한 오해가 여기서 풀린다.', engine: 'p.n=9는 힙 필드 변경.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }] }], heap: {}, note: 'a는 값 메모리의 3을 가리킨다.', engine: '3은 <b>SMI</b>라 실제론 a 슬롯에 <b>인라인</b>. 개념 모델에선 통일해 값 메모리 셀로 본다. 이 태깅은 V8 방식(JSC·SM은 NaN-boxing).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }] }], heap: {}, note: 'b엔 a의 <b>값을 복사</b>. a·b는 무관한 3 두 개.', engine: 'b 슬롯에 a의 3 <b>비트를 복사</b> — 각자 인라인 SMI, 별개 슬롯. 서로 참조 안 함.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }] }], heap: { h1: { label: '{ n: 1 }' } }, note: '객체는 힙에, obj엔 <b>주소</b>만.', engine: '객체 리터럴 → 힙 할당 + hidden class. obj 슬롯엔 (압축)포인터.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }, { name: 'p', ref: 'h1' }] }], heap: { h1: { label: '{ n: 1 }' } }, note: 'p엔 obj의 <b>주소를 복사</b> — 둘이 <b>같은 힙 박스</b>(별칭).', engine: '<b>포인터(주소)만 복사</b> — 새 객체 할당 없음. obj·p 두 슬롯이 같은 힙 주소를 담는다. (SMI 복사와 대조: 그건 값, 이건 주소)' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'a', value: '3' }, { name: 'b', value: '3' }, { name: 'obj', ref: 'h1' }, { name: 'p', ref: 'h1' }] }], heap: { h1: { label: '{ n: 9 }' } }, note: 'p로 힙을 바꾸면 <b>obj로 봐도 9</b> — 같은 박스니까. (a·b는 그대로) ← 흔한 오해가 여기서 풀린다.', engine: 'p.n=9는 힙 객체의 <b>n 필드를 제자리 변경</b>(진짜 뮤테이션). 슬롯 포인터는 그대로, 가리키는 박스 하나가 바뀌니 obj로 봐도 9.' },
     ],
   }
   // 값에 의한 전달 — 원시값을 함수에 넘기면 '복사본'이 전달된다(원본 안전).
@@ -573,10 +587,10 @@
     stackLabel: '📚 스택 (이름표 장부)', heapLabel: '🗄️ 값 메모리',
     code: ['let money = 10000', 'function tear(bill) {', '  bill = 0        // 건네받은 걸 찢어 못 쓰게', '}', 'tear(money)'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }], heap: {}, note: 'money 슬롯에 10000이 담긴다.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }, { name: 'tear', slots: [{ name: 'bill', value: '10000' }] }], heap: {}, note: 'tear(money) 호출 → money의 <b>값을 복사</b>해 bill에 담는다. bill은 money와 <b>별개의 슬롯</b>(복사된 만원 한 장 더).' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }, { name: 'tear', slots: [{ name: 'bill', value: '0', bad: true }] }], heap: {}, note: 'bill(복사본)을 0으로 찢어도 → <b>money(원본)는 그대로 10000</b>. 애초에 서로 다른 두 장이니까.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }], heap: {}, note: 'tear 끝 → bill(복사본) 사라짐. money는 여전히 <b>10000</b>. 원시값은 <b>복사본</b>으로 전달돼 원본이 안전하다.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }], heap: {}, note: 'money 슬롯에 10000이 담긴다.', engine: '10000은 <b>SMI</b>(작은 정수) — money 슬롯에 인라인. 개념 그림에선 값 셀로 본다.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }, { name: 'tear', slots: [{ name: 'bill', ref: 'bill10000' }] }], heap: { bill10000: { label: '10000', prim: true } }, note: 'tear(money) 호출 → money의 <b>값을 복사</b>해 bill에 담는다. bill은 money와 <b>별개의 슬롯</b>(복사된 만원 한 장 더).', engine: '새 프레임 push, 인자 <b>값복사</b> — bill 슬롯에 10000 비트 복사(각자 인라인 SMI, 별개 슬롯).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }, { name: 'tear', slots: [{ name: 'bill', ref: 'bill0' }] }], heap: { bill10000: { label: '10000', prim: true, faded: true }, bill0: { label: '0', prim: true, bad: true } }, note: '<code>bill = 0</code> → <b>숫자는 불변</b>. 10000이 0으로 변신한 게 아니라 bill의 <b>화살표가 새 0 셀로 이동</b>하고, 옛 10000은 버려진다(흐림). <b>money(원본)는 그대로 10000</b> — 애초에 서로 다른 두 장이니까.', engine: '실제 V8: 0도 SMI라 bill 슬롯 비트를 <b>10000→0으로 제자리 덮어씀</b>(새 힙 셀 없음). money 슬롯은 손도 안 댐 — 별개 슬롯이라 안 움직인다.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'money', value: '10000' }] }], heap: {}, note: 'tear 끝 → bill(복사본) 사라짐. money는 여전히 <b>10000</b>. 원시값은 <b>복사본</b>으로 전달돼 원본이 안전하다.', engine: 'tear 프레임 pop = bill 슬롯 회수. 인라인 원시값이라 힙에 남을 것도 GC 대상도 없다.' },
     ],
   }
 
@@ -591,18 +605,18 @@
     title: '① 내 베프가 머리를 자르면 → 효니도 숏컷',
     code: ['let hyoni = { name: "효니", hair: "긴머리" }', 'let me = { name: "나", bestFriend: hyoni }', 'me.bestFriend.hair = "숏컷"   // 내 베프가 머리 자름'],
     steps: [
-      { line: 0, stack: stackHyoni, heap: { h1: hyoniBox('👩', { key: 'hair', value: '"긴머리"' }) }, note: '효니(사람)가 힙에. hyoni 슬롯이 그를 가리킨다.' },
-      { line: 1, stack: stackBoth, heap: { h1: hyoniBox('👩', { key: 'hair', value: '"긴머리"' }), h2: meBox() }, note: 'me(나) 생성. 내 <b>bestFriend</b>가 효니를 가리킨다 → 효니를 향한 화살표가 <b>둘</b>(hyoni · me.bestFriend) = 같은 사람!' },
-      { line: 2, stack: stackBoth, heap: { h1: hyoniBox('💇‍♀️', { key: 'hair', value: '"숏컷"' }), h2: meBox() }, note: '<b>내 베프</b> 쪽으로 머리를 자르니(<code>me.bestFriend.hair="숏컷"</code>) → <b>효니도 숏컷</b> 💇‍♀️. 같은 사람이니까!' },
+      { line: 0, stack: stackHyoni, heap: { h1: hyoniBox('👩', { key: 'hair', value: '"긴머리"' }) }, note: '효니(사람)가 힙에. hyoni 슬롯이 그를 가리킨다.', engine: '효니 객체 = 힙 할당 + hidden class(hair 배치). hyoni 슬롯엔 포인터만.' },
+      { line: 1, stack: stackBoth, heap: { h1: hyoniBox('👩', { key: 'hair', value: '"긴머리"' }), h2: meBox() }, note: 'me(나) 생성. 내 <b>bestFriend</b>가 효니를 가리킨다 → 효니를 향한 화살표가 <b>둘</b>(hyoni · me.bestFriend) = 같은 사람!', engine: 'me도 힙 객체. me의 bestFriend 필드엔 효니의 <b>주소(포인터)를 복사</b> — 새 사람이 아니라 같은 힙 주소. 그래서 화살표 둘이 한 박스로.' },
+      { line: 2, stack: stackBoth, heap: { h1: hyoniBox('💇‍♀️', { key: 'hair', value: '"숏컷"' }), h2: meBox() }, note: '<b>내 베프</b> 쪽으로 머리를 자르니(<code>me.bestFriend.hair="숏컷"</code>) → <b>효니도 숏컷</b> 💇‍♀️. 같은 사람이니까!', engine: '이건 <b>진짜 뮤테이션</b> — 힙 객체의 hair 필드를 제자리 교체("숏컷"은 새 문자열, 필드 포인터가 그리로). 슬롯·주소는 그대로라 두 경로 모두 바뀐 걸 본다.' },
     ],
   }
   const SCENARIO_GRAPH_MONEY = {
     title: '② 효니가 복권에 당첨되면 → 내 베프도 부자',
     code: ['let hyoni = { name: "효니", money: 0 }', 'let me = { name: "나", bestFriend: hyoni }', 'hyoni.money = 1000000000      // 효니가 복권 당첨'],
     steps: [
-      { line: 0, stack: stackHyoni, heap: { h1: hyoniBox('👩', { key: 'money', value: '0' }) }, note: '효니(사람)가 힙에. hyoni가 가리킨다.' },
-      { line: 1, stack: stackBoth, heap: { h1: hyoniBox('👩', { key: 'money', value: '0' }), h2: meBox() }, note: 'me(나) 생성. 내 bestFriend가 같은 효니를 가리킨다.' },
-      { line: 2, stack: stackBoth, heap: { h1: hyoniBox('🤑', { key: 'money', value: '1000000000' }), h2: meBox() }, note: '<b>효니</b> 쪽으로 복권 당첨(<code>hyoni.money=10억</code>) → <b>내 베프도 10억</b> 🤑. 반대 방향도 같은 사람!' },
+      { line: 0, stack: stackHyoni, heap: { h1: hyoniBox('👩', { key: 'money', value: '0' }) }, note: '효니(사람)가 힙에. hyoni가 가리킨다.', engine: '효니 = 힙 객체. money: 0은 SMI라 필드 슬롯에 인라인.' },
+      { line: 1, stack: stackBoth, heap: { h1: hyoniBox('👩', { key: 'money', value: '0' }), h2: meBox() }, note: 'me(나) 생성. 내 bestFriend가 같은 효니를 가리킨다.', engine: 'me.bestFriend 필드에 효니의 <b>포인터를 복사</b> — 같은 힙 주소를 공유.' },
+      { line: 2, stack: stackBoth, heap: { h1: hyoniBox('🤑', { key: 'money', value: '1000000000' }), h2: meBox() }, note: '<b>효니</b> 쪽으로 복권 당첨(<code>hyoni.money=10억</code>) → <b>내 베프도 10억</b> 🤑. 반대 방향도 같은 사람!', engine: '진짜 뮤테이션 — 힙 객체의 money 필드를 제자리 변경. 10억은 SMI 범위(2³¹−1≈21.4억) 안이라 아직 인라인 SMI(더 크면 HeapNumber로 승격). 어느 경로로 봐도 같은 박스.' },
     ],
   }
 
@@ -618,16 +632,16 @@
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'jimin', ref: 'h1' }] }],
         heap: { h1: { person: '👩‍🦱', name: '지민', fields: [{ key: 'hair', value: '"파마"' }] } },
-        note: '지민(사람)이 힙에. jimin이 가리킨다.' },
+        note: '지민(사람)이 힙에. jimin이 가리킨다.', engine: '지민 = 힙 객체 + hidden class. hair "파마"는 힙 불변 문자열을 가리키는 필드.' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'jimin', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }],
         heap: { h1: { person: '👩‍🦱', name: '지민', fields: [{ key: 'hair', value: '"파마"' }] }, h2: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h1' }] } },
-        note: '효니 생성. <b>효니.bestFriend가 지민</b>을 가리킨다 → 효니 → 지민.' },
+        note: '효니 생성. <b>효니.bestFriend가 지민</b>을 가리킨다 → 효니 → 지민.', engine: '효니.bestFriend 필드에 지민의 <b>포인터를 저장</b> — 힙 객체가 힙 객체를 가리키는 참조 사슬의 시작.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'jimin', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }, { name: 'me', ref: 'h3' }] }],
         heap: { h1: { person: '👩‍🦱', name: '지민', fields: [{ key: 'hair', value: '"파마"' }] }, h2: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h1' }] }, h3: { person: '🧑', name: '나', fields: [{ key: 'bestFriend', ref: 'h2' }] } },
-        note: '나 생성. 이제 <b>me → 효니 → 지민</b> 화살표 사슬(2중 그래프). <code>me.bestFriend</code>는 효니, <code>me.bestFriend.bestFriend</code>는 지민.' },
+        note: '나 생성. 이제 <b>me → 효니 → 지민</b> 화살표 사슬(2중 그래프). <code>me.bestFriend</code>는 효니, <code>me.bestFriend.bestFriend</code>는 지민.', engine: 'me.bestFriend는 효니 주소. 점(.) 탐색은 <b>포인터를 따라가 힙에서 다음 객체를 읽는</b> 것 — 한 번에 한 칸.' },
       { line: 3, stack: [{ name: 'main', slots: [{ name: 'jimin', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }, { name: 'me', ref: 'h3' }] }],
         heap: { h1: { person: '👩‍🦲', name: '지민', fields: [{ key: 'hair', value: '"삭발"' }] }, h2: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h1' }] }, h3: { person: '🧑', name: '나', fields: [{ key: 'bestFriend', ref: 'h2' }] } },
-        note: 'me에서 bestFriend를 <b>두 번</b> 따라가(<code>me.bestFriend.bestFriend</code>) 지민에 도달 → hair "삭발" 👩‍🦲. 화살표를 여러 번 건너는 게 <b>2중 그래프 탐색</b>이다.' },
+        note: 'me에서 bestFriend를 <b>두 번</b> 따라가(<code>me.bestFriend.bestFriend</code>) 지민에 도달 → hair "삭발" 👩‍🦲. 화살표를 여러 번 건너는 게 <b>2중 그래프 탐색</b>이다.', engine: '포인터를 두 번 역참조(me→효니→지민)해 지민 박스에 도달, 그 hair 필드를 제자리 뮤테이션. 슬롯·중간 주소는 불변.' },
     ],
   }
 
@@ -660,10 +674,10 @@
     title: '속성끼리 — hyoni.money = me.money (객체가 껴도 복사!)',
     code: ['let me = { money: 100 }', 'let hyoni = { money: 0 }', 'hyoni.money = me.money   // me의 money(숫자) 복사', 'hyoni.money = 50          // hyoni.money만 바꿈'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] } }, note: 'me 객체 money 100.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] }, h2: { fields: [{ key: 'money', value: '0' }] } }, note: 'hyoni 객체 money 0. me와 <b>다른 박스</b>.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] }, h2: { fields: [{ key: 'money', value: '100' }] } }, note: '<code>hyoni.money = me.money</code> → me.money(숫자 100)를 <b>복사</b>해 hyoni.money에. 두 객체는 여전히 <b>다른 박스</b> — 숫자만 베낀 것.' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] }, h2: { fields: [{ key: 'money', value: '50' }] } }, note: 'hyoni.money만 50. <b>me.money는 그대로 100</b>! 객체가 둘 껴 있어도, 대입된 게 <b>숫자(원시값)</b>라 복사였다 = 안 공유.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] } }, note: 'me 객체 money 100.', engine: 'me = 힙 객체. money: 100은 SMI라 필드 슬롯에 인라인.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] }, h2: { fields: [{ key: 'money', value: '0' }] } }, note: 'hyoni 객체 money 0. me와 <b>다른 박스</b>.', engine: 'hyoni는 <b>별도 힙 할당</b> — me와 다른 주소. 두 슬롯이 서로 다른 힙 박스를 가리킨다.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] }, h2: { fields: [{ key: 'money', value: '100' }] } }, note: '<code>hyoni.money = me.money</code> → me.money(숫자 100)를 <b>복사</b>해 hyoni.money에. 두 객체는 여전히 <b>다른 박스</b> — 숫자만 베낀 것.', engine: '읽은 값이 <b>SMI(원시값)</b>라 hyoni.money 필드에 <b>비트만 복사</b>. 객체 주소가 아니라 값을 옮긴 것 — 두 박스는 그대로 별개.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }, { name: 'hyoni', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'money', value: '100' }] }, h2: { fields: [{ key: 'money', value: '50' }] } }, note: 'hyoni.money만 50. <b>me.money는 그대로 100</b>! 객체가 둘 껴 있어도, 대입된 게 <b>숫자(원시값)</b>라 복사였다 = 안 공유.', engine: 'hyoni 박스의 money 필드만 제자리 변경(50). me 박스는 다른 주소라 안 건드림 — 값 복사였으니 링크가 없다.' },
     ],
   }
   // 문자열도 원시값 → 복사(숫자만이 아님)
@@ -672,9 +686,9 @@
     stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
     code: ['let nick1 = "무지"', 'let nick2 = nick1      // 문자열도 복사', 'nick2 = "어피치"        // nick2만 바뀜'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }] }], heap: {}, note: 'nick1에 "무지".' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"무지"' }] }], heap: {}, note: '문자열 "무지"를 <b>복사</b>해 nick2에. 별개의 두 슬롯 — 숫자와 똑같다.', engine: '실제 V8: 문자열은 값 메모리에 두고 nick1·nick2가 <b>같은 "무지"를 가리킴</b>(주소 복사·공유). 하지만 불변이라 복사와 100% 동일 — 아래 💡심화 참고.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'nick1', value: '"무지"' }, { name: 'nick2', value: '"어피치"', bad: true }] }], heap: {}, note: 'nick2만 "어피치". <b>nick1은 그대로 "무지"</b> — 문자열도 <b>원시값</b>이라 복사(안 공유). "숫자만 복사"가 아니다.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'nick1', ref: 's_muji1' }] }], heap: { s_muji1: { label: '"무지"', prim: true } }, note: 'nick1이 값 메모리의 <b>"무지"</b>를 가리킨다.', engine: '문자열은 힙의 <b>불변 객체</b>, nick1 슬롯은 그 <b>포인터</b>. 리터럴은 <b>인터닝</b>돼 같은 글자면 공유될 수 있다(숫자 SMI와 달리 힙 참조).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'nick1', ref: 's_muji1' }, { name: 'nick2', ref: 's_muji2' }] }], heap: { s_muji1: { label: '"무지"', prim: true }, s_muji2: { label: '"무지"', prim: true } }, note: '문자열 "무지"를 <b>복사</b>해 nick2에 — 개념상 별개의 두 셀(숫자 대입과 똑같이 독립).', engine: '실제 V8: 문자열은 불변이라 nick2 슬롯에 <b>포인터만 복사</b> → nick1·nick2가 물리적으론 <b>같은 "무지" 하나를 공유</b>(그림의 두 셀은 개념). 불변이라 공유든 복사든 관찰 결과 100% 동일 — 아래 💡심화 참고.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'nick1', ref: 's_muji1' }, { name: 'nick2', ref: 's_apeach' }] }], heap: { s_muji1: { label: '"무지"', prim: true }, s_muji2: { label: '"무지"', prim: true, faded: true }, s_apeach: { label: '"어피치"', prim: true, bad: true } }, note: '<code>nick2 = "어피치"</code> → 문자열도 <b>불변</b>. "무지"가 바뀐 게 아니라 nick2의 <b>화살표가 새 "어피치" 셀로 이동</b>. <b>nick1은 그대로 "무지"</b> — 원시값이라 복사(안 공유). "숫자만 복사"가 아니다.', engine: '실제 V8: "어피치"라는 <b>새 힙 문자열</b>을 만들고(또는 인터닝된 것 재사용) nick2 슬롯 포인터를 그리로 <b>재연결</b>. nick1 포인터는 손도 안 댐 → 공유였어도 nick1은 여전히 "무지"를 가리킨다.' },
     ],
   }
   // 불변 (model B) — 재할당은 이름표의 화살표가 '새 값 셀'로 옮겨가는 것. 옛 값 셀은 안 고쳐지고 회색으로 남는다.
@@ -682,25 +696,25 @@
     title: '① 숫자 · 재할당 — money = 200',
     code: ['let money = 100', 'money = 200   // 100이 200으로 변신? 아니다'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v1' }] }], heap: { v1: { label: '100', prim: true } }, note: 'money는 값 메모리의 <b>100</b>을 가리킨다(장부엔 이름+화살표).' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v2' }] }], heap: { v1: { label: '100', prim: true, faded: true }, v2: { label: '200', prim: true } }, note: '<code>money = 200</code> → money의 <b>화살표가 새 200 셀로 옮겨간다</b>(재할당). 옛 <b>100은 그대로</b>(불변) — 아무도 안 가리켜 회색. 값 100이 200으로 "변신"한 게 아니다.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v1' }] }], heap: { v1: { label: '100', prim: true } }, note: 'money는 값 메모리의 <b>100</b>을 가리킨다(장부엔 이름+화살표).', engine: '100은 <b>SMI</b>라 실제론 money 슬롯에 인라인(힙 셀·화살표는 개념 그림). 이 태깅은 V8 방식, 스펙 비강제.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'money', ref: 'v2' }] }], heap: { v1: { label: '100', prim: true, faded: true }, v2: { label: '200', prim: true } }, note: '<code>money = 200</code> → money의 <b>화살표가 새 200 셀로 옮겨간다</b>(재할당). 옛 <b>100은 그대로</b>(불변) — 아무도 안 가리켜 회색. 값 100이 200으로 "변신"한 게 아니다.', engine: '실제 V8: 200도 SMI라 money 슬롯 비트를 <b>100→200 제자리 덮어씀</b>(새 셀·GC 없음). 소수였다면 HeapNumber 새 박스+포인터 재연결 — 그땐 이 화살표 이동 그림이 물리적으로도 맞다.' },
     ],
   }
   const SCENARIO_IMM_STR = {
     title: '② 문자열 · 연산은 새 값을 만든다 — "kim".toUpperCase()',
     code: ['let name = "kim"', 'name.toUpperCase()   // 새 값 "KIM"을 만들 뿐', '// name 은? 여전히 "kim"'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true } }, note: 'name은 값 메모리의 <b>"kim"</b>을 가리킨다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true }, v2: { label: '"KIM"', prim: true, faded: true } }, note: '.toUpperCase()는 <b>새 값 "KIM"</b>을 만든다(v2) — 하지만 <b>어디에도 안 담아</b> 아무도 안 가리킨다(회색). 원본 "kim"은 <b>제자리에서 안 바뀐다</b>. name의 화살표도 그대로.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true } }, note: '그래서 name은 <b>여전히 "kim"</b>. 진짜 바꾸려면 <code>name = name.toUpperCase()</code>로 <b>재할당</b>(화살표를 KIM 셀로 옮김, ①처럼). 문자열도 불변.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true } }, note: 'name은 값 메모리의 <b>"kim"</b>을 가리킨다.', engine: '문자열은 힙의 <b>불변 객체</b>, name 슬롯은 포인터. 리터럴이라 인터닝될 수 있다.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true }, v2: { label: '"KIM"', prim: true, faded: true } }, note: '.toUpperCase()는 <b>새 값 "KIM"</b>을 만든다(v2) — 하지만 <b>어디에도 안 담아</b> 아무도 안 가리킨다(회색). 원본 "kim"은 <b>제자리에서 안 바뀐다</b>. name의 화살표도 그대로.', engine: '문자열은 불변이라 대문자화는 원본을 못 고친다 — <b>새 힙 문자열 "KIM"</b>을 할당해 반환. 안 담으면 참조 0 → GC 대상. name 포인터는 불변.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'name', ref: 'v1' }] }], heap: { v1: { label: '"kim"', prim: true } }, note: '그래서 name은 <b>여전히 "kim"</b>. 진짜 바꾸려면 <code>name = name.toUpperCase()</code>로 <b>재할당</b>(화살표를 KIM 셀로 옮김, ①처럼). 문자열도 불변.', engine: '재할당해야 name 슬롯 포인터가 "KIM" 힙 객체로 <b>재연결</b>된다. 이어붙이기·대문자화 등 문자열 연산은 늘 새 객체를 만든다(원본 불변).' },
     ],
   }
   const SCENARIO_IMM_BOOL = {
     title: '③ 참거짓 · 뒤집기도 재할당 — on = !on',
     code: ['let on = true', 'on = !on   // 뒤집기 = 새 값을 가리키기'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v1' }] }], heap: { v1: { label: 'true', prim: true } }, note: 'on은 값 메모리의 <b>true</b>를 가리킨다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v2' }] }], heap: { v1: { label: 'true', prim: true, faded: true }, v2: { label: 'false', prim: true } }, note: '!on은 <b>새 값 false</b>를 만들고 on의 <b>화살표가 그리로 옮겨간다</b>(재할당). true는 그대로(불변). <b>뒤집기도 결국 "다른 값 가리키기"</b> — 참거짓도 불변.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v1' }] }], heap: { v1: { label: 'true', prim: true } }, note: 'on은 값 메모리의 <b>true</b>를 가리킨다.', engine: 'true는 힙에 <b>단 하나뿐인 싱글턴(oddball)</b> — on 슬롯은 그 하나를 가리킨다(값처럼 슬롯에 태그로 표현되기도).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'on', ref: 'v2' }] }], heap: { v1: { label: 'true', prim: true, faded: true }, v2: { label: 'false', prim: true } }, note: '!on은 <b>새 값 false</b>를 만들고 on의 <b>화살표가 그리로 옮겨간다</b>(재할당). true는 그대로(불변). <b>뒤집기도 결국 "다른 값 가리키기"</b> — 참거짓도 불변.', engine: 'false도 힙의 <b>또 다른 싱글턴 하나</b> — on 슬롯을 true 싱글턴에서 <b>false 싱글턴으로 재연결</b>. 새 불리언을 만드는 게 아니라 이미 있는 하나를 가리킬 뿐(회색 true는 그대로 존재).' },
     ],
   }
   // 묶음이면 다 참조 — object/array 말고 Date·class 인스턴스도 힙에, 슬롯엔 주소, 복사하면 별칭.
@@ -716,16 +730,16 @@
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'today', ref: 'h1' }] }],
         heap: { h1: { label: '📅 Date { 2026, 8, 13, … }' } },
-        note: 'new Date()도 <b>연·월·일·시를 하나로 묶은 객체</b> → 힙에 만들어진다. today는 <b>주소만</b> 가진다({ } 안이 아니라 힙을 가리킴).' },
+        note: 'new Date()도 <b>연·월·일·시를 하나로 묶은 객체</b> → 힙에 만들어진다. today는 <b>주소만</b> 가진다({ } 안이 아니라 힙을 가리킴).', engine: 'Date 인스턴스 = 힙 할당(내부에 타임스탬프 숫자를 품은 객체). today 슬롯엔 포인터. 원시값이 아니라 객체라 힙으로.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'today', ref: 'h1' }, { name: 'link', ref: 'h2' }] }],
         heap: { h1: { label: '📅 Date { … }' }, h2: { person: '🦸', name: '링크', fields: [{ key: 'hp', value: '100' }] } },
-        note: 'class Hero는 <b>설계도(틀)</b>일 뿐. <code>new Hero("링크")</code>로 <b>찍어낸 인스턴스</b>가 진짜 객체 → 힙에. link는 주소만. (클래스는 뒤에서 자세히 — 여기선 "new로 만든 것도 묶음이라 힙"만 기억)' },
+        note: 'class Hero는 <b>설계도(틀)</b>일 뿐. <code>new Hero("링크")</code>로 <b>찍어낸 인스턴스</b>가 진짜 객체 → 힙에. link는 주소만. (클래스는 뒤에서 자세히 — 여기선 "new로 만든 것도 묶음이라 힙"만 기억)', engine: 'new Hero(...) = 힙에 인스턴스 할당 + hidden class(name·hp 배치). 같은 클래스 인스턴스들은 <b>같은 hidden class</b>를 공유해 필드 접근이 빠르다.' },
       { line: 3, stack: [{ name: 'main', slots: [{ name: 'today', ref: 'h1' }, { name: 'link', ref: 'h2' }, { name: 'p2', ref: 'h2' }] }],
         heap: { h1: { label: '📅 Date { … }' }, h2: { person: '🦸', name: '링크', fields: [{ key: 'hp', value: '100' }] } },
-        note: 'p2 = link → <b>주소만 복사</b>. link와 p2가 <b>같은 히어로</b>를 가리킨다(별칭). 화살표 둘이 한 박스로 모인다.' },
+        note: 'p2 = link → <b>주소만 복사</b>. link와 p2가 <b>같은 히어로</b>를 가리킨다(별칭). 화살표 둘이 한 박스로 모인다.', engine: '포인터만 복사 — 새 인스턴스 할당 없음. link·p2 두 슬롯이 같은 힙 주소를 담는다(SMI 값복사와 대조).' },
       { line: 4, stack: [{ name: 'main', slots: [{ name: 'today', ref: 'h1' }, { name: 'link', ref: 'h2' }, { name: 'p2', ref: 'h2' }] }],
         heap: { h1: { label: '📅 Date { … }' }, h2: { person: '🦸', name: '링크', fields: [{ key: 'hp', value: '50' }] } },
-        note: 'p2.hp = 50 → 같은 박스라 <b>link.hp도 50</b>. 숫자·문자열이면 복사였지만, 이건 <b>묶음(객체)</b>이라 공유. Date·배열·클래스… <b>묶음이면 전부 참조</b>, 같은 규칙이 그대로 적용된다.' },
+        note: 'p2.hp = 50 → 같은 박스라 <b>link.hp도 50</b>. 숫자·문자열이면 복사였지만, 이건 <b>묶음(객체)</b>이라 공유. Date·배열·클래스… <b>묶음이면 전부 참조</b>, 같은 규칙이 그대로 적용된다.', engine: '힙 인스턴스의 hp 필드를 제자리 뮤테이션(50도 SMI라 필드에 인라인). 슬롯 포인터는 불변이라 link·p2 어느 이름으로 봐도 같은 박스의 50.' },
     ],
   }
   // ── M4-1 · 값 = 복사 (이름표 착각 정면돌파) ──────────────────
@@ -836,10 +850,10 @@
       stackLabel: '📇 이름표 장부 (변수)', heapLabel: '🗄️ 값 메모리',
       code: ['let a = { num: 10 }', 'let shared = a       // 객체째 → 주소 복사(공유)', 'let copied = a.num   // 그 안 숫자를 꺼냄 → 값 복사', 'copied = 20          // copied만 바뀜'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: 'a는 객체를 가리킨다(장부 칸엔 주소).' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let shared = a</code> → <b>주소를 복사</b> → shared·a가 <b>같은 객체</b>를 가리킨다(별칭·공유).' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '10' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let copied = a.num</code> → 객체 안에서 <b>숫자 10을 꺼내 복사</b>. copied는 힙과 <b>무관한 독립 슬롯</b>(자기 10 셀을 가리킴).', engine: 'a.num의 10을 copied 슬롯으로 <b>비트 복사</b>. 작은 정수는 슬롯에 <b>인라인</b>(SMI 태깅) — 힙 참조 아님.' },
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', value: '20', bad: true }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>copied = 20</code> → copied만 20. <b>숫자는 불변</b> — 10이 20으로 <b>변신한 게 아니라</b>, copied가 <b>담은 값이 10에서 20으로 교체</b>(재할당). <b>a.num은 그대로 10!</b> (꺼낼 때 복사됐으니 무관.) ↔ 반대로 <code>shared.num = 99</code> 했다면 <b>a.num도 99</b>(같은 객체 공유). <b>객체째 = 공유, 속성 꺼내기 = 복사.</b>', engine: '원시값은 <b>불변</b>. copied 슬롯의 비트를 <b>10→20으로 제자리 덮어쓰기</b>(새 셀 할당 없음). copied의 옛 10은 아무도 안 가리켜 사라진다 — <b>살아남는 10은 a.num의 별개 복사본</b>뿐.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: 'a는 객체를 가리킨다(장부 칸엔 주소).', engine: '객체 = 힙 할당 + hidden class. a 슬롯엔 포인터. 필드 num: 10은 SMI라 필드에 인라인.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] } }, note: '<code>let shared = a</code> → <b>주소를 복사</b> → shared·a가 <b>같은 객체</b>를 가리킨다(별칭·공유).', engine: '포인터만 복사 — 새 객체 없음. 두 슬롯이 같은 힙 주소를 담는다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', ref: 'cp10' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] }, cp10: { label: '10', prim: true } }, note: '<code>let copied = a.num</code> → 객체 안에서 <b>숫자 10을 꺼내 복사</b>. copied는 힙 객체(h1)와 <b>무관한 독립 슬롯</b>(자기 10 셀을 가리킴).', engine: 'a.num의 10을 copied 슬롯으로 <b>비트 복사</b>. 작은 정수는 슬롯에 <b>인라인</b>(SMI 태깅) — h1을 가리키는 참조가 아니다.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'shared', ref: 'h1' }, { name: 'copied', ref: 'cp20' }] }], heap: { h1: { fields: [{ key: 'num', value: '10' }] }, cp10: { label: '10', prim: true, faded: true }, cp20: { label: '20', prim: true, bad: true } }, note: '<code>copied = 20</code> → <b>숫자는 불변</b>. 10이 20으로 변신한 게 아니라 copied의 <b>화살표가 새 20 셀로 이동</b>, 옛 10은 버려진다(흐림). <b>a.num은 그대로 10!</b> (꺼낼 때 복사됐으니 무관.) ↔ 반대로 <code>shared.num = 99</code> 했다면 <b>a.num도 99</b>(같은 객체 공유). <b>객체째 = 공유, 속성 꺼내기 = 복사.</b>', engine: '실제 V8: 20도 SMI라 copied 슬롯 비트를 <b>10→20 제자리 덮어씀</b>(새 셀 없음). h1.num 필드는 손도 안 댐 — <b>살아남는 10은 a.num의 별개 복사본</b>. 화살표 이동은 개념 그림.' },
       ],
     }))
     root.querySelector('[data-m="extract-run"]').append(Runner({
@@ -993,10 +1007,10 @@
     title: '객체를 함수에 넘기면 → 원본이 바뀐다',
     code: ['let hero = { name: "용사", level: 1 }', 'function levelUp(user) {', '  user.level = user.level + 1', '}', 'levelUp(hero)'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '1' }] } }, note: 'hero 객체가 힙에. hero 슬롯은 <b>주소</b>만.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }, { name: 'levelUp', slots: [{ name: 'user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '1' }] } }, note: 'levelUp(hero) 호출 → user에 hero의 <b>주소를 복사</b>. user와 hero는 <b>같은 객체</b>(별칭)! (복사본 아님)' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }, { name: 'levelUp', slots: [{ name: 'user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '2' }] } }, note: 'user.level을 올리면 → 같은 객체라 <b>hero.level도 2</b>. 함수 안 변경이 원본에 뚫고 나간다.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '2' }] } }, note: 'levelUp 끝. 그래도 <b>hero.level은 2로 바뀐 채</b>. 객체는 주소로 전달돼 원본이 바뀐다. (M5의 원시값과 정반대!)' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '1' }] } }, note: 'hero 객체가 힙에. hero 슬롯은 <b>주소</b>만.', engine: 'hero = 힙 할당 + hidden class(name·level). level: 1은 SMI라 필드에 인라인.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }, { name: 'levelUp', slots: [{ name: 'user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '1' }] } }, note: 'levelUp(hero) 호출 → user에 hero의 <b>주소를 복사</b>. user와 hero는 <b>같은 객체</b>(별칭)! (복사본 아님)', engine: '새 프레임 push, 인자 값복사 — 다만 넘어온 값이 <b>객체 주소(포인터)</b>라 user 슬롯에 그 주소가 복사된다(객체 자체는 복사 안 됨).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }, { name: 'levelUp', slots: [{ name: 'user', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '2' }] } }, note: 'user.level을 올리면 → 같은 객체라 <b>hero.level도 2</b>. 함수 안 변경이 원본에 뚫고 나간다.', engine: 'user 포인터가 가리키는 힙 박스의 level 필드를 제자리 뮤테이션. hero도 같은 주소라 함께 2로 보인다.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'hero', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"용사"' }, { key: 'level', value: '2' }] } }, note: 'levelUp 끝. 그래도 <b>hero.level은 2로 바뀐 채</b>. 객체는 주소로 전달돼 원본이 바뀐다. (M5의 원시값과 정반대!)', engine: 'levelUp 프레임 pop = user 슬롯 회수. 힙 객체는 hero가 여전히 가리켜 <b>도달 가능 → 생존</b>(GC 안 함). 변경은 이미 힙에 남았다.' },
     ],
   }
   window.Lessons['passobj'] = function render(root) {
@@ -1061,10 +1075,10 @@ let strong = levelUpSafe(hero)       // hero는 그대로, strong만 레벨업</
     title: '배열을 함수에 넘기면 → 원본이 늘어난다',
     code: ['let cart = ["우유"]', 'function addItem(list, item) {', '  list.push(item)', '}', 'addItem(cart, "빵")'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }], heap: { h1: { label: '["우유"]' } }, note: 'cart 배열이 힙에. cart 슬롯은 주소만.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }, { name: 'addItem', slots: [{ name: 'list', ref: 'h1' }, { name: 'item', value: '"빵"' }] }], heap: { h1: { label: '["우유"]' } }, note: 'addItem 호출 → list에 cart의 <b>주소를 복사</b>. list와 cart는 <b>같은 배열</b>!' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }, { name: 'addItem', slots: [{ name: 'list', ref: 'h1' }, { name: 'item', value: '"빵"' }] }], heap: { h1: { label: '["우유", "빵"]' } }, note: 'list.push("빵") → 같은 배열이라 <b>cart도 ["우유","빵"]</b>으로 늘어난다.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }], heap: { h1: { label: '["우유", "빵"]' } }, note: 'addItem 끝. cart는 이제 <b>2칸</b>. 배열도 객체라 주소로 전달 = 원본 바뀜.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }], heap: { h1: { label: '["우유"]' } }, note: 'cart 배열이 힙에. cart 슬롯은 주소만.', engine: '배열 = 힙 할당 + <b>elements backing store</b>(원소가 연속). cart 슬롯엔 포인터.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }, { name: 'addItem', slots: [{ name: 'list', ref: 'h1' }, { name: 'item', value: '"빵"' }] }], heap: { h1: { label: '["우유"]' } }, note: 'addItem 호출 → list에 cart의 <b>주소를 복사</b>. list와 cart는 <b>같은 배열</b>!', engine: '새 프레임 push. list엔 배열 <b>주소(포인터) 복사</b>, item("빵")은 문자열 포인터 복사. 배열 실체는 하나.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }, { name: 'addItem', slots: [{ name: 'list', ref: 'h1' }, { name: 'item', value: '"빵"' }] }], heap: { h1: { label: '["우유", "빵"]' } }, note: 'list.push("빵") → 같은 배열이라 <b>cart도 ["우유","빵"]</b>으로 늘어난다.', engine: 'push = backing store를 제자리 뮤테이션(꽉 차면 더 큰 store로 재할당·복사하고 포인터 갱신). 같은 배열 객체라 cart로 봐도 늘어난다.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'cart', ref: 'h1' }] }], heap: { h1: { label: '["우유", "빵"]' } }, note: 'addItem 끝. cart는 이제 <b>2칸</b>. 배열도 객체라 주소로 전달 = 원본 바뀜.', engine: 'addItem 프레임 pop = list·item 슬롯 회수. 배열은 cart가 가리켜 생존, 변경은 힙에 남는다.' },
     ],
   }
   window.Lessons['passarr'] = function render(root) {
@@ -1137,7 +1151,8 @@ arr.concat([9])         // 이어붙인 새 배열
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'me', ref: 'h1' }] }],
         heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h2' }] }, h2: { person: '👨', name: '아빠', fields: [] } },
-        note: '스택엔 <b>me 하나</b>. 아빠 객체는 <b>me.parent로만</b> 닿는다(독립 변수 없음) → 아빠로 향한 화살표 <b>1개</b>.' },
+        note: '스택엔 <b>me 하나</b>. 아빠 객체는 <b>me.parent로만</b> 닿는다(독립 변수 없음) → 아빠로 향한 화살표 <b>1개</b>.',
+        engine: '중첩 리터럴도 <b>안쪽 객체(아빠)부터 힙 할당</b>하고 그 포인터를 me.parent 필드에 넣는다. 힙 박스는 둘, 스택 슬롯은 me 하나.' },
     ],
   }
   const SCENARIO_SAME_BC = {
@@ -1145,10 +1160,12 @@ arr.concat([9])         // 이어붙인 새 배열
     code: ['let parent = { name: "아빠" }', 'let me = { name: "나", parent: parent }'],
     steps: [
       { line: 0, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }] }],
-        heap: { h2: { person: '👨', name: '아빠', fields: [] } }, note: '아빠 객체 + 그걸 가리키는 <b>독립 변수 parent</b>.' },
+        heap: { h2: { person: '👨', name: '아빠', fields: [] } }, note: '아빠 객체 + 그걸 가리키는 <b>독립 변수 parent</b>.',
+        engine: '아빠 = 힙 할당. parent 슬롯엔 그 포인터.' },
       { line: 1, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }],
         heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h2' }] }, h2: { person: '👨', name: '아빠', fields: [] } },
-        note: 'me.parent가 <b>같은 아빠</b>를 가리킨다 → 아빠로 향한 화살표 <b>2개</b>(parent·me.parent). <b>힙 그래프는 A와 똑같다!</b> 차이는 parent 변수뿐.' },
+        note: 'me.parent가 <b>같은 아빠</b>를 가리킨다 → 아빠로 향한 화살표 <b>2개</b>(parent·me.parent). <b>힙 그래프는 A와 똑같다!</b> 차이는 parent 변수뿐.',
+        engine: 'me.parent 필드에 parent 변수가 든 <b>같은 주소를 복사</b> — 새 아빠 안 만듦. 스택 슬롯 개수만 A와 다르고 힙 그래프는 동일.' },
     ],
   }
   // 거꾸로 — 같은 코드처럼 보이는데 그림이 다르다: 공유(parent) vs 복사본({...parent}).
@@ -1157,20 +1174,20 @@ arr.concat([9])         // 이어붙인 새 배열
     title: '❗ me.parent = parent — 같은 아빠(공유)',
     code: ['let parent = { name: "아빠", age: 50 }', 'let me = { name: "나" }', 'me.parent = parent', 'parent.age = 51'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }] }], heap: { h2: dad('50') }, note: '아빠 객체 + 변수 parent.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [] }, h2: dad('50') }, note: '나 객체.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h2' }] }, h2: dad('50') }, note: 'me.parent = parent → <b>같은 아빠</b>를 가리킨다(화살표 2개).' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h2' }] }, h2: dad('51') }, note: 'parent.age=51 → <b>me.parent.age도 51</b>! 같은 객체라서.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }] }], heap: { h2: dad('50') }, note: '아빠 객체 + 변수 parent.', engine: '아빠 = 힙 할당. age: 50은 SMI라 필드에 인라인.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [] }, h2: dad('50') }, note: '나 객체.', engine: 'me = 별도 힙 할당(아빠와 다른 주소).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h2' }] }, h2: dad('50') }, note: 'me.parent = parent → <b>같은 아빠</b>를 가리킨다(화살표 2개).', engine: 'me.parent 필드에 아빠 <b>포인터 복사</b> — 복사본 안 만들고 원본 주소 공유.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h2' }] }, h2: dad('51') }, note: 'parent.age=51 → <b>me.parent.age도 51</b>! 같은 객체라서.', engine: '아빠 박스의 age 필드를 제자리 뮤테이션. parent·me.parent 두 경로가 같은 주소라 둘 다 51.' },
     ],
   }
   const SCENARIO_COPY = {
     title: '✅ me.parent = { ...parent } — 복사본(독립)',
     code: ['let parent = { name: "아빠", age: 50 }', 'let me = { name: "나" }', 'me.parent = { ...parent }', 'parent.age = 51'],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }] }], heap: { h2: dad('50') }, note: '아빠 객체 + 변수 parent.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [] }, h2: dad('50') }, note: '나 객체.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h3' }] }, h2: dad('50'), h3: dad('50') }, note: '{ ...parent }는 <b>새 복사본</b>(h3)을 만든다 → me.parent는 <b>복사본</b>을 가리킨다. 원본 h2와 <b>별개</b>!' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h3' }] }, h2: dad('51'), h3: dad('50') }, note: 'parent.age=51 → 원본만 51. <b>me.parent.age는 여전히 50</b>! 복사본이라 안 링크.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }] }], heap: { h2: dad('50') }, note: '아빠 객체 + 변수 parent.', engine: '아빠 = 힙 할당. age: 50은 SMI 인라인.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [] }, h2: dad('50') }, note: '나 객체.', engine: 'me = 별도 힙 할당.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h3' }] }, h2: dad('50'), h3: dad('50') }, note: '{ ...parent }는 <b>새 복사본</b>(h3)을 만든다 → me.parent는 <b>복사본</b>을 가리킨다. 원본 h2와 <b>별개</b>!', engine: '스프레드 {...parent} = <b>새 힙 객체 할당</b>(h3, 다른 주소)에 원본 필드를 얕게 복사. me.parent엔 h3 주소 — 포인터 공유가 아니다.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'parent', ref: 'h2' }, { name: 'me', ref: 'h1' }] }], heap: { h1: { person: '🧑', name: '나', fields: [{ key: 'parent', ref: 'h3' }] }, h2: dad('51'), h3: dad('50') }, note: 'parent.age=51 → 원본만 51. <b>me.parent.age는 여전히 50</b>! 복사본이라 안 링크.', engine: 'h2(원본)의 age만 제자리 변경. h3(복사본)은 다른 주소라 그대로 50 — 두 박스가 독립.' },
     ],
   }
   window.Lessons['graph'] = function render(root) {
@@ -1270,13 +1287,15 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'me.friends[0].mood = "😭"   // 목록 0번(효니) 기분 바꿈',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }] }], heap: { h1: friendBox('👩', '효니', '"😀"') }, note: '효니(사람)를 변수 hyoni로 가리킨다.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }] }], heap: { h1: friendBox('👩', '효니', '"😀"') }, note: '효니(사람)를 변수 hyoni로 가리킨다.', engine: '효니 = 힙 할당. hyoni 슬롯엔 포인터.' },
       { line: 2, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'me', ref: 'h2' }] }],
         heap: { h1: friendBox('👩', '효니', '"😀"'), h2: meWithFriends, ...others, h7: friendsArr },
-        note: 'me.friends는 <b>5명</b> 배열. <b>0번은 변수 hyoni</b>(같은 효니), 나머지 4명은 객체 리터럴로 바로 만든다 → 효니를 향한 화살표가 <b>둘</b>(hyoni · me.friends[0])!' },
+        note: 'me.friends는 <b>5명</b> 배열. <b>0번은 변수 hyoni</b>(같은 효니), 나머지 4명은 객체 리터럴로 바로 만든다 → 효니를 향한 화살표가 <b>둘</b>(hyoni · me.friends[0])!',
+        engine: 'friends 배열 = 힙의 elements backing store에 <b>객체 주소 5개</b>가 연속으로. 0번 칸엔 효니의 주소(변수 hyoni와 같은 값) — 나머지 4개는 새로 할당한 객체들의 주소.' },
       { line: 13, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'me', ref: 'h2' }] }],
         heap: { h1: friendBox('😭', '효니', '"😭"'), h2: meWithFriends, ...others, h7: friendsArr },
-        note: '<code>me.friends[0].mood = "😭"</code> → 목록 0번(효니)을 바꿨는데 <b>hyoni.mood도 😭</b>! 복사본이면 이럴 수 없다 → 이게 <b>참조</b>라는 증거.' },
+        note: '<code>me.friends[0].mood = "😭"</code> → 목록 0번(효니)을 바꿨는데 <b>hyoni.mood도 😭</b>! 복사본이면 이럴 수 없다 → 이게 <b>참조</b>라는 증거.',
+        engine: 'me.friends[0]으로 <b>배열 칸의 포인터를 역참조</b>해 효니 박스에 닿아 mood 필드를 제자리 변경. hyoni도 같은 주소라 함께 😭.' },
     ],
   }
   window.Lessons['friends'] = function render(root) {
@@ -1328,11 +1347,11 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'let sister = { name: "동생",   parent: dad }',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }] }], heap: { h1: P('👴', '할아버지') }, note: '할아버지 — 뿌리(root). 부모가 없다.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1') }, note: '아빠.parent = 할아버지 → 아빠에서 할아버지로 화살표.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }, { name: 'uncle', ref: 'h3' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1'), h3: P('🧔', '삼촌', 'h1') }, note: '삼촌도 parent가 할아버지 → 할아버지를 가리키는 화살표가 <b>둘</b>(아빠·삼촌).' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1'), h3: P('🧔', '삼촌', 'h1'), h4: P('🧑', '나', 'h2') }, note: '나.parent = 아빠 → 한 층 더 내려간다.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }, { name: 'sister', ref: 'h5' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1'), h3: P('🧔', '삼촌', 'h1'), h4: P('🧑', '나', 'h2'), h5: P('👧', '동생', 'h2') }, note: '<b>계통도 완성!</b> <code>me.parent</code>=아빠, <code>me.parent.parent</code>=할아버지. 나와 동생은 <b>같은 아빠</b>를 가리킨다(참조).' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }] }], heap: { h1: P('👴', '할아버지') }, note: '할아버지 — 뿌리(root). 부모가 없다.', engine: '할아버지 = 힙 할당(parent 필드 없음). grandpa 슬롯엔 포인터.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1') }, note: '아빠.parent = 할아버지 → 아빠에서 할아버지로 화살표.', engine: '아빠 = 새 힙 객체, parent 필드에 할아버지 <b>주소를 저장</b>(객체가 객체를 가리킴).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }, { name: 'uncle', ref: 'h3' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1'), h3: P('🧔', '삼촌', 'h1') }, note: '삼촌도 parent가 할아버지 → 할아버지를 가리키는 화살표가 <b>둘</b>(아빠·삼촌).', engine: '삼촌.parent에도 할아버지의 <b>같은 주소</b>를 저장 — 한 힙 객체를 여러 곳이 가리킬 수 있다.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1'), h3: P('🧔', '삼촌', 'h1'), h4: P('🧑', '나', 'h2') }, note: '나.parent = 아빠 → 한 층 더 내려간다.', engine: '나.parent엔 아빠 주소. 이제 나→아빠→할아버지 포인터 사슬이 두 칸.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'grandpa', ref: 'h1' }, { name: 'dad', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }, { name: 'sister', ref: 'h5' }] }], heap: { h1: P('👴', '할아버지'), h2: P('👨', '아빠', 'h1'), h3: P('🧔', '삼촌', 'h1'), h4: P('🧑', '나', 'h2'), h5: P('👧', '동생', 'h2') }, note: '<b>계통도 완성!</b> <code>me.parent</code>=아빠, <code>me.parent.parent</code>=할아버지. 나와 동생은 <b>같은 아빠</b>를 가리킨다(참조).', engine: '동생.parent에도 아빠 주소 — 트리는 결국 <b>힙 객체들 + 그 사이 포인터</b>. 스택 슬롯 5개, 화살표는 각 parent 포인터. 배치는 스펙 강제 아님.' },
     ],
   }
   // 계통도 + 구매 → 공유된 아빠 지갑에서 차감 = 참조 증명 (돈으로 실감나게)
@@ -1347,11 +1366,11 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'sister.parent.money = sister.parent.money - 90000  // 동생이 9만원짜리 삼',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]) }, note: '아빠 객체 — money 10만원(가족 지갑).' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]) }, note: '나.parent = 아빠.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '동생도 parent가 아빠 → 나·동생이 <b>같은 아빠 지갑</b>을 가리킨다(화살표 둘).' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '70000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '내가 <code>me.parent</code>(=아빠) 지갑에서 3만원 씀 → 아빠.money <b>70000</b>. <b>동생이 봐도 sister.parent.money는 70000</b>! 같은 아빠(객체)라서 = <b>참조 증명</b>.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '-20000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '이번엔 <b>동생</b>이 <code>sister.parent</code>(=<b>같은 아빠</b>) 지갑에서 9만원 씀. 근데 지갑은 이미 <b>70000</b>(내가 3만 씀)에서 출발 → 70000 - 90000 = <b>-20000, 펑크!</b> 내 3만 + 동생 9만 = 12만이 <b>하나의 money 셀</b>에서 빠졌다. 각자 지갑(복사)이면 10만-9만=+1만이라 절대 안 나올 결과 → 둘이 <b>한 지갑을 공유(참조)</b>한 증거. (공유는 편하지만 서로 모르고 쓰면 펑크난다.)' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]) }, note: '아빠 객체 — money 10만원(가족 지갑).', engine: '아빠 = 힙 할당. money: 100000은 SMI 범위라 필드에 인라인.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]) }, note: '나.parent = 아빠.', engine: '나.parent 필드에 아빠 <b>주소를 저장</b>(포인터 공유).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '100000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '동생도 parent가 아빠 → 나·동생이 <b>같은 아빠 지갑</b>을 가리킨다(화살표 둘).', engine: '동생.parent에도 <b>같은 아빠 주소</b> — money 필드는 힙에 <b>단 하나</b>뿐, 두 경로가 그 하나를 공유.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '70000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '내가 <code>me.parent</code>(=아빠) 지갑에서 3만원 씀 → 아빠.money <b>70000</b>. <b>동생이 봐도 sister.parent.money는 70000</b>! 같은 아빠(객체)라서 = <b>참조 증명</b>.', engine: 'me.parent 포인터를 역참조해 아빠 박스의 money 필드를 <b>제자리 변경</b>(70000도 SMI). 새 값 셀로 옮기는 원시 변수 재할당과 달리, 이건 <b>객체 필드 뮤테이션</b>이라 공유 경로 전부에 보인다.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'me', ref: 'h2' }, { name: 'sister', ref: 'h3' }] }], heap: { h1: Pm('👨', '아빠', [{ key: 'money', value: '-20000' }]), h2: Pm('🧑', '나', [{ key: 'parent', ref: 'h1' }]), h3: Pm('👧', '동생', [{ key: 'parent', ref: 'h1' }]) }, note: '이번엔 <b>동생</b>이 <code>sister.parent</code>(=<b>같은 아빠</b>) 지갑에서 9만원 씀. 근데 지갑은 이미 <b>70000</b>(내가 3만 씀)에서 출발 → 70000 - 90000 = <b>-20000, 펑크!</b> 내 3만 + 동생 9만 = 12만이 <b>하나의 money 셀</b>에서 빠졌다. 각자 지갑(복사)이면 10만-9만=+1만이라 절대 안 나올 결과 → 둘이 <b>한 지갑을 공유(참조)</b>한 증거. (공유는 편하지만 서로 모르고 쓰면 펑크난다.)', engine: 'sister.parent도 같은 아빠 주소 → 같은 money 필드를 또 제자리 변경. −20000은 여전히 SMI 범위. 두 변경이 하나의 힙 필드에 누적된 것.' },
     ],
   }
   // 대비 — 객체 속 '원시값(금액 숫자)'을 꺼내 적으면 복사(공유 안 됨). 지갑 vs 수첩에 베낀 숫자.
@@ -1363,9 +1382,9 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'myNote = myNote - 30000      // 내 수첩 숫자만 고침',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: '아빠 지갑(객체) money 10만.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', value: '100000' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: 'myNote = dad.money → 지갑 <b>금액(숫자)만 값으로 복사</b>. myNote는 <b>지갑 객체(h1)를 가리키지 않고</b> — 자기만의 <b>숫자 셀(10만)</b>을 가리킨다(그래서 지갑과 무관).' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', value: '70000', bad: true }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: '내 수첩(myNote)만 70000. <b>아빠 지갑은 그대로 10만!</b> 숫자를 베낀 것뿐이라 지갑과 무관 = <b>원시값은 복사</b>(공유 안 됨).' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] } }, note: '아빠 지갑(객체) money 10만.', engine: '아빠 = 힙 할당. money: 100000은 SMI라 필드에 인라인.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', ref: 'note100k' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] }, note100k: { label: '100000', prim: true } }, note: 'myNote = dad.money → 지갑 <b>금액(숫자)만 값으로 복사</b>. myNote는 <b>지갑 객체(h1)를 가리키지 않고</b> — 자기만의 <b>숫자 셀(10만)</b>을 가리킨다(그래서 지갑과 무관).', engine: 'dad.money 필드의 100000을 myNote 슬롯으로 <b>비트 복사</b>(SMI 인라인). h1을 가리키는 참조가 아니라 값만 베낀 것.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'myNote', ref: 'note70k' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'money', value: '100000' }] }, note100k: { label: '100000', prim: true, faded: true }, note70k: { label: '70000', prim: true, bad: true } }, note: '<code>myNote = myNote - 30000</code> → <b>숫자는 불변</b>. 10만이 7만으로 변신한 게 아니라 myNote의 <b>화살표가 새 70000 셀로 이동</b>, 옛 10만은 버려진다(흐림). <b>아빠 지갑은 그대로 10만!</b> 베낀 숫자라 지갑과 무관 = <b>원시값은 복사</b>(공유 안 됨).', engine: '실제 V8: 70000도 SMI라 myNote 슬롯 비트를 <b>제자리 덮어씀</b>(새 셀 없음). h1.money 필드는 손도 안 댐 — 화살표 이동은 개념 그림, 물리적으론 슬롯 비트 교체.' },
     ],
   }
 
@@ -1378,9 +1397,9 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'let me  = { name: "나", father: dad, mother: mom }',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] } }, note: '아빠 객체.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] } }, note: '엄마 객체도.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'me', ref: 'h3' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '<b>me 하나가 화살표 둘</b> — <code>father</code>→아빠, <code>mother</code>→엄마. 한 객체는 참조를 <b>여러 개</b> 가질 수 있다. (①에선 아빠만 <code>parent</code>로 그렸지만, 실은 부모가 둘.)' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] } }, note: '아빠 객체.', engine: '아빠 = 힙 할당. dad 슬롯엔 포인터.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] } }, note: '엄마 객체도.', engine: '엄마 = 별도 힙 할당(다른 주소).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'me', ref: 'h3' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '<b>me 하나가 화살표 둘</b> — <code>father</code>→아빠, <code>mother</code>→엄마. 한 객체는 참조를 <b>여러 개</b> 가질 수 있다. (①에선 아빠만 <code>parent</code>로 그렸지만, 실은 부모가 둘.)', engine: 'me 객체의 hidden class에 father·mother 두 필드가 배치되고 각각 아빠·엄마 <b>주소를 저장</b> — 한 힙 객체가 포인터를 여러 개 품는다.' },
     ],
   }
   // 관계는 parent만이 아니다 — 삼촌의 형의 와이프 = 엄마 = me.mother (두 경로가 한 노드에 수렴 = 별칭)
@@ -1394,11 +1413,11 @@ C) let parent = {name:"아빠"};  let me = { name:"나", parent: parent }  // �
       'dad.wife  = mom                            // 아빠의 와이프 = 엄마',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] } }, note: '아빠.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] } }, note: '엄마.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] } }, note: '삼촌의 <code>brother</code>(형) = 아빠 → 삼촌에서 아빠로 화살표.' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] }, h4: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '나 → <code>father</code>=아빠, <code>mother</code>=엄마.' },
-      { line: 4, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'wife', ref: 'h2' }] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] }, h4: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '아빠의 <code>wife</code> = 엄마. 이제 걸어 보자 — <code>uncle.brother.wife</code>: 삼촌→형(아빠)→와이프 = <b>엄마(h2)</b>. 그런데 <code>me.mother</code>도 <b>엄마(h2)</b> → <b>두 경로가 같은 상자에 수렴</b>! 문장은 달라도 메모리에선 <b>같은 객체(별칭)</b>.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] } }, note: '아빠.', engine: '아빠 = 힙 할당.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] } }, note: '엄마.', engine: '엄마 = 별도 힙 할당.' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] } }, note: '삼촌의 <code>brother</code>(형) = 아빠 → 삼촌에서 아빠로 화살표.', engine: '삼촌.brother 필드에 아빠 <b>주소를 저장</b> — parent 말고 어떤 이름의 필드든 포인터를 담을 수 있다.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] }, h4: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '나 → <code>father</code>=아빠, <code>mother</code>=엄마.', engine: 'me.father·me.mother에 각각 아빠·엄마 주소. 엄마 주소(h2)는 이제 mom 변수와 me.mother 두 곳에 들어 있다.' },
+      { line: 4, stack: [{ name: 'main', slots: [{ name: 'dad', ref: 'h1' }, { name: 'mom', ref: 'h2' }, { name: 'uncle', ref: 'h3' }, { name: 'me', ref: 'h4' }] }], heap: { h1: { person: '👨', name: '아빠', fields: [{ key: 'wife', ref: 'h2' }] }, h2: { person: '👩', name: '엄마', fields: [] }, h3: { person: '🧔', name: '삼촌', fields: [{ key: 'brother', ref: 'h1' }] }, h4: { person: '🧑', name: '나', fields: [{ key: 'father', ref: 'h1' }, { key: 'mother', ref: 'h2' }] } }, note: '아빠의 <code>wife</code> = 엄마. 이제 걸어 보자 — <code>uncle.brother.wife</code>: 삼촌→형(아빠)→와이프 = <b>엄마(h2)</b>. 그런데 <code>me.mother</code>도 <b>엄마(h2)</b> → <b>두 경로가 같은 상자에 수렴</b>! 문장은 달라도 메모리에선 <b>같은 객체(별칭)</b>.', engine: 'dad.wife에 엄마 주소를 추가(hidden class에 새 필드 → 다른 shape로 전이). 서로 다른 포인터 경로가 <b>같은 힙 주소(h2)</b>로 끝나면 그게 별칭 — 주소가 같은지로 판별.' },
     ],
   }
 
@@ -1528,10 +1547,10 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
       'jimin.bestFriend = hyoni   // 지민의 베프 = 효니 (서로!)',
     ],
     steps: [
-      { line: 0, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }] }], heap: { h1: { person: '👩', name: '효니', fields: [] } }, note: '효니 객체.' },
-      { line: 1, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'jimin', ref: 'h2' }] }], heap: { h1: { person: '👩', name: '효니', fields: [] }, h2: { person: '🧑', name: '지민', fields: [] } }, note: '지민 객체. 아직 서로 모른다.' },
-      { line: 2, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'jimin', ref: 'h2' }] }], heap: { h1: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h2' }] }, h2: { person: '🧑', name: '지민', fields: [] } }, note: '효니.bestFriend = 지민 → 효니에서 지민으로 화살표.' },
-      { line: 3, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'jimin', ref: 'h2' }] }], heap: { h1: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h2' }] }, h2: { person: '🧑', name: '지민', fields: [{ key: 'bestFriend', ref: 'h1' }] } }, note: '지민.bestFriend = 효니 → <b>서로 가리킨다 = 순환(cycle)!</b> <code>hyoni.bestFriend.bestFriend</code>는 돌고 돌아 다시 <b>효니 자신</b>.' },
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }] }], heap: { h1: { person: '👩', name: '효니', fields: [] } }, note: '효니 객체.', engine: '효니 = 힙 할당. hyoni 슬롯엔 포인터.' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'jimin', ref: 'h2' }] }], heap: { h1: { person: '👩', name: '효니', fields: [] }, h2: { person: '🧑', name: '지민', fields: [] } }, note: '지민 객체. 아직 서로 모른다.', engine: '지민 = 별도 힙 할당(다른 주소).' },
+      { line: 2, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'jimin', ref: 'h2' }] }], heap: { h1: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h2' }] }, h2: { person: '🧑', name: '지민', fields: [] } }, note: '효니.bestFriend = 지민 → 효니에서 지민으로 화살표.', engine: '효니.bestFriend 필드에 지민 <b>주소를 저장</b>(한 방향 포인터).' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'jimin', ref: 'h2' }] }], heap: { h1: { person: '👩', name: '효니', fields: [{ key: 'bestFriend', ref: 'h2' }] }, h2: { person: '🧑', name: '지민', fields: [{ key: 'bestFriend', ref: 'h1' }] } }, note: '지민.bestFriend = 효니 → <b>서로 가리킨다 = 순환(cycle)!</b> <code>hyoni.bestFriend.bestFriend</code>는 돌고 돌아 다시 <b>효니 자신</b>.', engine: '지민.bestFriend에 효니 주소 → 힙에 <b>포인터 고리</b>. 둘 다 서로 도달 가능해 GC가 <b>참조 세기</b>만으론 못 치운다(요즘 엔진은 <b>mark-and-sweep</b>: 루트에서 도달 불가한지로 판단). 스택 변수만 끊기면 고리째 회수 가능.' },
     ],
   }
   window.Lessons['cycle'] = function render(root) {
