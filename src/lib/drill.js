@@ -16,6 +16,13 @@
     return String(v)
   }
   const normalize = (s) => s.split('\n').map((l) => l.trim()).join('\n').trim()
+  // 예측 드릴은 '값(리터럴)'을 넣어야 한다 — 변수/식을 그대로 넣어 자기비교(a === a)로
+  // trivially true 되는 치트를 막는다. 숫자·문자열·참거짓/null/undefined/NaN만 허용.
+  const isLiteral = (v) => {
+    v = String(v).trim()
+    return /^-?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(v) || /^"[^"]*"$/.test(v) || /^'[^']*'$/.test(v) ||
+      /^(true|false|null|undefined|NaN|Infinity|-Infinity)$/.test(v)
+  }
 
   function runFilled(code, filled) {
     const out = []
@@ -42,6 +49,8 @@
     const codeLine = document.createElement('div')
     codeLine.className = 'drill-code'
     const [before, after] = p.code.split(BLANK)
+    // 무따옴표 '=== ____'(값 예측) 자리인가 — 그렇다면 입력은 리터럴이어야(변수/식 자기참조 치트 차단).
+    const cmpBlank = /===?\s*$/.test(before) && !(/["']$/.test(before) && /^["']/.test(after))
     const preSpan = document.createElement('span'); preSpan.className = 'drill-pre'; preSpan.textContent = before
     const input = document.createElement('input')
     input.className = 'drill-input'
@@ -92,6 +101,12 @@
         feedback.className = 'drill-feedback bad'
         feedback.textContent = '⚠️ 에러: ' + error
         input.classList.add('bad')
+      } else if (cmpBlank && !isLiteral(input.value)) {
+        // 출력은 true지만 '변수/식'을 넣어 자기 자신과 비교한 치트 — 값(리터럴)을 예측하게.
+        feedback.className = 'drill-feedback bad'
+        feedback.textContent = '❌ 변수·식 말고 예측한 값(리터럴)을 넣어요 — 예: 5, "민지", true. 이름을 그대로 넣으면 자기 자신과 비교라 늘 true예요.'
+        input.classList.add('bad')
+        card.classList.remove('solved')
       } else if (normalize(got) === normalize(p.expect)) {
         feedback.className = 'drill-feedback ok'
         feedback.textContent = '✅ 정답! 출력 → ' + got.replace(/\n/g, ' / ')
