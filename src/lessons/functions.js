@@ -86,10 +86,14 @@
 
       <h3 class="section-title">③ 그래서 함수를 쓰는 이유 — 하나가 아니다</h3>
       <ul class="section-list">
-        <li><b>반복 제거(DRY)</b> — 같은 코드를 한 번만 쓴다.</li>
-        <li><b>이름으로 의도</b> — <code>withTax(...)</code>라고 쓰면 <b>뭘 하는지</b> 한눈에(주석보다 낫다).</li>
-        <li><b>수정은 한 곳만</b> — 세율이 바뀌어도 함수 안 한 줄만 고치면 전부 반영.</li>
-        <li><b>조립</b> — 만든 상자를 다른 계산의 <b>부품</b>으로 끼운다(3강 표현식의 그 중첩).</li>
+        <li><b>반복 제거(DRY)</b> — 같은 코드를 한 번만 쓴다.
+          <span style="display:block;color:var(--muted);font-size:12.5px;margin-top:2px">예: <code>a * 1.1</code>, <code>b * 1.1</code>, <code>c * 1.1</code>를 세 번 쓰는 대신 → <code>withTax(a)</code>, <code>withTax(b)</code>, <code>withTax(c)</code>. <b>계산식은 함수 안에 딱 한 번</b>만 산다.</span></li>
+        <li><b>이름으로 의도</b> — <code>withTax(...)</code>라고 쓰면 <b>뭘 하는지</b> 한눈에(주석보다 낫다).
+          <span style="display:block;color:var(--muted);font-size:12.5px;margin-top:2px">예: <code>price * 1.1</code>은 "1.1이 뭐지?" 싶지만, <code>withTax(price)</code>는 읽는 순간 "아, 세금 붙이는구나". <b>이름이 곧 설명</b> — 주석은 코드가 바뀌면 낡지만, 이름은 호출할 때마다 읽힌다.</span></li>
+        <li><b>수정은 한 곳만</b> — 세율이 바뀌어도 함수 안 한 줄만 고치면 전부 반영.
+          <span style="display:block;color:var(--muted);font-size:12.5px;margin-top:2px">예: 세율이 10%→13%로 바뀌면 — 함수가 없으면 코드에 흩어진 <code>* 1.1</code>을 <b>전부 찾아</b> 고쳐야 한다(하나라도 놓치면 버그). 함수면 <code>withTax</code> 안의 <code>1.1</code>을 <code>1.13</code>으로 <b>한 줄</b>만 → 모든 호출에 한꺼번에 반영.</span></li>
+        <li><b>조립</b> — 만든 상자를 다른 계산의 <b>부품</b>으로 끼운다(3강 표현식의 그 중첩).
+          <span style="display:block;color:var(--muted);font-size:12.5px;margin-top:2px">예: <code>Math.round(withTax(price))</code> — withTax가 돌려준 값을 그대로 <code>Math.round</code>의 입력으로 끼운다. <code>withTax(withDiscount(price))</code>처럼 <b>함수를 함수 안에</b> — 식이 중첩되듯(3강) 상자를 상자에 꽂는다.</span></li>
       </ul>
       <p class="section-desc">👉 <b>"같은 코드를 두 번 이상 쓰게 되면 함수를 생각하라."</b> 이 감각이 이 강의 전체의 목적이다. 이제 상자 만드는 법(5-2)으로.</p>
 
