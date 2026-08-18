@@ -18,7 +18,7 @@
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p><code>for</code>·<code>forEach</code>로 훑고, <code>map</code>으로 <b>변환(새 배열)</b>, <code>filter</code>로 <b>거르고</b>, <code>reduce</code>로 <b>하나로 합친다</b>.
-        <b>map·filter는 원본을 안 바꾸고 새 배열</b>을 만든다(6강 참조 · 원본 보호). 콜백(함수를 인자로 넘김)은 <b>5강 함수</b>가 바탕.</p>
+        <b>map·filter는 원본을 안 바꾸고 새 배열</b>을 만든다(6강 참조 · 원본 보호). 콜백(함수를 인자로 넘김)은 <b>5강 함수</b>가 바탕 — JS에선 <b>함수도 값</b>이라 변수에 담고 인자로 넘길 수 있다(정식 용어: <b>일급 함수</b>). 그런 함수를 받아 쓰는 map·filter 같은 걸 <b>고차 함수</b>라 한다.</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/반복문" target="_blank" rel="noopener noreferrer">반복문 ↗</a> · <a href="https://ko.wikipedia.org/wiki/고차_함수" target="_blank" rel="noopener noreferrer">고차 함수(map·filter·reduce) ↗</a></p>
       </div>
 

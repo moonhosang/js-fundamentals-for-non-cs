@@ -504,6 +504,16 @@
         <li>복잡한 한 줄을 <b>부품으로 쪼갤</b> 때 (3강 표현식 · 조립).</li>
       </ul>
 
+      <h3 class="section-title">③ 좋은 상자의 감각 — '순수 함수'</h3>
+      <span class="learn-tag">📎 순수 함수 = ① 입력만 보고(밖의 값 안 훔쳐봄) ② 값만 돌려줌(밖을 안 건드림 · 부수효과 없음)</span>
+      <p class="section-desc"><code>function withTax(p){ return p * 1.1 }</code>는 <b>순수 함수</b>다 — 들어온 값(<code>p</code>)만 보고, 결과만 돌려주고, 밖의 무엇도 안 바꾼다. 그래서:</p>
+      <ul class="section-list">
+        <li><b>예측 가능</b> — 같은 입력이면 <b>언제 어디서 불러도 같은 출력</b>. <code>withTax(100)</code>은 늘 <code>110</code>. (정식 용어: <b>참조 투명성</b>)</li>
+        <li><b>안전 · 조립 쉬움</b> — 밖을 안 건드리니 원본이 안 상하고(🧠 M5), 다른 계산의 <b>부품</b>으로 마음껏 끼운다(<code>Math.round(withTax(p))</code>).</li>
+        <li><b>테스트 쉬움</b> — 입력만 넣어 보면 되니 검증이 간단.</li>
+      </ul>
+      <p class="section-desc" style="opacity:.85">↔ 반대로 <b>화면에 찍거나</b>(<code>print</code>), <b>전역을 바꾸거나</b>, <b>넘겨받은 객체를 수정하는</b>(🧠 M6) 함수는 <b>부수효과(side effect)</b>가 있어 <b>비순수</b>하다. 부수효과가 나쁜 건 아니다 — 출력·저장은 결국 필요하니까. 다만 <b>순수한 계산과 부수효과를 섞지 말고 나눠 두면</b> 예측·수정이 쉬워진다.</p>
+
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0"><b>함수 = 입력→처리→출력 상자</b>(반복 제거·이름·수정 한 곳·조립). <code>function 이름(매개변수){ return 값 }</code> 정의, <code>이름(인수)</code> 호출.
