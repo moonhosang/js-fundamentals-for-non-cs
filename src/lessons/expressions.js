@@ -83,6 +83,7 @@
       <h3 class="section-title">① 현실 감각 — '답이 돌아오나?' vs '그냥 시키나?'</h3>
       <p class="section-desc"><b>표현식</b>은 <b>질문</b> 같다 — 물으면 <b>답(값)이 돌아온다</b>. "3 더하기 4는?" → <b>7</b>. "10이 3보다 큰가?" → <b>true</b>.
       <b>문</b>은 <b>명령</b> 같다 — 시키면 <b>동작</b>은 하지만, <b>손에 쥐여주는 값은 없다</b>: "x 상자에 5를 넣어라"(<code>let x = 5</code>), "점수가 높으면 이걸 해라"(<code>if</code>).</p>
+      <p class="section-desc" style="opacity:.82;margin-top:10px">📎 <b>정식 용어(한 걸음 더)</b> — 식은 <b>평가(evaluate)</b>돼 <b>값</b>이 되고(숫자·문자·참거짓·객체 등 <b>아무 타입</b> — boolean만이 아니다), 문은 <b>실행(execute)</b>돼 <b>동작</b>한다. 식이 낳은 값이 <code>if</code>의 <b>조건 자리</b>에 오면 참/거짓으로 읽혀 분기를 <b>실행</b>한다(그 판정 규칙은 → <button class="inline-goto" data-goto="4">4강 · 조건문</button>).</p>
       <div class="card">
         <div class="file-label">🔬 판별법 — print() 안에 넣어 보라. '값'이면 들어간다</div>
         <div data-m="e1-run"></div>
