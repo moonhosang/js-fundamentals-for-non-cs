@@ -6,8 +6,9 @@
   window.Lessons = window.Lessons || {}
 
   const wireCTA = (root) => {
-    const cta = root.querySelector('[data-goto]')
-    if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(/^\d+$/.test(t) ? Number(t) : t) : (location.hash = '#' + t) }
+    root.querySelectorAll('[data-goto]').forEach((cta) => {
+      cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(/^\d+$/.test(t) ? Number(t) : t) : (location.hash = '#' + t) }
+    })
   }
 
   // ══ M1 · 메모리(Memory)란 — 주로 RAM ═══════════════════════
@@ -830,6 +831,8 @@
         <p class="section-desc" style="margin-top:0">원시값을 담으면 <b>복사</b> — 변수든 속성이든, 객체가 껴도, 꺼낸 게 원시값이면 <b>독립</b>. 다음은 정반대 이야기: <b>객체째 담으면 공유(별칭)</b>.</p>
       </div>
 
+      <p class="section-desc" style="opacity:.85;margin:10px 0 0">📎 <b>한 걸음 더 — 대입(<code>=</code>)만이 아니다</b>: 함수에 <b>넘길 때도</b> 똑같이 값이 복사된다. <code>tear(money)</code>에서 매개변수에 담기는 건 <code>let bill = money</code>와 <b>같은 연산(바인딩)</b> — JS는 늘 <b>값을 복사</b>한다(정식 용어: <b>call-by-value</b>). 그래서 함수 안에서 아무리 바꿔도 원본이 안전하다. 곧 <button class="inline-goto" data-goto="passval">🧠 M5 · 값에 의한 전달</button>에서 눈으로 본다.</p>
+
       <div class="practice-cta">
         <span>그럼 객체째 담으면? — 정반대 이야기 —</span>
         <button class="chip on" data-goto="ref2">🧠 M4-2 · 참조 = 공유 →</button>
@@ -953,6 +956,8 @@
         <p class="section-desc" style="margin-top:0">슬롯에 <b>숫자가 들면 복사</b>(독립·M4-1), <b>객체 주소가 들면 공유</b>(별칭·M4-2). <b>변수든 객체 속성이든 똑같다.</b>
         "객체가 끼면 무조건 공유"는 착각 — 대입되는 값의 종류로 갈린다.</p>
       </div>
+
+      <p class="section-desc" style="opacity:.85;margin:10px 0 0">📎 <b>한 걸음 더 — 대입(<code>=</code>)만이 아니다</b>: 객체를 함수에 <b>넘길 때도</b> 똑같이 <b>주소(참조)가 복사</b>돼 <b>공유</b>된다. <code>f(obj)</code>에서 매개변수에 담기는 건 <code>let p = obj</code>와 <b>같은 연산(바인딩)</b> — 그래서 함수 안에서 그 속성을 바꾸면 <b>원본도 바뀐다</b>. (JS는 늘 <b>call-by-value</b>인데, 객체에선 그 '값'이 <b>주소</b>라 결과적으로 공유 — 이걸 <b>call-by-sharing</b>이라고도 부른다.) 곧 <button class="inline-goto" data-goto="passobj">🧠 M6 · 참조에 의한 전달</button>에서 눈으로.</p>
 
       <div class="practice-cta">
         <span>그럼 함수에 '넘길' 때는? — 다음 —</span>
