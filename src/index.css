@@ -1613,11 +1613,10 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
 .bt-part:not(.collapsed) .bt-chev { transform: rotate(90deg); }
 .bt-part.collapsed .bt-part-body { display: none; }
 .book-toc.searching .bt-part-body { display: block !important; }
-.bt-tier { display: inline-flex; align-items: center; gap: 4px; padding: 1px 4px 1px 6px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel); }
-.bt-tier:hover { border-color: var(--brand); }
+.bt-tier { display: flex; align-items: center; gap: 6px; }
 .bt-tier-check { flex: none; width: 14px; height: 14px; margin: 0; cursor: pointer; accent-color: #16a34a; }
-.bt-tier-go { background: none; border: none; padding: 2px 4px; font: inherit; font-size: 11px; color: var(--muted); cursor: pointer; }
-.bt-tier:hover .bt-tier-go { color: var(--brand); }
+.bt-tier-go { background: none; border: none; padding: 1px 0; font: inherit; font-size: 11px; color: var(--muted); cursor: pointer; text-align: left; }
+.bt-tier-go:hover { color: var(--brand); text-decoration: underline; }
 .bt-part-count { font-size: 12px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 .bt-search { width: 100%; box-sizing: border-box; margin: 14px 0 2px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font: inherit; }
 .bt-search:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
