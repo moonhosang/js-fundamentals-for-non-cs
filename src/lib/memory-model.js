@@ -191,20 +191,29 @@
         `<span class="ln${i === st.line ? ' active' : ''}">${esc(line)}</span>`).join('')
 
       // 스택 — 위에 최근 프레임이 오도록 역순
+      const engine = this._layer === 'engine' // 실제 엔진: 원시값은 프레임 슬롯에 인라인, 객체만 공유 힙
+      const heap = st.heap || {}
       const slotRef = (name, ref, extra) => {
         const c = this._color[ref] || '#888'
         return `<span class="sname">${esc(name)}</span><span class="sref" data-ref="${esc(ref)}" style="color:${c}"><span class="dot" style="background:${c}"></span>→</span>`
       }
       const frames = (st.stack || []).slice().reverse()
-      const primCells = [] // model B: 원시값도 값 메모리에 셀로 (이름표 장부엔 이름+화살표만)
+      const primCells = [] // model B(개념): 원시값도 값 메모리에 셀로 (엔진에선 슬롯 인라인이라 안 씀)
       $('.stack-body').innerHTML = frames.length ? frames.map((f, ri) => {
         const isTop = ri === 0
         const slots = (f.slots || []).map((sl) => {
           const key = f.name + '#' + sl.name
           curSlots.add(key)
           const en = prev.slots.has(key) ? '' : ' enter'
-          if ('ref' in sl && sl.ref) return `<div class="slot${en}">${slotRef(sl.name, sl.ref)}</div>`
-          // 원시값 → 이름표 장부엔 이름+화살표, 값은 값 메모리 셀(p:frame#name)로
+          const inlineVal = (v, bad) => `<div class="slot${en}"><span class="sname">${esc(sl.name)}</span><span class="sval prim${bad ? ' bad' : ''}">${esc(v)}</span></div>`
+          if ('ref' in sl && sl.ref) {
+            const box = heap[sl.ref]
+            // 엔진 레이어: 원시 값 박스는 슬롯에 인라인(스택), 객체만 화살표(공유 힙)
+            if (engine && box && box.prim) return inlineVal(box.label, box.bad)
+            return `<div class="slot${en}">${slotRef(sl.name, sl.ref)}</div>`
+          }
+          // 원시값(value:) — 엔진은 슬롯 인라인, 개념은 값 메모리 셀 + 화살표
+          if (engine) return inlineVal(sl.value, sl.bad)
           const pid = 'p:' + f.name + '#' + sl.name
           primCells.push({ id: pid, value: sl.value, bad: !!sl.bad })
           return `<div class="slot${en}">${slotRef(sl.name, pid)}</div>`
@@ -213,7 +222,6 @@
       }).join('') : '<div class="empty">(스택 비어 있음)</div>'
 
       // 힙 — 박스는 label(간단) 또는 fields(객체 그래프: 필드가 다른 힙을 가리킬 수 있음)
-      const heap = st.heap || {}
       const ids = Object.keys(heap)
       const fieldRows = (fields, person) => `<div class="hfields">` + fields.map((fl) => {
         const ico = person && KEY_ICON[fl.key] ? KEY_ICON[fl.key] + ' ' : ''
@@ -265,17 +273,23 @@
         const tag = box.prim ? '' : `<span class="htag" style="background:${c}">${esc(id)}</span>`
         return `<div class="${cls}${anim}" data-heap="${esc(id)}" style="border-color:${bc}">${tag}${body}</div>`
       }
-      // 값 메모리를 두 구역으로 가른다 — 원시값(스택/힙은 타입·엔진마다 달라 '실제 엔진'서 밝힘)
-      // 과 힙(객체·배열은 언제나 힙). box.prim 인 힙 박스(명시 원시셀)는 원시값 구역으로.
-      const primBoxHTML = ids.filter((id) => heap[id].prim).map(renderBox).join('')
+      // 값 메모리(개념) = 원시값 구역 + 힙 구역. 실제 엔진 = 원시값은 슬롯 인라인이라 힙(객체)만 남는다.
       const heapBoxHTML = ids.filter((id) => !heap[id].prim).map(renderBox).join('')
-      const primAll = primHTML + primBoxHTML
       let bodyHTML = ''
-      if (primAll) bodyHTML += heapBoxHTML
-        ? `<div class="mem-grp"><div class="mem-lbl">원시값</div>${primAll}</div>`
-        : primAll
-      if (heapBoxHTML) bodyHTML += `<div class="mem-grp mem-heap"><div class="mem-lbl">🗄️ 힙 · 객체·배열</div>${heapBoxHTML}</div>`
-      $('.heap-body').innerHTML = bodyHTML || '<div class="empty">(값 메모리 비어 있음)</div>'
+      if (engine) {
+        bodyHTML = heapBoxHTML || '<div class="empty">(힙 비어 있음 — 원시값은 각 프레임 슬롯 안에 산다)</div>'
+      } else {
+        const primAll = primHTML + ids.filter((id) => heap[id].prim).map(renderBox).join('')
+        if (primAll) bodyHTML += heapBoxHTML
+          ? `<div class="mem-grp"><div class="mem-lbl">원시값</div>${primAll}</div>`
+          : primAll
+        if (heapBoxHTML) bodyHTML += `<div class="mem-grp mem-heap"><div class="mem-lbl">🗄️ 힙 · 객체·배열</div>${heapBoxHTML}</div>`
+        bodyHTML = bodyHTML || '<div class="empty">(값 메모리 비어 있음)</div>'
+      }
+      $('.heap-body').innerHTML = bodyHTML
+      // 열 제목 — 엔진 레이어는 왼쪽=프레임(원시값 인라인), 오른쪽=힙(객체만)
+      $('.col-stack h4').innerHTML = engine ? '📚 스택 <small>(프레임 · 원시값 인라인)</small>' : (this._s.stackLabel || '📇 이름표 장부 (변수)')
+      $('.col-heap h4').innerHTML = engine ? '🗄️ 힙 <small>(heap · 객체·배열만)</small>' : (this._s.heapLabel || '🗄️ 값 메모리')
 
       this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels }
 
