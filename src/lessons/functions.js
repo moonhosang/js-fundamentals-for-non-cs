@@ -492,17 +492,19 @@
       <h3 class="section-title">① 화살표 함수 — 짧게 쓰는 표기</h3>
       <span class="learn-tag">📎 (n) => n * 2 는 function (n) { return n * 2 } 의 짧은 표기 (한 줄이면 return 생략)</span>
       <div class="card"><div class="file-label">🔬 같은 함수, 두 표기</div><div data-m="arrow"></div></div>
-      <p class="section-desc"><b>왜 짧은 표기가 따로 있나? — 취향이 아니라 쓸모가 있다.</b> <b>작은 함수를 그 자리에 인자로 넘길 때</b>(콜백, 특히 <b>7강 map/filter</b>) 빛난다:</p>
+      <p class="section-desc"><b>왜 짧은 표기가 따로 있나? — 취향이 아니라 쓸모가 있다.</b> <b>작은 함수를 그 자리에 인자로 넘길 때</b>(콜백, 특히 <b>7강 map·filter</b>) 빛난다 — 특히 <b>여러 개를 이어 붙이면</b>(체이닝) 차이가 확 벌어진다:</p>
       <div class="falsy-grid" style="margin-top:8px">
-        <div class="card" style="margin:0"><div class="file-label">😵 껍데기가 시끄럽다</div>
-          <pre class="err-code" style="color:inherit;background:transparent">nums.map(function (n) {
-  return n * 2
-})</pre></div>
-        <div class="card" style="margin:0"><div class="file-label">✅ 하는 일만 남는다</div>
-          <pre class="err-code" style="color:inherit;background:transparent">nums.map(n => n * 2)
-// "n → n 곱하기 2" 가
-// 한눈에 읽힌다</pre></div>
+        <div class="card" style="margin:0"><div class="file-label">😵 <code>function</code> — 껍데기가 겹겹이</div>
+          <pre class="err-code" style="color:inherit;background:transparent">nums
+  .filter(function (n) { return n > 0 })
+  .map(function (n) { return n * 2 })</pre></div>
+        <div class="card" style="margin:0"><div class="file-label">✅ 화살표 — 각 단계가 한 줄</div>
+          <pre class="err-code" style="color:inherit;background:transparent">nums
+  .filter(n => n > 0)
+  .map(n => n * 2)
+// "양수만 → 두 배" 가 줄줄이 읽힌다</pre></div>
       </div>
+      <p class="section-desc" style="margin:6px 0 0;opacity:.75">(<code>filter</code>·<code>map</code>은 <b>7강</b>에서 제대로 배운다 — 여기선 화살표가 <b>왜</b> 좋은지만.)</p>
       <p class="section-desc" style="margin-top:10px">👉 <b>기준</b>: <b>작고 · 이름 없고 · 그 자리서 한 번 쓰는</b> 함수엔 <b>화살표</b>, <b>크거나 · 이름 붙여 여러 번 쓸</b> 함수엔 <code>function</code>(또는 <code>const 이름 = …</code>)이 낫다. 무작정 취향이 아니라 <b>상황에 맞춰</b> 고른다.
       <br><span style="opacity:.75">💡 심화(지금은 몰라도 됨): 화살표는 <code>this</code> 규칙도 달라서(자기 <code>this</code>가 없음) 그 때문에 쓰는 경우도 있다 — 나중에.</span></p>
 

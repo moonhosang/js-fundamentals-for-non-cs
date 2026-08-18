@@ -61,6 +61,7 @@
       <div class="card"><div class="file-label">🔬 두 배로 바꾸기 (원본 확인)</div><div data-m="map"></div></div>
       <div data-m="mapmem"></div>
       <p class="section-desc">그래서 <code>map</code>은 <b>담아야</b> 쓸모가 있다 — <code>let doubled = nums.map(...)</code>. 원본 <code>nums</code>는 <b>그대로</b> 남아 있어 안전하다.</p>
+      <p class="section-desc" style="opacity:.9">🔗 <code>map</code>에 넘긴 이 함수가 바로 <b>5-7에서 본 화살표가 빛나는 그 자리</b>다 — 위 실행의 <code>function (n) { return n * 2 }</code>를 <code>n => n * 2</code>로 쓰면 껍데기 없이 <b>변환만</b> 남는다: <code>nums.map(n => n * 2)</code>(둘은 <b>똑같은 함수</b>). <button class="inline-goto" data-goto="5-7">5-7 · 화살표</button></p>
 
       <h3 class="section-title">④ filter — 조건에 맞는 것만 거르기</h3>
       <span class="learn-tag">📎 filter = "이 조건이 true인 요소만" 새 배열로 (4강 조건이 바탕)</span>
