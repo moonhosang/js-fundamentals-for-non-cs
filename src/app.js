@@ -192,11 +192,11 @@
     const on = isDone(id)
     const sel = `[data-cid="${id}"]`
     if (typeof page !== 'undefined' && page) {
-      page.querySelectorAll('.bt-check' + sel + ', .bt-tier-check' + sel).forEach((s) => { s.classList.toggle('on', on); s.textContent = on ? '✓' : '○' })
+      page.querySelectorAll('input.bt-check' + sel + ', input.bt-tier-check' + sel).forEach((s) => { s.checked = on })
       page.querySelectorAll('.bt-part').forEach((part) => {
         const ct = part.querySelector('[data-ct]'); if (!ct) return
-        const cs = part.querySelectorAll('.bt-check[data-cid]')
-        ct.textContent = [...cs].filter((c) => c.classList.contains('on')).length + '/' + cs.length
+        const cs = part.querySelectorAll('input.bt-check[data-cid]')
+        ct.textContent = [...cs].filter((c) => c.checked).length + '/' + cs.length
       })
     }
   }
@@ -501,14 +501,14 @@
         const on = track && isDone(id)
         if (track) { total++; if (on) done++ }
         const check = track
-          ? `<span class="bt-check${on ? ' on' : ''}" data-cid="${id}" role="button" tabindex="0" title="읽음 표시(클릭)">${on ? '✓' : '○'}</span>`
+          ? `<input type="checkbox" class="bt-check" data-cid="${id}"${on ? ' checked' : ''} title="읽음 표시" aria-label="읽음 표시">`
           : '<span class="bt-check ghost"></span>'
         const flag = hasContent(id) ? '' : '<span class="bt-flag" title="준비 중">🚧</span>'
         const stext = (l.title + ' ' + (l.subtitle || '')).replace(/<[^>]+>/g, '').replace(/"/g, '').toLowerCase()
         const tiers = track ? practiceItemsFor(id) : []
         const drills = tiers.length ? `<div class="bt-drills">${tiers.map((p) => {
           const pon = isDone(p.id)
-          return `<span class="bt-tier"><span class="bt-tier-check${pon ? ' on' : ''}" data-cid="${p.id}" role="button" tabindex="0" title="완료 표시">${pon ? '✓' : '○'}</span><button class="bt-tier-go" data-go="${p.id}">${p.badge} ${p.title} <span class="bt-tier-n">${p.subtitle}</span></button></span>`
+          return `<span class="bt-tier"><input type="checkbox" class="bt-tier-check" data-cid="${p.id}"${pon ? ' checked' : ''} title="완료 표시" aria-label="완료 표시"><button class="bt-tier-go" data-go="${p.id}">${p.badge} ${p.title} <span class="bt-tier-n">${p.subtitle}</span></button></span>`
         }).join('')}</div>` : ''
         return `<div class="bt-item" data-s="${stext}">
           <div class="bt-row${sub}" data-go="${id}">
@@ -531,7 +531,7 @@
       </header>
       <div class="lesson-goal">
         <span class="lesson-goal-tag">이렇게 배워요</span>
-        <p>아래는 <b>책 목차</b> — 제목을 누르면 그 강의로, <b>○를 눌러 읽음/완료 표시</b>(사이드바와 자동 동기화), <b>파트 제목을 눌러 접기</b>, 위 칸에서 <b>검색</b>도 돼요.</p>
+        <p>아래는 <b>책 목차</b> — 제목을 누르면 그 강의로, <b>체크박스로 읽음/완료 표시</b>(사이드바와 자동 동기화), <b>파트 제목을 눌러 접기</b>, 위 칸에서 <b>검색</b>도 돼요.</p>
       </div>
       <input class="bt-search" type="search" placeholder="🔍 강의 검색 — 제목·설명으로 (예: 스택, map, 중첩, truthy)">
       <div class="book-toc">${parts}</div>
@@ -541,11 +541,10 @@
     sec.querySelectorAll('.bt-row[data-go], .bt-tier-go[data-go]').forEach((el) => {
       el.onclick = (e) => { e.stopPropagation(); const v = el.getAttribute('data-go'); go(/^\d+$/.test(v) ? Number(v) : v) }
     })
-    // 체크(개념 ○/✓ · 드릴 ○/✓) → 중앙 토글(사이드바까지 즉시 동기화)
-    sec.querySelectorAll('.bt-check[data-cid], .bt-tier-check[data-cid]').forEach((chk) => {
-      const toggle = (e) => { e.stopPropagation(); const id = chk.getAttribute('data-cid'); setDone(id, !isDone(id)) }
-      chk.onclick = toggle
-      chk.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e) } }
+    // 체크박스(개념 읽음 · 드릴 완료) → 중앙 토글(사이드바까지 즉시 동기화)
+    sec.querySelectorAll('input.bt-check[data-cid], input.bt-tier-check[data-cid]').forEach((chk) => {
+      chk.onclick = (e) => e.stopPropagation() // 체크 클릭이 행(bt-row) 이동을 트리거하지 않도록
+      chk.onchange = () => setDone(chk.getAttribute('data-cid'), chk.checked)
     })
     // 파트 접기/펼치기
     sec.querySelectorAll('.bt-part-head[data-pi]').forEach((h) => {
