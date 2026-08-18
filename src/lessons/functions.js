@@ -487,12 +487,24 @@
   // ── 5-7 · 화살표 & 요약 ─────────────────────────────────────
   window.Lessons['5-7'] = function render(root) {
     root.innerHTML = `
-      ${stepHeader('5-7 · 화살표 & 요약', '짧은 표기, 그리고 "언제 함수를 만드나"', '표기는 취향, 감각은 핵심')}
+      ${stepHeader('5-7 · 화살표 & 요약', '짧은 표기, 그리고 "언제 함수를 만드나"', '표기는 상황에 맞게, 감각이 핵심')}
       <p class="section-desc" style="margin:6px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/익명_함수" target="_blank" rel="noopener noreferrer">익명 함수 ↗</a> · <a href="https://ko.wikipedia.org/wiki/람다_대수" target="_blank" rel="noopener noreferrer">람다 ↗</a></p>
       <h3 class="section-title">① 화살표 함수 — 짧게 쓰는 표기</h3>
       <span class="learn-tag">📎 (n) => n * 2 는 function (n) { return n * 2 } 의 짧은 표기 (한 줄이면 return 생략)</span>
       <div class="card"><div class="file-label">🔬 같은 함수, 두 표기</div><div data-m="arrow"></div></div>
-      <p class="section-desc">뒤 강의(<b>7강 map</b>)에서 함수를 <b>인자로 넘길 때</b> 이 짧은 표기가 자주 나온다. 지금은 "둘은 같다"만 기억.</p>
+      <p class="section-desc"><b>왜 짧은 표기가 따로 있나? — 취향이 아니라 쓸모가 있다.</b> <b>작은 함수를 그 자리에 인자로 넘길 때</b>(콜백, 특히 <b>7강 map/filter</b>) 빛난다:</p>
+      <div class="falsy-grid" style="margin-top:8px">
+        <div class="card" style="margin:0"><div class="file-label">😵 껍데기가 시끄럽다</div>
+          <pre class="err-code" style="color:inherit;background:transparent">nums.map(function (n) {
+  return n * 2
+})</pre></div>
+        <div class="card" style="margin:0"><div class="file-label">✅ 하는 일만 남는다</div>
+          <pre class="err-code" style="color:inherit;background:transparent">nums.map(n => n * 2)
+// "n → n 곱하기 2" 가
+// 한눈에 읽힌다</pre></div>
+      </div>
+      <p class="section-desc" style="margin-top:10px">👉 <b>기준</b>: <b>작고 · 이름 없고 · 그 자리서 한 번 쓰는</b> 함수엔 <b>화살표</b>, <b>크거나 · 이름 붙여 여러 번 쓸</b> 함수엔 <code>function</code>(또는 <code>const 이름 = …</code>)이 낫다. 무작정 취향이 아니라 <b>상황에 맞춰</b> 고른다.
+      <br><span style="opacity:.75">💡 심화(지금은 몰라도 됨): 화살표는 <code>this</code> 규칙도 달라서(자기 <code>this</code>가 없음) 그 때문에 쓰는 경우도 있다 — 나중에.</span></p>
 
       <span class="learn-tag">📎 ▶ — 화살표 함수도 부르면 똑같이 프레임이 쌓인다(표기만 짧을 뿐)</span>
       <div data-m="mem"></div>
