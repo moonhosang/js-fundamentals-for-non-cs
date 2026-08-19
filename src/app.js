@@ -310,6 +310,22 @@
     homeBtn.onclick = () => go('home')
     toc.append(homeBtn)
 
+    // 모두 접기 / 모두 펼치기 — 사이드바 전체를 한 번에.
+    const substepParents = []
+    CHAPTERS.forEach((ch) => ch.items.forEach((id) => {
+      if (typeof id === 'string' && ch.items.some((it) => typeof it === 'string' && new RegExp('^' + id + '-\\d+$').test(it))) substepParents.push(String(id))
+    }))
+    const anyOpen = state.openChapters.size > 0
+    const allBtn = document.createElement('button')
+    allBtn.className = 'toc-collapse-all'
+    allBtn.textContent = anyOpen ? '⊟ 모두 접기' : '⊞ 모두 펼치기'
+    allBtn.onclick = () => {
+      if (state.openChapters.size > 0) { state.openChapters.clear(); state.openSteps.clear() }
+      else { CHAPTERS.forEach((_, i) => state.openChapters.add(i)); substepParents.forEach((p) => state.openSteps.add(p)) }
+      renderToc()
+    }
+    toc.append(allBtn)
+
     const set = activeMode().get()
     CHAPTERS.forEach((ch, ci) => {
       // 펼침 여부는 openChapters 집합만으로 결정 — 현재 챕터도 수동으로 접을 수 있게.

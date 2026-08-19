@@ -100,6 +100,13 @@ nav {
   margin-bottom: 4px;
 }
 .toc-home:hover { background: rgba(255, 255, 255, 0.08); }
+.toc-collapse-all {
+  display: block; width: 100%; text-align: left;
+  background: transparent; border: none; color: #94a3b8; cursor: pointer;
+  padding: 5px 12px; margin-bottom: 6px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; letter-spacing: .02em;
+}
+.toc-collapse-all:hover { background: rgba(255, 255, 255, 0.08); color: #e2e8f0; }
 .toc-home.active { background: var(--brand); color: #fff; }
 .toc-roadmap { margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 12px; }
 
