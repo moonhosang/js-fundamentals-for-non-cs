@@ -531,11 +531,23 @@
       </header>
       <div class="fit-check">
         <span class="fit-check-tag">🧭 이 강의, 나에게 맞나? (30초 체크)</span>
-        <ul>
-          <li><b>✅ 이런 분께 딱</b> — 일은 하지만 기초가 없어 답답했던, <b>복붙·감으로 짜다 "왜 되는지"에서 막힌</b> 비전공 실무자.</li>
-          <li><b>🙅 이런 분껜 덜 맞아요</b> — 메모리·스택·참조가 이미 몸에 밴 전공자·시니어(너무 기초일 수 있음). 문법만 빨리 찾는 분(이건 <b>원리 체득</b>용).</li>
-          <li><b>🌱 완전 처음이어도 OK</b> — 기초를 제로부터 쌓는다. 다만 <b>이미 코드를 짜봤다면</b> "아, 그래서 그때 그 버그가!" 순간이 더 세게 온다.</li>
-        </ul>
+        <table class="fit-table"><tbody>
+          <tr>
+            <td class="fit-who">🎯 <b>비전공 실무자</b><span>일은 하지만 기초 없이 복붙·감으로 짜다 "왜 되는지"에서 막힘</span></td>
+            <td class="fit-star">★★★★★</td>
+            <td class="fit-verdict"><b>딱 맞음</b></td>
+          </tr>
+          <tr>
+            <td class="fit-who">🌱 <b>완전 입문자</b><span>코드가 처음</span></td>
+            <td class="fit-star">★★★☆☆</td>
+            <td class="fit-verdict">OK — 이미 짜봤다면 "그래서 그때 그 버그가!" 더 세게</td>
+          </tr>
+          <tr>
+            <td class="fit-who">🙅 <b>전공자·시니어</b><span>메모리·스택·참조가 이미 몸에 밴</span></td>
+            <td class="fit-star">★★☆☆☆</td>
+            <td class="fit-verdict">너무 기초일 수 (원리 체득용)</td>
+          </tr>
+        </tbody></table>
       </div>
       <div class="lesson-goal">
         <span class="lesson-goal-tag">이렇게 배워요</span>
