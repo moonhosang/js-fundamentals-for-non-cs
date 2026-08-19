@@ -53,6 +53,11 @@
       </div>
       <div class="card">
         <div class="file-label">⏱ 단계 추적 — if 사다리가 갈래를 고르기까지 (score = 85, 다음 ▶)</div>
+        <pre class="err-code" style="color:inherit;background:transparent">let score = 85
+if (score >= 90)      { grade = "A" }
+else if (score >= 80) { grade = "B" }
+else if (score >= 70) { grade = "C" }
+else                  { grade = "F" }</pre>
         <div data-m="red-if"></div>
       </div>
 
@@ -98,10 +103,13 @@
       <h3 class="section-title">⑤ switch — 값 하나로 여러 갈래</h3>
       <span class="learn-tag">📎 완전히 새 게 아니다 — "if 여러 개"를 값 하나로 고르는 정리본</span>
       <p class="section-desc"><b>요일 번호 → 안내 문구</b>, <b>등급 → 혜택</b>처럼 <b>값 하나</b>를 보고 여러 갈래 중 하나를 골라야 할 때가 많다.
-      <code>if (day === 1) … else if (day === 2) … else if (day === 3) …</code>를 줄줄이 쓰는 대신,
-      <code>switch</code>는 그 대조를 한 곳에 정리한다. 생김새만 먼저 —
-      <code>switch (값) { case 값: 코드; break … default: 코드 }</code>.
-      규칙은 아직 안 배웠다 — 아래 두 문제를 <b>감으로 예측</b>해 보라. <b>틀리라고 있는 문제다.</b></p>
+      <code>if (day === 1)</code> · <code>else if (day === 2)</code> · <code>else if (day === 3)</code> …를 줄줄이 쓰는 대신, <code>switch</code>는 그 대조를 <b>한 곳에</b> 정리한다. 생김새만 먼저 —</p>
+      <pre class="err-code" style="color:inherit;background:transparent">switch (값) {
+  case A:  코드; break
+  case B:  코드; break
+  default: 코드
+}</pre>
+      <p class="section-desc">규칙은 아직 안 배웠다 — 아래 두 문제를 <b>감으로 예측</b>해 보라. <b>틀리라고 있는 문제다.</b></p>
       <div data-m="qz-sw1"></div>
       <div data-m="qz-sw2"></div>
       <p class="section-desc">🔗 <b>같은 실이다</b> — <code>switch (expr)</code>도 결국 <b>괄호 안 expr을 한 번 값으로 접은 뒤</b>,
@@ -163,7 +171,7 @@
       ],
     }))
     root.querySelector('[data-m="red-if"]').append(ExprReduce({
-      title: 'if (score >= 90) … else if (score >= 80) …   // score = 85',
+      title: 'score = 85 — 위 사다리는 어느 갈래를 고를까?',
       steps: [
         { code: 'if ( 85 >= 90 )', mark: '85 >= 90', note: 'score(85)를 넣고 <b>맨 위 조건부터</b>. <b>85 >= 90</b>?' },
         { code: 'if ( false )', note: '<b style="color:var(--red)">false</b> → 이 갈래(<code>"A"</code>)는 건너뛰고 <b>else if</b>로.' },
@@ -253,13 +261,13 @@
 
     // ⑤ switch — 🔮 예측(스포일러 전) → ⏱ step-through → 🔬 실행 → 🎯 드릴
     root.querySelector('[data-m="qz-sw1"]').append(Quiz({
-      q: '<code>let n = 1</code> 일 때 — <code>switch (n) { case 1: print("A");  case 2: print("B"); break }</code>. case 1 뒤에 <b>break가 없다</b>. 무엇이 출력될까?',
+      q: '<code>let n = 1</code> 일 때, <b>case 1 뒤에 <span style="color:var(--red)">break가 없다</span></b> — 무엇이 출력될까?<pre class="err-code" style="color:inherit;background:transparent">switch (n) {\n  case 1: print("A")   // ← break 없음!\n  case 2: print("B"); break\n}</pre>',
       options: ['"A"만 — case 1만 맞았으니까', '"A" 그리고 "B" — 둘 다 나온다', '에러가 난다'],
       answer: 1,
       explain: 'switch는 <b>맞은 case부터 break를 만날 때까지</b> 실행한다. break가 없으면 <b>아래 case 코드로 줄줄 샌다(fall-through)</b> — case 2와 비교도 안 하고 그냥 실행! 그래서 "A" "B" 둘 다. 이게 switch 최대 함정 — <b>case마다 break</b>가 기본이다.',
     }))
     root.querySelector('[data-m="qz-sw2"]').append(Quiz({
-      q: '<code>let x = "3"</code> (따옴표 있는 <b>글자</b>) 일 때 — <code>switch (x) { case 3: print("숫자!"); break;  default: print("몰라요") }</code>. 무엇이 출력될까?',
+      q: '<code>let x = "3"</code> (따옴표 있는 <b>글자</b>) 일 때 — 무엇이 출력될까?<pre class="err-code" style="color:inherit;background:transparent">switch (x) {\n  case 3:  print("숫자!"); break\n  default: print("몰라요")\n}</pre>',
       options: ['"숫자!" — 3이니까 맞는다', '"몰라요" — 글자 "3"과 숫자 3은 다르다'],
       answer: 1,
       explain: 'case의 대조는 <b>===(엄격 비교)</b>다 — <code>"3" === 3</code>은 <b>거짓</b>(글자 vs 숫자). ①비교의 <code>"5" === 5</code>와 같은 실! switch엔 느슨한(<code>==</code>) 버전이 아예 없다 — <b>타입까지 맞아야</b> 갈래가 열리고, 아무것도 안 맞으면 <b>default</b>가 잡는다.',

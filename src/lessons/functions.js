@@ -336,7 +336,7 @@
       ${nav('5-4', 5, '5-6', '5-6 · 스코프 →')}
     `
     root.querySelector('[data-m="qz2"]').append(Quiz({
-      q: '<code>function shout(x){ let big = x*100 }</code> — return이 없다. <code>let r = shout(5)</code> 뒤 <b>r은?</b>',
+      q: '아래 함수는 <b>return이 없다</b>. <code>let r = shout(5)</code> 뒤 <b>r은?</b><pre class="err-code" style="color:inherit;background:transparent">function shout(x) {\n  let big = x * 100   // ← return 없음!\n}</pre>',
       options: ['500', 'undefined', '0'],
       answer: 1,
       explain: 'big=500을 <b>계산은</b> 했지만 <b>return으로 내보내지 않았다</b> → 함수는 undefined를 돌려주고, big(지역)은 사라진다. r엔 <b>undefined</b>.',
