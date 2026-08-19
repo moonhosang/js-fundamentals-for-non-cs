@@ -636,7 +636,7 @@
   window.addEventListener('resize', () => { backdrop.hidden = !state.sidebarOpen || window.innerWidth > 720 })
 
   // ── 최초 그리기 ───────────────────────────────────────────
-  setSidebar(state.sidebarOpen)
+  setSidebar(window.innerWidth > 720 && state.sidebarOpen) // 모바일은 콘텐츠 먼저 — ☰로 목차 연다
   revealCurrent()
   renderCheckTabs()
   renderProgress()

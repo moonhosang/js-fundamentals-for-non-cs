@@ -1306,7 +1306,7 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
   }
   .toc { max-height: none; }
-  .sidebar-backdrop { display: block; }
+  .sidebar-backdrop:not([hidden]) { display: block; }
   .content { padding: 20px 16px; max-width: 100%; }
   .layout.sidebar-collapsed .content { padding-top: 60px; }
   .compare-grid { grid-template-columns: 1fr; }
