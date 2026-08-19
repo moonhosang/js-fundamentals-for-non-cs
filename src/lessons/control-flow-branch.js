@@ -460,7 +460,7 @@
     `
 
     root.querySelector('[data-m="qz1"]').append(Quiz({
-      q: '<code>score = 95</code>. switch로 등급 범위를 흉내 내 봤다 — <code>switch (score) { case score >= 90: g = "A"; break; default: g = "?" }</code>. g는?',
+      q: '<code>score = 95</code>. switch로 등급 <b>범위</b>를 흉내 내 봤다 — g는?<pre class="err-code" style="color:inherit;background:transparent">switch (score) {\n  case score >= 90: g = "A"; break\n  default:          g = "?"\n}</pre>',
       options: ['"A" — 95는 90 이상이니까', '"?" — case 식은 true로 접히고, 대조는 95 === true 라 거짓', '에러 — case 자리에 식을 쓸 수 없다'],
       answer: 1,
       explain: 'case 자리도 표현식이라 <b>값으로 접힌다</b>: <code>score >= 90</code> → <b>true</b>. 그런데 switch의 대조는 <code>95 === true</code> — <b>거짓!</b> 조건이 참인데도 갈래가 안 열린다. case에 식을 쓰는 것 자체는 합법이라 <b>에러조차 안 난다</b> — 그래서 더 위험한 함정. <b>범위·대소 비교는 if의 일이다.</b>',

@@ -168,7 +168,7 @@
       ${nav('5-1', 2, '5-3', '5-3 · 매개변수 vs 인수 →')}
     `
     root.querySelector('[data-m="qz"]').append(Quiz({
-      q: '<code>function greet(){ return "안녕!" }</code> 다음에 <code>greet</code>라고 <b>( ) 없이</b> 쓰면 "안녕!"이 나올까?',
+      q: '아래처럼 정의한 뒤 <code>greet</code>라고 <b>( ) 없이</b> 쓰면 "안녕!"이 나올까?<pre class="err-code" style="color:inherit;background:transparent">function greet() {\n  return "안녕!"\n}</pre>',
       options: ['나온다 — "안녕!"', '안 나온다 — 함수 자체를 가리킬 뿐(실행 X)', '에러가 난다'],
       answer: 1,
       explain: '<b>( )가 "지금 실행" 신호</b>다. <code>greet</code>는 상자 <b>자체</b>를 가리킬 뿐(안 돎), <code>greet()</code>라야 안이 실행돼 "안녕!"이 나온다.',
@@ -259,7 +259,7 @@
       ${nav('5-3', 4, '5-5', '5-5 · 🧠 프레임 →')}
     `
     root.querySelector('[data-m="qz"]').append(Quiz({
-      q: '<code>function f(x){ let y = x*2 }</code> — <b>return이 없다</b>. <code>print(f(5))</code>는 뭘 찍을까?',
+      q: '아래 함수는 <b>return이 없다</b>. <code>print(f(5))</code>는 뭘 찍을까?<pre class="err-code" style="color:inherit;background:transparent">function f(x) {\n  let y = x * 2   // ← return 없음!\n}</pre>',
       options: ['10', 'undefined (돌려준 게 없다)', '0', '에러'],
       answer: 1,
       explain: '함수 안에서 계산은 했지만 <b>return으로 내보내지 않았다</b> → 함수는 <b>undefined</b>를 돌려준다. "계산했으니 10이 나오겠지"가 최대 착각. return이 있어야 값이 밖으로 나온다.',
@@ -520,7 +520,10 @@
 
       <h3 class="section-title">③ 좋은 상자의 감각 — '순수 함수'</h3>
       <span class="learn-tag">📎 순수 함수 = ① 입력만 보고(밖의 값 안 훔쳐봄) ② 값만 돌려줌(밖을 안 건드림 · 부수효과 없음)</span>
-      <p class="section-desc"><code>function withTax(p){ return p * 1.1 }</code>는 <b>순수 함수</b>다 — 들어온 값(<code>p</code>)만 보고, 결과만 돌려주고, 밖의 무엇도 안 바꾼다. 그래서:</p>
+      <pre class="err-code" style="color:inherit;background:transparent">function withTax(p) {
+  return p * 1.1
+}</pre>
+      <p class="section-desc">이 <code>withTax</code>는 <b>순수 함수</b>다 — 들어온 값(<code>p</code>)만 보고, 결과만 돌려주고, 밖의 무엇도 안 바꾼다. 그래서:</p>
       <ul class="section-list">
         <li><b>예측 가능</b> — 같은 입력이면 <b>언제 어디서 불러도 같은 출력</b>. <code>withTax(100)</code>은 늘 <code>110</code>. (정식 용어: <b>참조 투명성</b>)</li>
         <li><b>안전 · 조립 쉬움</b> — 밖을 안 건드리니 원본이 안 상하고(🧠 M5), 다른 계산의 <b>부품</b>으로 마음껏 끼운다(<code>Math.round(withTax(p))</code>).</li>
