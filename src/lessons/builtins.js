@@ -279,6 +279,22 @@
         <p class="section-desc" style="margin:0"><code>false</code> · <code>0</code> · <code>-0</code> · <code>0n</code>(BigInt 0) · <code>""</code>(빈 문자열) · <code>null</code> · <code>undefined</code> · <code>NaN</code></p>
       </div>
       <span class="learn-tag">⚠️ 헷갈리는 <b>truthy</b> — 이건 다 <b>참</b>이다: <code>"0"</code> · <code>"false"</code> · <code>" "</code>(공백) · <code>[]</code>(빈 배열) · <code>{}</code>(빈 객체) · <code>-1</code></span>
+      <div class="table-wrap"><table class="ref-table">
+        <thead><tr><th>값</th><th><code>Boolean(값)</code></th><th>분류 · 왜</th></tr></thead>
+        <tbody>
+          <tr><td><code>false</code></td><td><b>false</b></td><td>❌ falsy 8개</td></tr>
+          <tr><td><code>0</code> · <code>-0</code></td><td><b>false</b></td><td>❌ falsy — 숫자 0</td></tr>
+          <tr><td><code>0n</code></td><td><b>false</b></td><td>❌ falsy — BigInt 0</td></tr>
+          <tr><td><code>""</code></td><td><b>false</b></td><td>❌ falsy — 빈 문자열</td></tr>
+          <tr><td><code>null</code></td><td><b>false</b></td><td>❌ falsy — 비었음(의도)</td></tr>
+          <tr><td><code>undefined</code></td><td><b>false</b></td><td>❌ falsy — 아직 없음</td></tr>
+          <tr><td><code>NaN</code></td><td><b>false</b></td><td>❌ falsy — 실패한 계산</td></tr>
+          <tr><td><code>"0"</code></td><td><b>true</b></td><td>⚠️ 글자라 truthy (빈 문자열 아님)</td></tr>
+          <tr><td><code>"false"</code> · <code>" "</code></td><td><b>true</b></td><td>⚠️ 글자·공백도 truthy</td></tr>
+          <tr><td><code>[]</code> · <code>{}</code></td><td><b>true</b></td><td>⚠️ 빈 배열·객체도 truthy(원시 아님)</td></tr>
+          <tr><td><code>-1</code> · <code>3.14</code></td><td><b>true</b></td><td>0 아닌 숫자는 truthy</td></tr>
+        </tbody>
+      </table></div>
       ${tbl([
         ['if (x)', 'x가 truthy면 실행', 'if ("0") …', '실행됨(문자열은 truthy)'],
         ['a || b', 'a가 falsy면 b (기본값 패턴)', '"" || "익명"', '"익명"'],
@@ -289,6 +305,7 @@
         ['!!x', '두 번 뒤집어 <b>truthy 판정만</b> 얻기', '!!"hi"', 'true'],
       ])}
       <div class="card"><div class="file-label">🔬 실행 — falsy 8개 & truthy 함정</div><div data-m="truthy"></div></div>
+      <div class="card"><div class="file-label">⏱ 판정 시뮬레이션 — <code>if("0")</code>은 왜 실행되나 (다음 ▶)</div><div data-m="sim-tobool"></div></div>
       <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>"" || "익명"</code> 의 참·거짓 판정 (다음 ▶)</div><div data-m="sim-truthy"></div></div>
       <div class="card"><div class="file-label">⏱ 응용 — 후보가 셋: <code>nick || name || "익명"</code> (기본값 사슬)</div><div data-m="sim-chain"></div></div>
       <span class="learn-tag">🔗 같은 사슬을 <code>??</code>로 하면 훑는 규칙만 다르다 — <code>""</code>·<code>0</code>은 <b>건너뛰지 않고</b> <b>null·undefined일 때만</b> 다음으로. <button class="inline-goto" data-scroll="sim-default"><code>||</code> vs <code>??</code> 대비 보기 ↓</button></span>
@@ -352,6 +369,14 @@
       'print("" || "익명")           // "익명"  (빈값이면 기본값)',
       'print(0 && "실행")            // 0       (앞이 falsy면 멈춤)',
     ].join('\n') }))
+    root.querySelector('[data-m="sim-tobool"]').append(ExprReduce({
+      title: 'if ("0") { … }  — "0"은 참일까 거짓일까?',
+      steps: [
+        { code: 'if ("0") { 실행 }', mark: '"0"', note: '조건 자리의 <b>"0"</b>을 JS가 <b>참/거짓으로</b> 본다(값→불리언 강제, ToBoolean).' },
+        { code: '"0" 가 falsy 8개 목록에 있나?', mark: 'falsy 8개', note: 'falsy는 딱 8개: <code>false · 0 · -0 · 0n · "" · null · undefined · NaN</code>. <b>"0"은 그 목록에 없다</b> — 빈 문자열 <code>""</code>만 falsy다.' },
+        { code: '"0" → ✅ truthy → 블록 실행', note: '목록에 없으니 <b>참</b> → <code>{ … }</code>이 <b>실행된다</b>. "0"이 숫자 0처럼 보여도 <b>글자</b>라 truthy — 대표 함정. (반대로 <code>if("")</code>는 빈 문자열이라 falsy → 안 함)' },
+      ],
+    }))
 
     // 🔮 예측 먼저(표 보기 전) — 스포일러 없이 감을 깨운다.
     root.querySelector('[data-m="pq1"]').append(Quiz({
