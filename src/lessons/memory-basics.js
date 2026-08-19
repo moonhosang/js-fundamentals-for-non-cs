@@ -218,6 +218,8 @@
         메모리는 빠르지만 <b>끄면 사라진다</b>. 이 메모리를 스택·힙 두 방식으로 나눠 쓴다.</p>
       </div>
 
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — 변수는 프로그램이 <b>켜져 있는 동안(런타임)만</b> 산다. 그래서 <b>새로고침하면 입력·상태가 다 날아간다</b>(메모리는 휘발성). 남기려면 <code>localStorage</code>·서버·DB에 <b>따로 저장</b>해야 한다.</p>
+
       <div class="practice-cta">
         <span>먼저 '스택' 방식부터 자세히 —</span>
         <button class="chip on" data-goto="stack">🧠 M2 · 스택 →</button>
@@ -453,6 +455,8 @@
         <b>작업이 끝나면 그 칸이 통째로 사라진다</b> — 규약상 밖에서 못 쓰고, 필요한 건 이미 빼냈고, 지워야 재사용되니 <b>안전하다</b>. 이게 다음 M3의 "왜 묶음은 힙에?"로 이어진다.</p>
       </div>
 
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — <code>Maximum call stack size exceeded</code>(RangeError)를 본 적 있다면, 그게 이 스택이 <b>꽉 찬</b> 것이다 — 끝나지 않는 재귀나 너무 깊은 호출로 프레임이 계속 쌓여서. 스택은 유한하다.</p>
+
       <div class="practice-cta">
         <span>그럼 크고 오래 살아야 하는 묶음은? — 힙으로 —</span>
         <button class="chip on" data-goto="heap">🧠 M3 · 힙 →</button>
@@ -570,6 +574,8 @@
         <p class="section-desc" style="margin-top:0">묶음(객체·배열)은 <b>힙</b>에 살고 슬롯엔 <b>주소</b>만. 크기가 가변이고, 오래 살아야 하고, 공유되기 때문.
         스택에 뒀다면 작업이 끝날 때 <b>함께 사라진다</b>.</p>
       </div>
+
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — <b>메모리 누수(memory leak)</b>가 이 그림의 반대다: 다 썼는데 <b>어딘가 참조가 남아</b>(이벤트 리스너·전역 캐시) 힙에서 <b>안 치워지는</b> 것. "아무도 안 가리키면 치운다"의 뒤집힌 얼굴 — 안 쓰면 참조를 끊어줘야 한다.</p>
 
       <div class="practice-cta">
         <span>슬롯이 '주소'를 담는다 — 그래서 생기는 유명한 함정을 다음에서 —</span>
@@ -833,6 +839,8 @@
 
       <p class="section-desc" style="opacity:.85;margin:10px 0 0">📎 <b>한 걸음 더 — 대입(<code>=</code>)만이 아니다</b>: 함수에 <b>넘길 때도</b> 똑같이 값이 복사된다. <code>tear(money)</code>에서 매개변수에 담기는 건 <code>let bill = money</code>와 <b>같은 연산(바인딩)</b> — JS는 늘 <b>값을 복사</b>한다(정식 용어: <b>call-by-value</b>). 그래서 함수 안에서 아무리 바꿔도 원본이 안전하다. 곧 <button class="inline-goto" data-goto="passval">🧠 M5 · 값에 의한 전달</button>에서 눈으로 본다.</p>
 
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — 그래서 <b>숫자·문자·불리언 state</b>는 마음 놓고 새 값을 넣어도 된다(원시값은 복사라 안전). 진짜 함정은 <b>객체·배열</b>일 때 — 바로 다음 M4-2다.</p>
+
       <div class="practice-cta">
         <span>그럼 객체째 담으면? — 정반대 이야기 —</span>
         <button class="chip on" data-goto="ref2">🧠 M4-2 · 참조 = 공유 →</button>
@@ -959,6 +967,8 @@
 
       <p class="section-desc" style="opacity:.85;margin:10px 0 0">📎 <b>한 걸음 더 — 대입(<code>=</code>)만이 아니다</b>: 객체를 함수에 <b>넘길 때도</b> 똑같이 <b>주소(참조)가 복사</b>돼 <b>공유</b>된다. <code>f(obj)</code>에서 매개변수에 담기는 건 <code>let p = obj</code>와 <b>같은 연산(바인딩)</b> — 그래서 함수 안에서 그 속성을 바꾸면 <b>원본도 바뀐다</b>. (JS는 늘 <b>call-by-value</b>인데, 객체에선 그 '값'이 <b>주소</b>라 결과적으로 공유 — 이걸 <b>call-by-sharing</b>이라고도 부른다.) 곧 <button class="inline-goto" data-goto="passobj">🧠 M6 · 참조에 의한 전달</button>에서 눈으로.</p>
 
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — <b>React/Vue에서 <code>state.items.push(x)</code> 하고 갱신해도 화면이 안 바뀌는</b> 그 미스터리가 이것: 같은 <b>참조(주소)</b>라 프레임워크가 "안 바뀜"으로 본다. 그래서 <code>[...items]</code>·<code>{...obj}</code>로 <b>새 참조를 만들어</b> 넘긴다(불변성). "왜 spread로 복사하지?"의 답이 이 강의다.</p>
+
       <div class="practice-cta">
         <span>그럼 함수에 '넘길' 때는? — 다음 —</span>
         <button class="chip on" data-goto="passval">🧠 M5 · 값에 의한 전달 →</button>
@@ -1011,6 +1021,8 @@
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0">원시값을 넘기면 <b>복사본</b>이 전달돼 원본이 안전. 객체를 넘기면 <b>주소</b>가 전달돼 원본이 바뀔 수 있다.</p>
       </div>
+
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — 원시값(숫자·문자)을 함수에 넘길 땐 <b>원본이 안 상하니</b> 안심하고 넘겨도 된다. 방어할 게 없다.</p>
 
       <div class="practice-cta">
         <span>그럼 객체를 넘기면? — 정반대다 —</span>
@@ -1081,6 +1093,8 @@ let strong = levelUpSafe(hero)       // hero는 그대로, strong만 레벨업</
         <p class="section-desc" style="margin-top:0">객체를 함수에 넘기면 <b>주소</b>가 전달 → 함수 안 변경이 <b>원본까지</b> 바꾼다.
         원본을 지키려면 <b>복사본</b>(<code>{...obj}</code>)을 넘긴다.</p>
       </div>
+
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — <b>"함수 안에서 바꿨을 뿐인데 밖의 객체까지 바뀌었다"</b>는 버그가 이 원인(주소 공유). 남이 준 객체를 안 망치려면 <b>방어적 복사</b>(<code>{...obj}</code>) 후 건드린다. 순수 함수(5강)가 이래서 안전하다.</p>
 
       <div class="practice-cta">
         <span>배열도 똑같을까? — 다음 —</span>
@@ -1156,6 +1170,8 @@ arr.concat([9])         // 이어붙인 새 배열
         <p class="section-desc" style="margin-top:0">배열도 객체라 <b>주소</b>로 전달된다. <code>push·sort</code> 같은 <b>원본 변경</b> 메서드는 바깥 배열도 바꾼다.
         지키려면 <code>[...arr]</code> 복사본을 넘긴다.</p>
       </div>
+
+      <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — <code>arr.sort()</code>·<code>reverse()</code>·<code>splice()</code>가 <b>원본을 바꿔서</b> 난 버그가 이것 — 이들은 <b>제자리 변경(mutating)</b> 메서드다. 원본을 지키려면 <code>[...arr].sort()</code>처럼 <b>복사 후</b> 하거나 <code>map</code>·<code>filter</code>·<code>slice</code>(non-mutating, 7강)를 쓴다.</p>
 
       <div class="practice-cta">
         <span>객체가 객체를 가리키면? — 다음 —</span>

@@ -304,6 +304,9 @@
       </div>
       <div class="card"><div class="file-label">🔬 ★ 3 > 2 > 1 이 왜 false인지 — 한 겹씩</div><div data-m="red-chain"></div></div>
       <div class="card"><div class="file-label">🔬 ★ 2 ** 3 ** 2 — 지수는 오른쪽부터</div><div data-m="red-exp"></div></div>
+      <div class="card"><div class="file-label">🔬 ★ typeof typeof 42 — 안쪽부터 · typeof는 늘 문자열</div><div data-m="red-typeof"></div></div>
+      <div class="card"><div class="file-label">🔬 ★ "5" + 1 vs "5" - 1 — 연산자마다 강제 방향이 다르다</div><div data-m="red-pm"></div></div>
+      <div class="card"><div class="file-label">🔬 ★ 1 + 2 + "3" — 왼쪽부터, 글자를 만나면 이어붙이기</div><div data-m="red-c5"></div></div>
 
       ${nav('3-3', 4, '3-5')}
     `
@@ -398,6 +401,30 @@
         { code: 'const r = 2 ** 3 ** 2', mark: '3 ** 2', note: '거의 모든 연산자는 왼쪽부터지만 <b>지수 <code>**</code>는 오른쪽부터</b>(오른쪽 결합) → 안쪽 <b>3 ** 2</b> 먼저.' },
         { code: 'const r = 2 ** 9', mark: '2 ** 9', note: '<code>3 ** 2 = 9</code>. 이제 <b>2 ** 9</b>.' },
         { code: 'const r = 512', note: '<code>2의 9제곱 = 512</code>. 만약 왼쪽부터 <code>(2**3)**2</code> 였다면 <b>64</b> — 지수만 방향이 반대라 결과가 크게 갈린다.' },
+      ],
+    }))
+    root.querySelector('[data-m="red-typeof"]').append(ExprReduce({
+      title: 'typeof typeof 42  (안쪽부터)',
+      steps: [
+        { code: 'const r = typeof typeof 42', mark: 'typeof 42', note: '안쪽부터 → <b>typeof 42</b> 먼저. 42는 숫자라 → <b>"number"</b>. (이 결과가 이미 <b>문자열</b>이다!)' },
+        { code: 'const r = typeof "number"', mark: 'typeof "number"', note: '이제 <b>typeof "number"</b> — "number"는 <b>문자열</b>이니까 → <b>"string"</b>.' },
+        { code: 'const r = "string"', note: '= <b>"string"</b>. <code>typeof</code>는 <b>항상 문자열</b>을 낳는다 — 그래서 두 번 감싸면 늘 "string".' },
+      ],
+    }))
+    root.querySelector('[data-m="red-pm"]').append(ExprReduce({
+      title: '"5" + 1  vs  "5" - 1  (연산자마다 다르다)',
+      steps: [
+        { code: '"5" + 1   ·   "5" - 1', mark: '"5" + 1', note: '먼저 왼쪽 — <code>+</code>는 <b>한쪽이 문자열이면 이어붙이기</b>. "5"가 문자열이라 1을 <b>"1"로</b> 만들어 붙인다.' },
+        { code: '"51"   ·   "5" - 1', mark: '"5" - 1', note: '이번엔 <code>-</code>. <b>−·*·/ 는 무조건 숫자로 강제</b> → "5"를 <b>숫자 5로</b> → <code>5 - 1</code>.' },
+        { code: '"51"   ·   4', note: '<b>"51"</b> vs <b>4</b>. 같은 <code>"5"</code>·<code>1</code>인데 <b>연산자가 강제 방향을 정한다</b> — <code>+</code>는 문자로, <code>−</code>는 숫자로.' },
+      ],
+    }))
+    root.querySelector('[data-m="red-c5"]').append(ExprReduce({
+      title: '1 + 2 + "3"  (왼쪽부터, 글자를 만나면?)',
+      steps: [
+        { code: 'const r = 1 + 2 + "3"', mark: '1 + 2', note: '왼쪽부터 → <b>1 + 2</b>는 둘 다 숫자라 그냥 산수 → <b>3</b>.' },
+        { code: 'const r = 3 + "3"', mark: '3 + "3"', note: '이제 <b>3 + "3"</b> — <code>+</code>가 <b>문자열을 만났다</b> → 숫자 3을 <b>"3"으로</b> 만들어 이어붙임.' },
+        { code: 'const r = "33"', note: '= <b>"33"</b>. 6도 "123"도 아니다 — <b>왼쪽부터</b> 접히다 <b>글자를 만나는 순간</b> 이어붙이기로 바뀐다.' },
       ],
     }))
     wireGoto(root)
