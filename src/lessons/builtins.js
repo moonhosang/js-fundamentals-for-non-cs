@@ -137,6 +137,7 @@
         ['s.split(x)', 'x로 잘라 <b>배열</b>로', '"a,b,c".split(",")', '["a","b","c"]'],
       ])}
       <div class="card"><div class="file-label">🔬 실행</div><div data-m="str"></div></div>
+      <div class="card"><div class="file-label">⏱ 시뮬레이션 — <code>split ↔ join</code> (문자 ↔ 배열, 다음 ▶)</div><div data-m="sim-str"></div></div>
       ${subNav(['builtins-2', '② 숫자'], ['builtins-4', '④ 배열'])}
     `
     root.querySelector('[data-m="str"]').append(Runner({ showBox: false, code: [
@@ -145,6 +146,14 @@
       'print("hi".toUpperCase())    // "HI"',
       'print("a,b,c".split(","))    // ["a","b","c"]',
     ].join('\n') }))
+    root.querySelector('[data-m="sim-str"]').append(ExprReduce({
+      title: '"a,b,c" 를 "-" 로 바꾸기 (split 으로 자르고 join 으로 잇기)',
+      steps: [
+        { code: '"a,b,c".split(",").join("-")', mark: 'split(",")', note: '왼쪽부터 — 먼저 <b>split(",")</b>: 콤마로 잘라 <b>배열</b>로 만든다.' },
+        { code: '["a", "b", "c"].join("-")', mark: 'join("-")', note: '이제 <b>join("-")</b>: 그 배열을 "-"로 이어 <b>문자열</b>로.' },
+        { code: '"a-b-c"', note: '= <b>"a-b-c"</b>. <b>split</b>(문자→배열) ↔ <b>join</b>(배열→문자)은 정반대 <b>짝</b>이다.' },
+      ],
+    }))
     wireNav(root)
   }
 
@@ -182,6 +191,8 @@
         ['a.every(f)', '<b>모두</b> 맞나', '[2,4].every(x=>x%2===0)', 'true'],
       ])}
       <div class="card"><div class="file-label">🔬 실행</div><div data-m="arr2"></div></div>
+      <div class="card"><div class="file-label">⏱ 시뮬레이션 — filter로 걸러서 map으로 변환 (체인, 다음 ▶)</div><div data-m="sim-arr"></div></div>
+      <div class="card"><div class="file-label">⏱ 시뮬레이션 — reduce: 목록을 하나로 접기 (한 요소씩)</div><div data-m="sim-reduce"></div></div>
       ${subNav(['builtins-3', '③ 문자열'], ['builtins-5', '⑤ 객체'])}
     `
     root.querySelector('[data-m="arr"]').append(Runner({ showBox: false, code: [
@@ -199,6 +210,24 @@
       'print([5, 10, 15].find(x => x > 7))    // 10',
       'print([2, 4].every(x => x % 2 === 0))  // true',
     ].join('\n') }))
+    root.querySelector('[data-m="sim-arr"]').append(ExprReduce({
+      title: '짝수만 골라 10배로 — filter 다음 map',
+      steps: [
+        { code: '[1, 2, 3, 4].filter(n => n % 2 === 0).map(n => n * 10)', mark: 'filter(n => n % 2 === 0)', note: '왼쪽부터 — 먼저 <b>filter</b>: 짝수(<code>n % 2 === 0</code>)만 남긴다.' },
+        { code: '[2, 4].map(n => n * 10)', mark: 'map(n => n * 10)', note: '남은 <b>[2, 4]</b>에 <b>map</b>: 각 요소를 ×10.' },
+        { code: '[20, 40]', note: '= <b>[20, 40]</b>. filter로 <b>거르고</b> map으로 <b>변환</b> — 둘 다 원본은 그대로, <b>새 배열</b>(6강).' },
+      ],
+    }))
+    root.querySelector('[data-m="sim-reduce"]').append(ExprReduce({
+      title: '합계 구하기 — reduce는 누적값(acc)을 한 요소씩 접는다',
+      steps: [
+        { code: '[10, 20, 30].reduce((acc, n) => acc + n, 0)', note: '시작값 <b>acc = 0</b>(마지막 인자). 각 요소 n을 <code>acc + n</code>으로 접어 간다.' },
+        { code: 'n = 10  →  acc = 0 + 10 = 10', mark: 'n = 10', note: '첫 요소 <b>10</b> → acc = 0 + 10 = <b>10</b>.' },
+        { code: 'n = 20  →  acc = 10 + 20 = 30', mark: 'n = 20', note: '다음 <b>20</b> → acc = 10 + 20 = <b>30</b>.' },
+        { code: 'n = 30  →  acc = 30 + 30 = 60', mark: 'n = 30', note: '마지막 <b>30</b> → acc = 30 + 30 = <b>60</b>.' },
+        { code: 'acc = 60', note: '= <b>60</b>. reduce = <b>목록을 값 하나로 접기</b>(합계·최댓값·객체 만들기…). map/filter와 달리 <b>결과가 배열이 아니라 값 하나</b>.' },
+      ],
+    }))
     wireNav(root)
   }
 
