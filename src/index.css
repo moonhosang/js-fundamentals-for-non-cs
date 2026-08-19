@@ -348,6 +348,11 @@ nav {
   margin-bottom: 6px;
 }
 .lesson-goal p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--text); }
+/* 홈 '이 강의 나에게 맞나' 자기선별 블럭 */
+.fit-check { margin: 0 0 14px; padding: 12px 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; }
+.fit-check-tag { display: inline-block; font-size: 12px; font-weight: 700; color: var(--brand); margin-bottom: 7px; }
+.fit-check ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.fit-check li { font-size: 13.5px; line-height: 1.55; color: var(--text); }
 
 /* 서브 섹션별 학습 포인트 칩 */
 .learn-tag {
