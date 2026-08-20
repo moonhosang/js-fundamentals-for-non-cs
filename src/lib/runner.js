@@ -18,6 +18,15 @@
     return String(v)
   }
 
+  // print(...) 줄 끝의 결과 주석(정답 스포일러)만 가린다. 단독 설명 주석(// …)·URL은 그대로.
+  function maskResults(src) {
+    return String(src).split('\n').map((line) =>
+      /\bprint\s*\(/.test(line) && !/:\/\//.test(line)
+        ? line.replace(/\s*\/\/.*$/, '   // ?')
+        : line
+    ).join('\n')
+  }
+
   window.Runner = function Runner(opts) {
     // autorun 기본 false — 커리큘럼 철학이 '읽고 → 눌러 보고'라, 학습자가 직접 ▶실행을 눌러
     // 결과를 확인하게 한다(자동 실행은 결과를 미리 보여줘 '예측→실행' 경험을 없앤다).
@@ -26,23 +35,31 @@
     const root = document.createElement('div')
     root.className = 'runner'
 
+    // 정답(결과) 주석 가리기 — print 줄 끝 결과는 스포일러라 기본 '// ?'로 가림. 💡로 펼침.
+    const masked = maskResults(code)
+    const hasSpoiler = masked !== code
+    let revealed = false
+    let hintBtn = null
+
     // 편집창(또는 고정 코드)
-    let getCode
+    let getCode, setDisplay
     if (editable) {
       const ta = document.createElement('textarea')
       ta.className = 'runner-code'
-      ta.value = code
+      ta.value = hasSpoiler ? masked : code
       ta.spellcheck = false
       ta.rows = rows || Math.max(3, code.split('\n').length)
       root.append(ta)
       getCode = () => ta.value
-      root._reset = () => { ta.value = code }
+      setDisplay = () => { ta.value = revealed || !hasSpoiler ? code : masked }
+      root._reset = () => { revealed = false; setDisplay(); if (hintBtn) hintBtn.textContent = '💡 정답 보기' }
     } else {
       const pre = document.createElement('pre')
       pre.className = 'runner-code runner-code-static'
-      pre.textContent = code
+      pre.textContent = hasSpoiler ? masked : code
       root.append(pre)
       getCode = () => code
+      setDisplay = () => { pre.textContent = revealed || !hasSpoiler ? code : masked }
     }
 
     // 버튼
@@ -53,6 +70,14 @@
     runBtn.className = 'chip on'
     runBtn.textContent = '▶ 실행'
     btns.append(runBtn)
+    if (hasSpoiler) {
+      hintBtn = document.createElement('button')
+      hintBtn.className = 'chip'
+      hintBtn.textContent = '💡 정답 보기'
+      hintBtn.title = '실행 결과(정답)를 코드에 다시 보여줘요'
+      hintBtn.onclick = () => { revealed = !revealed; hintBtn.textContent = revealed ? '🙈 정답 가리기' : '💡 정답 보기'; setDisplay() }
+      btns.append(hintBtn)
+    }
     if (editable) {
       const resetBtn = document.createElement('button')
       resetBtn.className = 'chip'
