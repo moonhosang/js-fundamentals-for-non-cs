@@ -445,6 +445,32 @@
       err.innerHTML = `<div class="file-label">⚠️ 이 레슨을 그리다 문제가 생겼어요</div><pre class="err-code">${String((e && e.message) || e)}</pre>`
       host.append(err)
     }
+    const nav = pageNav()
+    if (nav) page.append(nav)
+  }
+
+  // 페이지 하단 이전/다음 — 모바일에서 목차 안 열고 순서대로(강의·드릴) 넘어가기.
+  function pageNav() {
+    const order = CHAPTERS.flatMap((c) => c.items).filter((id) => byId[id] && hasContent(id))
+    const i = order.indexOf(state.currentId)
+    if (i < 0) return null
+    const label = (id) => {
+      const l = byId[id]
+      if (kindOf(l) === 'practiceset') return ((l.badge ? l.badge + ' ' : '') + (l.title || '') + (l.subtitle ? ' ' + l.subtitle : '')).trim()
+      return l.title || String(id)
+    }
+    const btn = (id, dir) => {
+      const b = document.createElement('button')
+      b.className = 'page-nav-btn ' + dir
+      b.innerHTML = `<span class="pn-dir">${dir === 'prev' ? '← 이전' : '다음 →'}</span><span class="pn-title">${label(id)}</span>`
+      b.onclick = () => go(id)
+      return b
+    }
+    const nav = document.createElement('nav')
+    nav.className = 'page-nav'
+    nav.append(i > 0 ? btn(order[i - 1], 'prev') : document.createElement('span'))
+    nav.append(i < order.length - 1 ? btn(order[i + 1], 'next') : document.createElement('span'))
+    return nav
   }
 
   // 실습 문제를 풀면(정답) 그 문제 항목을 '연습' 진도에 자동 체크한다.

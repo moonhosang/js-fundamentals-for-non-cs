@@ -367,6 +367,14 @@ nav {
 .fit-star { white-space: nowrap; text-align: center; color: #f59e0b; letter-spacing: 1.5px; font-size: 14px; width: 88px; }
 .fit-verdict { color: var(--muted); font-size: 12.5px; min-width: 84px; }
 .fit-verdict b { color: #16a34a; }
+/* 페이지 하단 이전/다음 (모바일에서 목차 없이 이동) */
+.page-nav { display: flex; justify-content: space-between; gap: 12px; margin: 30px 0 10px; }
+.page-nav > span { flex: 1; }
+.page-nav-btn { flex: 1; display: flex; flex-direction: column; gap: 3px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); color: var(--text); cursor: pointer; text-align: left; min-width: 0; }
+.page-nav-btn.next { text-align: right; align-items: flex-end; }
+.page-nav-btn:hover { border-color: var(--brand); background: var(--brand-soft); }
+.page-nav-btn .pn-dir { font-size: 11px; font-weight: 700; color: var(--brand); }
+.page-nav-btn .pn-title { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
 /* 서브 섹션별 학습 포인트 칩 */
 .learn-tag {
