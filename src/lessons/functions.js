@@ -178,8 +178,10 @@
       '  return "안녕!"',
       '}',
       '',
-      'print(greet())             // 호출: ( )를 붙여 실행 → "안녕!"',
-      'print(greet())             // 몇 번이든 다시 부를 수 있다',
+      'print(greet())             // "안녕!"',
+      '// ( )를 붙여야 호출(실행)된다',
+      'print(greet())             // "안녕!"',
+      '// 몇 번이든 다시 부를 수 있다',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
       title: '정의는 상자만 · 호출해야 프레임이 생긴다',
