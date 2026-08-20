@@ -578,8 +578,8 @@
       <p class="section-desc" style="opacity:.85;margin-top:10px">💡 <b>실무에서</b> — <b>메모리 누수(memory leak)</b>가 이 그림의 반대다: 다 썼는데 <b>어딘가 참조가 남아</b>(이벤트 리스너·전역 캐시) 힙에서 <b>안 치워지는</b> 것. "아무도 안 가리키면 치운다"의 뒤집힌 얼굴 — 안 쓰면 참조를 끊어줘야 한다.</p>
 
       <div class="practice-cta">
-        <span>슬롯이 '주소'를 담는다 — 그래서 생기는 유명한 함정을 다음에서 —</span>
-        <button class="chip on" data-goto="ref">🧠 M4-1 · 값 = 복사 →</button>
+        <span>객체가 힙에 산다 — 그럼 그 <b>속 데이터(속성)</b>는 어디에? —</span>
+        <button class="chip on" data-goto="objanat">🧠 객체 해부 · 속성은 어디 사나 →</button>
       </div>
     `
     root.querySelector('[data-m="heap"]').append(MemoryModel(SCENARIO_HEAP))
