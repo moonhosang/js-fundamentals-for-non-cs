@@ -157,11 +157,13 @@
 
     // ⑤ 축약 — 읽으면 뭐가 나오나: 값 vs 주소
     root.querySelector('[data-m="xr-extract"]').append(ExprReduce({
-      title: '꺼내기 — p.age는 값이, p.best는 주소가 나온다',
+      title: 'p 봉투에서 꺼내기 — age는 값이, best는 주소가 나온다',
       steps: [
-        { code: 'let x = p.age\nlet f = p.best', mark: 'p.age', note: 'p의 봉투를 열어 <b>age 칸</b>을 읽는다 — 그 칸엔 <b>값 30이 그대로</b> 들어 있다.' },
-        { code: 'let x = 30\nlet f = p.best', mark: 'p.best', note: '나온 30이 <b>복사</b>돼 x에(봉투 밖 독립). 이제 <b>best 칸</b> — 이 칸엔 값이 아니라 <b>주소표</b>가 들어 있다.' },
-        { code: 'let x = 30\nlet f = (효니 봉투의 주소)', note: 'x = <b>값의 사본</b>(이후 봉투와 무관) · f = <b>주소의 사본</b>(p.best와 <b>같은 효니 봉투</b>를 가리킴 = 공유). 봉투에 든 그대로 나온다.' },
+        { code: 'p = { age: 30, best: {name: "효니"} }', mark: 'age', note: '먼저 <b>p가 뭐였지?</b> — ③에서 만든 그 <b>봉투</b>다. <b>age 칸엔 값 30</b>, <b>best 칸엔 효니 봉투의 주소표</b>. 이걸 기억하고 꺼내 보자.' },
+        { code: 'let x = p.age', mark: 'p.age', note: 'p의 봉투를 열어 <b>age 칸</b>을 읽는다 — 그 칸엔 <b>값 30이 그대로</b> 들어 있다 → <b>30</b>이 나온다.' },
+        { code: 'let x = 30', mark: '30', note: '나온 30이 <b>복사</b>돼 x에 담긴다 — x는 <b>봉투 밖 독립 30</b>.' },
+        { code: 'let f = p.best', mark: 'p.best', note: '이번엔 <b>best 칸</b> — 이 칸엔 값이 아니라 <b>주소표</b>가 들어 있다 → <b>주소</b>가 나온다.' },
+        { code: 'let f = (효니 봉투의 주소)', note: 'f = <b>주소의 사본</b> → p.best와 <b>같은 효니 봉투</b>를 가리킨다(공유). 규칙은 하나 — <b>봉투 칸에 든 그대로</b> 나온다. age 칸엔 값이라 값이(복사), best 칸엔 주소라 주소가(공유).' },
       ],
     }))
 
@@ -169,14 +171,19 @@
     root.querySelector('[data-m="sim-extract"]').append(MemoryModel({
       title: '꺼내기 — 원시는 복사(독립), 객체는 주소(공유)',
       stackLabel: '📇 이름표 장부(변수)', heapLabel: '🗄️ 값 메모리',
-      code: ['let x = p.age   // 원시 → 복사', 'let f = p.best  // 객체 → 주소'],
+      code: ['let p = { age: 30, best: { name: "효니" } }', 'let x = p.age   // 원시 → 복사', 'let f = p.best  // 객체 → 주소'],
       steps: [
         { line: 0,
+          stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }] }],
+          heap: { h1: { fields: [{ key: 'age', value: '30' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'name', value: '"효니"' }] } },
+          note: '먼저 <b>p</b>부터 — ③에서 본 그 <b>봉투</b>다. <b>age 칸엔 값 30</b>, <b>best 칸엔 효니 봉투(h2)의 주소표</b>. (아직 x·f 없음) 이제 여기서 꺼내 보자.',
+          engine: 'h1은 힙에 할당된 객체. age는 SMI라 <b>봉투 안에 인라인</b>, best는 h2를 가리키는 포인터. 봉투와 그 부품들이 준비됐다.' },
+        { line: 1,
           stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }, { name: 'x', value: '30' }] }],
           heap: { h1: { fields: [{ key: 'age', value: '30' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'name', value: '"효니"' }] } },
           note: '<code>let x = p.age</code> — age 칸의 <b>값 30이 복사</b>돼 나온다. x는 <b>봉투 밖 독립 30</b> — 이후 <code>p.age = 99</code> 해도 x는 그대로, <code>x = 9</code> 해도 p.age는 그대로(M4-1 · 값 = 복사).',
           engine: 'p.age의 SMI 비트를 x 슬롯으로 <b>복사</b> — h1을 가리키는 참조가 아니다. 봉투와의 링크가 애초에 없다.' },
-        { line: 1,
+        { line: 2,
           stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }, { name: 'x', value: '30' }, { name: 'f', ref: 'h2' }] }],
           heap: { h1: { fields: [{ key: 'age', value: '30' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'name', value: '"효니"' }] } },
           note: '<code>let f = p.best</code> — best 칸엔 <b>주소표</b>가 들어 있으니 <b>주소가 복사</b>된다. f와 p.best가 <b>같은 효니 봉투(h2)</b>를 가리킨다(공유) — <code>f.name = "보리"</code> 하면 <b>p.best.name도 "보리"</b>. 원시=복사·독립 vs 객체=주소·공유.',
