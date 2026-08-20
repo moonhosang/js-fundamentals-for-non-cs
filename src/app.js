@@ -13,6 +13,7 @@
     { id: 'stack', badge: '🧠 M2', title: 'M2 · 스택', subtitle: '슬롯 · LIFO · push/pop' },
     { id: 'heap', badge: '🧠 M3', title: 'M3 · 힙', subtitle: '창고 · 주소 · 왜 힙인가 · ❌스택' },
     { id: 'objanat', badge: '🧠 해부', title: '객체 해부 · 속성은 어디', subtitle: '원시는 스택이라며? · 봉투 속 데이터' },
+    { id: 'objprim', badge: '🧠 조화', title: '객체 × 원시값 · 조화 연습', subtitle: '넣기·꺼내기·중첩 · 규칙은 하나' },
     { id: 'ref', badge: '🧠 M4-1', title: 'M4-1 · 값 = 복사', subtitle: '이름표 착각 정면돌파 · a.num은 복사' },
     { id: 'ref2', badge: '🧠 M4-2', title: 'M4-2 · 참조 = 공유', subtitle: '별칭 · "왜 obj도 바뀌지"' },
     { id: 'passval', badge: '🧠 M5', title: 'M5 · 값에 의한 전달', subtitle: '원시값 → 함수 · 원본 안전' },
@@ -129,7 +130,7 @@
   // 이러면 사이드바 최상위는 파트1~4만 보여 흐름이 깔끔하고(예전엔 1강↔2강 사이에 심화
   // 11개가 벽처럼 끼어 끊겼다), 파트를 펼치면 심화가 제 자리에 자연히 이어진다.
   const CHAPTERS = [
-    { n: '1', title: '값과 메모리', items: [1, ...P(1), 'ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'objanat', 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
+    { n: '1', title: '값과 메모리', items: [1, ...P(1), 'ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'objanat', 'objprim', ...P('objprim'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
     // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다. 함수 뒤에 메모리 심화.
     { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5), 'callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     // 객체(8강) 뒤에 그래프·클래스.

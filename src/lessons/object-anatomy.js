@@ -106,7 +106,7 @@ me.name = name
       </div>
       <div data-m="drill"></div>
 
-      <div class="practice-cta"><span>그럼 그 속성을 꺼내면? — 정반대·정면돌파 —</span><button class="chip on" data-goto="ref">🧠 M4-1 · 값 = 복사 →</button></div>
+      <div class="practice-cta"><span>규칙은 하나인데 조합이 많다 — 예측으로 손에 붙이자 —</span><button class="chip on" data-goto="objprim">🧠 객체 × 원시값 · 조화 연습 →</button></div>
     `
 
     // ② 대비 시뮬 — 같은 30, 다른 집 (변수 vs 속성)
