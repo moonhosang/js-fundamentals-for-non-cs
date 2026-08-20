@@ -19,7 +19,9 @@
   }
 
   window.Runner = function Runner(opts) {
-    const { code = '', editable = true, showBox = true, autorun = true, rows } = opts || {}
+    // autorun 기본 false — 커리큘럼 철학이 '읽고 → 눌러 보고'라, 학습자가 직접 ▶실행을 눌러
+    // 결과를 확인하게 한다(자동 실행은 결과를 미리 보여줘 '예측→실행' 경험을 없앤다).
+    const { code = '', editable = true, showBox = true, autorun = false, rows } = opts || {}
 
     const root = document.createElement('div')
     root.className = 'runner'
