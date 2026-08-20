@@ -55,7 +55,27 @@
       <div data-m="qz-g1"></div>
       <div data-m="qz-g2"></div>
 
-      <h3 class="section-title">⑧ 🎯 예측 드릴 — A~G 섞어서, 손에 붙이자</h3>
+      <h3 class="section-title">⑧ H · 함수에 전달 — 매개변수도 결국 '대입'이다</h3>
+      <span class="learn-tag">📎 f(인자) 호출은 매개변수 = 인자 대입과 같다 — 그래서 넣기·꺼내기와 똑같은 규칙</span>
+      <div class="concept">
+        <p class="concept-lead">📖 핵심 다리 — 매개변수 전달 = 대입</p>
+        <p class="section-desc" style="margin-top:0"><code>f(x)</code>로 부르면 함수는 매개변수 자리에 <code>매개변수 = x</code>를 <b>대입</b>하는 것과 똑같다.
+        그러니 <b>새 규칙이 아니다</b> — <b>원시면 값이 복사</b>돼 원본 안전, <b>객체면 주소가 복사=공유</b>돼 함수 안에서 바꾸면 원본도 바뀐다. 지금까지의 한 줄 그대로다.</p>
+      </div>
+      <div data-m="qz-h1"></div>
+      <div data-m="qz-h2"></div>
+
+      <div class="card">
+        <div class="file-label">⚠️ 최대 함정 — 매개변수를 '변경(mutate)' 하나, '재할당(reassign)' 하나</div>
+        <pre class="err-code">function 변경(p)   { p.hp = 0 }       // p가 가리키는 봉투를 뜯어고침 → 원본도 바뀜
+function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼움 → 원본은 그대로</pre>
+      </div>
+      <p class="section-desc"><b>변경</b>(<code>p.hp = 0</code>)은 넘겨받은 <b>같은 봉투</b>를 고치니 원본에 뚫고 나간다. <b>재할당</b>(<code>p = { ... }</code>)은 매개변수 <code>p</code>의 <b>화살표만 새 봉투로</b> 옮길 뿐 — 바깥 변수의 화살표는 <b>옛 봉투 그대로</b>라 원본이 안전하다. 같은 <code>=</code>이라도 <b>p.hp = …</b>는 봉투 <u>안</u>을, <b>p = …</b>는 <u>화살표</u>를 바꾼다.</p>
+      <div data-m="qz-h3"></div>
+
+      <p class="section-desc" style="opacity:.85">🔎 왜 그런지 <b>메모리 그림</b>으로 낱낱이 — <button class="inline-goto" data-goto="passval">🧠 M5 · 원시 전달</button> · <button class="inline-goto" data-goto="passobj">🧠 M6 · 객체 전달</button> · <button class="inline-goto" data-goto="passarr">🧠 M7 · 배열 전달</button></p>
+
+      <h3 class="section-title">⑨ 🎯 예측 드릴 — A~H 섞어서, 손에 붙이자</h3>
       <p class="section-desc">위 개념을 <b>예측 드릴</b>로 굳힌다 — 매 문제, <b>그 칸에 값이 들었나 주소표가 들었나</b>부터 판정하라. 사이드바의 이 강의 아래 <b>쉬움·보통·어려움</b> 3단계, 아래 버튼으로 바로 시작:</p>
       <div class="practice-cta"><span>예측 드릴 —</span><button class="chip on" data-goto="objprim:easy">🟢 쉬움</button><button class="chip on" data-goto="objprim:normal">🟡 보통</button><button class="chip on" data-goto="objprim:hard">🔴 어려움</button></div>
 
@@ -146,6 +166,26 @@
       options: ['1 — 복사했으니 안쪽도 독립이다', '9 — 객체 필드는 주소만 복사돼 안쪽 봉투는 여전히 공유'],
       answer: 1,
       explain: 'f 칸엔 <b>주소표</b> → 복사되는 건 <b>주소뿐</b>이다. c.f와 o.f는 <b>같은 안쪽 봉투</b> — 그래서 <code>c.f.v = 9</code>가 o.f.v로도 보인다. 이게 <b>"얕은" 복사</b>의 정체: 한 겹만 새 봉투, 안쪽은 공유. 규칙은 그대로 — <b>원시=복사 · 객체=공유</b>가 필드마다 적용될 뿐.',
+    }))
+
+    // ── H 함수에 전달 (매개변수 = 대입) ──────────────────────
+    root.querySelector('[data-m="qz-h1"]').append(Quiz({
+      q: '<code>let money = 100; function pay(n) { n = 0 } pay(money)</code> — <b>money</b>는?',
+      options: ['0 — 함수 안에서 0으로 바꿨으니까', '100 — 복사본이 전달돼 원본은 안전'],
+      answer: 1,
+      explain: '원시값은 넘길 때 <b>값이 복사</b>된다 — 매개변수 <code>n</code>은 money의 <b>독립 사본</b>. <code>n = 0</code>은 사본만 바꾼다 → 원본 <b>money는 100 그대로</b>. <b>원시=값 복사(독립)</b> — 대입일 때와 똑같다.',
+    }))
+    root.querySelector('[data-m="qz-h2"]').append(Quiz({
+      q: '<code>let u = { hp: 100 }; function hurt(p) { p.hp = 0 } hurt(u)</code> — <b>u.hp</b>는?',
+      options: ['100 — 함수에 넘긴 건 사본이라 원본 안전', '0 — 같은 봉투라 함수 안 변경이 원본에 보인다'],
+      answer: 1,
+      explain: '객체는 넘길 때 <b>주소가 복사=공유</b> — 매개변수 <code>p</code>와 <code>u</code>는 <b>같은 봉투</b>다. <code>p.hp = 0</code>이 그 봉투를 고치니 <b>u.hp도 0</b>. <b>객체=주소 복사(공유)</b>.',
+    }))
+    root.querySelector('[data-m="qz-h3"]').append(Quiz({
+      q: '이번엔 <code>function reset(p) { p = { hp: 0 } } reset(u)</code> — (u는 { hp: 100 }) <b>u.hp</b>는?',
+      options: ['0 — 함수가 hp를 0으로 만들었다', '100 — p를 새 봉투로 갈아껴 원본은 그대로'],
+      answer: 1,
+      explain: '<code>p = { hp: 0 }</code>은 매개변수 <code>p</code>의 <b>화살표만 새 봉투로</b> 옮긴다 — 바깥 <code>u</code>의 화살표는 <b>옛 봉투 그대로</b>. 그래서 <b>u.hp는 100</b>. (만약 <code>p.hp = 0</code>였다면 같은 봉투를 고쳐 원본도 0 — <b>변경 vs 재할당</b>의 갈림길!)',
     }))
   }
 })()
