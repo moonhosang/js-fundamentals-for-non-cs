@@ -97,7 +97,8 @@
     root.querySelector('[data-m="bracket"]').append(Runner({ showBox: false, code: [
       'let user = { name: "민지" }',
       'print(user.name)       // "민지"  (점)',
-      'print(user["name"])    // "민지"  (대괄호 — 같다)',
+      'print(user["name"])    // "민지"',
+      '// 대괄호 — 같다',
       '',
       'let key = "name"       // 이름이 변수에 담겨 있으면?',
       'print(user[key])       // "민지"  (대괄호만 가능!)',
@@ -131,7 +132,8 @@
       '  bark: function () { return "멍멍!" },   // 값이 함수 = 메서드',
       '}',
       'print(dog.name)      // "콩이"  (보통 속성)',
-      'print(dog.bark())    // "멍멍!" (메서드 — ()로 부른다)',
+      'print(dog.bark())    // "멍멍!"',
+      '// 메서드 — ()로 부른다',
     ].join('\n') }))
 
     root.querySelector('[data-m="card"]').append(Runner({ code: [

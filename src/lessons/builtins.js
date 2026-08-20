@@ -90,9 +90,11 @@
     root.querySelector('[data-m="type"]').append(Runner({ showBox: false, code: [
       'print(typeof 24)        // "number"',
       'print(typeof "hi")      // "string"',
-      'print(typeof null)      // "object"  (유명한 함정)',
+      'print(typeof null)      // "object"',
+      '// 유명한 함정',
       'print([] instanceof Array)  // true',
-      'print(NaN === NaN)      // false  (자기와도 다름)',
+      'print(NaN === NaN)      // false',
+      '// 자기와도 다름',
     ].join('\n') }))
     wireNav(root)
   }
@@ -117,8 +119,10 @@
     root.querySelector('[data-m="num"]').append(Runner({ showBox: false, code: [
       'print(Number("12") + 3)   // 15',
       'print(Math.max(1, 9, 3))  // 9',
-      'print(2 ** 3)             // 8  (2의 3제곱)',
-      'print(10 % 3)             // 1  (나머지)',
+      'print(2 ** 3)             // 8',
+      '// 2의 3제곱',
+      'print(10 % 3)             // 1',
+      '// 나머지',
     ].join('\n') }))
     wireNav(root)
   }
@@ -200,8 +204,10 @@
       'print(a.includes(20))    // true',
       'print(a.indexOf(100))    // 2',
       'print([1, 2, 3].join("-"))   // "1-2-3"',
-      'print(a.sort())          // [100,20,3]  (기본은 문자 비교!)',
-      'a.push(9); print(a.length)   // 4  (push는 원본 변경)',
+      'print(a.sort())          // [100,20,3]',
+      '// 기본은 문자 비교!',
+      'a.push(9); print(a.length)   // 4',
+      '// push는 원본 변경',
     ].join('\n') }))
     root.querySelector('[data-m="arr2"]').append(Runner({ showBox: false, code: [
       'print([1, 2, 3].map(x => x * 2))       // [2,4,6]',
@@ -251,7 +257,8 @@
       'print(Object.keys(o))    // ["a","b"]',
       'print(Object.keys(o).length)  // 2',
       'delete o.a',
-      'print(o.a)               // undefined  (지워짐)',
+      'print(o.a)               // undefined',
+      '// 지워짐',
     ].join('\n') }))
     wireNav(root)
   }
@@ -374,16 +381,23 @@
     `
     root.querySelector('[data-m="cast"]').append(Runner({ showBox: false, code: [
       '// 🙋 명시적 — 내가 직접',
-      'print(Number("12") + 3)       // 15   (문자 → 숫자)',
-      'print(Number("abc"))          // NaN  (못 바꾸면)',
+      'print(Number("12") + 3)       // 15',
+      '// 문자 → 숫자',
+      'print(Number("abc"))          // NaN',
+      '// 못 바꾸면',
       'print(String(12) + "!")       // "12!"',
-      'print(parseInt("12px"))       // 12   (앞 정수만)',
+      'print(parseInt("12px"))       // 12',
+      '// 앞 정수만',
       '',
       '// 🤖 암묵적 — 연산자가 알아서 (같은 "5"인데 다르다)',
-      'print("5" + 1)                // "51"  (+는 이어붙임)',
-      'print("5" - 1)                // 4     (−는 숫자로 강제)',
-      'print(true + 1)               // 2     (true → 1)',
-      'print(1 == "1", 1 === "1")    // true false  (==는 강제, ===는 안 함)',
+      'print("5" + 1)                // "51"',
+      '// +는 이어붙임',
+      'print("5" - 1)                // 4',
+      '// −는 숫자로 강제',
+      'print(true + 1)               // 2',
+      '// true → 1',
+      'print(1 == "1", 1 === "1")    // true false',
+      '// ==는 강제, ===는 안 함',
     ].join('\n') }))
     root.querySelector('[data-m="truthy"]').append(Runner({ showBox: false, code: [
       '// ❌ falsy 8개 — 전부 false 취급',
@@ -395,8 +409,10 @@
       'print(Boolean([]), Boolean({}))                      // true true',
       '',
       '// 실전 패턴',
-      'print("" || "익명")           // "익명"  (빈값이면 기본값)',
-      'print(0 && "실행")            // 0       (앞이 falsy면 멈춤)',
+      'print("" || "익명")           // "익명"',
+      '// 빈값이면 기본값',
+      'print(0 && "실행")            // 0',
+      '// 앞이 falsy면 멈춤',
     ].join('\n') }))
     root.querySelector('[data-m="sim-tobool"]').append(ExprReduce({
       title: 'if ("0") { … }  — "0"은 참일까 거짓일까?',
@@ -488,14 +504,19 @@
     }))
     root.querySelector('[data-m="run-default"]').append(Runner({ showBox: false, code: [
       'let count = 0',
-      'print(count || 10)   // 10  ← 0이 falsy라 날아감 (함정!)',
-      'print(count ?? 10)   // 0   ← ??는 null/undefined일 때만',
+      'print(count || 10)   // 10',
+      '// ← 0이 falsy라 날아감 (함정!)',
+      'print(count ?? 10)   // 0',
+      '// ??는 null/undefined일 때만',
       '',
-      'print("" || "익명")   // "익명"  ← 빈칸이면 기본값 (여기선 ||가 맞다)',
-      'print(null ?? "기본") // "기본"  ← 값이 아예 없을 때',
+      'print("" || "익명")   // "익명"',
+      '// ← 빈칸이면 기본값 (여기선 ||가 맞다)',
+      'print(null ?? "기본") // "기본"',
+      '// 값이 아예 없을 때',
       '',
       'let score = 85',
-      'print(score >= 60 ? "합격" : "불합격")   // "합격"  ← 삼항: 조건으로 고르기',
+      'print(score >= 60 ? "합격" : "불합격")   // "합격"',
+      '// 삼항: 조건으로 고르기',
     ].join('\n') }))
     root.querySelector('[data-m="def-drill"]').append(Drill({
       pattern: '빈칸에 예측값을 넣어라 — 맞으면 true. (0에서 ||와 ??가 갈린다)',

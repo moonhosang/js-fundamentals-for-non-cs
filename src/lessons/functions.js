@@ -276,7 +276,8 @@
       'function noReturn(x) {     // return이 없으면?',
       '  let y = x * 2           // 계산만 하고 안 돌려줌',
       '}',
-      'print(noReturn(5))        // undefined (돌려준 게 없다)',
+      'print(noReturn(5))        // undefined',
+      '// 돌려준 게 없다',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
       title: 'return이 값을 돌려줘 변수에 담긴다',
@@ -382,7 +383,8 @@
       '  let big = x * 100      // 계산만 하고',
       '}                        // return이 없다',
       'let r = shout(5)',
-      'print(r)                 // undefined (돌려준 게 없다)',
+      'print(r)                 // undefined',
+      '// 돌려준 게 없다',
     ].join('\n') }))
     root.querySelector('[data-m="f3"]').append(MemoryModel({
       title: '③ 조기 반환 — return을 만나면 즉시 끝',
@@ -465,7 +467,8 @@
       '  return msg',
       '}',
       '',
-      'print(makeMsg("민지"))             // OK — 함수가 msg를 만들어 돌려준다',
+      'print(makeMsg("민지"))             // OK',
+      '// 함수가 msg를 만들어 돌려준다',
       '// print(msg)   // ❌ 여기선 msg가 안 보인다(지역이라) — 주석 풀면 에러',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
@@ -548,7 +551,8 @@
       'const doubleB = (n) => n * 2           // 화살표(한 줄이면 return 생략)',
       '',
       'print(doubleA(10))   // 20',
-      'print(doubleB(10))   // 20  (똑같다)',
+      'print(doubleB(10))   // 20',
+      '// 똑같다',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
       title: '화살표 함수도 똑같이 프레임이 쌓인다',

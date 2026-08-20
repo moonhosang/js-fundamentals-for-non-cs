@@ -122,7 +122,8 @@
       'let a = new Cat()',
       'let b = new Cat()   // 또 하나 — 힙에 새 객체',
       'a.hp = 50           // a만 바꾼다',
-      'print(a.hp + " / " + b.hp)   // 50 / 100  (b는 그대로 — 독립)',
+      'print(a.hp + " / " + b.hp)   // 50 / 100',
+      '// b는 그대로 — 독립',
     ].join('\n') }))
 
     root.querySelector('[data-m="mem"]').append(MemoryModel({

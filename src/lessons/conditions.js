@@ -154,10 +154,14 @@ else                  { grade = "F" }</pre>
       showBox: false,
       code: [
         'print(10 > 5)      // true',
-        'print(3 === 3)     // true  (값·타입 같음)',
-        'print("5" === 5)   // false! 글자 vs 숫자 (타입 다름)',
-        'print("5" == 5)    // true  — ==는 타입을 바꿔 비교 (함정!)',
-        'print(0 == "")     // true  — == 함정',
+        'print(3 === 3)     // true',
+        '// 값·타입 같음',
+        'print("5" === 5)   // false!',
+        '// 글자 vs 숫자 (타입 다름)',
+        'print("5" == 5)    // true',
+        '// ==는 타입을 바꿔 비교 (함정!)',
+        'print(0 == "")     // true',
+        '// == 함정',
       ].join('\n'),
     }))
 
@@ -238,8 +242,10 @@ else                  { grade = "F" }</pre>
     root.querySelector('[data-m="tf"]').append(Runner({
       showBox: false,
       code: [
-        'print(Boolean(0))       // false  (falsy)',
-        'print(Boolean(""))      // false  (빈 글자)',
+        'print(Boolean(0))       // false',
+        '// falsy',
+        'print(Boolean(""))      // false',
+        '// 빈 글자',
         'print(Boolean(null))    // false',
         'print(Boolean("0"))     // true!  글자 "0"은 있는 것',
         'print(Boolean([]))      // true!  빈 배열도 있는 것',

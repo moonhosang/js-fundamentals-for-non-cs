@@ -136,22 +136,31 @@
     root.querySelector('[data-m="e1-run"]').append(Runner({
       showBox: false,
       code: [
-        'print(3 + 4)                    // 7     (계산 → 값)',
-        'print(10 > 3)                   // true  (비교 → 값)',
-        'print(10 > 3 ? "큼" : "작음")     // "큼"   (삼항 → 값!)',
-        'print("kim".toUpperCase())       // "KIM" (메서드 호출 → 값)',
-        'print(Math.max(2, 7, 5))         // 7     (함수 호출 → 값)',
+        'print(3 + 4)                    // 7',
+        '// 계산 → 값',
+        'print(10 > 3)                   // true',
+        '// 비교 → 값',
+        'print(10 > 3 ? "큼" : "작음")     // "큼"',
+        '// 삼항 → 값!',
+        'print("kim".toUpperCase())       // "KIM"',
+        '// 메서드 호출 → 값',
+        'print(Math.max(2, 7, 5))         // 7',
+        '// 함수 호출 → 값',
       ].join('\n'),
     }))
     root.querySelector('[data-m="e1b-run"]').append(Runner({
       showBox: false,
       code: [
         'let ok = 10 > 3',
-        'print(ok)                    // true   (비교 결과를 변수에 담았다)',
-        'print(5 > 3 && 2 < 4)         // true   (논리도 값)',
+        'print(ok)                    // true',
+        '// 비교 결과를 변수에 담았다',
+        'print(5 > 3 && 2 < 4)         // true',
+        '// 논리도 값',
         'let canEnter = 20 >= 18 && 5 > 0',
-        'print(canEnter)              // true   ("조건"이 아니라 "값")',
-        'print(true < true && true)   // false  (이상해 보여도 하나의 값!)',
+        'print(canEnter)              // true',
+        '// "조건"이 아니라 "값"',
+        'print(true < true && true)   // false',
+        '// 이상해 보여도 하나의 값!',
       ].join('\n'),
     }))
     root.querySelector('[data-m="red-tern-fold"]').append(ExprReduce({
@@ -222,9 +231,12 @@
     root.querySelector('[data-m="e2-run"]').append(Runner({
       showBox: false,
       code: [
-        'print(2 + 3 * 4)      // 14   (곱셈 먼저 → 2 + 12)',
-        'print((2 + 3) * 4)    // 20   (괄호가 덧셈을 먼저로)',
-        'print(10 - 2 - 3)     // 5    (뺄셈은 왼쪽부터: (10-2)-3)',
+        'print(2 + 3 * 4)      // 14',
+        '// 곱셈 먼저 → 2 + 12',
+        'print((2 + 3) * 4)    // 20',
+        '// 괄호가 덧셈을 먼저로',
+        'print(10 - 2 - 3)     // 5',
+        '// 뺄셈은 왼쪽부터: (10-2)-3',
       ].join('\n'),
     }))
     root.querySelector('[data-m="qz32"]').append(Quiz({ q: '<code>2 + 3 * 4</code> 의 값은?', options: ['20 (왼쪽부터)', '14 (곱셈 먼저)', '24'], answer: 1, explain: '<code>*</code>가 <code>+</code>보다 <b>우선순위가 높다</b> → 3*4=12 먼저, 그다음 2+12=<b>14</b>. 왼쪽부터가 아니다.' }))
@@ -373,17 +385,24 @@
     root.querySelector('[data-m="gallery"]').append(Runner({
       showBox: false,
       code: [
-        'print(2 * 3 + 4 * 5)              // 26   (곱셈 먼저)',
-        'print((2 + 3) * (4 - 1))          // 15   (괄호 둘)',
-        'print(Math.max(1, 2 * 3, 10 / 5)) // 6    (인자 안 계산)',
+        'print(2 * 3 + 4 * 5)              // 26',
+        '// 곱셈 먼저',
+        'print((2 + 3) * (4 - 1))          // 15',
+        '// 괄호 둘',
+        'print(Math.max(1, 2 * 3, 10 / 5)) // 6',
+        '// 인자 안 계산',
         'print(10 > 5 && 3 < 1)            // false',
         'print("Hi, " + "bob".toUpperCase())  // "Hi, BOB"',
         '',
-        'print(3 > 2 > 1)         // ★ false   (사슬 비교 안 됨)',
-        'print(2 ** 3 ** 2)       // ★ 512     (지수 오른쪽부터)',
+        'print(3 > 2 > 1)         // ★ false',
+        '// 사슬 비교 안 됨',
+        'print(2 ** 3 ** 2)       // ★ 512',
+        '// 지수 오른쪽부터',
         'print(typeof typeof 42)  // ★ "string"',
-        'print("5" + 1, "5" - 1)  // ★ "51"  4 (+와 −가 다름)',
-        'print(1 + 2 + "3")       // ★ "33"    (왼쪽부터, 글자 만나면 이어붙임)',
+        'print("5" + 1, "5" - 1)  // ★ "51"  4',
+        '// +와 −가 다름',
+        'print(1 + 2 + "3")       // ★ "33"',
+        '// 왼쪽부터, 글자 만나면 이어붙임',
       ].join('\n'),
     }))
     root.querySelector('[data-m="red-chain"]').append(ExprReduce({
@@ -474,7 +493,8 @@
         '}',
         '',
         'let total = shippingFee(2) + discounted(30000, memberRate("gold"))',
-        'print(total)   // 25000  (배송비 1000 + 할인가 24000)',
+        'print(total)   // 25000',
+        '// 배송비 1000 + 할인가 24000',
       ].join('\n'),
     }))
     root.querySelector('[data-m="red3"]').append(ExprReduce({
@@ -540,9 +560,12 @@
       code: [
         'let score = 85, n = 5, day = 9',
         '',
-        'print(score >= 80)   // true   ← if (…) · while (…) 의 그 조건 자리',
-        'print(n < 10)        // true   ← for (…; 조건; …) 가운데도 같은 자리',
-        'print(day % 7)       // 2      ← switch (…) 값도 표현식 → case 2: 와 === 비교',
+        'print(score >= 80)   // true',
+        '// ← if (…) · while (…) 의 그 조건 자리',
+        'print(n < 10)        // true',
+        '// ← for (…; 조건; …) 가운데도 같은 자리',
+        'print(day % 7)       // 2',
+        '// ← switch (…) 값도 표현식 → case 2: 와 === 비교',
         '',
         '// for의 조건은 매 반복 "다시" 접힌다 — i가 0,1,2 → true, 3 → false(종료)',
         'for (let i = 0; i < 3; i++) print("i=" + i + " → " + (i < 3))',

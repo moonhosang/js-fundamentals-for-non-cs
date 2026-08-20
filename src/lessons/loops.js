@@ -186,7 +186,8 @@
       '})',
       '',
       'let r = fruits.forEach(function (f) {})',
-      'print(r)   // undefined — forEach는 값을 안 돌려준다',
+      'print(r)   // undefined',
+      '// forEach는 값을 안 돌려준다',
     ].join('\n') }))
 
     root.querySelector('[data-m="qz-fe"]').append(Quiz({
@@ -206,8 +207,10 @@
     root.querySelector('[data-m="map"]').append(Runner({ showBox: false, code: [
       'let nums = [1, 2, 3]',
       'let doubled = nums.map(function (n) { return n * 2 })   // 각 요소 × 2',
-      'print(doubled)   // [2,4,6]  (새 배열)',
-      'print(nums)      // [1,2,3]  (원본 그대로!)',
+      'print(doubled)   // [2,4,6]',
+      '// 새 배열',
+      'print(nums)      // [1,2,3]',
+      '// 원본 그대로!',
     ].join('\n') }))
 
     root.querySelector('[data-m="mapmem"]').append(MemoryModel({
@@ -224,7 +227,8 @@
       'let nums = [1, 2, 3, 4, 5]',
       'let evens = nums.filter(function (n) { return n % 2 === 0 })   // 짝수만 통과',
       'print(evens)   // [2,4]',
-      'print(nums)    // [1,2,3,4,5]  (원본 그대로)',
+      'print(nums)    // [1,2,3,4,5]',
+      '// 원본 그대로',
     ].join('\n') }))
 
     root.querySelector('[data-m="qz-reduce"]').append(Quiz({
@@ -239,7 +243,8 @@
       'let sum = nums.reduce(function (acc, n) {   // acc=누적, n=이번 요소',
       '  return acc + n',
       '}, 0)   // 0에서 시작',
-      'print(sum)   // 60  (0+10+20+30)',
+      'print(sum)   // 60',
+      '// 0+10+20+30',
     ].join('\n') }))
 
     root.querySelector('[data-m="cards"]').append(Runner({ code: [

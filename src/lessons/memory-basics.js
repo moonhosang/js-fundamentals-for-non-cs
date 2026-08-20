@@ -1570,7 +1570,8 @@ me.parent === sister.parent   // true — 나와 동생은 같은 아빠(참조)
         'dad.wife  = mom',
         'print(uncle.brother.wife.name)          // "엄마"  (삼촌→형→와이프)',
         'print(me.mother.name)                   // "엄마"  (나→엄마)',
-        'print(uncle.brother.wife === me.mother) // true — 같은 사람(별칭)!',
+        'print(uncle.brother.wife === me.mother) // true',
+        '// 같은 사람(별칭)!',
       ].join('\n'),
     }))
     root.querySelector('[data-m="qzg3"]').append(Quiz({ q: '<code>me.parent</code>는 엄마, 엄마의 <code>parent</code>는 할머니. <code>me.parent.parent</code>는?', options: ['엄마', '할머니', '나'], answer: 1, explain: '화살표를 <b>두 번</b> 따라간다 — me→엄마→할머니. 이게 <b>트리(그래프) 탐색</b>.' }))

@@ -126,7 +126,8 @@
         'print(fruits[0])   // "사과"  (첫째 = 0번!)',
         'print(fruits[1])   // "배"',
         'print(fruits[2])   // "귤"   (셋 중 마지막 = 2번)',
-        'print(fruits[3])   // undefined  (칸 밖 → 빈손)',
+        'print(fruits[3])   // undefined',
+        '// 칸 밖 → 빈손',
       ].join('\n'),
     }))
 
@@ -134,9 +135,12 @@
       showBox: false,
       code: [
         'let nums = [10, 20, 30]',
-        'print(nums.length)              // 3   (개수)',
-        'print(nums[nums.length - 1])    // 30  (마지막 = length-1)',
-        'print(nums[nums.length])        // undefined  (length번은 칸 밖! 함정)',
+        'print(nums.length)              // 3',
+        '// 개수',
+        'print(nums[nums.length - 1])    // 30',
+        '// 마지막 = length-1',
+        'print(nums[nums.length])        // undefined',
+        '// length번은 칸 밖! 함정',
       ].join('\n'),
     }))
 

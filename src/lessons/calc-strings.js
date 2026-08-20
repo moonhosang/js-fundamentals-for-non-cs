@@ -89,10 +89,13 @@
       showBox: false,
       code: [
         'print(3 + 4)          // 7',
-        'print(10 - 2 * 3)     // 4  (곱셈 먼저!)',
-        'print((10 - 2) * 3)   // 24 (괄호로 순서 강제)',
+        'print(10 - 2 * 3)     // 4',
+        '// 곱셈 먼저!',
+        'print((10 - 2) * 3)   // 24',
+        '// 괄호로 순서 강제',
         'print(7 / 2)          // 3.5',
-        'print(7 % 3)          // 1  (나머지)',
+        'print(7 % 3)          // 1',
+        '// 나머지',
       ].join('\n'),
     }))
 
@@ -119,11 +122,16 @@
     root.querySelector('[data-m="coerce"]').append(Runner({
       showBox: false,
       code: [
-        'print("5" + 3)          // "53"  — 글자가 이겨 이어붙임',
-        'print(5 + 3)            // 8     — 둘 다 숫자',
-        'print("5" * 2)          // 10    — 곱셈은 숫자로 바꿔줌',
-        'print(Number("5") + 3)  // 8     — 일부러 숫자로 바꿔서 더함',
-        'print(String(5) + 3)    // "53"  — 일부러 글자로 바꿔서 이음',
+        'print("5" + 3)          // "53"',
+        '// 글자가 이겨 이어붙임',
+        'print(5 + 3)            // 8',
+        '// 둘 다 숫자',
+        'print("5" * 2)          // 10',
+        '// 곱셈은 숫자로 바꿔줌',
+        'print(Number("5") + 3)  // 8',
+        '// 일부러 숫자로 바꿔서 더함',
+        'print(String(5) + 3)    // "53"',
+        '// 일부러 글자로 바꿔서 이음',
       ].join('\n'),
     }))
 
@@ -142,11 +150,15 @@
     root.querySelector('[data-m="nan"]').append(Runner({
       showBox: false,
       code: [
-        'print(Number("삼"))                 // NaN  (글자를 숫자로 못 바꿈)',
+        'print(Number("삼"))                 // NaN',
+        '// 글자를 숫자로 못 바꿈',
         'print(0 / 0)                        // NaN',
-        'print(10 - "가")                    // NaN  (숫자 아닌 걸 빼기)',
-        'print(NaN === NaN)                  // false — 자기와도 다르다!',
-        'print(Number.isNaN(Number("삼")))   // true  — 이렇게 검사한다',
+        'print(10 - "가")                    // NaN',
+        '// 숫자 아닌 걸 빼기',
+        'print(NaN === NaN)                  // false',
+        '// 자기와도 다르다!',
+        'print(Number.isNaN(Number("삼")))   // true',
+        '// 이렇게 검사한다',
       ].join('\n'),
     }))
 
