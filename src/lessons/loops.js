@@ -73,7 +73,13 @@
       <div class="card"><div class="file-label">🔬 합계 구하기 (0에서 시작해 누적)</div><div data-m="reduce"></div></div>
       <p class="section-desc"><code>reduce(콜백, 시작값)</code> — <code>acc</code>(누적)에 각 요소를 콜백대로 합쳐 <b>하나</b>로 만든다. 합계는 <code>acc + n</code>, 곱은 <code>acc * n</code>. 처음엔 어렵지만 "누적 상자에 하나씩 담는다"로 보면 쉽다.</p>
 
-      <h3 class="section-title">⑥ 화면 — 데이터 배열을 카드 목록으로</h3>
+      <h3 class="section-title">⑥ 객체도 반복 — <code>Object.keys</code> + <code>obj[key]</code> (8강 회수)</h3>
+      <span class="learn-tag">📎 객체엔 번호(인덱스)가 없다 → <code>Object.keys(obj)</code>로 '키 배열'을 얻어 순회 · 값은 <code>obj[k]</code> 대괄호로</span>
+      <div data-m="qz-objiter"></div>
+      <div class="card"><div class="file-label">🔬 객체 순회 — 왜 obj.k가 아니라 obj[k]인가</div><div data-m="objiter"></div></div>
+      <p class="section-desc">🔑 각 키 <code>k</code>는 <b>변수</b>(매 바퀴 다른 이름 문자열이 담김)라 <b><code>obj[k]</code> 대괄호</b>로 꺼내야 한다. <code>obj.k</code>는 글자 그대로 <b>"k"라는 이름</b>을 찾아 <code>undefined</code> — <b>8강에서 심은 <code>obj[key]</code> vs <code>obj["key"]</code> 함정이 바로 여기서 터진다</b>. 배열 순회가 <code>arr[i]</code>였듯, 객체 순회는 <code>obj[key]</code>.</p>
+
+      <h3 class="section-title">⑦ 화면 — 데이터 배열을 카드 목록으로</h3>
       <span class="learn-tag">📎 실전 패턴 — 데이터 배열 → map/forEach로 화면에 카드 여러 개</span>
       <div class="card"><div class="file-label">🔬 상품 목록을 카드로 (배열을 바꿔 실행)</div><div data-m="cards"></div></div>
 
@@ -245,6 +251,24 @@
       '}, 0)   // 0에서 시작',
       'print(sum)   // 60',
       '// 0+10+20+30',
+    ].join('\n') }))
+    root.querySelector('[data-m="qz-objiter"]').append(Quiz({
+      q: '점수 객체를 순회해 값을 꺼낸다. 빈칸에 뭘 써야 할까?<pre class="err-code" style="color:inherit;background:transparent">let score = { kor: 90, eng: 80 }\nObject.keys(score).forEach(k => {\n  print(______)   // 각 과목 점수를 찍고 싶다\n})</pre>',
+      options: ['score.k — 점(.)으로', 'score[k] — 대괄호로 (k는 변수)', 'k.score — 거꾸로'],
+      answer: 1,
+      explain: '<code>k</code>는 매 바퀴 <b>"kor"·"eng"</b>가 담기는 <b>변수</b>다. <code>score[k]</code>라야 그 변수의 값(이름)으로 접근해 90·80을 꺼낸다. <code>score.k</code>는 <b>글자 그대로 "k"</b>라는 없는 이름 → undefined. 8강의 <code>obj[key]</code> vs <code>obj["key"]</code>가 여기서 <b>필수</b>가 된다.',
+    }))
+    root.querySelector('[data-m="objiter"]').append(Runner({ showBox: false, code: [
+      'let user = { name: "민지", age: 20, city: "서울" }',
+      '',
+      '// 객체엔 번호(인덱스)가 없다 → 키 배열을 얻어 순회',
+      'Object.keys(user).forEach(k => {',
+      '  print(k + ": " + user[k])    // k는 변수 → user[k] 대괄호로',
+      '})',
+      '// name: 민지 / age: 20 / city: 서울',
+      '',
+      '// ❌ user.k 라고 쓰면? "k"라는 이름을 찾아 undefined',
+      '// print(user.k)   // undefined  (주석 풀어 확인)',
     ].join('\n') }))
 
     root.querySelector('[data-m="cards"]').append(Runner({ code: [
