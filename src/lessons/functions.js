@@ -163,7 +163,7 @@
       </ul>
 
       <h3 class="section-title">② 눈으로 — 스택에서 (이름표 장부 │ 값 메모리)</h3>
-      <span class="learn-tag">📎 ▶ — 정의만 하면 프레임이 안 생기고, 호출해야 greet 칸이 쌓인다</span>
+      <span class="learn-tag">📎 ▶ — 정의→프레임 X · <b>①호출부</b>가 greet를 부르면 → <b>②프레임 push</b> · <b>④</b>return이 값 생성 → <b>⑤</b>내보내고 pop → <b>⑥</b>print가 받음</span>
       <div data-m="mem"></div>
 
       ${nav('5-1', 2, '5-3', '5-3 · 매개변수 vs 인수 →')}
@@ -185,13 +185,16 @@
       '// 몇 번이든 다시 부를 수 있다',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
-      title: '정의는 상자만 · 호출해야 프레임이 생긴다',
+      title: '정의→상자만 · ①호출→②프레임 · return→④값생성·⑤반환pop·⑥호출부 사용',
       stackLabel: '📚 스택 (이름표 장부)',
       code: ['function greet() {', '  return "안녕!"', '}', 'print(greet())'],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>function greet(){…}</code> <b>정의만</b> 하면 스택엔 <b>아무 프레임도 안 생긴다</b>(상자만 만들어 둠).', engine: '<b>함수 정의</b>는 힙에 <b>함수 객체</b>를 만들어 이름에 묶을 뿐 — <b>실행 컨텍스트(프레임)는 생기지 않는다</b>. 호출해야 프레임이 push된다.' },
-        { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [] }], heap: {}, note: '<b>②프레임 push</b> — <code>greet()</code> 호출(( )가 그 신호) → greet의 <b>실행 컨텍스트</b>가 스택에 쌓인다. <b>매개변수 없음</b> — 바인딩할 인자도, 지역 슬롯도 아직 없다(빈 프레임).', engine: '새 <b>스택 프레임(실행 컨텍스트)</b> 생성. 이때 <b>스코프·호이스팅</b>(var·함수선언 등록, let/const는 TDZ)과 <b>this·arguments</b>도 준비된다. 매개변수가 없어 인자 값복사(③ 바인딩)는 생략된다. 배치는 스펙 비강제.' },
-        { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>④본문</b> — <code>return "안녕!"</code> → 값을 돌려주고 greet 프레임은 <b>pop(사라짐)</b>. print가 "안녕!"을 찍는다.', engine: '<b>return "안녕!"</b> → 문자열은 힙에 <b>불변 객체</b>로 있고 그 <b>포인터</b>가 레지스터로 넘어간다(리터럴이라 인터닝될 수 있음). greet 프레임은 <b>pop(즉시 회수)</b>.' },
+        { line: 0, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>정의만</b> — <code>function greet(){…}</code>는 스택에 <b>아무 프레임도 안 만든다</b>(상자만 만들어 둠). 아직 아무것도 안 돈다.', engine: '<b>함수 정의</b>는 힙에 <b>함수 객체</b>를 만들어 이름에 묶을 뿐 — <b>실행 컨텍스트(프레임)는 생기지 않는다</b>. 호출해야 프레임이 push된다.' },
+        { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>①호출부 — 호출부가 greet를 부른다</b> — 마지막 줄 <code>print(greet())</code>를 실행하려면 <b>먼저 그 인자 <code>greet()</code>를 값으로 만들어야</b> 한다 → 그래서 <b>print보다 greet가 먼저</b> 호출된다(( )가 그 신호). <b>아직 greet 프레임은 없다</b>(main만) — print는 인자가 준비되길 기다린다.', engine: '<b>호출 규약</b>: 바깥 <code>print(...)</code>의 인자부터 평가된다(인자 평가가 함수 진입보다 먼저). 인수가 없어 값복사(③ 바인딩)는 없다. 아직 새 프레임 없음 — 다음 순간 push된다.' },
+        { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [] }], heap: {}, note: '<b>②프레임 push(진입)</b> — 그 호출로 greet의 <b>실행 컨텍스트</b>가 스택에 쌓이고 본문으로 들어간다. <b>매개변수 없음</b>(빈 프레임). <b>아직 돌려줄 값은 없다</b>.', engine: '새 <b>스택 프레임(실행 컨텍스트)</b> 생성. 이때 <b>스코프·호이스팅</b>(var·함수선언 등록, let/const는 TDZ)과 <b>this·arguments</b>도 준비된다. 매개변수가 없어 인자 값복사(③ 바인딩)는 생략된다. 배치는 스펙 비강제.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [] }], heap: { ret: { label: '"안녕!"', prim: true } }, note: '<b>④본문 — 반환값이 <u>지금</u> 만들어진다</b> — <code>return</code>은 먼저 <b>오른쪽 식을 값으로 만든다</b> → 문자열 <b>"안녕!"</b>이 값 메모리에 <b>생긴다</b>. greet 프레임은 <b>아직 살아 있다</b>. 이 값이 곧 돌려줄 <b>반환값</b>이다 — 아직 아무 이름표도 안 붙었다.', engine: '<b>return의 오른쪽 식</b>부터 평가 — 문자열 리터럴 <b>"안녕!"</b>이 힙의 <b>불변 String</b>으로 만들어진다(리터럴이라 <b>인터닝</b>될 수 있음). 프레임은 아직 살아 있고, 이 값의 <b>포인터</b>가 반환 준비된다.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }], heap: { ret: { label: '"안녕!"', prim: true } }, note: '<b>⑤ 반환·pop — 값 내보내고 프레임 종료</b> — <code>return</code>이 <b>"안녕!"을 프레임 <u>밖으로</u> 내보내고</b> greet를 <b>즉시 끝낸다</b>(프레임 pop). 값은 <b>어떤 이름표도 안 붙은 채</b> 호출한 자리로 가는 중 — <b>값은 살아 있지만 프레임은 사라졌다</b>.', engine: '<b>return</b> → 값(포인터)이 <b>레지스터</b>에 실려 호출자에게 전달되고 greet 프레임은 <b>pop(즉시 회수)</b>. 문자열 객체 자체는 힙에 남아 <b>참조되는 동안</b> 산다.' },
+        { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>⑥ 호출부 — 돌려받은 값을 쓴다</b> — 호출한 자리 <code>print(<u>여기</u>)</code>가 반환값 <b>"안녕!"</b>을 받아 <b>화면에 찍는다</b>. <b>반환(⑤)과 사용(⑥)은 별개의 두 단계</b>. (여기선 변수에 담지 않고 바로 print에 넘겼다 — 담고 싶으면 <code>let m = greet()</code>, 그건 5-4.)', engine: '레지스터의 반환값이 <code>print</code>의 인자로 넘어간다. 아무 지역 슬롯에도 안 담겼다 — 담으려면 호출부에서 <code>=</code> 대입이 필요(5-4의 ⑥).' },
       ],
     }))
     wireGoto(root)
