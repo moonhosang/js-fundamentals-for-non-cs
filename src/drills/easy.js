@@ -70,7 +70,9 @@
       {"label":"여러 번 호출","ask":"같은 함수를 두 번 부르면? n은?","code":"let n = 0\nfunction up() { n = n + 1 }\nup()\nup()\nprint(n === ____)","expect":"true","answer":"2","hint":"부를 때마다 실행","explain":"함수는 <b>정의 한 번, 호출 여러 번</b>. up()을 두 번 부르면 n이 두 번 올라 2."},
       {"label":"인수 하나","ask":"dbl은 2배. dbl(4)는?","code":"function dbl(n) { return n * 2 }\nprint(dbl(4) === ____)","expect":"true","answer":"8","hint":"4 × 2","explain":"인수 4가 매개변수 n에 담겨 <code>n*2</code> = 8을 돌려준다."},
       {"label":"인수 둘·순서","ask":"sub는 a - b. sub(10, 3)은?","code":"function sub(a, b) { return a - b }\nprint(sub(10, 3) === ____)","expect":"true","answer":"7","hint":"순서대로 10→a, 3→b","explain":"인수는 <b>순서대로</b> 매개변수에 담긴다 — 10→a, 3→b → a-b = 7. (sub(3,10)이면 -7!)"},
-      {"label":"🔨 만들기·2배","ask":"dbl(n)이 n의 2배를 돌려주도록 본문을 채워라","code":"function dbl(n) { return ____ }\nprint(dbl(4) === 8 && dbl(10) === 20)","expect":"true","answer":"n * 2","hint":"매개변수 n을 써서 2배","explain":"매개변수 <code>n</code>으로 식을 짠다 → <code>return n * 2</code>. dbl(4)=8, dbl(10)=20. <b>이게 함수를 '만드는' 것</b> — 결과 예측이 아니라 로직을 짠다.","see":"5-4"}
+      {"label":"🔨 만들기·2배","ask":"dbl(n)이 n의 2배를 돌려주도록 본문을 채워라","code":"function dbl(n) { return ____ }\nprint(dbl(4) === 8 && dbl(10) === 20)","expect":"true","answer":"n * 2","hint":"매개변수 n을 써서 2배","explain":"매개변수 <code>n</code>으로 식을 짠다 → <code>return n * 2</code>. dbl(4)=8, dbl(10)=20. <b>이게 함수를 '만드는' 것</b> — 결과 예측이 아니라 로직을 짠다.","see":"5-4"},
+      {"label":"🔨 선언·이름","ask":"n의 2배를 돌려주는 함수의 '이름'을 채워 선언 완성 (아래 print가 부르는 이름)","code":"function ____(n) { return n * 2 }\nprint(dbl(4) === 8)","expect":"true","answer":"dbl","hint":"print가 dbl(4)를 부른다 → 이름은 dbl","explain":"<code>function 이름(매개변수){ 본문 }</code>이 <b>선언</b>. print가 <code>dbl</code>을 부르니 이름은 <b>dbl</b>이어야 한다(다르면 못 찾아 에러). 이름을 직접 지어 선언해 본다.","see":"5-2"},
+      {"label":"🔨 선언·매개변수","ask":"받을 값의 '매개변수'를 채워 greet 선언 완성","code":"function greet(____) { return \"안녕, \" + name }\nprint(greet(\"민지\") === \"안녕, 민지\")","expect":"true","answer":"name","hint":"본문이 name을 쓴다 → 매개변수도 name","explain":"본문에서 <code>name</code>을 쓰니 <b>빈 자리(매개변수)</b>도 <code>name</code>으로 선언해야 인수가 담긴다. 매개변수 = 값을 받을 빈 이름.","see":"5-3"}
     ],
   }
   E["6"] = {
