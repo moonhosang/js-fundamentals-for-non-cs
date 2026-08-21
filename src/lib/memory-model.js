@@ -334,6 +334,18 @@
 
       this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels, ret: curRet }
 
+      // 🚨 개발용 검문소 — 함수 프레임이 pop됐는데 이 스텝·직전 스텝 모두 returning이 없으면 '반환값 표현 누락' 신호.
+      // (패턴 A: ⑤가 반환+pop 동시 → 이 스텝 returning / 패턴 B: ⑤반환[프레임 유지]→pop 별도 → 직전 스텝 returning)
+      // 의도적 예외(프레임에 갇힌 객체 등)는 스텝에 noReturnLane:true. 배포 환경에선 조용(local/file:만).
+      const prevStep = this._step > 0 ? s.steps[this._step - 1] : null
+      if (prevStep && !st.returning && !prevStep.returning && !st.noReturnLane) {
+        const isMainFrame = (n) => n === 'main' || n.indexOf('main') === 0
+        const curNames = new Set((st.stack || []).map((f) => f.name))
+        const popped = (prevStep.stack || []).map((f) => f.name).filter((n) => !curNames.has(n) && !isMainFrame(n))
+        const dev = typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:')
+        if (popped.length && dev) console.warn(`[memory-model] "${this._s.title}" 스텝 ${this._step + 1}/${s.steps.length}: 프레임 [${popped.join(', ')}] pop인데 returning 없음 — 반환값(값/undefined/객체) 표현 누락? 의도면 그 스텝에 noReturnLane:true.`)
+      }
+
       // 설명
       $('.note').innerHTML = st.note ? `<b class="k">🔑</b> ${st.note}` : ''
       const eng = $('.engine')
