@@ -308,6 +308,12 @@
       <div class="card"><div class="file-label">🔬 실행 — 명시적 vs 암묵적</div><div data-m="cast"></div></div>
       <div class="card"><div class="file-label">⏱ 시간 시뮬레이션 — <code>"5" - 1</code> 이 접히는 과정 (다음 ▶)</div><div data-m="sim-coerce"></div></div>
 
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">⚠️ <code>==</code> vs <code>===</code> — 왜 <code>===</code>만 쓰라 하나 (<code>==</code>는 함정)</div>
+        <p class="section-desc" style="margin:0 0 8px"><code>==</code>(느슨한 같음)는 타입이 다르면 <b>몰래 타입을 맞춰(강제) 비교</b>해 결과를 예측하기 어렵다. <code>===</code>(엄격한 같음)는 <b>타입까지 같아야</b> 참 — 그래서 <b>실무에선 항상 <code>===</code></b>. <code>==</code>는 "이런 함정이 있다"만 알면 된다. 아래로 눈에 새겨라:</p>
+        <div data-m="eqeq"></div>
+      </div>
+
       <h3 class="section-title">B. truthy / falsy — 조건에서 참·거짓으로 취급되는 값</h3>
       <p class="section-desc"><code>if</code>·<code>||</code>·<code>&amp;&amp;</code>·삼항의 조건은 꼭 <code>true</code>/<code>false</code>가 아니어도 된다 — 아무 값이나 오면 JS가 <b>참 같은가(truthy) / 거짓 같은가(falsy)</b>로 본다(값→불리언 강제). <b>falsy는 딱 8개</b>, <b>나머지는 전부 truthy</b>. 이 8개만 외우면 된다.</p>
       <div class="card" style="border-color:var(--red)">
@@ -398,6 +404,21 @@
       '// true → 1',
       'print(1 == "1", 1 === "1")    // true false',
       '// ==는 강제, ===는 안 함',
+    ].join('\n') }))
+    root.querySelector('[data-m="eqeq"]').append(Runner({ showBox: false, code: [
+      '// == 는 타입을 몰래 맞춰 비교(함정) · === 는 타입까지 비교(권장)',
+      'print("5" == 5)             // true   ← 문자 "5"를 숫자 5로 강제',
+      'print("5" === 5)            // false  ← 타입(문자≠숫자)이 달라 거짓',
+      '',
+      '// 아래는 == 의 악명 높은 함정들 (전부 true!)',
+      'print(0 == "")              // true   ← 빈 문자열이 0으로?!',
+      'print(0 == false)           // true   ← false가 0으로',
+      'print("" == false)          // true   ← 빈 문자열과 false가 같다?!',
+      'print(null == undefined)    // true   ← 둘만의 특수 규칙',
+      'print(1 == true)            // true   ← true가 1로',
+      '',
+      '// === 로 바꾸면 위가 전부 false — 예측 가능해진다',
+      'print(0 === "", 0 === false, null === undefined)   // false false false',
     ].join('\n') }))
     root.querySelector('[data-m="truthy"]').append(Runner({ showBox: false, code: [
       '// ❌ falsy 8개 — 전부 false 취급',
