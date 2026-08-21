@@ -263,6 +263,22 @@
       <span class="learn-tag">📎 ▶ — return 10이 double 프레임에서 나와 r 셀에 담긴다</span>
       <div data-m="mem"></div>
 
+      <h3 class="section-title">③ 🔨 직접 만들어보기 — 예측을 넘어 '생산'으로</h3>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">💡 읽기 ≠ 짜기</div>
+        <p class="section-desc" style="margin:0">함수가 어떻게 도는지 <b>예측</b>하는 것과 직접 <b>짜는</b> 것은 다른 능력이다. 아래 <b>빈 본문을 채우고 ▶실행</b>하라. 결과 주석(<code>// ?</code>)은 <b>정답 스포일러</b>라 가려져 있다 — 먼저 스스로 맞히고 💡로 펼쳐 확인하라.</p>
+      </div>
+
+      <span class="learn-tag">🔨 과제 1 (기초) — <code>dbl(n)</code>이 n의 <b>2배</b>를 돌려주도록 본문을 채워라</span>
+      <div data-m="make1"></div>
+
+      <span class="learn-tag">🔨 과제 2 (조립) — <code>greet(name)</code>이 <code>"안녕, ○○님"</code>을 돌려주도록(문자열 이어붙이기)</span>
+      <div data-m="make2"></div>
+
+      <span class="learn-tag">🔨 과제 3 (조건) — <code>max2(a, b)</code>가 <b>둘 중 큰 값</b>을 돌려주도록(삼항 <code>? :</code> 또는 if)</span>
+      <div data-m="make3"></div>
+      <p class="section-desc" style="opacity:.85">🔑 막히면? <b>매개변수를 써서 식을 만들고 <code>return</code></b>하면 된다. 정답을 예측형 드릴로 더 굳히려면 → 사이드바 이 강의 아래 <b>🟢🟡🔴</b>의 🔨 만들기 문제들.</p>
+
       ${nav('5-3', 4, '5-5', '5-5 · 🧠 프레임 →')}
     `
     root.querySelector('[data-m="qz"]').append(Quiz({
@@ -300,6 +316,33 @@
         { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: '10' }] }], heap: {}, note: '<b>⑥ 호출부 대입</b> — 호출한 자리 <code>let r = …</code>가 <b>반환 통로의 10</b>을 받아 <b>r 셀에 담는다</b> ✔ (통로는 <b>비워짐</b>). <b>반환(⑤)과 대입(⑥)은 별개의 두 단계</b>. (return이 없었다면 r엔 <b>undefined</b>가 담겼을 것.)', engine: '레지스터의 반환값 10이 r 슬롯에 안착(SMI). 프레임은 이미 없다.' },
       ],
     }))
+    root.querySelector('[data-m="make1"]').append(Runner({ showBox: false, code: [
+      '// n의 2배를 돌려주도록 아래 본문을 채우고 ▶실행',
+      'function dbl(n) {',
+      '  // 여기에 return 문을 쓰세요 (매개변수 n 사용)',
+      '}',
+      '',
+      'print(dbl(4))    // 8',
+      'print(dbl(10))   // 20',
+    ].join('\n') }))
+    root.querySelector('[data-m="make2"]').append(Runner({ showBox: false, code: [
+      '// "안녕, ○○님"을 돌려주도록 채우고 ▶실행',
+      'function greet(name) {',
+      '  // 여기에 return 문을 쓰세요 (name을 문장에 끼우기)',
+      '}',
+      '',
+      'print(greet("민지"))   // "안녕, 민지님"',
+      'print(greet("지훈"))   // "안녕, 지훈님"',
+    ].join('\n') }))
+    root.querySelector('[data-m="make3"]').append(Runner({ showBox: false, code: [
+      '// 둘 중 큰 값을 돌려주도록 채우고 ▶실행',
+      'function max2(a, b) {',
+      '  // 여기에 return 문을 쓰세요 (삼항 a > b ? _ : _ 또는 if)',
+      '}',
+      '',
+      'print(max2(3, 8))    // 8',
+      'print(max2(10, 2))   // 10',
+    ].join('\n') }))
     wireGoto(root)
   }
 
