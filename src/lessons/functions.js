@@ -566,7 +566,7 @@
       '// 똑같다',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
-      title: '화살표 함수도 똑같이 프레임이 쌓인다',
+      title: '화살표 함수도 똑같이 — push→본문→반환(⑤)→대입(⑥)',
       stackLabel: '📚 스택 (이름표 장부)',
       code: ['const doubleB = (n) => n * 2', 'let x = doubleB(10)'],
       steps: [
@@ -574,7 +574,8 @@
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '(대기)', bad: true }] }, { name: 'doubleB', slots: [] }], heap: {}, note: '<b>②프레임 push</b> — 화살표 함수도 부르면 <b>똑같이</b> doubleB의 <b>실행 컨텍스트</b>가 스택에 쌓인다. <b>매개변수 n 칸은 아직 비어 있다</b>(바인딩 전).', engine: '새 <b>스택 프레임(실행 컨텍스트)</b> 생성. 이때 <b>스코프·호이스팅</b>(var·함수선언 등록, let/const는 TDZ)과 <b>this·arguments</b>도 준비된다 — 컴파일 때 만든 스코프 정보로. 화살표도 실행 컨텍스트는 보통 함수와 동일하다. 배치는 스펙 비강제.' },
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '(대기)', bad: true }] }, { name: 'doubleB', slots: [{ name: 'n', ref: 'n10' }] }], heap: { n10: { label: '10', prim: true } }, note: '<b>③매개변수 바인딩(복사)</b> — 인수 <b>10</b>을 매개변수 n에 <b>복사</b>(원시=값복사·별개 셀 / 객체=주소복사·공유). n은 별개 슬롯.', engine: '인자 <b>값복사</b> — n 슬롯에 10 비트 복사(<b>SMI</b> 인라인, 별개 슬롯). 객체였다면 주소(포인터) 복사(공유).' },
         { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '(대기)', bad: true }] }, { name: 'doubleB', slots: [{ name: 'n', ref: 'n10' }] }], heap: { n10: { label: '10', prim: true } }, note: '<b>④본문</b> — <code>n*2=20</code>을 (암묵적으로) 만든다. 표기만 짧을 뿐 동작은 같다.', engine: '화살표는 본문이 식 하나면 <b>암묵적 return</b>. 실행 컨텍스트는 보통 함수와 동일하다.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '20' }] }], heap: {}, note: '<b>n*2=20</b>을 (암묵적으로) 돌려주고 pop → x=20. <b>보통 함수와 완전히 같다</b>.', engine: '<b>암묵적 return</b>(n*2=20) → 값은 <b>레지스터</b>로 넘어가 x에 담기고 프레임 <b>pop</b>. 지역 n은 사라진다.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'x', value: '(대기)', bad: true }] }], heap: {}, note: '<b>⑤ 반환·pop</b> — <code>n*2=20</code>을 (암묵적으로) <b>프레임 밖으로</b> 내보내고 doubleB를 <b>즉시 끝낸다</b>(pop, 지역 n 사라짐). 반환값 20은 <b>호출한 자리로</b> 가는 중 — x는 <b>아직 대기</b>. 화살표도 <b>보통 함수와 완전히 같다</b>.', engine: '<b>암묵적 return</b>(n*2=20) → 값이 <b>레지스터</b>로 넘어가고 doubleB 프레임은 <b>pop(즉시 회수)</b> — n 슬롯 소멸. 대입은 아직 — 호출자가 받아야 한다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '20' }] }], heap: {}, note: '<b>⑥ 호출부 대입</b> — 호출한 자리 <code>let x = …</code>가 반환값 <b>20</b>을 받아 <b>x에 담는다</b> ✔. <b>반환(⑤)과 대입(⑥)은 별개의 두 단계</b>.', engine: '레지스터의 반환값 20이 x 슬롯에 안착(SMI). 프레임은 이미 없다.' },
       ],
     }))
     wireGoto(root)
