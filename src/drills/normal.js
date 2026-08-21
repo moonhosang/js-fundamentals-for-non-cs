@@ -63,13 +63,14 @@
     ],
   }
   N["5"] = {
-    pattern: "🟡 보통 · 중첩 호출·화살표·조건 반환·전역 참조 결과 예측",
+    pattern: "🟡 보통 · return의 진짜 의미 · 인수 함정 · 조건으로 🔨만들기",
     problems: [
-      {"label":"중첩 호출","ask":"twice는 2배. twice(twice(3))은?","code":"function twice(n) { return n * 2 }\nprint(twice(twice(3)) === ____)","expect":"true","answer":"12","hint":"3→6→12","explain":"안쪽부터: <code>twice(3)=6</code>, <code>twice(6)=12</code>."},
-      {"label":"화살표","ask":"화살표 함수 dbl. dbl(6)은?","code":"const dbl = n => n * 2\nprint(dbl(6) === ____)","expect":"true","answer":"12","hint":"6 × 2","explain":"화살표 함수도 같은 함수 → <code>6*2=12</code>."},
-      {"label":"세금 계산","ask":"tax는 10%를 더한다. tax(100)은?","code":"function tax(p) { return p + p * 0.1 }\nprint(tax(100) === ____)","expect":"true","answer":"110","hint":"100 + 10","explain":"<code>100 + 100*0.1 = 110</code>(세금 10 포함)."},
-      {"label":"조건 반환","ask":"sign은 양수면 \"+\", 아니면 \"-\". sign(-2)는?","code":"function sign(n) { return n > 0 ? \"+\" : \"-\" }\nprint(sign(-2) === \"____\")","expect":"true","answer":"-","hint":"-2는 양수 아님","explain":"-2는 양수가 아니라 삼항의 else → <code>\"-\"</code>."},
-      {"label":"전역 참조","ask":"base=10을 더하는 함수. addBase(5)는?","code":"let base = 10\nfunction addBase(n) { return n + base }\nprint(addBase(5) === ____)","expect":"true","answer":"15","hint":"5 + 10","explain":"함수 안에서 <b>바깥 base(10)</b>를 읽어 <code>5+10=15</code>."}
+      {"label":"return 담기","ask":"돌려준 값을 변수에 담으면 r은?","code":"function add(a, b) { return a + b }\nlet r = add(2, 3)\nprint(r === ____)","expect":"true","answer":"5","hint":"return 값이 r에 담긴다","explain":"<code>return a+b</code>가 5를 돌려주고 <code>let r =</code>가 담는다 → r은 5. <b>담아야 다시 쓴다.</b>","see":"5-4","mem":{"title":"return 값이 통로를 지나 r에 담긴다","stackLabel":"📚 스택 (이름표 장부)","code":["function add(a, b) { return a + b }","let r = add(2, 3)"],"steps":[{"line":1,"stack":[{"name":"main","slots":[{"name":"r","value":"(대기)","bad":true}]},{"name":"add","slots":[{"name":"a","value":"2"},{"name":"b","value":"3"}]}],"heap":{},"note":"<b>②push+③바인딩</b> — a=2, b=3."},{"line":0,"stack":[{"name":"main","slots":[{"name":"r","value":"(대기)","bad":true}]}],"heap":{},"returning":{"value":"5"},"note":"<b>⑤반환·pop</b> — return a+b=5가 통로로, add 사라짐. r은 아직 대기."},{"line":1,"stack":[{"name":"main","slots":[{"name":"r","value":"5"}]}],"heap":{},"note":"<b>⑥호출부 대입</b> — 통로의 5를 r에 담는다."}]}},
+      {"label":"return 없으면","ask":"return 없는 함수의 결과를 담으면 r은?","code":"function f(x) { let y = x * 2 }\nlet r = f(5)\nprint((r === undefined) === ____)","expect":"true","answer":"true","hint":"안 돌려주면 undefined","explain":"계산은 했지만 <b>return이 없다</b> → 함수는 <code>undefined</code>를 돌려준다. '계산했으니 10' 최대 착각."},
+      {"label":"print는 못 담음","ask":"print는 값을 돌려줄까? r은?","code":"function f() { print(\"안녕\") }\nlet r = f()\nprint((r === undefined) === ____)","expect":"true","answer":"true","hint":"print=화면에 찍기만","explain":"<code>print</code>는 <b>화면에 찍을 뿐</b> 값을 안 돌려준다 — return이 없어 r은 undefined. <b>return≠print.</b>"},
+      {"label":"인수 부족(arity)","ask":"add(a,b)에 하나만 넘기면? add(3)의 결과는?","code":"function add(a, b) { return a + b }\nprint((add(3) + \"\") === \"____\")","expect":"true","answer":"NaN","hint":"안 넘긴 b는 undefined → 3 + undefined","explain":"매개변수는 2개인데 인수 1개 → <b>b는 undefined</b>. <code>3 + undefined</code> = <b>NaN</b>. 안 넘긴 자리는 undefined로 채워진다."},
+      {"label":"조건 반환","ask":"sign은 양수면 \"+\", 아니면 \"-\". sign(-2)는?","code":"function sign(n) { if (n > 0) return \"+\"; return \"-\" }\nprint(sign(-2) === \"____\")","expect":"true","answer":"-","hint":"-2는 양수 아님","explain":"-2는 <code>n>0</code>이 거짓 → 첫 return 건너뛰고 <code>return \"-\"</code>. 여러 return 중 <b>먼저 만나는 하나</b>만."},
+      {"label":"🔨 만들기·성인 판별","ask":"isAdult(age)가 18 이상이면 true를 돌려주도록 채워라","code":"function isAdult(age) { return ____ }\nprint(isAdult(20) === true && isAdult(15) === false)","expect":"true","answer":"age >= 18","hint":"비교식도 값(참/거짓)을 낳는다","explain":"<code>age >= 18</code>은 참/거짓을 <b>값으로</b> 낳는 표현식 → 그대로 return. isAdult(20)=true, isAdult(15)=false. (조건을 담아 만든다)","see":"5-4"}
     ],
   }
   N["6"] = {

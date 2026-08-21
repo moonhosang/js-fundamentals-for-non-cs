@@ -63,13 +63,14 @@
     ],
   }
   H["5"] = {
-    pattern: "🔴 어려움 · 지역 vs 전역·함수를 반환·인수는 복사·조기 반환 예측",
+    pattern: "🔴 어려움 · 조합·콜백 + 본문을 직접 조립해 🔨만들기",
     problems: [
-      {"label":"지역 우선","ask":"함수 안 n=1, 밖 n=9. f()는? (지역이 우선)","code":"let n = 9\nfunction f() { let n = 1; return n }\nprint(f() === ____)","expect":"true","answer":"1","hint":"안쪽 n을 본다","explain":"함수 안 지역 n=1이 <b>바깥 n=9를 가린다</b>(스코프) → 1.","see":"stack","wiki":{"label":"변수의 유효 범위","url":"https://ko.wikipedia.org/wiki/변수의_유효_범위"}},
-      {"label":"함수를 반환","ask":"함수가 함수를 돌려준다. make()()는?","code":"function make() { return function () { return 7 } }\nprint(make()() === ____)","expect":"true","answer":"7","hint":"부른 함수가 또 부른다","explain":"<code>make()</code>가 함수를 돌려주고, 그걸 <code>()</code>로 또 불러 7."},
-      {"label":"인수는 복사","ask":"인수는 복사(원시). f 안에서 x=0 해도 a는?","code":"function f(x) { x = 0 }\nlet a = 5\nf(a)\nprint(a === ____)","expect":"true","answer":"5","hint":"원본은 안전","explain":"인수는 <b>복사</b>라 함수 안 x를 바꿔도 밖 a는 5."},
-      {"label":"조기 반환","ask":"조기 반환. f(-1) (양수면 \"양\", 아니면 \"음\")은?","code":"function f(n) { if (n > 0) return \"양\"; return \"음\" }\nprint(f(-1) === \"____\")","expect":"true","answer":"음","hint":"-1은 아래 return","explain":"-1은 첫 return을 건너뛰고 <b>아래 return</b> → <code>\"음\"</code>."},
-      {"label":"콜백","ask":"콜백. [1,2,3].map(dbl) 의 첫 요소는?","code":"function dbl(n) { return n * 2 }\nprint([1, 2, 3].map(dbl)[0] === ____)","expect":"true","answer":"2","hint":"1 × 2","explain":"콜백 dbl이 각 요소에 적용 → 첫 요소 <code>1*2=2</code>."}
+      {"label":"중첩 호출","ask":"twice는 2배. twice(twice(3))은?","code":"function twice(n) { return n * 2 }\nprint(twice(twice(3)) === ____)","expect":"true","answer":"12","hint":"안쪽부터 — twice(3)=6, 그다음 6×2","explain":"<b>안쪽부터</b> — twice(3)=6이 먼저, 그 6이 바깥 twice로 → 12. 반환값이 곧 다음 인수.","see":"5-5","mem":{"title":"안쪽 호출이 먼저 — 프레임이 쌓였다 반환된다","stackLabel":"📚 스택 (이름표 장부)","code":["function twice(n) { return n * 2 }","twice(twice(3))"],"steps":[{"line":1,"stack":[{"name":"main","slots":[]},{"name":"twice","slots":[{"name":"n","value":"3"}]}],"heap":{},"note":"<b>안쪽 twice(3)</b> 먼저 — n=3."},{"line":0,"stack":[{"name":"main","slots":[]}],"heap":{},"returning":{"value":"6"},"note":"<b>⑤</b> 안쪽이 6을 통로로 반환·pop."},{"line":1,"stack":[{"name":"main","slots":[]},{"name":"twice","slots":[{"name":"n","value":"6"}]}],"heap":{},"note":"그 <b>6으로 바깥 twice</b> 호출 — n=6."},{"line":0,"stack":[{"name":"main","slots":[]}],"heap":{},"returning":{"value":"12"},"note":"<b>⑤</b> 바깥이 12를 반환·pop → 최종 12."}]}},
+      {"label":"반환값 재사용","ask":"add의 반환값을 다시 인수로. add(add(1,2), 3)은?","code":"function add(a, b) { return a + b }\nprint(add(add(1, 2), 3) === ____)","expect":"true","answer":"6","hint":"안쪽 add(1,2)=3, 그다음 add(3,3)","explain":"안쪽 <code>add(1,2)</code>=3 → <code>add(3,3)</code>=6. 반환값을 <b>부품으로 조립</b>하는 게 함수의 힘."},
+      {"label":"콜백","ask":"map에 함수를 넘기면? [1,2,3].map(dbl)의 첫 요소는?","code":"function dbl(n) { return n * 2 }\nlet r = [1, 2, 3].map(dbl)\nprint(r[0] === ____)","expect":"true","answer":"2","hint":"각 요소에 dbl 적용 → 1→2","explain":"<code>map(dbl)</code>은 각 요소마다 dbl을 <b>불러</b> 변환 → [2,4,6]. 첫 요소 2. (함수를 값처럼 넘긴다 = 콜백)","see":"5-7"},
+      {"label":"🔨 만들기·큰 값","ask":"max2(a,b)가 둘 중 큰 값을 돌려주도록 채워라 (삼항)","code":"function max2(a, b) { return ____ }\nprint(max2(3, 8) === 8 && max2(10, 2) === 10)","expect":"true","answer":"a > b ? a : b","hint":"삼항 조건 ? 참 : 거짓","explain":"<code>a > b ? a : b</code> — a가 크면 a, 아니면 b. 삼항은 <b>값을 낳는 if</b>라 그대로 return.","see":"5-4"},
+      {"label":"🔨 만들기·본문 조립","ask":"greet(name)이 \"안녕, 민지님\"처럼 돌려주도록 채워라","code":"function greet(name) { return ____ }\nprint(greet(\"민지\") === \"안녕, 민지님\")","expect":"true","answer":"\"안녕, \" + name + \"님\"","hint":"문자열 이어붙이기 + 매개변수","explain":"<code>\"안녕, \" + name + \"님\"</code>으로 조립 → greet(\"민지\")=\"안녕, 민지님\". 매개변수를 문장에 끼워 만든다."},
+      {"label":"🔨 만들기·화살표로","ask":"function으로 된 dbl을 화살표로 재작성 — 빈칸은?","code":"let dbl = (n) => ____\nprint(dbl(5) === 10)","expect":"true","answer":"n * 2","hint":"한 줄이면 return 생략","explain":"화살표는 한 줄이면 <b>return 생략</b> — <code>(n) => n * 2</code>. 보통 함수 <code>function dbl(n){return n*2}</code>와 완전히 같다.","see":"5-7"}
     ],
   }
   H["6"] = {

@@ -63,13 +63,14 @@
     ],
   }
   E["5"] = {
-    pattern: "🟢 쉬움 · 함수를 부르면 무엇이 돌아오는지 예측",
+    pattern: "🟢 쉬움 · 부르고·인수 넣고·직접 완성하기 (정의&호출 · 인수 · 🔨만들기)",
     problems: [
-      {"label":"두 인수 합","ask":"add는 두 인수를 더한다. add(2, 3)은?","code":"function add(a, b) { return a + b }\nprint(add(2, 3) === ____)","expect":"true","answer":"5","hint":"2 + 3","explain":"함수는 입력→처리→<b>출력(return)</b> → <code>2+3=5</code>."},
-      {"label":"2배","ask":"dbl은 2배. dbl(4)는?","code":"function dbl(n) { return n * 2 }\nprint(dbl(4) === ____)","expect":"true","answer":"8","hint":"4 × 2","explain":"인수 4가 매개변수 n에 담겨 <code>4*2=8</code>."},
-      {"label":"문자 반환","ask":"greet는 이름에 \"님\"을 붙인다. greet(\"z\")는?","code":"function greet(n) { return n + \"님\" }\nprint(greet(\"z\") === \"____\")","expect":"true","answer":"z님","hint":"\"z\" + \"님\"","explain":"받은 <code>\"z\"</code>에 <code>\"님\"</code>을 이어붙여 반환."},
-      {"label":"제곱","ask":"sq는 제곱. sq(5)는?","code":"function sq(x) { return x * x }\nprint(sq(5) === ____)","expect":"true","answer":"25","hint":"5 × 5","explain":"<code>5*5=25</code>를 돌려준다."},
-      {"label":"return 없으면","ask":"return이 없는 함수는 무엇을 돌려주나?","code":"function f() { let x = 1 }\nprint(f() === ____)","expect":"true","answer":"undefined","hint":"돌려줄 게 없으면 undefined","explain":"<code>return</code>이 없으면 함수는 <b>undefined</b>를 돌려준다."}
+      {"label":"호출=실행","ask":"greet를 ( )로 부르면 무엇이 나오나?","code":"function greet() { return \"안녕\" }\nprint(greet() === \"____\")","expect":"true","answer":"안녕","hint":"( )가 '지금 실행' 신호","explain":"<code>greet()</code>처럼 <b>( )를 붙여야</b> 함수 안이 실행돼 \"안녕\"을 돌려준다.","see":"5-2","mem":{"title":"정의는 상자만 · 호출해야 프레임이 뜬다","stackLabel":"📚 스택 (이름표 장부)","code":["function greet() { return \"안녕\" }","greet()"],"steps":[{"line":0,"stack":[{"name":"main","slots":[]}],"heap":{},"note":"<b>정의만</b> — 프레임 안 생김(상자만 만듦)."},{"line":1,"stack":[{"name":"main","slots":[]},{"name":"greet","slots":[]}],"heap":{},"note":"<b>②프레임 push</b> — greet() 호출(( )가 신호)."},{"line":0,"stack":[{"name":"main","slots":[]}],"heap":{},"returning":{"value":"\"안녕\""},"note":"<b>⑤반환·pop</b> — return \"안녕\"이 통로로 나오고 greet 프레임 사라짐."}]}},
+      {"label":"( ) 없으면","ask":"greet라고 ( ) 없이 쓰면? (타입은)","code":"function greet() { return \"안녕\" }\nlet x = greet\nprint((typeof x) === \"____\")","expect":"true","answer":"function","hint":"( ) 없으면 상자 '자체'","explain":"<code>greet</code>(( ) 없이)는 <b>실행이 아니라 함수 자체</b>를 가리킨다 → 타입은 <code>\"function\"</code>. 실행하려면 <code>greet()</code>."},
+      {"label":"여러 번 호출","ask":"같은 함수를 두 번 부르면? n은?","code":"let n = 0\nfunction up() { n = n + 1 }\nup()\nup()\nprint(n === ____)","expect":"true","answer":"2","hint":"부를 때마다 실행","explain":"함수는 <b>정의 한 번, 호출 여러 번</b>. up()을 두 번 부르면 n이 두 번 올라 2."},
+      {"label":"인수 하나","ask":"dbl은 2배. dbl(4)는?","code":"function dbl(n) { return n * 2 }\nprint(dbl(4) === ____)","expect":"true","answer":"8","hint":"4 × 2","explain":"인수 4가 매개변수 n에 담겨 <code>n*2</code> = 8을 돌려준다."},
+      {"label":"인수 둘·순서","ask":"sub는 a - b. sub(10, 3)은?","code":"function sub(a, b) { return a - b }\nprint(sub(10, 3) === ____)","expect":"true","answer":"7","hint":"순서대로 10→a, 3→b","explain":"인수는 <b>순서대로</b> 매개변수에 담긴다 — 10→a, 3→b → a-b = 7. (sub(3,10)이면 -7!)"},
+      {"label":"🔨 만들기·2배","ask":"dbl(n)이 n의 2배를 돌려주도록 본문을 채워라","code":"function dbl(n) { return ____ }\nprint(dbl(4) === 8 && dbl(10) === 20)","expect":"true","answer":"n * 2","hint":"매개변수 n을 써서 2배","explain":"매개변수 <code>n</code>으로 식을 짠다 → <code>return n * 2</code>. dbl(4)=8, dbl(10)=20. <b>이게 함수를 '만드는' 것</b> — 결과 예측이 아니라 로직을 짠다.","see":"5-4"}
     ],
   }
   E["6"] = {
