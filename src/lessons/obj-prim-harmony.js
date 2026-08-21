@@ -22,6 +22,10 @@
         조합이 헷갈리면 매번 이 한 줄로 돌아온다. 개념이 흐릿하면 → <button class="inline-goto" data-goto="objanat">🧠 객체 해부</button></p>
       </div>
 
+      <h3 class="section-title">👁️ 눈으로 ① — 별칭 vs 재할당 (한쪽을 바꾸면?)</h3>
+      <span class="learn-tag">📎 ▶ — <code>const heyony = myFriend</code>는 같은 봉투(별칭) · <code>myFriend = …</code>는 myFriend 화살표만 옮긴다(heyony는 옛 봉투 그대로)</span>
+      <div data-m="sim-alias"></div>
+
       <h3 class="section-title">① A · 넣기 — 변수 → 속성</h3>
       <span class="learn-tag">📎 o.x = a — 변수에 든 것이 봉투 칸으로 복사된다: 원시면 값이(독립), 객체면 주소가(공유)</span>
       <div data-m="qz-a1"></div>
@@ -62,6 +66,8 @@
         <p class="section-desc" style="margin-top:0"><code>f(x)</code>로 부르면 함수는 매개변수 자리에 <code>매개변수 = x</code>를 <b>대입</b>하는 것과 똑같다.
         그러니 <b>새 규칙이 아니다</b> — <b>원시면 값이 복사</b>돼 원본 안전, <b>객체면 주소가 복사=공유</b>돼 함수 안에서 바꾸면 원본도 바뀐다. 지금까지의 한 줄 그대로다.</p>
       </div>
+      <span class="learn-tag">📎 ▶ — <code>hurt(u)</code>는 같은 봉투를 넘겨(p=u) 함수 안 변경이 원본에 샌다 · 함수 끝엔 undefined가 반환된다</span>
+      <div data-m="sim-fn"></div>
       <div data-m="qz-h1"></div>
       <div data-m="qz-h2"></div>
 
@@ -82,15 +88,27 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
       <div class="practice-cta"><span>이제 복사·공유의 진짜 함정으로 —</span><button class="chip on" data-goto="ref">🧠 M4-1 · 값 = 복사 →</button></div>
     `
 
+    // ── 눈으로 ① · 별칭 vs 재할당 ────────────────────────────
+    root.querySelector('[data-m="sim-alias"]').append(MemoryModel({
+      title: '별칭(같은 봉투) vs 재할당(화살표만 이동)',
+      stackLabel: '📇 이름표 장부',
+      code: ['let myFriend = { name: "효니" }', 'const heyony = myFriend', 'myFriend = "효니"'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'myFriend', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }] } }, note: 'myFriend가 봉투 <b>h1</b>을 가리킨다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'myFriend', ref: 'h1' }, { name: 'heyony', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }] } }, note: '<b>const heyony = myFriend</b> → <b>주소만 복사</b> → heyony도 <b>같은 h1</b>(별칭). 봉투는 하나뿐.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'myFriend', value: '"효니"' }, { name: 'heyony', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }] } }, note: '<b>myFriend = "효니"</b>는 <b>재할당</b> — myFriend의 <b>화살표만</b> 문자열 "효니"로 옮긴다. <b>heyony는 여전히 h1</b>(봉투 그대로). 별칭이라도 <b>한쪽 재할당은 다른 쪽과 무관</b> — 변경(봉투 안)과 재할당(화살표)은 다르다.' },
+      ],
+    }))
+
     // ── A 넣기 ──────────────────────────────────────────────
     root.querySelector('[data-m="qz-a1"]').append(Quiz({
-      q: '<code>let o = {}; let a = 5; o.x = a; a = 9</code> — <b>o.x</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let o = {}\nlet a = 5\no.x = a\na = 9</pre><b>o.x</b>는?',
       options: ['5 — 넣을 때 값이 복사돼 독립, 변수를 바꿔도 무관', '9 — 변수 a와 이어져 같이 바뀐다'],
       answer: 0,
       explain: '<code>o.x = a</code>는 a의 <b>값 5를 복사</b>해 봉투 칸에 넣는다. 그 뒤 <code>a = 9</code>는 변수만 바꾼다 — <b>o.x는 그대로 5</b>. 규칙: <b>원시=값 복사(독립) · 객체=주소 복사(공유)</b>.',
     }))
     root.querySelector('[data-m="qz-a2"]').append(Quiz({
-      q: '<code>let o = {}; let h = { v: 1 }; o.f = h; h.v = 9</code> — <b>o.f.v</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let o = {}\nlet h = { v: 1 }\no.f = h\nh.v = 9</pre><b>o.f.v</b>는?',
       options: ['1 — 넣을 때 복사됐으니 독립', '9 — 주소가 복사돼 h와 같은 봉투를 공유'],
       answer: 1,
       explain: 'h에 든 건 값이 아니라 <b>주소표</b> — <code>o.f = h</code>는 그 <b>주소를 복사</b>한다. o.f와 h는 <b>같은 봉투</b>라 <code>h.v = 9</code>가 o.f.v로도 보인다. 규칙: <b>원시=값 복사 · 객체=주소 복사(공유)</b>.',
@@ -98,13 +116,13 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
 
     // ── B 꺼내기 ────────────────────────────────────────────
     root.querySelector('[data-m="qz-b1"]').append(Quiz({
-      q: '<code>let o = { n: 5 }; let x = o.n; x = 9</code> — <b>o.n</b>은?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let o = { n: 5 }\nlet x = o.n\nx = 9</pre><b>o.n</b>은?',
       options: ['5 — 꺼낼 때 값이 복사돼 봉투와 무관', '9 — 꺼낸 x와 이어져 같이 바뀐다'],
       answer: 0,
       explain: 'n 칸엔 <b>값 5</b>가 들었으니 꺼내면 <b>값이 복사</b>돼 나온다. x는 봉투 밖 독립 사본 — <code>x = 9</code> 해도 <b>o.n은 그대로 5</b>. 규칙: <b>원시=값 복사(독립)</b>.',
     }))
     root.querySelector('[data-m="qz-b2"]').append(Quiz({
-      q: '<code>let o = { best: { v: 1 } }; let f = o.best; f.v = 9</code> — <b>o.best.v</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let o = { best: { v: 1 } }\nlet f = o.best\nf.v = 9</pre><b>o.best.v</b>는?',
       options: ['1 — 꺼내면 복사라 독립', '9 — best 칸엔 주소표가 들어 있어 같은 봉투를 공유'],
       answer: 1,
       explain: 'best 칸엔 <b>주소표</b>가 들었으니 꺼내면 <b>주소가 복사</b>된다. f와 o.best는 <b>같은 봉투</b> — f로 고치면 o.best로 봐도 9. 규칙: <b>객체=주소 복사(공유)</b>. B는 A의 반대 방향이지만 규칙은 같다.',
@@ -112,13 +130,13 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
 
     // ── C 속성끼리 ──────────────────────────────────────────
     root.querySelector('[data-m="qz-c1"]').append(Quiz({
-      q: '<code>let a = { x: 1 }; let b = { y: 5 }; a.x = b.y; b.y = 9</code> — <b>a.x</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let a = { x: 1 }\nlet b = { y: 5 }\na.x = b.y\nb.y = 9</pre><b>a.x</b>는?',
       options: ['5 — 값이 복사돼 독립, b를 바꿔도 무관', '9 — 속성끼리 대입하면 이어진다'],
       answer: 0,
       explain: 'b.y 칸엔 <b>값 5</b> — 그러니 <code>a.x = b.y</code>는 <b>값 복사</b>다. 봉투에서 봉투로 가도 똑같다 — <b>a.x는 5</b>. 규칙: <b>원시=값 복사(독립)</b>. "속성끼리는 특별하다"는 없다.',
     }))
     root.querySelector('[data-m="qz-c2"]').append(Quiz({
-      q: '<code>let a = {}; let b = { f: { v: 1 } }; a.g = b.f; b.f.v = 9</code> — <b>a.g.v</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let a = {}\nlet b = { f: { v: 1 } }\na.g = b.f\nb.f.v = 9</pre><b>a.g.v</b>는?',
       options: ['1 — 다른 봉투로 옮겨 담았으니 독립', '9 — 주소가 복사돼 같은 봉투를 공유'],
       answer: 1,
       explain: 'b.f 칸엔 <b>주소표</b> — <code>a.g = b.f</code>는 그 주소를 복사한다. a.g와 b.f는 <b>같은 안쪽 봉투</b>를 가리켜 <code>b.f.v = 9</code>가 a.g.v로도 보인다. 규칙: <b>객체=주소 복사(공유)</b>.',
@@ -126,7 +144,7 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
 
     // ── D 이름 함정 ─────────────────────────────────────────
     root.querySelector('[data-m="qz-d1"]').append(Quiz({
-      q: '<code>let name = "민지"; let me = {}; me.name = name</code> — 왼쪽 <code>me.name</code>의 name과 오른쪽 <code>name</code>은 <b>같은 것</b>인가?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let name = "민지"\nlet me = {}\nme.name = name</pre>왼쪽 <code>me.name</code>의 name과 오른쪽 <code>name</code>은 <b>같은 것</b>인가?',
       options: ['같다 — 철자가 같으니 같은 name이다', '다르다 — 왼쪽은 속성 키(봉투 칸 이름), 오른쪽은 변수'],
       answer: 1,
       explain: '철자만 같을 뿐 <b>완전히 다른 것</b>이다. 읽는 법: "<b>변수 name의 값을 꺼내 → me 봉투의 name 칸에 복사하라</b>". 문자열은 원시라 <b>값 복사(독립)</b> — 이후 변수 name을 바꿔도 me.name은 무관. 규칙은 여기서도 하나다.',
@@ -134,7 +152,7 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
 
     // ── E 중첩 ─────────────────────────────────────────────
     root.querySelector('[data-m="qz-e1"]').append(Quiz({
-      q: '<code>let o = { inner: { val: 1 } }; let p = o.inner; p.val = 9</code> — <b>o.inner.val</b>은?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let o = { inner: { val: 1 } }\nlet p = o.inner\np.val = 9</pre><b>o.inner.val</b>은?',
       options: ['1 — 중첩된 안쪽 값이라 안전하게 복사된다', '9 — inner 칸의 주소가 복사돼 p와 같은 봉투'],
       answer: 1,
       explain: 'inner 칸엔 안쪽 봉투의 <b>주소표</b> — 꺼내면 주소가 복사돼 p와 o.inner는 <b>같은 봉투</b>다(공유). 반대로 그 안의 <b>원시값 val을 꺼내면</b>(<code>let v = p.val</code>) 그건 <b>값 복사(독립)</b>. 아무리 깊어도 각 칸마다 <b>원시=복사 · 객체=공유</b>만 판정하면 된다.',
@@ -142,13 +160,13 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
 
     // ── F 배열 원소 ─────────────────────────────────────────
     root.querySelector('[data-m="qz-f1"]').append(Quiz({
-      q: '<code>let arr = [1, 2, 3]; let x = arr[0]; x = 9</code> — <b>arr[0]</b>은?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let arr = [1, 2, 3]\nlet x = arr[0]\nx = 9</pre><b>arr[0]</b>은?',
       options: ['1 — 원소가 원시라 꺼낼 때 값이 복사된다', '9 — 배열 원소와 이어져 같이 바뀐다'],
       answer: 0,
       explain: '배열도 봉투다 — <code>arr[0]</code> 칸엔 <b>값 1</b>이 들었으니 꺼내면 <b>값 복사</b>. x는 독립 사본이라 <code>x = 9</code> 해도 <b>arr[0]은 1</b>. 규칙: <b>원시=값 복사(독립)</b> — 배열이라고 다르지 않다.',
     }))
     root.querySelector('[data-m="qz-f2"]').append(Quiz({
-      q: '<code>let arr = [{ v: 1 }]; let e = arr[0]; e.v = 9</code> — <b>arr[0].v</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let arr = [{ v: 1 }]\nlet e = arr[0]\ne.v = 9</pre><b>arr[0].v</b>는?',
       options: ['1 — 꺼내면 복사돼 독립', '9 — 원소가 객체라 주소가 복사돼 공유'],
       answer: 1,
       explain: '이번엔 <code>arr[0]</code> 칸에 <b>주소표</b> — 꺼내면 주소가 복사돼 e와 arr[0]은 <b>같은 봉투</b>. <code>e.v = 9</code>가 arr[0].v로도 보인다. 규칙: <b>객체=주소 복사(공유)</b>. F-1과의 차이는 배열이 아니라 <b>원소의 종류</b>다.',
@@ -156,7 +174,7 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
 
     // ── G 얕은 복사 ─────────────────────────────────────────
     root.querySelector('[data-m="qz-g1"]').append(Quiz({
-      q: '<code>let o = { n: 5, f: { v: 1 } }; let c = { ...o }; c.n = 9</code> — <b>o.n</b>은?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let o = { n: 5, f: { v: 1 } }\nlet c = { ...o }\nc.n = 9</pre><b>o.n</b>은?',
       options: ['5 — 원시 필드는 값이 복사돼 c와 독립', '9 — 복사본이라도 원본과 이어진다'],
       answer: 0,
       explain: '<code>{ ...o }</code>는 봉투 칸을 하나씩 새 봉투로 복사한다. n 칸엔 <b>값 5</b> → <b>값이 복사</b>돼 c.n은 독립 사본. <code>c.n = 9</code> 해도 <b>o.n은 5</b>. 규칙: <b>원시=값 복사(독립)</b>.',
@@ -169,20 +187,32 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
     }))
 
     // ── H 함수에 전달 (매개변수 = 대입) ──────────────────────
+    root.querySelector('[data-m="sim-fn"]').append(MemoryModel({
+      title: 'hurt(u) — 같은 봉투를 넘긴다(주소 복사) · 끝엔 undefined 반환',
+      stackLabel: '📇 이름표 장부',
+      code: ['let u = { hp: 100 }', 'function hurt(p) { p.hp = 0 }', 'hurt(u)'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: 'u가 봉투 h1을 가리킨다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: '<b>①호출</b> — <code>hurt(u)</code> 호출 직전. 아직 hurt 프레임 없다(main만).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }] }, { name: 'hurt', slots: [{ name: 'p', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }] } }, note: '<b>②push + ③바인딩</b> — hurt 프레임 push, 매개변수 <b>p = u</b>는 <b>주소 복사</b> → p와 u는 <b>같은 봉투 h1</b>(공유).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }] }, { name: 'hurt', slots: [{ name: 'p', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '0', bad: true }] } }, note: '<b>④본문</b> — <code>p.hp = 0</code>이 h1을 고친다 → 같은 봉투라 <b>u.hp도 0</b>(변경이 원본에 샌다).' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'u', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '0', bad: true }] } }, returning: { value: 'undefined', discarded: true }, note: '<b>⑤ 반환·pop</b> — hurt는 return이 없어 <b>undefined를 통로로</b>(💨 버려짐) 내보내고 pop. p 사라짐. 그래도 <b>u.hp는 0</b>(같은 봉투 변경은 남는다).' },
+      ],
+    }))
     root.querySelector('[data-m="qz-h1"]').append(Quiz({
-      q: '<code>let money = 100; function pay(n) { n = 0 } pay(money)</code> — <b>money</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let money = 100\nfunction pay(n) { n = 0 }\npay(money)</pre><b>money</b>는?',
       options: ['0 — 함수 안에서 0으로 바꿨으니까', '100 — 복사본이 전달돼 원본은 안전'],
       answer: 1,
       explain: '원시값은 넘길 때 <b>값이 복사</b>된다 — 매개변수 <code>n</code>은 money의 <b>독립 사본</b>. <code>n = 0</code>은 사본만 바꾼다 → 원본 <b>money는 100 그대로</b>. <b>원시=값 복사(독립)</b> — 대입일 때와 똑같다.',
     }))
     root.querySelector('[data-m="qz-h2"]').append(Quiz({
-      q: '<code>let u = { hp: 100 }; function hurt(p) { p.hp = 0 } hurt(u)</code> — <b>u.hp</b>는?',
+      q: '<pre class="err-code" style="color:inherit;background:transparent">let u = { hp: 100 }\nfunction hurt(p) { p.hp = 0 }\nhurt(u)</pre><b>u.hp</b>는?',
       options: ['100 — 함수에 넘긴 건 사본이라 원본 안전', '0 — 같은 봉투라 함수 안 변경이 원본에 보인다'],
       answer: 1,
       explain: '객체는 넘길 때 <b>주소가 복사=공유</b> — 매개변수 <code>p</code>와 <code>u</code>는 <b>같은 봉투</b>다. <code>p.hp = 0</code>이 그 봉투를 고치니 <b>u.hp도 0</b>. <b>객체=주소 복사(공유)</b>.',
     }))
     root.querySelector('[data-m="qz-h3"]').append(Quiz({
-      q: '이번엔 <code>function reset(p) { p = { hp: 0 } } reset(u)</code> — (u는 { hp: 100 }) <b>u.hp</b>는?',
+      q: '이번엔 (u는 <code>{ hp: 100 }</code>):<pre class="err-code" style="color:inherit;background:transparent">function reset(p) { p = { hp: 0 } }\nreset(u)</pre><b>u.hp</b>는?',
       options: ['0 — 함수가 hp를 0으로 만들었다', '100 — p를 새 봉투로 갈아껴 원본은 그대로'],
       answer: 1,
       explain: '<code>p = { hp: 0 }</code>은 매개변수 <code>p</code>의 <b>화살표만 새 봉투로</b> 옮긴다 — 바깥 <code>u</code>의 화살표는 <b>옛 봉투 그대로</b>. 그래서 <b>u.hp는 100</b>. (만약 <code>p.hp = 0</code>였다면 같은 봉투를 고쳐 원본도 0 — <b>변경 vs 재할당</b>의 갈림길!)',
