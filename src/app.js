@@ -119,6 +119,12 @@
     }))
   const PRACTICE_ITEMS = LESSONS.flatMap((l) => practiceItemsFor(l.id))
   const byId = Object.fromEntries([...LESSONS, ...PRACTICE_ITEMS].map((l) => [l.id, l]))
+  // 강의 자식(하위스텝 X-N · 드릴 X:tier)의 부모 강 id를 돌려준다(아니면 null).
+  const lessonParent = (id) => {
+    const s = String(id)
+    if (s.includes(':')) return s.split(':')[0]                 // 드릴 X:tier → X
+    const m = s.match(/^(.*)-\d+$/); return m && byId[m[1]] ? m[1] : null  // 하위스텝 X-N → X
+  }
 
   // 사이드바 목차 — 개념 강의 + 그 강의의 실습 문제들을 명시적으로 배치한다.
   // 🧠 메모리 챕터도 이제 개념 + 실습(드릴) — items에 P()로 실습 항목 전개(tag로 '파트' 대신 아이콘 표시).
@@ -141,6 +147,9 @@
   ]
   // 원리 심화 개념 강의 → "급하면 다음 파트로" 건너뛰기 배너의 이동 목적지(파트 안에 있지만 선택).
   const DEEP_SKIP = { ram: 2, stack: 2, heap: 2, ref: 2, ref2: 2, passval: 2, passobj: 2, passarr: 2, callstack: 6, closure: 6, gc: 6, graph: 9, friends: 9, family: 9, cycle: 9, class: 9 }
+  // 자식(스텝·드릴)을 가진 강 id 집합 — 이 강들에 '강 접기' chevron을 단다.
+  const lessonsWithChildren = new Set()
+  CHAPTERS.forEach((ch) => ch.items.forEach((it) => { const p = lessonParent(it); if (p != null) lessonsWithChildren.add(p) }))
 
   const kindOf = (l) => (l && l.kind) || 'lesson'
   const hasContent = (id) => {
@@ -168,6 +177,7 @@
     sidebarOpen: load('sidebarOpen', 'true') !== 'false',
     openChapters: new Set(CHAPTERS.map((_, i) => i)),
     openSteps: new Set(), // 하위 단계(3-1…·5-1…)를 펼친 부모 강의 id. 기본 접힘.
+    collapsedLessons: new Set(), // 사용자가 수동으로 접은 강 id. 기본 비어 있음 = 모든 강 펼침(드릴 보임). 접으면 그 강의 스텝+드릴 모두 숨김.
     homeCollapsed: new Set(), // 목차(홈)에서 접은 파트 인덱스. 기본 다 펼침.
   }
   const CHECK_MODES = [
@@ -303,6 +313,10 @@
     } else if (CHAPTERS.some((c) => c.items.some((it) => typeof it === 'string' && new RegExp('^' + sid + '-\\d+$').test(it)))) {
       state.openSteps.add(sid) // 하위단계를 가진 부모 강의면 자신을 펼침
     }
+    // 강이 접혀 있으면 펼친다 — 자식(드릴·스텝)으로 가거나 강 자체로 가면 그 강을 보여야 한다.
+    const pl = lessonParent(id)
+    if (pl != null) state.collapsedLessons.delete(pl)
+    state.collapsedLessons.delete(sid)
   }
 
   function renderToc() {
@@ -323,8 +337,8 @@
     allBtn.className = 'toc-collapse-all'
     allBtn.textContent = anyOpen ? '⊟ 모두 접기' : '⊞ 모두 펼치기'
     allBtn.onclick = () => {
-      if (state.openChapters.size > 0) { state.openChapters.clear(); state.openSteps.clear() }
-      else { CHAPTERS.forEach((_, i) => state.openChapters.add(i)); substepParents.forEach((p) => state.openSteps.add(p)) }
+      if (state.openChapters.size > 0) { state.openChapters.clear(); state.openSteps.clear(); lessonsWithChildren.forEach((p) => state.collapsedLessons.add(p)) }
+      else { CHAPTERS.forEach((_, i) => state.openChapters.add(i)); substepParents.forEach((p) => state.openSteps.add(p)); state.collapsedLessons.clear() }
       renderToc()
     }
     toc.append(allBtn)
@@ -352,11 +366,25 @@
         ch.items.forEach((id) => {
           const l = byId[id]
           if (!l) return
+          // 강이 접혀 있으면 그 강의 자식(하위스텝·드릴)은 렌더하지 않는다.
+          const parentL = lessonParent(id)
+          if (parentL != null && state.collapsedLessons.has(parentL)) return
           // 접힌 부모의 하위 단계면 렌더하지 않는다.
           const isSub = typeof id === 'string' && /-\d+$/.test(id) && byId[id.replace(/-\d+$/, '')]
           if (isSub && !stepOpen(id.replace(/-\d+$/, ''))) return
           const row = document.createElement('div')
           row.className = 'toc-item-row'
+          // 강 접기 chevron(왼쪽) — 자식(하위스텝·드릴)을 가진 개념 강에만. 접으면 그 강의 스텝+드릴 모두 숨김.
+          if (!l.step && kindOf(l) === 'lesson' && lessonsWithChildren.has(String(id))) {
+            const lopen = !state.collapsedLessons.has(String(id))
+            const lchev = document.createElement('button')
+            lchev.className = 'toc-step-toggle toc-lesson-toggle' + (lopen ? ' open' : '')
+            lchev.textContent = '▸'
+            lchev.title = lopen ? '강 접기(스텝·드릴 숨김)' : '강 펼치기'
+            lchev.setAttribute('aria-label', lchev.title)
+            lchev.onclick = (e) => { e.stopPropagation(); const k = String(id); state.collapsedLessons.has(k) ? state.collapsedLessons.delete(k) : state.collapsedLessons.add(k); renderToc() }
+            row.append(lchev)
+          }
           // 체크박스: 개념 서브내비(step)만 빼고 항상 표시. 각 항목은 '제 종류'의 집계셋에 연결
           // (개념 강의 → 📖 진도 셋, 실습 문제 → ✏️ 연습 셋). 모드 탭은 진행률 분모만 바꾼다.
           const isPr = isPracticeKind(l)
