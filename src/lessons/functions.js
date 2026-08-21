@@ -228,7 +228,7 @@
       <span class="learn-tag">📎 부족 → 빈 매개변수는 <code>undefined</code> · 초과 → 남는 인수는 무시(버려짐)</span>
       <div data-m="sim-arity"></div>
       <div class="card"><div class="file-label">🔬 실행 — 2개 선언, 1개·3개 넘겨보기</div><div data-m="arity"></div></div>
-      <p class="section-desc">🔑 "부족"을 막는 도구가 <b>기본 매개변수</b> — <code>function add(a, b = 0)</code>처럼 두면, b를 안 넘겼을 때 <code>undefined</code> 대신 <b>0</b>이 들어간다.</p>
+      <p class="section-desc">🔑 "부족"을 막는 도구가 <b>기본 매개변수</b> — <code>function add(a, b = 0)</code>처럼 두면, b를 안 넘겼을 때 <code>undefined</code> 대신 <b>0</b>이 들어간다. 반대로 <b>"초과"를 다 받으려면 <code>나머지 매개변수 ...args</code></b> — 넘긴 인수를 <b>배열로 모은다</b>(<code>function sumAll(...nums)</code>). 버려지던 초과분을 오히려 활용하는 도구다.</p>
 
       ${nav('5-2', 3, '5-4', '5-4 · return →')}
     `
@@ -268,6 +268,10 @@
       '// 🔑 "부족"을 막는 법 — 기본 매개변수',
       'function add2(a, b = 0) { return a + b }',
       'print(add2(3))        // 3   (b를 안 넘기면 undefined 대신 0)',
+      '',
+      '// 🔑 반대로 "초과"를 다 받으려면 — 나머지 매개변수 ...rest',
+      'function sumAll(...nums) { return nums.reduce((a, b) => a + b, 0) }',
+      'print(sumAll(1, 2, 3, 4))   // 10  (넘긴 걸 배열 nums로 다 모음)',
     ].join('\n') }))
     root.querySelector('[data-m="qz-ar1"]').append(Quiz({
       q: '<code>function add(a, b) { return a + b }</code> — <b>인수를 하나만</b> 넘겨 <code>add(10)</code>을 부르면?',
@@ -555,6 +559,8 @@
 
       <span class="learn-tag">📎 <b>매개변수도 지역이다</b> — 매개변수(빈 자리)도 그 함수 안에서만 사는 지역변수, 밖에선 못 쓴다</span>
       <div data-m="qz-param"></div>
+      <span class="learn-tag">📎 이름이 겹치면? 함수 안 매개변수가 바깥 같은 이름을 <b>가린다</b>(shadowing) — 안쪽이 우선</span>
+      <div data-m="qz-shadow"></div>
 
       <h3 class="section-title">② 눈으로 — 전역은 남고, 지역은 사라진다</h3>
       <span class="learn-tag">📎 ▶ — appName(전역)은 main에 남고, user·msg(지역)는 프레임과 함께 사라진다</span>
@@ -573,6 +579,12 @@
       options: ['"민지"가 찍힌다', '에러 — name은 매개변수(지역)라 함수 밖엔 없다', 'undefined가 찍힌다'],
       answer: 1,
       explain: '<b>매개변수도 지역변수</b>다. <code>name</code>은 greet 안에서만 살고 함수가 끝나면 프레임과 함께 사라진다 → 함수 밖 <code>print(name)</code>은 <b>ReferenceError</b>. "매개변수는 빈 자리라 밖에서도 되겠지"가 착각 — 지역 <code>let</code>과 똑같다.',
+    }))
+    root.querySelector('[data-m="qz-shadow"]').append(Quiz({
+      q: '바깥 <code>n = 9</code>, 매개변수도 <code>n</code>. <code>f(1)</code>은 무엇을 볼까?<pre class="err-code" style="color:inherit;background:transparent">let n = 9\nfunction f(n) { return n * 2 }   // 매개변수도 n\nprint(f(1))   // f(1)은?</pre>',
+      options: ['18 — 바깥 n=9를 본다', '2 — 함수 안 매개변수 n(=1)이 바깥 n을 가린다', '에러 — 이름이 겹쳐서'],
+      answer: 1,
+      explain: '함수 안 <b>매개변수 n</b>이 바깥 <code>n=9</code>를 <b>가린다</b>(shadowing) — 안에선 매개변수 n(=1)만 보여 <code>1*2=2</code>. 이름이 같아도 <b>다른 프레임의 다른 셀</b>이라 안 부딪히고, 안쪽이 우선. 바깥 n은 그대로 9.',
     }))
     root.querySelector('[data-m="scope"]').append(Runner({ showBox: false, code: [
       'let appName = "메모장"              // 전역 — 어디서나 보인다',

@@ -52,7 +52,7 @@
       <div data-m="objmem"></div>
 
       <h3 class="section-title">⑤ 메서드 — 값이 '함수'인 속성</h3>
-      <span class="learn-tag">📎 속성 값이 함수면 '메서드' — obj.행동() 으로 부른다 (5강 함수가 바탕)</span>
+      <span class="learn-tag">📎 <b>함수도 값</b>(5-7)이라 속성에 담을 수 있다 → 그게 '메서드'. <code>obj.행동()</code> 으로 부른다 (5강 함수가 바탕)</span>
       <div class="card"><div class="file-label">🔬 강아지의 bark() 메서드</div><div data-m="method"></div></div>
 
       <h3 class="section-title">⑥ 화면 — 객체로 프로필 카드</h3>
