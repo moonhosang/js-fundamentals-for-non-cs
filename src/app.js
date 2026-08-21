@@ -366,25 +366,12 @@
         ch.items.forEach((id) => {
           const l = byId[id]
           if (!l) return
-          // 강이 접혀 있으면 그 강의 자식(하위스텝·드릴)은 렌더하지 않는다.
+          // 강이 접혀 있으면 그 강의 자식(하위스텝·드릴)은 렌더하지 않는다(단일 chevron으로 스텝+드릴 함께 접힘).
           const parentL = lessonParent(id)
           if (parentL != null && state.collapsedLessons.has(parentL)) return
-          // 접힌 부모의 하위 단계면 렌더하지 않는다.
           const isSub = typeof id === 'string' && /-\d+$/.test(id) && byId[id.replace(/-\d+$/, '')]
-          if (isSub && !stepOpen(id.replace(/-\d+$/, ''))) return
           const row = document.createElement('div')
           row.className = 'toc-item-row'
-          // 강 접기 chevron(왼쪽) — 자식(하위스텝·드릴)을 가진 개념 강에만. 접으면 그 강의 스텝+드릴 모두 숨김.
-          if (!l.step && kindOf(l) === 'lesson' && lessonsWithChildren.has(String(id))) {
-            const lopen = !state.collapsedLessons.has(String(id))
-            const lchev = document.createElement('button')
-            lchev.className = 'toc-step-toggle toc-lesson-toggle' + (lopen ? ' open' : '')
-            lchev.textContent = '▸'
-            lchev.title = lopen ? '강 접기(스텝·드릴 숨김)' : '강 펼치기'
-            lchev.setAttribute('aria-label', lchev.title)
-            lchev.onclick = (e) => { e.stopPropagation(); const k = String(id); state.collapsedLessons.has(k) ? state.collapsedLessons.delete(k) : state.collapsedLessons.add(k); renderToc() }
-            row.append(lchev)
-          }
           // 체크박스: 개념 서브내비(step)만 빼고 항상 표시. 각 항목은 '제 종류'의 집계셋에 연결
           // (개념 강의 → 📖 진도 셋, 실습 문제 → ✏️ 연습 셋). 모드 탭은 진행률 분모만 바꾼다.
           const isPr = isPracticeKind(l)
@@ -413,15 +400,15 @@
           btn.innerHTML = `<span class="toc-item-title">${flag}${l.title}</span><span class="toc-item-sub">${l.subtitle}</span>`
           btn.onclick = () => go(id)
           row.append(btn)
-          // 하위 단계가 있는 부모 강의(3·5)엔 펼침/접기 토글을 단다.
-          if (hasSteps(id)) {
-            const open2 = stepOpen(id)
+          // 강 접기/펼치기 chevron — 자식(하위스텝·드릴)을 가진 강에. 접으면 그 강의 스텝+드릴 전부 숨김(기본 펼침).
+          if (!l.step && kindOf(l) === 'lesson' && lessonsWithChildren.has(String(id))) {
+            const lopen = !state.collapsedLessons.has(String(id))
             const chev = document.createElement('button')
-            chev.className = 'toc-step-toggle' + (open2 ? ' open' : '')
+            chev.className = 'toc-step-toggle' + (lopen ? ' open' : '')
             chev.textContent = '▸'
-            chev.title = open2 ? '하위 단계 접기' : '하위 단계 펼치기'
+            chev.title = lopen ? '강 접기(하위 단계·드릴 숨김)' : '강 펼치기'
             chev.setAttribute('aria-label', chev.title)
-            chev.onclick = (e) => { e.stopPropagation(); const k = String(id); state.openSteps.has(k) ? state.openSteps.delete(k) : state.openSteps.add(k); renderToc() }
+            chev.onclick = (e) => { e.stopPropagation(); const k = String(id); state.collapsedLessons.has(k) ? state.collapsedLessons.delete(k) : state.collapsedLessons.add(k); renderToc() }
             row.append(chev)
           }
           sec.append(row)
