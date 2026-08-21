@@ -2,6 +2,16 @@
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const N = window.Drills.normal
+  N["objanat"] = {
+    pattern: "🟡 보통 · 봉투에서 꺼내면? 원시는 복사(독립)·객체는 주소(공유) — 예측",
+    problems: [
+      {"label":"원시 꺼내 복사","ask":"원시 속성을 꺼낸 뒤 사본을 바꾸면 — 봉투 안 원본은?","code":"let p = { n: 5 }\nlet x = p.n\nx = 9\nprint((p.n) === ____)","expect":"true","answer":"5","hint":"원시 꺼내면 복사 → 독립","explain":"p.n을 꺼낼 때 <b>값 5가 복사</b>돼 x는 봉투 밖 독립. <code>x = 9</code>는 x의 화살표만 옮긴다 — <b>봉투 안 n은 그대로 5</b>.","see":"objanat"},
+      {"label":"반대 방향","ask":"봉투 안을 바꾸면, 먼저 꺼내 둔 사본은?","code":"let p = { hp: 100 }\nlet x = p.hp\np.hp = 10\nprint((x) === ____)","expect":"true","answer":"100","hint":"꺼낸 순간 복사 끝 — 그 뒤 봉투를 고쳐도 사본은 무관","explain":"x에는 꺼낼 때 <b>복사된 100</b>이 담겼다. 그 뒤 <code>p.hp = 10</code>은 봉투 안만 고친다 — <b>x는 여전히 100</b>. 복사는 <b>양방향으로 독립</b>이다."},
+      {"label":"문자열도 복사","ask":"문자열 속성을 꺼내서 바꾸면 봉투 안은?","code":"let p = { name: \"민지\" }\nlet n = p.name\nn = \"지훈\"\nprint((p.name) === \"____\")","expect":"true","answer":"민지","hint":"문자열도 원시 — 꺼내면 복사","explain":"문자열도 <b>원시</b>라 꺼내면 복사. <code>n = \"지훈\"</code>은 n만 재할당 — <b>봉투 안 name은 그대로 \"민지\"</b>."},
+      {"label":"객체 속성 공유","ask":"꺼낸 f로 안을 바꾸면 p 쪽은?","code":"let p = { best: { name: \"효니\" } }\nlet f = p.best\nf.name = \"보리\"\nprint((p.best.name) === \"____\")","expect":"true","answer":"보리","hint":"객체 칸엔 주소표 — 꺼내면 주소가 복사 → 공유","explain":"best 칸엔 값이 아니라 <b>주소표</b>. 꺼내면 주소가 복사돼 f와 p.best가 <b>같은 효니 봉투</b> — f로 고치면 <b>p.best도 \"보리\"</b>(공유)."},
+      {"label":"봉투 공유","ask":"b로 봉투 안 원시를 바꾸면 a 쪽은?","code":"let a = { num: 10 }\nlet b = a\nb.num = 77\nprint((a.num) === ____)","expect":"true","answer":"77","hint":"b = a는 주소 복사 — 봉투가 하나뿐","explain":"<code>let b = a</code>는 <b>주소 복사</b>라 봉투는 하나. <code>b.num = 77</code>은 그 하나뿐인 봉투를 고친다 — <b>a.num도 77</b>. 원시라도 <b>봉투를 공유 중이면</b> 같이 보인다."}
+    ]
+  }
   N["1"] = {
     pattern: "🟡 보통 · 두 단계 계산·타입 결합을 예측",
     problems: [

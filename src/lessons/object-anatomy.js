@@ -97,14 +97,14 @@ me.name = name
       <h3 class="section-title">⑦ 💡 실무에서</h3>
       <p class="section-desc" style="opacity:.85">React에서 <code>obj.age = 31; setState(obj)</code> 해도 화면이 <b>안 바뀌는</b> 이유가 이 그림이다 — 봉투 <b>안</b>만 고쳤지 봉투의 <b>주소는 그대로</b>라, 주소만 비교하는 React는 "같은 객체네" 하고 넘어간다. 그래서 <code>setState({ ...obj, age: 31 })</code>처럼 <b>새 봉투</b>를 만들어 준다 — 속성이 봉투 안에 산다는 그림이 있어야 이 관례가 이해된다.</p>
 
-      <h3 class="section-title">⑧ 📖 요약 + 예측 드릴</h3>
+      <h3 class="section-title">⑧ 📖 요약</h3>
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0"><b>타입이 아니라 소속이 집을 정한다 — 값은 담긴 그릇을 따라간다.</b>
         독립 변수(원시) = 스택 슬롯 안 · 속성 = 객체 봉투(힙) 안. 봉투 속: 원시 = <b>값 그대로</b> · 객체 = <b>주소표</b>.
         꺼내면 봉투에 든 그대로 나온다 — 값이면 <b>복사(독립)</b>, 주소표면 <b>공유</b>.</p>
       </div>
-      <div data-m="drill"></div>
+      <div class="practice-cta"><span>예측 드릴 —</span><button class="chip on" data-goto="objanat:easy">🟢 쉬움</button><button class="chip on" data-goto="objanat:normal">🟡 보통</button><button class="chip on" data-goto="objanat:hard">🔴 어려움</button></div>
 
       <div class="practice-cta"><span>규칙은 하나인데 조합이 많다 — 예측으로 손에 붙이자 —</span><button class="chip on" data-goto="objprim">🧠 객체 × 원시값 · 조화 연습 →</button></div>
     `
@@ -231,37 +231,5 @@ me.name = name
       ],
     }))
 
-    // ⑦ 예측 드릴 — 봉투 규칙을 손에 붙인다 (원시 꺼내기=복사 / 객체 공유)
-    root.querySelector('[data-m="drill"]').append(Drill({
-      pattern: '📎 예측: 봉투 안 원시는 꺼내면 복사(독립) · 객체는 주소(공유) — 값을 예측해 빈칸에',
-      stepped: true,
-      problems: [
-        { ask: '원시 속성을 꺼낸 뒤 사본을 바꾸면 — 봉투 안 원본은?',
-          code: ['let p = { n: 5 }', 'let x = p.n', 'x = 9', 'print((p.n) === ____)'].join('\n'),
-          expect: 'true', answer: '5',
-          hint: '원시 꺼내면 복사 → 독립',
-          explain: 'p.n을 꺼낼 때 <b>값 5가 복사</b>돼 x는 봉투 밖 독립. <code>x = 9</code>는 x의 화살표만 옮긴다 — <b>봉투 안 n은 그대로 5</b>.' },
-        { ask: '반대 방향 — 봉투 안을 바꾸면, 먼저 꺼내 둔 사본은?',
-          code: ['let p = { hp: 100 }', 'let x = p.hp', 'p.hp = 10', 'print((x) === ____)'].join('\n'),
-          expect: 'true', answer: '100',
-          hint: '꺼낸 순간 복사 끝 — 그 뒤 봉투를 고쳐도 사본은 무관',
-          explain: 'x에는 꺼낼 때 <b>복사된 100</b>이 담겼다. 그 뒤 <code>p.hp = 10</code>은 봉투 안만 고친다 — <b>x는 여전히 100</b>. 복사는 한 방향이 아니라 <b>양방향으로 독립</b>이다.' },
-        { ask: '문자열 속성도 마찬가지 — 꺼내서 바꾸면 봉투 안은?',
-          code: ['let p = { name: "민지" }', 'let n = p.name', 'n = "지훈"', 'print((p.name) === ____)'].join('\n'),
-          expect: 'true', answer: '"민지"',
-          hint: '문자열도 원시 — 꺼내면 복사(숫자만이 아니다)',
-          explain: '문자열도 <b>원시</b>라 꺼내면 복사. <code>n = "지훈"</code>은 n만 새 값으로 재할당 — <b>봉투 안 name은 그대로 "민지"</b>.' },
-        { ask: '이번엔 객체 속성 — 꺼낸 f로 안을 바꾸면 p 쪽은?',
-          code: ['let p = { best: { name: "효니" } }', 'let f = p.best', 'f.name = "보리"', 'print((p.best.name) === ____)'].join('\n'),
-          expect: 'true', answer: '"보리"',
-          hint: 'best 칸엔 주소표 — 꺼내면 주소가 복사 → 같은 봉투 공유',
-          explain: 'best 칸엔 값이 아니라 <b>주소표</b>가 들어 있다. 꺼내면 주소가 복사돼 f와 p.best가 <b>같은 효니 봉투</b> — f로 고치면 <b>p.best로 봐도 "보리"</b>(공유).' },
-        { ask: '객체째 담기 — b로 봉투 안 원시를 바꾸면 a 쪽은?',
-          code: ['let a = { num: 10 }', 'let b = a', 'b.num = 77', 'print((a.num) === ____)'].join('\n'),
-          expect: 'true', answer: '77',
-          hint: 'b = a는 주소 복사 — 봉투가 하나뿐',
-          explain: '<code>let b = a</code>는 <b>주소 복사</b>라 봉투는 하나. <code>b.num = 77</code>은 그 하나뿐인 봉투 안을 고친다 — <b>a.num도 77</b>. 원시(num)라도 <b>봉투를 공유 중이면</b> 같이 보인다 — 복사는 "꺼내 담을 때" 일어난다.' },
-      ],
-    }))
   }
 })()

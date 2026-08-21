@@ -2,6 +2,16 @@
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const H = window.Drills.hard
+  H["objanat"] = {
+    pattern: "🔴 어려움 · 중첩·수명·스프레드 — 봉투 규칙의 함정을 예측",
+    problems: [
+      {"label":"2겹 중첩 공유","ask":"g로 2겹 안을 바꾸면 p 쪽은?","code":"let p = { inner: { hp: 100 } }\nlet g = p.inner\ng.hp = 0\nprint((p.inner.hp) === ____)","expect":"true","answer":"0","hint":"inner 칸도 주소표 — g와 p.inner는 같은 봉투","explain":"inner 칸엔 <b>안쪽 봉투의 주소</b>. g에 그 주소가 복사돼 <b>같은 안쪽 봉투</b> — <code>g.hp=0</code>이 p.inner.hp도 0."},
+      {"label":"반환 후 생존","ask":"함수가 만든 봉투를 돌려받으면 hp는?","code":"function make() { let q = { hp: 7 }; return q }\nlet c = make()\nprint((c.hp) === ____)","expect":"true","answer":"7","hint":"객체는 힙에 살아 반환된다 — 프레임 pop과 무관","explain":"q는 <b>힙 봉투</b>. return이 그 <b>주소를 내보내</b> c가 받는다. make 프레임은 pop돼도 봉투는 힙에 살아남아 <b>c.hp는 7</b>. (속성은 봉투째 산다)","see":"heap"},
+      {"label":"스프레드 새 봉투","ask":"{...p}로 사본을 만들고 원본 원시를 바꾸면 사본은?","code":"let p = { hp: 100 }\nlet copy = { ...p }\np.hp = 0\nprint((copy.hp) === ____)","expect":"true","answer":"100","hint":"스프레드는 새 봉투 — 원시 값은 복사(독립)","explain":"<code>{ ...p }</code>는 <b>새 봉투</b>에 p의 칸을 복사. 원시(hp)는 <b>값 복사=독립</b> → 원본 p.hp를 0으로 바꿔도 <b>copy.hp는 100</b>."},
+      {"label":"얕은 복사 함정","ask":"{...p}로 복사해도 중첩 객체는 공유 — 원본 안쪽을 바꾸면 copy 쪽은?","code":"let p = { in: { n: 1 } }\nlet copy = { ...p }\np.in.n = 9\nprint((copy.in.n) === ____)","expect":"true","answer":"9","hint":"스프레드는 얕은 복사 — 중첩 봉투는 주소만 복사(공유)","explain":"<code>{...p}</code>는 <b>얕은 복사</b> — in 칸의 <b>주소표만 복사</b>라 copy.in과 p.in은 <b>같은 안쪽 봉투</b>. <code>p.in.n=9</code>가 copy.in.n도 9. (중첩은 공유가 샌다)"},
+      {"label":"배열 속성 공유","ask":"객체 안 배열을 꺼내 push하면 원본 쪽 개수는?","code":"let p = { tags: [\"a\"] }\nlet t = p.tags\nt.push(\"b\")\nprint((p.tags.length) === ____)","expect":"true","answer":"2","hint":"배열도 객체 — 꺼내면 주소 공유","explain":"tags 칸엔 <b>배열 주소</b>. t에 복사돼 <b>같은 배열</b> — <code>t.push</code>가 p.tags에도 보여 length 2. (배열=객체라 공유)"}
+    ]
+  }
   H["1"] = {
     pattern: "🔴 어려움 · typeof 함정·부동소수점·+와 -의 차이 — 아는 것도 틀린다",
     problems: [

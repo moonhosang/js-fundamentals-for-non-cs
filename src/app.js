@@ -130,7 +130,7 @@
   // 이러면 사이드바 최상위는 파트1~4만 보여 흐름이 깔끔하고(예전엔 1강↔2강 사이에 심화
   // 11개가 벽처럼 끼어 끊겼다), 파트를 펼치면 심화가 제 자리에 자연히 이어진다.
   const CHAPTERS = [
-    { n: '1', title: '값과 메모리', items: [1, ...P(1), 'ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'objanat', 'objprim', ...P('objprim'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
+    { n: '1', title: '값과 메모리', items: [1, ...P(1), 'ram', ...P('ram'), 'stack', ...P('stack'), 'heap', ...P('heap'), 'objanat', ...P('objanat'), 'objprim', ...P('objprim'), 'ref', ...P('ref'), 'ref2', ...P('ref2'), 'passval', ...P('passval'), 'passobj', ...P('passobj'), 'passarr', ...P('passarr')] },
     // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다. 함수 뒤에 메모리 심화.
     { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5), 'callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     // 객체(8강) 뒤에 그래프·클래스.

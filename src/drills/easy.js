@@ -2,6 +2,16 @@
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const E = window.Drills.easy
+  E["objanat"] = {
+    pattern: "🟢 쉬움 · 객체 봉투 속 속성을 읽고·바꾸고·세어 본다 (=== true 면 정답)",
+    problems: [
+      {"label":"속성 읽기","ask":"봉투 안 age를 읽으면?","code":"let p = { age: 20 }\nprint(p.age === ____)","expect":"true","answer":"20","hint":"점(.)으로 봉투 안 값을 꺼낸다","explain":"<code>p.age</code>는 p 봉투 안 <b>age 칸의 값</b>을 꺼낸다 → 20.","see":"objanat"},
+      {"label":"속성 바꾸기","ask":"p.hp를 50으로 바꾸면 p.hp는?","code":"let p = { hp: 100 }\np.hp = 50\nprint(p.hp === ____)","expect":"true","answer":"50","hint":"봉투 안 hp 칸을 덮어쓴다","explain":"<code>p.hp = 50</code>은 봉투 안 hp 칸을 <b>50으로 고친다</b> → 50."},
+      {"label":"없는 속성","ask":"봉투에 없는 칸을 읽으면? (에러 아님!)","code":"let p = { n: 1 }\nprint((p.zzz === undefined) === ____)","expect":"true","answer":"true","hint":"없는 칸 = undefined (에러 아니다)","explain":"객체에 <b>없는 속성</b>을 읽으면 에러가 아니라 <code>undefined</code>다 — 6강 배열 칸 밖과 같은 규칙.","see":"objanat"},
+      {"label":"속성 개수","ask":"봉투 안 칸이 몇 개?","code":"let p = { a: 1, b: 2, c: 3 }\nprint(Object.keys(p).length === ____)","expect":"true","answer":"3","hint":"키(칸) 3개","explain":"<code>Object.keys(p)</code>는 봉투 안 <b>칸 이름 목록</b>을 준다 → 길이 3."},
+      {"label":"새 칸 넣기","ask":"빈 봉투에 name을 넣으면?","code":"let p = {}\np.name = \"민지\"\nprint(p.name === \"____\")","expect":"true","answer":"민지","hint":"없던 칸도 대입하면 생긴다","explain":"없던 속성도 <code>p.name = ...</code>로 대입하면 봉투에 <b>칸이 새로 생긴다</b> → \"민지\"."}
+    ]
+  }
   E["1"] = {
     pattern: "🟢 쉬움 · 값의 타입·계산 결과를 스스로 예측해 채운다 (=== true 면 정답)",
     problems: [
