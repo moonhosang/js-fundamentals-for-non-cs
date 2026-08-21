@@ -75,6 +75,7 @@
           .sval { font-family:var(--font-mono,monospace); font-size:13px; border:1px solid var(--border,#e5e7eb); border-radius:6px; padding:2px 10px; background:var(--panel,#fff); }
           .sval.prim { color:#16a34a; }
           .sval.bad { color:#dc2626; border-color:#dc2626; background:#fef2f2; font-weight:700; }
+          .sval.waiting { color:var(--muted,#9ca3af); border-color:var(--border,#e5e7eb); border-style:dashed; background:transparent; font-weight:400; font-style:italic; }
           .sref { font-family:var(--font-mono,monospace); font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:5px; }
           .sref .dot { width:9px; height:9px; border-radius:50%; }
           .hbox { border:2px solid; border-radius:10px; padding:8px 10px; margin-bottom:8px; display:flex; align-items:center; gap:8px; background:var(--panel,#fff); }
@@ -218,6 +219,10 @@
           curSlots.add(key)
           const en = prev.slots.has(key) ? '' : ' enter'
           const inlineVal = (v, bad) => `<div class="slot${en}"><span class="sname">${esc(sl.name)}</span><span class="sval prim${bad ? ' bad' : ''}">${esc(v)}</span></div>`
+          // 대기(pending) 슬롯 — 아직 값이 없다. 값 메모리 셀·화살표를 만들지 않고, 이름표 장부 안에 흐린 플레이스홀더로만 표시(🔒 값처럼 안 보이게).
+          if (sl.waiting || sl.value === '(대기)') {
+            return `<div class="slot${en}"><span class="sname">${esc(sl.name)}</span><span class="sval waiting">${esc(sl.value || '(대기)')}</span></div>`
+          }
           if ('ref' in sl && sl.ref) {
             const box = heap[sl.ref]
             // 엔진 레이어: 원시 값 박스는 슬롯에 인라인(스택), 객체만 화살표(공유 힙)
