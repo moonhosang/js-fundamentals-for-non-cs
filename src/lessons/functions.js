@@ -218,6 +218,18 @@
       <span class="learn-tag">📎 ▶ — 인수 "민지"가 매개변수 name 셀에 들어가는 걸 본다</span>
       <div data-m="mem"></div>
 
+      <h3 class="section-title">③ ⚠️ 개수가 안 맞으면? — 부족 / 초과</h3>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">⚠️ 오해 — "매개변수가 2개면 인수도 딱 2개여야 에러난다"</div>
+        <p class="section-desc" style="margin:0"><b>에러 안 난다.</b> JS는 개수가 안 맞아도 <b>그냥 실행</b>한다 — <b>부족</b>하면 안 채운 매개변수는 <code>undefined</code>, <b>초과</b>하면 남는 인수는 <b>버려진다</b>(무시). 그래서 <code>add(3)</code>이 에러가 아니라 조용히 <b>NaN</b>을 내는 함정이 생긴다("계산 안 되니 에러겠지"가 착각).</p>
+      </div>
+      <div data-m="qz-ar1"></div>
+      <div data-m="qz-ar2"></div>
+      <span class="learn-tag">📎 부족 → 빈 매개변수는 <code>undefined</code> · 초과 → 남는 인수는 무시(버려짐)</span>
+      <div data-m="sim-arity"></div>
+      <div class="card"><div class="file-label">🔬 실행 — 2개 선언, 1개·3개 넘겨보기</div><div data-m="arity"></div></div>
+      <p class="section-desc">🔑 "부족"을 막는 도구가 <b>기본 매개변수</b> — <code>function add(a, b = 0)</code>처럼 두면, b를 안 넘겼을 때 <code>undefined</code> 대신 <b>0</b>이 들어간다.</p>
+
       ${nav('5-2', 3, '5-4', '5-4 · return →')}
     `
     root.querySelector('[data-m="param"]').append(Runner({ showBox: false, code: [
@@ -239,6 +251,46 @@
         { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [{ name: 'name', ref: 'nameMinji' }] }], heap: { nameMinji: { label: '"민지"', prim: true } }, note: '<b>④본문 첫 줄</b> — <code>return "안녕, " + name + " 님!"</code>이 새 문자열을 만든다. 이름은 장부, 값은 값 메모리.', engine: '이어붙이기는 새 <b>문자열 객체</b>를 힙에 만들고 그 <b>포인터</b>가 반환값이 된다.' },
         { line: 1, stack: [{ name: 'main', slots: [] }], heap: {}, returning: { value: '"안녕, 민지 님!"' }, note: '<b>⑤ 반환 — 값이 통로로 나오고 프레임 pop</b> — <code>return</code>이 <b>"안녕, 민지 님!"</b>을 프레임 밖 <b>반환 통로로</b> 내보내고 greet를 <b>즉시 끝낸다</b>(프레임 pop, 지역 name 사라짐). 반환값은 <b>통로에서 호출한 자리(print의 인자)로</b> 건네지는 중.', engine: '<b>return</b> → 이어붙인 새 문자열의 <b>포인터</b>가 레지스터로 넘어가고 greet 프레임은 <b>pop</b>. 지역 슬롯 name은 사라진다(가리키던 "민지" 본체는 아무도 안 쓰면 추후 GC).' },
         { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>⑥ 호출부에서 사용</b> — 호출한 자리 <code>print(…)</code>가 반환값 <b>"안녕, 민지 님!"</b>을 받아 <b>화면에 찍는다</b>. <b>반환(⑤)과 사용(⑥)은 별개의 두 단계</b> — greet가 먼저 끝나고, 그 반환값을 print가 받는다.', engine: 'print는 반환값(문자열 포인터)을 인자로 받아 출력한다. greet 프레임은 이미 pop된 뒤 — 값만 넘어왔다.' },
+      ],
+    }))
+    root.querySelector('[data-m="arity"]').append(Runner({ showBox: false, code: [
+      'function add(a, b) { return a + b }   // 매개변수 2개 (a, b)',
+      '',
+      '// 딱 맞게 — 2개',
+      'print(add(3, 4))      // 7',
+      '',
+      '// 부족 — 1개만 넘김 → b는 undefined → 3 + undefined',
+      'print(add(3))         // NaN  (에러 아님! 조용한 함정)',
+      '',
+      '// 초과 — 3개 넘김 → 남는 5는 버려짐(무시)',
+      'print(add(3, 4, 5))   // 7',
+      '',
+      '// 🔑 "부족"을 막는 법 — 기본 매개변수',
+      'function add2(a, b = 0) { return a + b }',
+      'print(add2(3))        // 3   (b를 안 넘기면 undefined 대신 0)',
+    ].join('\n') }))
+    root.querySelector('[data-m="qz-ar1"]').append(Quiz({
+      q: '<code>function add(a, b) { return a + b }</code> — <b>인수를 하나만</b> 넘겨 <code>add(10)</code>을 부르면?',
+      options: ['에러가 난다 (인수 부족)', 'NaN — b가 undefined라 10 + undefined', '10 — b는 그냥 무시된다', 'undefined'],
+      answer: 1,
+      explain: '에러가 <b>아니다!</b> b에 넣을 인수가 없어 <b>b는 undefined</b> → <code>10 + undefined = NaN</code>. "개수 안 맞으면 에러"가 최대 착각 — JS는 조용히 undefined로 채운다.',
+    }))
+    root.querySelector('[data-m="qz-ar2"]').append(Quiz({
+      q: '<b>인수를 더 많이</b> — <code>add(1, 2, 3)</code>을 부르면? (add는 a, b <b>2개만</b> 받는다)',
+      options: ['에러가 난다 (인수 초과)', '6 — 1+2+3', '3 — 1+2, 남는 3은 버려짐', '1'],
+      answer: 2,
+      explain: '남는 인수 <b>3은 그냥 버려진다</b>(무시) → a=1, b=2 → <code>1+2=3</code>. 초과도 에러가 아니다 — 매개변수 자리에 없는 인수는 조용히 사라진다. (전부 받으려면 나머지 매개변수 <code>...args</code> — 심화.)',
+    }))
+    root.querySelector('[data-m="sim-arity"]').append(MemoryModel({
+      title: 'add(3) — 인수 1개, 매개변수 2개 → b는 undefined',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function add(a, b) { return a + b }', 'add(3)'],
+      steps: [
+        { line: 1, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<b>①인자 평가</b> — <code>add(3)</code>은 인수 <b>3 하나</b>만 준비된다. b에 넣을 인수는 <b>없다</b>.' },
+        { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'add', slots: [] }], heap: {}, note: '<b>②프레임 push</b> — add 프레임. 매개변수 a·b 빈칸.' },
+        { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'add', slots: [{ name: 'a', value: '3' }, { name: 'b', value: 'undefined', bad: true }] }], heap: {}, note: '<b>③바인딩(부족)</b> — 인수는 1개뿐 → a엔 <b>3</b>, b는 채울 인수가 없어 <b>undefined</b>로 남는다(빈 자리 그대로).' },
+        { line: 0, stack: [{ name: 'main', slots: [] }, { name: 'add', slots: [{ name: 'a', value: '3' }, { name: 'b', value: 'undefined', bad: true }] }], heap: {}, note: '<b>④본문</b> — <code>return a + b</code> = <code>3 + undefined</code> = <b>NaN</b>(숫자+undefined는 NaN). 에러가 아니다.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }], heap: {}, returning: { value: 'NaN' }, note: '<b>⑤ 반환·pop</b> — NaN이 반환 통로로 나오고 add pop. 조용히 NaN이 나오는 함정.' },
       ],
     }))
     wireGoto(root)
