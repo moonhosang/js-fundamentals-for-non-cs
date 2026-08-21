@@ -156,7 +156,6 @@
         <p>M2에서 "함수가 끝나면 그 장부(프레임)가 pop되며 지역변수가 사라진다" 했다. <b>딱 하나 예외</b> — 안쪽 함수가 그 변수를 <b>붙잡으면</b> 안 사라진다. 그게 클로저.</p>
       </header>
 
-      <div data-m="qzcl"></div>
       <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/클로저_(컴퓨터_프로그래밍)" target="_blank" rel="noopener noreferrer">클로저 ↗</a></p>
 
       <div class="card" style="border-color:var(--brand)">
@@ -169,7 +168,8 @@
 
       <h3 class="section-title">② 반전 — 붙잡으면 살아남는다 (makeCounter)</h3>
       <span class="learn-tag">📎 안쪽 함수가 바깥 count를 쓰면, count는 못 죽고 값 메모리로 옮겨져 기억된다</span>
-      <p class="section-desc"><code>makeCounter</code>는 <b>안쪽 함수</b>를 돌려준다. 그 안쪽 함수가 <code>count</code>를 쓰기 때문에, makeCounter가 끝나도 <b>count가 안 사라진다</b>. ▶로 보라.</p>
+      <p class="section-desc"><code>makeCounter</code>는 <b>안쪽 함수</b>를 돌려준다. 그 안쪽 함수가 <code>count</code>를 쓴다. 아래 코드를 <b>먼저 읽고</b> 예측한 뒤, ▶로 확인하라.</p>
+      <div data-m="qzcl"></div>
       <div data-m="closure"></div>
 
       <h3 class="section-title">③ 왜 유용한가 — 상태를 숨겨 보관</h3>
@@ -190,7 +190,7 @@
       </div>
     `
     root.querySelector('[data-m="closure"]').append(MemoryModel(SCENARIO_CLOSURE))
-    root.querySelector('[data-m="qzcl"]').append(Quiz({ q: '<code>makeCounter()</code>가 반환된 뒤에도, 그 안에서 세던 <code>count</code>는 살아있을까?', options: ['사라진다 (함수 끝났으니)', '산다 (클로저가 붙잡음)'], answer: 1, explain: '보통은 함수가 끝나면 지역변수가 사라지지만, <b>안쪽 함수가 count를 붙잡으면</b> 스코프가 살아남는다 — 이게 <b>클로저</b>.' }))
+    root.querySelector('[data-m="qzcl"]').append(Quiz({ q: '🔮 <b>예측</b> — 이 코드에서 <code>makeCounter()</code>가 <b>반환된 뒤</b>(프레임 pop), 그 안에서 세던 <code>count</code>는?<pre class="err-code" style="color:inherit;background:transparent">function makeCounter() {\n  let count = 0\n  return function () {   // 안쪽 함수가 count를 쓴다\n    count = count + 1\n    return count\n  }\n}\nconst next = makeCounter()   // ← 여기서 makeCounter는 끝난다\nnext()   // 그런데 count는?</pre>', options: ['사라진다 (함수 끝났으니 지역변수도 pop)', '산다 (안쪽 함수가 count를 붙잡음 = 클로저)'], answer: 1, explain: '보통은 함수가 끝나면 지역변수가 사라지지만, <b>반환된 안쪽 함수가 <code>count</code>를 쓰기</b> 때문에 count는 못 죽고 <b>값 메모리로 옮겨져 살아남는다</b> — 이게 <b>클로저</b>. 아래 ▶로 count가 이사하는 순간을 보라.' }))
     wireGoto(root)
   }
 
@@ -242,6 +242,7 @@
 
       <h3 class="section-title">③ 누수(leak) — 안 쓰는데 참조가 남으면</h3>
       <p class="section-desc">반대 함정 — <b>더 안 쓰는데</b> 어딘가(전역 배열·오래 사는 객체)가 <b>계속 가리키고</b> 있으면 GC가 못 치운다. 값 메모리가 쌓여 <b>메모리 누수</b>가 된다. → 다 쓴 참조는 <b>끊어 준다</b>(null 대입, 배열에서 제거 등).</p>
+      <div data-m="qz-leak"></div>
 
       <h3 class="section-title">④ JS엔 '수동 해제'가 없다</h3>
       <p class="section-desc">C의 <code>free()</code>처럼 객체를 직접 지우는 명령이 <b>없다</b>. 우리가 하는 건 <b>참조를 끊는 것</b>뿐 — 회수 판단·시점은 <b>GC가 알아서</b> 한다. 그래서 "객체를 해제하는 순간"은 코드 어디에도 없다.</p>
@@ -257,6 +258,12 @@
       </div>
     `
     root.querySelector('[data-m="gc"]').append(MemoryModel(SCENARIO_GC))
+    root.querySelector('[data-m="qz-leak"]').append(Quiz({
+      q: '<code>box = null</code>로 화살표를 끊었다. 그런데 <b>전역 배열이 같은 객체를 가리키고</b> 있으면 그 객체는?<pre class="err-code" style="color:inherit;background:transparent">let box = { big: "데이터" }\ncache.push(box)   // 전역 배열도 이 객체를 가리킴\nbox = null        // box 화살표만 끊음</pre>',
+      options: ['GC가 치운다 — box를 null 했으니', '안 치운다 — cache가 아직 가리켜 도달 가능(=누수)', '에러가 난다'],
+      answer: 1,
+      explain: '<code>box=null</code>은 <b>화살표 하나만</b> 끊는다. <code>cache</code>가 여전히 그 객체를 가리키면 <b>도달 가능</b>이라 GC가 못 치운다 — 안 쓰는데 안 죽는 게 <b>메모리 누수</b>. 회수되려면 <b>모든 참조</b>를 끊어야 한다(cache에서도 제거).',
+    }))
     root.querySelector('[data-m="qzgc"]').append(Quiz({ q: '힙에 있던 객체를 <b>아무 변수도 안 가리키게</b> 되면?', options: ['영원히 남는다', '자동으로 치워진다 (GC)'], answer: 1, explain: '아무도 안 가리키는(도달 불가) 객체는 <b>가비지 컬렉터</b>가 자동으로 메모리에서 치운다.' }))
     wireGoto(root)
   }

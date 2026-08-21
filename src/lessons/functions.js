@@ -663,10 +663,9 @@
 
       <h3 class="section-title">③ 좋은 상자의 감각 — '순수 함수'</h3>
       <span class="learn-tag">📎 순수 함수 = ① 입력만 보고(밖의 값 안 훔쳐봄) ② 값만 돌려줌(밖을 안 건드림 · 부수효과 없음)</span>
-      <pre class="err-code" style="color:inherit;background:transparent">function withTax(p) {
-  return p * 1.1
-}</pre>
-      <p class="section-desc">이 <code>withTax</code>는 <b>순수 함수</b>다 — 들어온 값(<code>p</code>)만 보고, 결과만 돌려주고, 밖의 무엇도 안 바꾼다. 그래서:</p>
+      <div data-m="qz-pure"></div>
+      <div class="card"><div class="file-label">🔬 순수 vs 비순수 — 직접 실행해 차이를 본다</div><div data-m="pure"></div></div>
+      <p class="section-desc">위 <code>withTax</code>는 <b>순수 함수</b>다 — 들어온 값(<code>p</code>)만 보고, 결과만 돌려주고, 밖의 무엇도 안 바꾼다. 그래서:</p>
       <ul class="section-list">
         <li><b>예측 가능</b> — 같은 입력이면 <b>언제 어디서 불러도 같은 출력</b>. <code>withTax(100)</code>은 늘 <code>110</code>. (정식 용어: <b>참조 투명성</b>)</li>
         <li><b>안전 · 조립 쉬움</b> — 밖을 안 건드리니 원본이 안 상하고(🧠 M5), 다른 계산의 <b>부품</b>으로 마음껏 끼운다(<code>Math.round(withTax(p))</code>).</li>
@@ -729,6 +728,30 @@
         { line: 1, stack: [{ name: 'main', slots: [{ name: 'x', value: '20' }] }], heap: {}, note: '<b>⑥ 호출부 대입</b> — 호출한 자리 <code>let x = …</code>가 반환값 <b>20</b>을 받아 <b>x에 담는다</b> ✔. <b>반환(⑤)과 대입(⑥)은 별개의 두 단계</b>.', engine: '레지스터의 반환값 20이 x 슬롯에 안착(SMI). 프레임은 이미 없다.' },
       ],
     }))
+    root.querySelector('[data-m="qz-pure"]').append(Quiz({
+      q: '넷 중 <b>순수 함수</b>는? (입력만 보고 · 값만 돌려주고 · 밖을 안 건드림)',
+      options: ['<code>function f(a, b) { return a + b }</code>', '<code>function f(x) { print(x); return x }</code> (화면에 찍음)', '<code>let n = 0; function f() { n++; return n }</code> (전역 바꿈)', '<code>function f(o) { o.x = 9; return o }</code> (넘겨받은 객체 수정)'],
+      answer: 0,
+      explain: '<b>①만 순수</b> — 입력 a·b만 보고 결과만 돌려주며 밖을 안 건드린다. ②는 <code>print</code>(화면 부수효과), ③은 전역 n 변경, ④는 넘겨받은 객체 변경 → 모두 <b>부수효과 있는 비순수</b>. 순수는 <b>같은 입력이면 항상 같은 출력</b>(참조 투명성).',
+    }))
+    root.querySelector('[data-m="pure"]').append(Runner({ showBox: false, code: [
+      '// ✅ 순수 — 입력만 보고, 값만 돌려줌 (밖을 안 건드림)',
+      'function withTax(p) { return p * 1.1 }',
+      'print(withTax(100))   // 110  (언제 불러도 같음 = 참조 투명성)',
+      'print(withTax(100))   // 110',
+      '',
+      '// ❌ 비순수 — 전역을 바꾼다 (부수효과)',
+      'let total = 0',
+      'function addToTotal(p) { total = total + p }',
+      'addToTotal(100)',
+      'print(total)          // 100  (부를 때마다 밖이 달라짐)',
+      '',
+      '// ❌ 비순수 — 넘겨받은 객체를 수정한다 (🧠 M6)',
+      'function discount(obj) { obj.price = obj.price - 10 }',
+      'let item = { price: 100 }',
+      'discount(item)',
+      'print(item.price)     // 90  (원본이 바뀜)',
+    ].join('\n') }))
     wireGoto(root)
   }
 

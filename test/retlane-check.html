@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>반환 통로 확인</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;background:#f6f7fb}
+  h2{margin:28px 0 8px;font-size:15px}
+  .hint{color:#6b7280;font-size:13px;margin:0 0 10px}
+  :root{--brand:#6366f1;--brand-soft:#eef2ff}
+</style></head><body>
+<h1 style="font-size:18px">🔙 반환 통로 렌더 확인</h1>
+<p class="hint">각 시뮬에서 <b>▶ 다음 단계</b>로 ⑤까지 가면 하단에 앰버색 <b>반환 통로</b>가 떠야 합니다. ⑥에서 통로가 비고 값이 호출부로 이동. 두 번째(객체)는 통로에서 힙으로 <b>화살표</b>가 그려져야 합니다.</p>
+
+<h2>A. 원시값 반환 — 5-4 double(5) (통로에 값 "10")</h2>
+<div id="a"></div>
+
+<h2>B. 객체 반환 — make() → 통로에서 힙 h1로 화살표</h2>
+<div id="b"></div>
+
+<h2>C. 버려지는 반환 — greet() 결과 안 담음 (💨 버려짐)</h2>
+<div id="c"></div>
+
+<script src="../src/lib/memory-model.js"></script>
+<script>
+  document.getElementById('a').append(MemoryModel({
+    title: 'double(5) — 반환 통로(원시)',
+    code: ['function double(x) {', '  return x * 2', '}', 'let r = double(5)'],
+    steps: [
+      { line: 0, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }, { name: 'double', slots: [{ name: 'x', value: '5' }] }], heap: {}, note: '④ 본문 — return x*2가 10을 만든다(프레임 살아있음).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'r', value: '(대기)', bad: true }] }], heap: {}, returning: { value: '10' }, note: '⑤ 반환 — 10이 통로로 나오고 double pop. r은 대기.' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'r', value: '10' }] }], heap: {}, note: '⑥ 대입 — 통로의 10을 r이 받음. 통로 비워짐.' },
+    ],
+  }))
+  document.getElementById('b').append(MemoryModel({
+    title: 'make() — 반환 통로(객체=화살표)',
+    code: ['function make() {', '  return { name: "민지" }', '}', 'let c = make()'],
+    steps: [
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'c', value: '(대기)', bad: true }] }, { name: 'make', slots: [] }], heap: { h1: { label: '{ name: "민지" }' } }, note: '④ 본문 — 힙에 객체 h1 생성(프레임 살아있음).' },
+      { line: 1, stack: [{ name: 'main', slots: [{ name: 'c', value: '(대기)', bad: true }] }], heap: { h1: { label: '{ name: "민지" }' } }, returning: { ref: 'h1', label: 'h1' }, note: '⑤ 반환 — h1 주소가 통로로. make pop. (통로→힙 화살표 확인)' },
+      { line: 3, stack: [{ name: 'main', slots: [{ name: 'c', ref: 'h1' }] }], heap: { h1: { label: '{ name: "민지" }' } }, note: '⑥ 대입 — c가 h1을 받음. 통로 비워짐.' },
+    ],
+  }))
+  document.getElementById('c').append(MemoryModel({
+    title: 'greet() 결과 안 담음 — 버려짐',
+    code: ['function greet() {', '  return "안녕!"', '}', 'greet()'],
+    steps: [
+      { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'greet', slots: [] }], heap: {}, note: '④ 본문 — "안녕!" 생성(프레임 살아있음).' },
+      { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, returning: { value: '"안녕!"', discarded: true }, note: '⑤ 반환 — 통로로 나오지만 호출부가 안 받음 → 💨 버려짐.' },
+      { line: 3, stack: [{ name: 'main', slots: [] }], heap: {}, note: '통로 비워짐(아무 데도 안 감).' },
+    ],
+  }))
+</script>
+</body></html>

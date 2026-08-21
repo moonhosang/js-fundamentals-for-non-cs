@@ -272,6 +272,12 @@
         <p class="section-desc" style="margin:0">중첩이 깊어질수록 <code>}</code>가 <b>누구의 짝인지</b>가 버그의 온상이다 — <code>}</code> 하나가 빠지면 에러는 <b>엉뚱한 줄</b>에서 난다. 규칙 하나로 산다: <b>닫는 <code>}</code>는 자기 <code>{</code>가 있는 줄과 같은 들여쓰기</b>. 안 맞으면 이미 뭔가 샌 것이다.</p>
       </div>
 
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">🐛 직접 체험 — } 하나가 빠졌다. ▶ 실행해 에러를 보고, 고쳐서 다시 ▶</div>
+        <div data-m="brace"></div>
+        <p class="section-desc" style="margin:8px 0 0">에러 메시지는 <code>Unexpected end of input</code> — <b>맨 끝</b>을 가리킨다. 정작 빠진 <code>}</code>는 <code>print</code> 다음 줄인데. 이래서 "<b>엉뚱한 줄</b>"이다. <code>print(...)</code> 아래에 <code>}</code> 한 줄을 넣고 다시 ▶ 하면 통과한다.</p>
+      </div>
+
       <h3 class="section-title">④ 🔁 반복 드릴 — 관문을 값만 바꿔 통과시켜 보기</h3>
       <div data-m="dr"></div>
 
@@ -371,6 +377,18 @@
         'box.style.cssText = "padding:14px 22px;font-size:22px;font-weight:800;color:white;border-radius:12px;background:#4D96FF"',
       ].join('\n'),
     }))
+    root.querySelector('[data-m="brace"]').append(Runner({ showBox: false, code: [
+      'let a = true, b = true',
+      '',
+      'if (a) {',
+      '  if (b) {',
+      '    print("둘 다 참!")',
+      '  // ← 안쪽 if 의 } 가 여기 빠졌다',
+      '}',
+      '',
+      '// ▶ 실행 → ⚠️ 에러가 맨 끝 줄을 가리킨다 (정작 문제는 위)',
+      '// 고치기: print(...) 아래에 }  한 줄을 넣고 다시 ▶',
+    ].join('\n') }))
 
     root.querySelector('[data-m="dr"]').append(Drill({
       pattern: '빈칸에 예측값을 넣어라 — 맞으면 true. (글자 답은 따옴표까지: "문", 빈 글자는 "")',

@@ -102,6 +102,7 @@
 
       <h3 class="section-title">③ 입문자가 꼭 걸리는 함정 — if는 문이다</h3>
       <p class="section-desc">영어·의사코드 감각으로 이렇게 써 보게 된다(자연스럽다). 하지만 <b>if는 문</b>이라 값을 안 내므로, <code>=</code>의 오른쪽(값 자리)에 <b>담을 게 없다</b>:</p>
+      <div data-m="qz-if"></div>
       <div class="falsy-grid" style="margin-top:12px">
         <div class="card" style="margin:0"><div class="file-label" style="color:#dc2626">❌ if는 문 → 값이 아니라 = 오른쪽에 못 온다</div>
           <pre class="err-code" style="color:inherit;background:transparent">let grade = if (score>90) "A" else "B"
@@ -170,6 +171,12 @@
         { code: 'let grade = true ? "A" : "B"', mark: 'true ? "A" : "B"', note: '조건이 <b>true</b> → <code>?</code>(then) 쪽 값 <b>"A"</b>를 고른다. <code>: "B"</code>는 버린다.' },
         { code: 'let grade = "A"', note: '삼항이 <b>하나의 값 "A"</b>로 접혔다 → grade에 담긴다. <b>if였다면 이 자리에 남는 값이 없어</b> 못 담는다 — 이게 문(if)과 식(삼항)의 갈림.' },
       ],
+    }))
+    root.querySelector('[data-m="qz-if"]').append(Quiz({
+      q: '먼저 <b>예측</b> — 아래를 실행하면?<pre class="err-code" style="color:inherit;background:transparent">let grade = if (score > 90) "A" else "B"</pre>',
+      options: ['grade에 "A"가 담긴다', 'SyntaxError — if는 문이라 = 오른쪽에 못 온다', 'grade에 true/false가 담긴다'],
+      answer: 1,
+      explain: '<code>if</code>는 <b>문</b> — 동작만 하고 <b>값을 안 남긴다</b>. <code>=</code>의 오른쪽은 <b>값 자리</b>라 담을 게 없어 <b>SyntaxError</b>. "값이 되는 if"가 필요하면 <b>삼항</b>(<code>score &gt; 90 ? "A" : "B"</code>)을 쓴다 — 아래 ❌/✅ 참조.',
     }))
     wireGoto(root)
   }

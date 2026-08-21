@@ -53,6 +53,7 @@
         <p class="section-desc" style="margin-top:0">JS 객체는 원래 <b>프로토타입</b>이라는 '원본 객체'에 기대어 메서드를 공유한다. <code>class</code>는 그 프로토타입 배선을 <b>보기 좋은 문법으로 감싼 것</b>이다 — 없던 능력을 준 게 아니다.
         그래서 <code>typeof (new Dog())</code>는 여전히 <code>"object"</code>다. 인스턴스는 <b>특별한 종류가 아니라 그냥 객체</b> — 8강·메모리 모델이 그대로 적용된다.</p>
       </div>
+      <div class="card"><div class="file-label">🔬 직접 — 인스턴스도 그냥 객체 · class 없이 함수로도 같은 것</div><div data-m="sugar"></div></div>
 
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
@@ -140,6 +141,18 @@
         { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { label: 'Cat', fields: [{ key: 'hp', value: '50', bad: true }] }, h2: { label: 'Cat', fields: [{ key: 'hp', value: '100' }] } }, note: '<code>a.hp = 50</code> → <b>h1만 바뀐다</b>. h2(b)는 <b>그대로 100</b> — 각자 다른 객체라 <b>독립</b>. (별칭 <code>let b = a</code>였다면 둘 다 바뀌었다.)', engine: 'a.hp = 50: h1의 hp 슬롯을 제자리 덮어쓰기(50도 SMI라 HeapNumber 승격 없음). hidden class 그대로 → IC로 가속. h2는 손대지 않아 그대로.' },
       ],
     }))
+    root.querySelector('[data-m="sugar"]').append(Runner({ showBox: false, code: [
+      'class Dog { constructor(name) { this.name = name } }',
+      'let d = new Dog("콩이")',
+      'print(typeof d)          // "object"  (인스턴스도 그냥 객체!)',
+      'print(d.name)            // "콩이"',
+      '',
+      '// class 없이 — 함수로도 같은 걸 만든다',
+      'function makeCat(name) { return { name: name } }',
+      'let c = makeCat("나비")',
+      'print(typeof c)          // "object"  (똑같다)',
+      'print(c.name)            // "나비"',
+    ].join('\n') }))
 
     const cta = root.querySelector('[data-goto]')
     if (cta) cta.onclick = () => { const t = cta.getAttribute('data-goto'); window.goLesson ? window.goLesson(t) : (location.hash = '#' + t) }

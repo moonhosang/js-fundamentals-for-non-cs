@@ -117,6 +117,9 @@
       'let key = "name"',
       'print(user[key])          // "민지"  (변수 key의 값 "name"으로 접근)',
       'print(user["key"])        // undefined  ("key"라는 이름은 없다!)',
+      '',
+      '// ⚠️ 객체엔 "번호 칸"이 없다 — 배열처럼 순서로 못 꺼낸다',
+      'print(user[0])            // undefined  (arr[0]과 달리 0번 칸 없음)',
     ].join('\n') }))
 
     root.querySelector('[data-m="nested"]').append(Runner({ showBox: false, code: [
