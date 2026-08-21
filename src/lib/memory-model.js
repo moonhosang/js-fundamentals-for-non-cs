@@ -105,6 +105,17 @@
           .mem-heap { margin-top:10px; padding:8px 8px 3px; border:1px dashed var(--border,#e5e7eb); border-radius:12px; background:var(--bg,#f6f7fb); }
           .mem-heap .mem-lbl { color:var(--brand,#6366f1); }
           .arrows { position:absolute; inset:0; pointer-events:none; overflow:visible; }
+          /* 🔙 반환 통로 — 값이 '사는' 스택·힙과 달리 '잠깐 지나가는' 곳(개념: 반환 레지스터) */
+          .retlane { grid-column:1 / -1; margin-top:2px; display:flex; align-items:center; gap:12px; padding:9px 14px; border:1.5px dashed #f59e0b; border-radius:12px; background:rgba(245,158,11,.08); }
+          .retlane[hidden] { display:none; }
+          .retlane-label { font-size:11px; font-weight:800; color:#b45309; white-space:nowrap; line-height:1.25; }
+          .retlane-label small { display:block; font-weight:500; opacity:.72; font-size:9.5px; }
+          .retval { font-family:var(--font-mono,monospace); font-size:13px; font-weight:700; border:1.5px solid #f59e0b; border-radius:8px; padding:3px 12px; background:var(--panel,#fff); color:#b45309; display:inline-flex; align-items:center; gap:6px; }
+          .retlane .disc-tag { color:#dc2626; font-weight:700; font-size:12px; }
+          .retlane.discarded { border-style:solid; }
+          .retlane.discarded .retval { text-decoration:line-through; opacity:.55; }
+          @keyframes ret-in { from { opacity:0; transform:translateY(7px) scale(.96); } to { opacity:1; transform:none; } }
+          .retlane.enter { animation: ret-in .34s cubic-bezier(.2,.7,.3,1); }
           .note { padding:10px 14px; font-size:13px; border-top:1px solid var(--border,#e5e7eb); }
           .note b.k { color:var(--brand,#6366f1); }
           .engine { padding:10px 14px; font-size:12.5px; background:#0f172a; color:#cbd5e1; border-top:1px solid var(--border,#e5e7eb); font-family:var(--font-mono,monospace); line-height:1.6; }
@@ -122,7 +133,7 @@
           .hbox.enter { animation: mm-enter .36s cubic-bezier(.2,.7,.3,1); }
           .hbox.flash { animation: mm-flash .85s ease; }
           @media (prefers-reduced-motion: reduce) {
-            .slot.enter, .hbox.enter, .hbox.flash { animation: none; }
+            .slot.enter, .hbox.enter, .hbox.flash, .retlane.enter { animation: none; }
             .arrows path { transition: none !important; }
           }
         </style>
@@ -138,6 +149,7 @@
           <div class="stage">
             <div class="col col-stack"><h4>📇 이름표 장부 (변수)</h4><div class="stack-body"></div></div>
             <div class="col col-heap"><h4>🗄️ 값 메모리</h4><div class="heap-body"></div></div>
+            <div class="retlane" hidden></div>
             <svg class="arrows"></svg>
           </div>
           <div class="note"></div>
@@ -291,7 +303,31 @@
       $('.col-stack h4').innerHTML = engine ? '📚 스택 <small>(프레임 · 원시값 인라인)</small>' : (this._s.stackLabel || '📇 이름표 장부 (변수)')
       $('.col-heap h4').innerHTML = engine ? '🗄️ 힙 <small>(heap · 객체·배열만)</small>' : (this._s.heapLabel || '🗄️ 값 메모리')
 
-      this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels }
+      // 🔙 반환 통로 — st.returning 있을 때만 등장(원시=값 인라인 / 객체=힙으로 화살표). 값이 '사는' 곳(스택·힙)과 달리 '지나가는' 곳.
+      const retEl = $('.retlane')
+      const ret = st.returning
+      let curRet = null
+      if (ret) {
+        const isRef = 'ref' in ret && ret.ref
+        curRet = (isRef ? 'r:' + ret.ref : 'v:' + ret.value) + (ret.discarded ? '!' : '')
+        let valHTML
+        if (isRef) {
+          const rc = this._color[ret.ref] || '#888'
+          valHTML = `<span class="retval"><span class="sref" data-ref="${esc(ret.ref)}" style="color:${rc}"><span class="dot" style="background:${rc}"></span>→</span>${ret.label ? ' ' + esc(ret.label) : ''}</span>`
+        } else {
+          valHTML = `<span class="retval">${esc(ret.value)}</span>`
+        }
+        const discTag = ret.discarded ? `<span class="disc-tag">💨 아무도 안 받음 → 버려짐</span>` : ''
+        const enter = prev.ret !== curRet ? ' enter' : ''
+        retEl.className = 'retlane' + (ret.discarded ? ' discarded' : '') + enter
+        retEl.hidden = false
+        retEl.innerHTML = `<span class="retlane-label">🔙 반환 통로<small>값이 잠깐 지나감</small></span>${valHTML}${discTag}`
+      } else {
+        retEl.hidden = true
+        retEl.innerHTML = ''
+      }
+
+      this._prev = { slots: curSlots, heaps: curHeaps, labels: curLabels, ret: curRet }
 
       // 설명
       $('.note').innerHTML = st.note ? `<b class="k">🔑</b> ${st.note}` : ''
