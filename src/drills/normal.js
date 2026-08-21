@@ -2,6 +2,16 @@
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const N = window.Drills.normal
+  N["spread"] = {
+    pattern: "🟡 보통 · 스프레드 사본의 독립성·덮어쓰기 순서 — 원시 칸은 어느 쪽을 바꿔도 무관",
+    problems: [
+      {"label":"반대 방향","ask":"원본 원시를 바꾸면 먼저 뜬 사본은?","code":"let p = { hp: 100 }\nlet c = { ...p }\np.hp = 0\nprint(c.hp === ____)","expect":"true","answer":"100","hint":"뜬 순간 값복사 끝 — 원본을 고쳐도 사본 무관","explain":"<code>{ ...p }</code> 뜰 때 hp <b>값이 복사</b>됐다. 그 뒤 <code>p.hp = 0</code>은 원본만 고침 — <b>사본 c.hp는 100</b>. 원시는 <b>양방향 독립</b>.","see":"spread"},
+      {"label":"덮어쓰기 순서","ask":"{ hp: 50, ...p }면 hp는? (스프레드가 뒤!)","code":"let p = { hp: 100 }\nlet c = { hp: 50, ...p }\nprint(c.hp === ____)","expect":"true","answer":"100","hint":"...p가 뒤라 p의 hp(100)가 덮어씀","explain":"<b>뒤에 오는 게 이긴다</b>. <code>{ hp: 50, ...p }</code>는 50을 먼저 두고 <code>...p</code>가 <b>뒤에서 hp를 100으로 덮어쓴다</b> → 100. (순서 함정!)"},
+      {"label":"배열 push 독립","ask":"[...arr] 사본에 push해도 원본 마지막 원소는?","code":"let arr = [10, 20]\nlet c = [ ...arr ]\nc.push(99)\nprint(arr[arr.length - 1] === ____)","expect":"true","answer":"20","hint":"새 배열이라 원본 안 늘어남","explain":"사본은 새 배열 — push는 사본만 늘린다. 원본 arr은 [10,20] 그대로라 마지막은 20."},
+      {"label":"문자열 칸 독립","ask":"사본의 문자열 칸을 바꾸면 원본은?","code":"let p = { name: \"민지\" }\nlet c = { ...p }\nc.name = \"지훈\"\nprint(p.name === \"____\")","expect":"true","answer":"민지","hint":"문자열도 원시 — 값복사(독립)","explain":"문자열도 원시라 스프레드에서 <b>값 복사</b> → 사본을 바꿔도 <b>원본 name은 \"민지\"</b>."},
+      {"label":"복사하며 추가","ask":"{...p, age: 20}에서 칸 개수는? (age는 없던 칸)","code":"let p = { name: \"민지\" }\nlet c = { ...p, age: 20 }\nprint(Object.keys(c).length === ____)","expect":"true","answer":"2","hint":"name(복사) + age(추가)","explain":"p의 name을 복사하고 없던 age를 추가 → name, age 둘 → 2. 스프레드로 <b>복사 + 새 칸</b>을 한 번에."}
+    ]
+  }
   N["objanat"] = {
     pattern: "🟡 보통 · 봉투에서 꺼내면? 원시는 복사(독립)·객체는 주소(공유) — 예측",
     problems: [

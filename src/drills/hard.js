@@ -2,6 +2,16 @@
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const H = window.Drills.hard
+  H["spread"] = {
+    pattern: "🔴 어려움 · 얕은 복사(shallow) — 중첩 객체·배열 칸은 주소만 복사돼 여전히 공유",
+    problems: [
+      {"label":"중첩 공유(함정)","ask":"{...p} 사본의 중첩 객체를 바꾸면 원본은? (얕은 복사!)","code":"let p = { best: { n: \"효니\" } }\nlet c = { ...p }\nc.best.n = \"보리\"\nprint((p.best.n) === \"____\")","expect":"true","answer":"보리","hint":"best 칸은 주소만 복사 — 같은 봉투 공유","explain":"<code>{ ...p }</code>는 <b>얕은 복사</b> — best 칸의 <b>주소만 복사</b>돼 c.best와 p.best는 <b>같은 봉투</b>. c.best.n을 고치면 <b>p.best.n도 \"보리\"</b>로 샌다.","see":"spread"},
+      {"label":"배열 칸 공유","ask":"{...p} 사본의 배열 칸에 push하면 원본 개수는?","code":"let p = { tags: [\"a\"] }\nlet c = { ...p }\nc.tags.push(\"b\")\nprint((p.tags.length) === ____)","expect":"true","answer":"2","hint":"배열도 객체 — 주소만 복사(공유)","explain":"tags 칸엔 <b>배열 주소</b>. 얕은 복사라 주소만 복사돼 c.tags와 p.tags는 <b>같은 배열</b> — push가 p.tags에도 보여 length 2."},
+      {"label":"원시는 독립·중첩은 공유","ask":"같은 사본에서 원시 hp를 바꾸면 원본 hp는?","code":"let p = { hp: 100, best: { n: \"효니\" } }\nlet c = { ...p }\nc.hp = 0\nprint((p.hp) === ____)","expect":"true","answer":"100","hint":"hp는 원시 — 값복사(독립). best만 공유였다","explain":"같은 얕은 복사라도 <b>칸마다 다르다</b> — hp(원시)는 값복사라 <b>독립</b>(p.hp는 100), best(객체)만 주소복사라 공유. '칸에 값이냐 주소표냐'가 갈림."},
+      {"label":"깊게 끊기","ask":"중첩도 스프레드하면? {...p, best: {...p.best}}","code":"let p = { best: { n: \"효니\" } }\nlet c = { ...p, best: { ...p.best } }\nc.best.n = \"보리\"\nprint((p.best.n) === \"____\")","expect":"true","answer":"효니","hint":"best도 새 봉투로 떠서 이제 독립","explain":"<code>best: { ...p.best }</code>로 <b>안쪽 봉투까지 새로</b> 떴다 → c.best와 p.best는 <b>다른 봉투</b>. 이제 c.best.n을 고쳐도 <b>p.best.n은 \"효니\"</b>. (얕은 복사 함정을 한 겹 더 떠서 해결)"},
+      {"label":"배열 속 객체 공유","ask":"[...arr] 사본 속 객체를 바꾸면 원본 쪽은?","code":"let arr = [{ hp: 100 }]\nlet c = [ ...arr ]\nc[0].hp = 0\nprint((arr[0].hp) === ____)","expect":"true","answer":"0","hint":"배열은 얕게 복사 — 원소가 객체면 그 객체는 공유","explain":"<code>[ ...arr ]</code>도 <b>얕은 복사</b> — 원소가 <b>객체 주소</b>면 그 주소만 복사돼 c[0]과 arr[0]은 <b>같은 봉투</b>. c[0].hp=0이 arr[0].hp도 0."}
+    ]
+  }
   H["objanat"] = {
     pattern: "🔴 어려움 · 중첩·수명·스프레드 — 봉투 규칙의 함정을 예측",
     problems: [

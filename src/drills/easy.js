@@ -2,6 +2,16 @@
 ;(function () {
   window.Drills = window.Drills || { easy: {}, normal: {}, hard: {} }
   const E = window.Drills.easy
+  E["spread"] = {
+    pattern: "🟢 쉬움 · { ...obj }·[ ...arr ]는 새 봉투/배열 — 원시는 값복사(독립) (=== true 면 정답)",
+    problems: [
+      {"label":"사본은 독립","ask":"{...p}로 사본을 만들고 사본 hp를 바꾸면 원본은?","code":"let p = { hp: 100 }\nlet c = { ...p }\nc.hp = 0\nprint(p.hp === ____)","expect":"true","answer":"100","hint":"새 봉투 — 원시 hp는 값복사(독립)","explain":"<code>{ ...p }</code>는 <b>새 봉투</b>. hp는 원시라 <b>값이 복사</b>돼 독립 — 사본을 바꿔도 <b>원본 p.hp는 100</b>.","see":"spread"},
+      {"label":"덮어쓰기","ask":"{...p, hp: 50}에서 hp는?","code":"let p = { hp: 100, n: \"민지\" }\nlet c = { ...p, hp: 50 }\nprint(c.hp === ____)","expect":"true","answer":"50","hint":"뒤에 쓴 값이 이긴다","explain":"<code>{ ...p, hp: 50 }</code>은 p를 복사한 뒤 hp를 50으로 <b>덮어쓴다</b>(뒤 값 우선) → 50. 나머지 칸(n)은 그대로 복사."},
+      {"label":"병합","ask":"두 객체를 합치면 칸 개수는?","code":"let a = { x: 1 }\nlet b = { y: 2 }\nlet m = { ...a, ...b }\nprint(Object.keys(m).length === ____)","expect":"true","answer":"2","hint":"x와 y 둘 다","explain":"<code>{ ...a, ...b }</code>는 두 봉투의 칸을 새 봉투에 모은다 → x, y 둘 → 길이 2."},
+      {"label":"배열 사본","ask":"[...arr] 사본에 push하면 원본 개수는?","code":"let arr = [1, 2]\nlet c = [ ...arr ]\nc.push(9)\nprint(arr.length === ____)","expect":"true","answer":"2","hint":"새 배열 — 원본 그대로","explain":"<code>[ ...arr ]</code>는 <b>새 배열</b>. 사본에 push해도 <b>원본 arr은 2칸</b> 그대로.","see":"spread"},
+      {"label":"배열 합치기","ask":"두 배열을 이어붙이면 길이는?","code":"let a = [1, 2]\nlet b = [3, 4, 5]\nlet m = [ ...a, ...b ]\nprint(m.length === ____)","expect":"true","answer":"5","hint":"2 + 3","explain":"<code>[ ...a, ...b ]</code>는 두 배열 원소를 새 배열에 펼쳐 담는다 → 2+3 = 5."}
+    ]
+  }
   E["objanat"] = {
     pattern: "🟢 쉬움 · 객체 봉투 속 속성을 읽고·바꾸고·세어 본다 (=== true 면 정답)",
     problems: [
