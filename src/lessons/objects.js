@@ -49,6 +49,11 @@
       <h3 class="section-title">④ 중첩 & 배열 안 객체 — 실전 데이터 모양</h3>
       <span class="learn-tag">📎 객체 안에 객체, 배열 안에 객체 — API·DB 데이터가 이렇게 생겼다</span>
       <div class="card"><div class="file-label">🔬 중첩 객체 · 사람 목록</div><div data-m="nested"></div></div>
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">🐛 직접 체험 — 없는 키 하나는 undefined(안전), 그걸 또 파고들면 💥 크래시</div>
+        <div data-m="crash"></div>
+        <p class="section-desc" style="margin:8px 0 0">핵심 구분 — <code>me.job</code>(없는 키) 하나는 <b>undefined</b>(에러 아님). 하지만 <code>me.job.title</code>은 곧 <b>undefined.title</b>이라 <b>💥 TypeError: Cannot read properties of undefined</b> — <b>실전 입문자 에러 1위</b>다. 고치려면 <code>me.job?.title</code>(있으면 파고, 없으면 undefined로 안전 착지)로 바꿔 다시 ▶.</p>
+      </div>
       <div data-m="objmem"></div>
 
       <h3 class="section-title">⑤ 메서드 — 값이 '함수'인 속성</h3>
@@ -131,6 +136,17 @@
       '  { name: "지훈", age: 30 },',
       ']',
       'print(users[1].name)   // "지훈"  (배열[번호].이름)',
+    ].join('\n') }))
+    root.querySelector('[data-m="crash"]').append(Runner({ showBox: false, code: [
+      'let me = { name: "나" }        // job 속성이 없다',
+      '',
+      'print(me.job)          // undefined  ← 없는 키 하나는 안전(에러 아님)',
+      '',
+      '// 그런데 그 undefined를 "또" 파고들면?',
+      'print(me.job.title)    // 💥 여기서 크래시',
+      '',
+      '// ▶ 실행 → 윗줄 undefined는 잘 찍히고, 아랫줄에서 TypeError로 멈춘다',
+      '// 고치기: me.job.title → me.job?.title 로 바꾸고 다시 ▶',
     ].join('\n') }))
 
     root.querySelector('[data-m="objmem"]').append(MemoryModel({

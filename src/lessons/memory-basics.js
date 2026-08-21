@@ -293,9 +293,12 @@
     root.querySelector('[data-m="letconst"]').append(Runner({
       showBox: false,
       code: [
-        'const rate = 0.1     // 세율 — 안 바뀔 값이라 const(상수)',
+        'const rate = 0.1     // 세율 — const(상수)로 잡았다',
         'rate = 0.2           // 이름표를 옮기려 하면?',
-        '// ▶ 실행하면 "Assignment to constant variable" 에러 — const가 막는다',
+        '// ▶ 실행 → 💥 "Assignment to constant variable" — const가 재할당을 막는다',
+        '',
+        '// ✅ 고치기 — "바꿀 값"이면 애초에 let으로 선언한다',
+        '//   첫 줄을  let rate = 0.1  로 바꾸고 다시 ▶ 하면 통과',
       ].join('\n'),
     }))
     root.querySelector('[data-m="qz"]').append(Quiz({

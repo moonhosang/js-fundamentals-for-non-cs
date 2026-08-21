@@ -561,6 +561,11 @@
       <div data-m="qz-param"></div>
       <span class="learn-tag">📎 이름이 겹치면? 함수 안 매개변수가 바깥 같은 이름을 <b>가린다</b>(shadowing) — 안쪽이 우선</span>
       <div data-m="qz-shadow"></div>
+      <div class="card" style="border-color:var(--red)">
+        <div class="file-label">🐛 직접 체험 — 예측이 맞는지 실행해 보라. 그리고 고쳐 보라</div>
+        <div data-m="param-crash"></div>
+        <p class="section-desc" style="margin:8px 0 0">▶ 하면 <b>💥 ReferenceError: name is not defined</b> — 매개변수 <code>name</code>은 greet <b>안에서만</b> 산다. 고치기: 밖에서 쓰고 싶으면 함수가 <b>돌려주게</b> 하고(<code>return name</code>) 그 <b>반환값을 변수에 받아</b> 쓴다 — 주석의 ✅ 두 줄 주석을 풀고 마지막 줄은 지운 뒤 다시 ▶.</p>
+      </div>
 
       <h3 class="section-title">② 눈으로 — 전역은 남고, 지역은 사라진다</h3>
       <span class="learn-tag">📎 ▶ — appName(전역)은 main에 남고, user·msg(지역)는 프레임과 함께 사라진다</span>
@@ -575,10 +580,10 @@
       explain: '<b>지역변수</b>는 그 함수 <b>프레임 안에서만</b> 살고, 함수가 끝나면 <b>프레임과 함께 사라진다</b>(5-5). 밖에는 그런 이름이 아예 없어서 <b>에러</b>. 이게 스코프.',
     }))
     root.querySelector('[data-m="qz-param"]').append(Quiz({
-      q: '<b>매개변수</b>도 지역일까? 함수 밖에서 <code>print(name)</code> 하면?<pre class="err-code" style="color:inherit;background:transparent">function greet(name) { return name }\ngreet("민지")\nprint(name)   // ← 함수 밖에서 name?</pre>',
-      options: ['"민지"가 찍힌다', '에러 — name은 매개변수(지역)라 함수 밖엔 없다', 'undefined가 찍힌다'],
+      q: '<b>매개변수</b>도 지역일까? 함수 밖에서 <code>print(who)</code> 하면?<pre class="err-code" style="color:inherit;background:transparent">function greet(who) { return who }\ngreet("민지")\nprint(who)   // ← 함수 밖에서 who?</pre>',
+      options: ['"민지"가 찍힌다', '에러 — who는 매개변수(지역)라 함수 밖엔 없다', 'undefined가 찍힌다'],
       answer: 1,
-      explain: '<b>매개변수도 지역변수</b>다. <code>name</code>은 greet 안에서만 살고 함수가 끝나면 프레임과 함께 사라진다 → 함수 밖 <code>print(name)</code>은 <b>ReferenceError</b>. "매개변수는 빈 자리라 밖에서도 되겠지"가 착각 — 지역 <code>let</code>과 똑같다.',
+      explain: '<b>매개변수도 지역변수</b>다. <code>who</code>는 greet 안에서만 살고 함수가 끝나면 프레임과 함께 사라진다 → 함수 밖 <code>print(who)</code>은 <b>ReferenceError</b>. "매개변수는 빈 자리라 밖에서도 되겠지"가 착각 — 지역 <code>let</code>과 똑같다. (바로 아래에서 직접 돌려 본다.)',
     }))
     root.querySelector('[data-m="qz-shadow"]').append(Quiz({
       q: '바깥 <code>n = 9</code>, 매개변수도 <code>n</code>. <code>f(1)</code>은 무엇을 볼까?<pre class="err-code" style="color:inherit;background:transparent">let n = 9\nfunction f(n) { return n * 2 }   // 매개변수도 n\nprint(f(1))   // f(1)은?</pre>',
@@ -586,6 +591,18 @@
       answer: 1,
       explain: '함수 안 <b>매개변수 n</b>이 바깥 <code>n=9</code>를 <b>가린다</b>(shadowing) — 안에선 매개변수 n(=1)만 보여 <code>1*2=2</code>. 이름이 같아도 <b>다른 프레임의 다른 셀</b>이라 안 부딪히고, 안쪽이 우선. 바깥 n은 그대로 9.',
     }))
+    root.querySelector('[data-m="param-crash"]').append(Runner({ showBox: false, code: [
+      'function greet(who) {',
+      '  return who + " 님 환영"',
+      '}',
+      'greet("민지")',
+      '',
+      'print(who)       // 💥 ReferenceError: who is not defined (who는 greet 지역)',
+      '',
+      '// ✅ 고치는 법 — 반환값을 밖에서 변수로 받아 쓴다',
+      '// let msg = greet("민지")',
+      '// print(msg)',
+    ].join('\n') }))
     root.querySelector('[data-m="scope"]').append(Runner({ showBox: false, code: [
       'let appName = "메모장"              // 전역 — 어디서나 보인다',
       '',
