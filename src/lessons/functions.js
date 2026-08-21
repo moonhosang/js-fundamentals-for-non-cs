@@ -553,6 +553,9 @@
       <div class="card"><div class="file-label">🔬 밖에서 msg를 부르면? (주석 풀면 에러)</div><div data-m="scope"></div></div>
       <p class="section-desc">그래서 함수는 <b>안전</b>하다 — 함수 안에서 뭘 하든 지역변수라 <b>밖을 안 건드린다</b>. 이름이 겹쳐도 서로 다른 프레임이라 안 부딪힌다.</p>
 
+      <span class="learn-tag">📎 <b>매개변수도 지역이다</b> — 매개변수(빈 자리)도 그 함수 안에서만 사는 지역변수, 밖에선 못 쓴다</span>
+      <div data-m="qz-param"></div>
+
       <h3 class="section-title">② 눈으로 — 전역은 남고, 지역은 사라진다</h3>
       <span class="learn-tag">📎 ▶ — appName(전역)은 main에 남고, user·msg(지역)는 프레임과 함께 사라진다</span>
       <div data-m="mem"></div>
@@ -564,6 +567,12 @@
       options: ['msg 값이 나온다', 'undefined가 나온다', '에러 — 밖에선 msg가 안 보인다(지역)'],
       answer: 2,
       explain: '<b>지역변수</b>는 그 함수 <b>프레임 안에서만</b> 살고, 함수가 끝나면 <b>프레임과 함께 사라진다</b>(5-5). 밖에는 그런 이름이 아예 없어서 <b>에러</b>. 이게 스코프.',
+    }))
+    root.querySelector('[data-m="qz-param"]').append(Quiz({
+      q: '<b>매개변수</b>도 지역일까? 함수 밖에서 <code>print(name)</code> 하면?<pre class="err-code" style="color:inherit;background:transparent">function greet(name) { return name }\ngreet("민지")\nprint(name)   // ← 함수 밖에서 name?</pre>',
+      options: ['"민지"가 찍힌다', '에러 — name은 매개변수(지역)라 함수 밖엔 없다', 'undefined가 찍힌다'],
+      answer: 1,
+      explain: '<b>매개변수도 지역변수</b>다. <code>name</code>은 greet 안에서만 살고 함수가 끝나면 프레임과 함께 사라진다 → 함수 밖 <code>print(name)</code>은 <b>ReferenceError</b>. "매개변수는 빈 자리라 밖에서도 되겠지"가 착각 — 지역 <code>let</code>과 똑같다.',
     }))
     root.querySelector('[data-m="scope"]').append(Runner({ showBox: false, code: [
       'let appName = "메모장"              // 전역 — 어디서나 보인다',
@@ -618,6 +627,9 @@
       <p class="section-desc" style="margin-top:10px">👉 <b>기준</b>: <b>작고 · 이름 없고 · 그 자리서 한 번 쓰는</b> 함수엔 <b>화살표</b>, <b>크거나 · 이름 붙여 여러 번 쓸</b> 함수엔 <code>function</code>(또는 <code>const 이름 = …</code>)이 낫다. 무작정 취향이 아니라 <b>상황에 맞춰</b> 고른다.
       <br><span style="opacity:.75">💡 심화(지금은 몰라도 됨): 화살표는 <code>this</code> 규칙도 달라서(자기 <code>this</code>가 없음) 그 때문에 쓰는 경우도 있다 — 나중에.</span></p>
 
+      <span class="learn-tag">📎 <b>함수도 '값'이다</b> — 변수에 담고, 인자로 넘기고(콜백), 배열·객체에도 넣을 수 있다</span>
+      <div data-m="qz-fnval"></div>
+
       <span class="learn-tag">📎 ▶ — 화살표 함수도 부르면 똑같이 프레임이 쌓인다(표기만 짧을 뿐)</span>
       <div data-m="mem"></div>
 
@@ -670,6 +682,12 @@
       'print(doubleB(10))   // 20',
       '// 똑같다',
     ].join('\n') }))
+    root.querySelector('[data-m="qz-fnval"]').append(Quiz({
+      q: '함수를 <b>( ) 없이 변수에 담아</b> 부를 수 있을까?<pre class="err-code" style="color:inherit;background:transparent">function greet() { return "안녕" }\nlet f = greet     // ( ) 없이 — 함수 자체를 담기\nprint(f())        // f() 는?</pre>',
+      options: ['"안녕" — 함수도 값이라 변수에 담아 f()로 부른다', '에러 — 함수는 변수에 못 담는다', 'undefined'],
+      answer: 0,
+      explain: '<b>함수도 값</b>이다 — <code>let f = greet</code>(( ) 없이)는 함수 <b>자체</b>를 f에 담는다. 그럼 <code>f()</code>로 부를 수 있다 → "안녕". 이렇게 함수를 <b>인자로 넘기면 콜백</b>(map·filter), 배열·객체 속성에도 담는다(메서드). "함수는 특별해서 값처럼 못 다룬다"가 착각.',
+    }))
     root.querySelector('[data-m="qz-hoist"]').append(Quiz({
       q: '<b>선언보다 먼저</b> 호출한다. 어느 게 정상 실행될까?<pre class="err-code" style="color:inherit;background:transparent">say()                        // A\nfunction say() { return "hi" }\n\ngo()                          // B\nconst go = () => "go"</pre>',
       options: ['A만 된다 (function 선언은 끌어올려짐)', 'B만 된다', '둘 다 된다', '둘 다 에러난다'],

@@ -36,10 +36,15 @@
       <span class="learn-tag">📎 obj.key = 값 — 있으면 바꾸고, 없으면 새로 추가된다</span>
       <div class="card"><div class="file-label">🔬 속성 바꾸고 추가하기</div><div data-m="set"></div></div>
 
-      <h3 class="section-title">③ 대괄호 표기 — 변수·공백 있는 이름</h3>
-      <span class="learn-tag">📎 obj["이름"] 는 obj.이름 과 같다 · 이름이 변수거나 공백이 있으면 대괄호만 가능</span>
+      <h3 class="section-title">③ 대괄호 표기 — 변수·숫자·공백 있는 이름</h3>
+      <span class="learn-tag">📎 obj["이름"] 는 obj.이름 과 같다 · 이름이 변수거나 숫자로 시작·공백·하이픈이면 <b>대괄호만</b></span>
       <div data-m="qz-bracket"></div>
-      <div class="card"><div class="file-label">🔬 점 vs 대괄호 (같은 값)</div><div data-m="bracket"></div></div>
+      <div data-m="qz-5th"></div>
+      <div class="card"><div class="file-label">🔬 점 vs 대괄호 · 숫자 키 · 변수 키 vs 문자열 키</div><div data-m="bracket"></div></div>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">⚠️ 최대 함정 — <code>obj[key]</code> vs <code>obj["key"]</code> (따옴표가 다른 뜻)</div>
+        <p class="section-desc" style="margin:0"><code>obj[<b>key</b>]</code>는 <b>변수 key에 든 값</b>을 이름으로 쓴다(<code>key = "name"</code>이면 <code>obj.name</code>). <code>obj["<b>key</b>"]</code>는 <b>글자 그대로 "key"</b>라는 이름. <b>따옴표 유무가 완전히 다른 접근</b> — 이걸 헷갈리면 반복문으로 객체를 순회할 때(다음 강) 무너진다.</p>
+      </div>
 
       <h3 class="section-title">④ 중첩 & 배열 안 객체 — 실전 데이터 모양</h3>
       <span class="learn-tag">📎 객체 안에 객체, 배열 안에 객체 — API·DB 데이터가 이렇게 생겼다</span>
@@ -94,14 +99,24 @@
       explain: '둘은 <b>완전히 같은 속성 접근</b>이다. 다만 이름이 <b>변수</b>이거나 <b>공백·특수문자</b>가 있으면 <b>대괄호 <code>obj["key"]</code>만</b> 된다.',
     }))
 
+    root.querySelector('[data-m="qz-5th"]').append(Quiz({
+      q: '속성 이름이 <code>"5thSkill"</code>이다. <code>user.5thSkill</code>로 꺼내면?<pre class="err-code" style="color:inherit;background:transparent">let user = { "5thSkill": "코딩" }\nprint(user.5thSkill)   // ← 이렇게 되나?</pre>',
+      options: ['"코딩" — 잘 나온다', '문법 에러 — 숫자로 시작하는 이름은 점 표기 불가, user["5thSkill"]만', 'undefined가 나온다'],
+      answer: 1,
+      explain: '점 표기 <code>obj.이름</code>은 <b>유효한 변수 이름</b>만 된다. <code>5thSkill</code>은 <b>숫자로 시작</b>해 <code>user.5thSkill</code>은 <b>문법 에러</b> — <code>user["5thSkill"]</code>처럼 <b>대괄호 + 문자열</b>로만 접근한다. 공백(<code>"my key"</code>)·하이픈(<code>"a-b"</code>)도 마찬가지.',
+    }))
     root.querySelector('[data-m="bracket"]').append(Runner({ showBox: false, code: [
-      'let user = { name: "민지" }',
-      'print(user.name)       // "민지"  (점)',
-      'print(user["name"])    // "민지"',
-      '// 대괄호 — 같다',
+      'let user = { name: "민지", "5thSkill": "코딩" }',
+      'print(user.name)          // "민지"  (점)',
+      'print(user["name"])       // "민지"  (대괄호 — 같다)',
       '',
-      'let key = "name"       // 이름이 변수에 담겨 있으면?',
-      'print(user[key])       // "민지"  (대괄호만 가능!)',
+      '// 숫자로 시작하는 이름은 대괄호만 (user.5thSkill 은 문법 에러!)',
+      'print(user["5thSkill"])   // "코딩"',
+      '',
+      '// ⚠️ 변수 키 vs 문자열 키 — 따옴표가 다른 뜻',
+      'let key = "name"',
+      'print(user[key])          // "민지"  (변수 key의 값 "name"으로 접근)',
+      'print(user["key"])        // undefined  ("key"라는 이름은 없다!)',
     ].join('\n') }))
 
     root.querySelector('[data-m="nested"]').append(Runner({ showBox: false, code: [
