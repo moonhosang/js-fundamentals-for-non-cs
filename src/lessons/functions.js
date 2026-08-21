@@ -621,6 +621,15 @@
       <span class="learn-tag">📎 ▶ — 화살표 함수도 부르면 똑같이 프레임이 쌓인다(표기만 짧을 뿐)</span>
       <div data-m="mem"></div>
 
+      <h3 class="section-title">⚠️ 함정 — 선언 방식에 따라 '선언 전 호출'이 되기도, 안 되기도</h3>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">🔮 먼저 예측 — 선언보다 <b>먼저</b> 불렀을 때 되는 건?</div>
+        <div data-m="qz-hoist"></div>
+      </div>
+      <span class="learn-tag">📎 <code>function</code> 선언은 위로 끌어올려짐(호이스팅) → 선언 전 호출 OK · <code>const</code> 화살표는 안 됨(에러)</span>
+      <div class="card"><div class="file-label">🔬 실행 — 같은 함수, 선언 방식만 다르게</div><div data-m="hoist"></div></div>
+      <p class="section-desc">🔑 <code>function foo(){}</code>는 실행 전에 <b>선언이 통째로 위로</b> 올라간다(호이스팅) — 그래서 <b>선언보다 위에서 불러도</b> 된다. 하지만 <code>const foo = () => {}</code>는 <b>변수 대입</b>이라 그 줄에 닿기 전엔 <b>foo가 아직 없다</b>(TDZ) — 위에서 부르면 에러. <b>"함수는 아무 데서나 불러도 되겠지"가 애매한 착각</b>이다.</p>
+
       <h3 class="section-title">② 언제 함수를 만드나 — 감각</h3>
       <ul class="section-list">
         <li>같은 코드를 <b>두 번 이상</b> 쓰게 될 때 (5-1의 그 고통).</li>
@@ -648,7 +657,7 @@
       </div>
 
       <div class="practice-cta">
-        <span>🎯 이제 <b>드릴</b>로 손에 붙이자 — 🟢쉬움 → 🟡보통 → 🔴어려움 (각 5문제).</span>
+        <span>🎯 이제 <b>드릴</b>로 손에 붙이자 — 🟢쉬움 → 🟡보통 → 🔴어려움 (각 8문제, 🔨 만들기·선언 포함).</span>
         <button class="chip on" data-goto="5:easy">📝 5강 실습 시작 (🟢 쉬움) →</button>
       </div>
     `
@@ -660,6 +669,22 @@
       'print(doubleA(10))   // 20',
       'print(doubleB(10))   // 20',
       '// 똑같다',
+    ].join('\n') }))
+    root.querySelector('[data-m="qz-hoist"]').append(Quiz({
+      q: '<b>선언보다 먼저</b> 호출한다. 어느 게 정상 실행될까?<pre class="err-code" style="color:inherit;background:transparent">say()                        // A\nfunction say() { return "hi" }\n\ngo()                          // B\nconst go = () => "go"</pre>',
+      options: ['A만 된다 (function 선언은 끌어올려짐)', 'B만 된다', '둘 다 된다', '둘 다 에러난다'],
+      answer: 0,
+      explain: '<b>A만</b> 된다. <code>function say(){}</code>는 <b>선언이 통째로 위로 올라가(호이스팅)</b> 선언 전 호출도 OK. 반면 <code>const go = …</code>는 <b>변수 대입</b>이라 그 줄 전엔 go가 아직 없어(TDZ) <b>B는 ReferenceError</b>. 선언 방식이 "언제부터 부를 수 있나"를 가른다.',
+    }))
+    root.querySelector('[data-m="hoist"]').append(Runner({ showBox: false, code: [
+      '// function 선언 — 선언보다 위에서 불러도 된다(호이스팅)',
+      'print(say())         // "hi"  (선언은 아래인데 됨!)',
+      'function say() { return "hi" }',
+      '',
+      '// const 화살표 — 선언 전엔 못 부른다(아래 주석 풀면 에러)',
+      '// print(go())       // ❌ ReferenceError: go 아직 없음',
+      'const go = () => "go"',
+      'print(go())          // "go"  (선언 뒤엔 OK)',
     ].join('\n') }))
     root.querySelector('[data-m="mem"]').append(MemoryModel({
       title: '화살표 함수도 똑같이 — push→본문→반환(⑤)→대입(⑥)',
