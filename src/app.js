@@ -358,8 +358,10 @@
           row.className = 'toc-item-row'
           // 체크박스: 개념 서브내비(step)만 빼고 항상 표시. 각 항목은 '제 종류'의 집계셋에 연결
           // (개념 강의 → 📖 진도 셋, 실습 문제 → ✏️ 연습 셋). 모드 탭은 진행률 분모만 바꾼다.
-          if (!l.step) {
-            const isPr = isPracticeKind(l)
+          const isPr = isPracticeKind(l)
+          // 탭별 필터: 진도 탭은 개념 강의만, 연습 탭은 드릴만 체크박스 노출(각 탭이 안 겹쳐 멘탈모델과 일치).
+          const matchesTab = isPr === (state.checkMode === 'practice')
+          if (!l.step && matchesTab) {
             const itemSet = isPr ? state.practice : state.study
             const cb = document.createElement('input')
             cb.type = 'checkbox'
