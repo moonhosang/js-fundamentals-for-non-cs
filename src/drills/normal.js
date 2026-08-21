@@ -72,7 +72,8 @@
       {"label":"조건 반환","ask":"sign은 양수면 \"+\", 아니면 \"-\". sign(-2)는?","code":"function sign(n) { if (n > 0) return \"+\"; return \"-\" }\nprint(sign(-2) === \"____\")","expect":"true","answer":"-","hint":"-2는 양수 아님","explain":"-2는 <code>n>0</code>이 거짓 → 첫 return 건너뛰고 <code>return \"-\"</code>. 여러 return 중 <b>먼저 만나는 하나</b>만."},
       {"label":"🔨 만들기·성인 판별","ask":"isAdult(age)가 18 이상이면 true를 돌려주도록 채워라","code":"function isAdult(age) { return ____ }\nprint(isAdult(20) === true && isAdult(15) === false)","expect":"true","answer":"age >= 18","hint":"비교식도 값(참/거짓)을 낳는다","explain":"<code>age >= 18</code>은 참/거짓을 <b>값으로</b> 낳는 표현식 → 그대로 return. isAdult(20)=true, isAdult(15)=false. (조건을 담아 만든다)","see":"5-4"},
       {"label":"🔨 선언·매개변수 2개","ask":"두 값을 더하는 add의 '매개변수 2개'를 채워라","code":"function add(____) { return a + b }\nprint(add(3, 4) === 7)","expect":"true","answer":"a, b","hint":"본문이 a, b를 쓴다 → 쉼표로 둘","explain":"매개변수 여러 개는 <b>쉼표</b>로 — <code>function add(a, b)</code>. 인수는 순서대로 3→a, 4→b. 본문이 a·b를 쓰니 둘 다 선언해야 한다.","see":"5-3"},
-      {"label":"🔨 선언·전체(세제곱)","ask":"n의 세제곱을 돌려주는 cube를 '통째로' 선언하라","code":"____\nprint(cube(3) === 27)","expect":"true","answer":"function cube(n) { return n * n * n }","hint":"function 이름(매개변수){ return ... }","explain":"이름 cube, 매개변수 n, 본문 <code>return n*n*n</code> → <code>function cube(n) { return n * n * n }</code>. cube(3)=27. 함수를 <b>처음부터 선언</b>해 본다.","see":"5-4"}
+      {"label":"🔨 선언·전체(세제곱)","ask":"n의 세제곱을 돌려주는 cube를 '통째로' 선언하라","code":"____\nprint(cube(3) === 27)","expect":"true","answer":"function cube(n) { return n * n * n }","hint":"function 이름(매개변수){ return ... }","explain":"이름 cube, 매개변수 n, 본문 <code>return n*n*n</code> → <code>function cube(n) { return n * n * n }</code>. cube(3)=27. 함수를 <b>처음부터 선언</b>해 본다.","see":"5-4"},
+      {"label":"함수도 값","ask":"함수를 ( ) 없이 변수에 담아 부르면? let f = dbl 뒤 f(4)는?","code":"function dbl(n) { return n * 2 }\nlet f = dbl\nprint(f(4) === ____)","expect":"true","answer":"8","hint":"f는 dbl 자체 → f(4)=dbl(4)","explain":"<code>let f = dbl</code>(( ) 없이)는 함수 <b>자체</b>를 f에 담는다 → <code>f(4)</code>는 dbl(4)와 같아 8. 함수도 값이라 변수에 담고 인자로 넘긴다(콜백).","see":"5-7"}
     ],
   }
   N["6"] = {
@@ -102,7 +103,8 @@
       {"label":"배열 안 객체","ask":"users[1].name 은?","code":"let users = [{ name: \"민지\" }, { name: \"지훈\" }]\nprint(users[1].name === \"____\")","expect":"true","answer":"지훈","hint":"두 번째 사람","explain":"<code>users[1]</code>은 두 번째 객체 → <code>.name=\"지훈\"</code>."},
       {"label":"대괄호(공백 키)","ask":"o[\"my key\"] 는?","code":"let o = { \"my key\": 7 }\nprint(o[\"my key\"] === ____)","expect":"true","answer":"7","hint":"대괄호로 접근","explain":"공백 있는 키는 <b>대괄호</b>로만 → <code>o[\"my key\"]=7</code>."},
       {"label":"속성 조합","ask":"이름과 나이를 이으면? name(age)","code":"let p = { name: \"민지\", age: 24 }\nprint((p.name + \"(\" + p.age + \")\") === \"____\")","expect":"true","answer":"민지(24)","hint":"이어붙이기","explain":"속성을 이어붙여 <code>\"민지(24)\"</code>."},
-      {"label":"키 개수","ask":"객체의 키(속성) 개수는?","code":"let o = { a: 1, b: 2 }\nprint(Object.keys(o).length === ____)","expect":"true","answer":"2","hint":"a, b → 2개","explain":"<code>Object.keys(o)</code>는 키 배열 <code>[\"a\",\"b\"]</code> → 길이 2.","see":"builtins"}
+      {"label":"키 개수","ask":"객체의 키(속성) 개수는?","code":"let o = { a: 1, b: 2 }\nprint(Object.keys(o).length === ____)","expect":"true","answer":"2","hint":"a, b → 2개","explain":"<code>Object.keys(o)</code>는 키 배열 <code>[\"a\",\"b\"]</code> → 길이 2.","see":"builtins"},
+      {"label":"변수 키","ask":"키가 변수에 담겨 있으면? key=\"hp\" 일 때 u[key] 는?","code":"let u = { hp: 100 }\nlet key = \"hp\"\nprint(u[key] === ____)","expect":"true","answer":"100","hint":"u[key] = 변수 key의 값 \"hp\"로 접근","explain":"<code>u[key]</code>는 <b>변수 key에 든 값</b>(\"hp\")을 이름으로 써서 <code>u.hp</code>=100. (<code>u.key</code>·<code>u[\"key\"]</code>는 \"key\"라는 이름을 찾아 다르다)","see":"8"}
     ],
   }
   N["9"] = {

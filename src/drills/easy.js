@@ -102,7 +102,8 @@
       {"label":"다른 속성","ask":"car.brand 는?","code":"let car = { brand: \"기아\", year: 2020 }\nprint(car.brand === \"____\")","expect":"true","answer":"기아","hint":"brand 값","explain":"<code>car.brand</code> → <code>\"기아\"</code>."},
       {"label":"값 바꾸기","ask":"바꾼 뒤 u.hp 는?","code":"let u = { hp: 100 }\nu.hp = 50\nprint(u.hp === ____)","expect":"true","answer":"50","hint":"방금 넣은 값","explain":"<code>u.hp = 50</code>으로 덮어써 50."},
       {"label":"속성 추가","ask":"추가한 뒤 o.color 는?","code":"let o = {}\no.color = \"빨강\"\nprint(o.color === \"____\")","expect":"true","answer":"빨강","hint":"방금 추가한 값","explain":"없던 속성도 <code>=</code>로 <b>새로 추가</b>된다."},
-      {"label":"없는 키","ask":"u엔 name만 있다. u.age 는?","code":"let u = { name: \"민지\" }\nprint(u.age === ____)","expect":"true","answer":"undefined","hint":"없는 키 = undefined","explain":"<b>없는 키</b>를 꺼내면 에러가 아니라 <code>undefined</code>."}
+      {"label":"없는 키","ask":"u엔 name만 있다. u.age 는?","code":"let u = { name: \"민지\" }\nprint(u.age === ____)","expect":"true","answer":"undefined","hint":"없는 키 = undefined","explain":"<b>없는 키</b>를 꺼내면 에러가 아니라 <code>undefined</code>."},
+      {"label":"숫자 키(대괄호)","ask":"이름이 숫자로 시작하면? u[\"2nd\"] 는?","code":"let u = { \"2nd\": \"은메달\" }\nprint(u[\"2nd\"] === \"____\")","expect":"true","answer":"은메달","hint":"숫자로 시작하는 이름은 대괄호+문자열만","explain":"<code>u.2nd</code>는 <b>문법 에러</b>(숫자로 시작하는 이름은 점 표기 불가). <code>u[\"2nd\"]</code>처럼 <b>대괄호+문자열</b>로만 꺼낸다 → \"은메달\".","see":"8"}
     ],
   }
   E["9"] = {

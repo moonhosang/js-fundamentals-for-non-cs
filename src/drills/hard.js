@@ -102,7 +102,8 @@
       {"label":"깊은 중첩","ask":"data.users[0].pet.name 은?","code":"let data = { users: [{ pet: { name: \"콩이\" } }] }\nprint(data.users[0].pet.name === \"____\")","expect":"true","answer":"콩이","hint":"끝까지 따라감","explain":"점·번호를 이어 끝까지 → <code>data.users[0].pet.name=\"콩이\"</code>."},
       {"label":"나이 합(reduce)","ask":"사람들의 나이를 다 더하면?","code":"let ppl = [{ age: 24 }, { age: 30 }]\nprint(ppl.reduce((s, p) => s + p.age, 0) === ____)","expect":"true","answer":"54","hint":"24 + 30","explain":"각 사람의 age를 누적 → <code>24+30=54</code>."},
       {"label":"조건 결합","ask":"vip면 이름 뒤에 별을 붙인다. 결과는?","code":"let p = { name: \"민지\", vip: true }\nprint((p.name + (p.vip ? \"⭐\" : \"\")) === \"____\")","expect":"true","answer":"민지⭐","hint":"vip라 별 붙음","explain":"vip가 참이라 <code>\"⭐\"</code>가 붙어 <code>\"민지⭐\"</code>."},
-      {"label":"this 메서드","ask":"c.hi() 는? (hi는 \"나는 \"+this.name 반환)","code":"let c = { name: \"민지\", hi() { return \"나는 \" + this.name } }\nprint(c.hi() === \"____\")","expect":"true","answer":"나는 민지","hint":"this.name = \"민지\"","explain":"메서드 안 <code>this</code>는 <b>자기 객체</b> → <code>this.name=\"민지\"</code>."}
+      {"label":"this 메서드","ask":"c.hi() 는? (hi는 \"나는 \"+this.name 반환)","code":"let c = { name: \"민지\", hi() { return \"나는 \" + this.name } }\nprint(c.hi() === \"____\")","expect":"true","answer":"나는 민지","hint":"this.name = \"민지\"","explain":"메서드 안 <code>this</code>는 <b>자기 객체</b> → <code>this.name=\"민지\"</code>."},
+      {"label":"u[key] vs u[\"key\"]","ask":"key=\"name\"일 때 u[\"key\"] 는? (따옴표 함정)","code":"let u = { name: \"민지\" }\nlet key = \"name\"\nprint((u[\"key\"] === undefined) === ____)","expect":"true","answer":"true","hint":"\"key\"는 글자 그대로 — u엔 그런 이름 없음","explain":"<code>u[\"key\"]</code>는 <b>글자 그대로 \"key\"</b>라는 이름을 찾는다 — u엔 name만 있어 <b>undefined</b>. 변수로 접근하려면 따옴표 없이 <code>u[key]</code>. <b>따옴표 유무가 완전히 다른 접근</b>.","see":"8"}
     ],
   }
   H["9"] = {
