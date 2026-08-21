@@ -26,6 +26,10 @@
       <span class="learn-tag">📎 ▶ — <code>const heyony = myFriend</code>는 같은 봉투(별칭) · <code>myFriend = …</code>는 myFriend 화살표만 옮긴다(heyony는 옛 봉투 그대로)</span>
       <div data-m="sim-alias"></div>
 
+      <h3 class="section-title">👁️ 눈으로 ② — 같은 내용인데 <code>===</code>가 거짓? (봉투 주소로 비교)</h3>
+      <span class="learn-tag">📎 ▶ — <code>{n:1}</code>과 <code>{n:1}</code>은 내용은 같아도 <b>다른 봉투</b> · <code>===</code>는 내용이 아니라 <b>주소</b>를 비교한다(입문자 최대 맹점)</span>
+      <div data-m="sim-eq"></div>
+
       <h3 class="section-title">① A · 넣기 — 변수 → 속성</h3>
       <span class="learn-tag">📎 o.x = a — 변수에 든 것이 봉투 칸으로 복사된다: 원시면 값이(독립), 객체면 주소가(공유)</span>
       <div data-m="qz-a1"></div>
@@ -38,6 +42,7 @@
 
       <h3 class="section-title">③ C · 속성 → 속성</h3>
       <span class="learn-tag">📎 a.x = b.y — 봉투에서 봉투로도 규칙은 그대로: 원시=값 복사 · 객체=주소 복사</span>
+      <div data-m="sim-c"></div>
       <div data-m="qz-c1"></div>
       <div data-m="qz-c2"></div>
 
@@ -51,6 +56,7 @@
 
       <h3 class="section-title">⑥ F · 배열 원소</h3>
       <span class="learn-tag">📎 arr[0]도 봉투의 한 칸 — 원소가 원시면 꺼낼 때 복사, 객체면 주소 공유. 배열이라고 다르지 않다</span>
+      <div data-m="sim-farr"></div>
       <div data-m="qz-f1"></div>
       <div data-m="qz-f2"></div>
 
@@ -100,6 +106,20 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
       ],
     }))
 
+    // ── 눈으로 ② · === 는 주소로 비교 ───────────────────────
+    root.querySelector('[data-m="sim-eq"]').append(MemoryModel({
+      title: '=== 는 객체를 주소로 비교 — 내용이 같아도 다른 봉투면 거짓',
+      stackLabel: '📇 이름표 장부',
+      code: ['let a = { n: 1 }', 'let b = { n: 1 }', 'let c = a', 'print(a === b)   // ?', 'print(a === c)   // ?'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] } }, note: 'a가 봉투 <b>h1</b>{n:1}을 가리킨다.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] }, h2: { fields: [{ key: 'n', value: '1' }] } }, note: 'b도 <code>{ n: 1 }</code>이지만 <b>새 봉투 h2</b>가 생긴다 — <b>내용이 같아도 다른 주소</b>. (리터럴 <code>{}</code>는 볼 때마다 새 봉투)' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }, { name: 'c', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] }, h2: { fields: [{ key: 'n', value: '1' }] } }, note: '<code>let c = a</code> → 주소 복사 → c도 <b>같은 h1</b>(별칭).' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }, { name: 'c', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] }, h2: { fields: [{ key: 'n', value: '1' }] } }, note: '<b>a === b</b>? 주소 <b>h1 vs h2</b> → <b>다르다 → false</b>. 내용이 같아도(둘 다 n:1) <b>봉투가 다르면 거짓</b> — ===는 <b>내용이 아니라 주소</b>를 본다.' },
+        { line: 4, stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h2' }, { name: 'c', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'n', value: '1' }] }, h2: { fields: [{ key: 'n', value: '1' }] } }, note: '<b>a === c</b>? 주소 <b>h1 vs h1</b> → <b>같다 → true</b>(별칭이라 같은 봉투). 정리: <b>객체 === 는 같은 봉투(주소)일 때만 참</b>. (원시값 ===는 값으로 비교 — 그래서 5===5는 참)' },
+      ],
+    }))
+
     // ── A 넣기 ──────────────────────────────────────────────
     root.querySelector('[data-m="qz-a1"]').append(Quiz({
       q: '<pre class="err-code" style="color:inherit;background:transparent">let o = {}\nlet a = 5\no.x = a\na = 9</pre><b>o.x</b>는?',
@@ -129,6 +149,17 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
     }))
 
     // ── C 속성끼리 ──────────────────────────────────────────
+    root.querySelector('[data-m="sim-c"]').append(MemoryModel({
+      title: '같은 문법 a.속성 = b.속성 — 그런데 x는 독립, g는 공유',
+      stackLabel: '📇 이름표 장부',
+      code: ['let b = { y: 5, f: { v: 1 } }', 'let a = {}', 'a.x = b.y', 'a.g = b.f'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'b', ref: 'h2' }] }], heap: { h2: { fields: [{ key: 'y', value: '5' }, { key: 'f', ref: 'h3' }] }, h3: { fields: [{ key: 'v', value: '1' }] } }, note: 'b 봉투 h2: y 칸엔 <b>값 5</b>, f 칸엔 <b>주소표(→h3)</b>.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'b', ref: 'h2' }, { name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [] }, h2: { fields: [{ key: 'y', value: '5' }, { key: 'f', ref: 'h3' }] }, h3: { fields: [{ key: 'v', value: '1' }] } }, note: 'a는 빈 봉투 h1.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'b', ref: 'h2' }, { name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'x', value: '5' }] }, h2: { fields: [{ key: 'y', value: '5' }, { key: 'f', ref: 'h3' }] }, h3: { fields: [{ key: 'v', value: '1' }] } }, note: '<b>a.x = b.y</b> — b.y 칸엔 <b>값 5</b> → <b>값이 복사</b>돼 a.x 칸에. a.x와 b.y는 <b>따로</b>(독립) — b.y를 바꿔도 a.x는 5.' },
+        { line: 3, stack: [{ name: 'main', slots: [{ name: 'b', ref: 'h2' }, { name: 'a', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'x', value: '5' }, { key: 'g', ref: 'h3' }] }, h2: { fields: [{ key: 'y', value: '5' }, { key: 'f', ref: 'h3' }] }, h3: { fields: [{ key: 'v', value: '1' }] } }, note: '<b>a.g = b.f</b> — b.f 칸엔 <b>주소표(→h3)</b> → <b>주소가 복사</b>돼 a.g도 <b>같은 h3</b>(공유). <b>같은 문법인데</b> x는 독립·g는 공유 — <b>칸에 값이냐 주소표냐</b>가 갈랐다.' },
+      ],
+    }))
     root.querySelector('[data-m="qz-c1"]').append(Quiz({
       q: '<pre class="err-code" style="color:inherit;background:transparent">let a = { x: 1 }\nlet b = { y: 5 }\na.x = b.y\nb.y = 9</pre><b>a.x</b>는?',
       options: ['5 — 값이 복사돼 독립, b를 바꿔도 무관', '9 — 속성끼리 대입하면 이어진다'],
@@ -159,6 +190,16 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
     }))
 
     // ── F 배열 원소 ─────────────────────────────────────────
+    root.querySelector('[data-m="sim-farr"]').append(MemoryModel({
+      title: '배열도 객체 — let c = arr는 같은 배열(별칭)',
+      stackLabel: '📇 이름표 장부',
+      code: ['let arr = [1, 2]', 'let c = arr', 'c.push(9)'],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'arr', ref: 'h1' }] }], heap: { h1: { label: '[1, 2]' } }, note: 'arr가 배열 봉투 <b>h1</b>을 가리킨다(배열도 힙 객체).' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: 'arr', ref: 'h1' }, { name: 'c', ref: 'h1' }] }], heap: { h1: { label: '[1, 2]' } }, note: '<code>let c = arr</code> — 배열도 객체라 <b>주소 복사</b> → c와 arr은 <b>같은 배열 h1</b>(별칭). "배열은 특별"이 아니다.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: 'arr', ref: 'h1' }, { name: 'c', ref: 'h1' }] }], heap: { h1: { label: '[1, 2, 9]' } }, note: '<code>c.push(9)</code>가 h1을 늘린다 → <b>arr로 봐도 [1, 2, 9]</b>. 같은 배열을 공유하니까. (사본을 원하면 <code>[ ...arr ]</code> — 스프레드!)' },
+      ],
+    }))
     root.querySelector('[data-m="qz-f1"]').append(Quiz({
       q: '<pre class="err-code" style="color:inherit;background:transparent">let arr = [1, 2, 3]\nlet x = arr[0]\nx = 9</pre><b>arr[0]</b>은?',
       options: ['1 — 원소가 원시라 꺼낼 때 값이 복사된다', '9 — 배열 원소와 이어져 같이 바뀐다'],
