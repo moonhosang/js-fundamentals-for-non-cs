@@ -41,6 +41,8 @@
       ;[...ids].forEach((id, i) => { this._color[id] = COLORS[i % COLORS.length] })
       // 명시적 원시값 힙 박스({prim:true})는 값 메모리 색(초록)으로 — 자동 원시셀과 화살표 색 통일.
       ;(s.steps || []).forEach((st) => Object.entries(st.heap || {}).forEach(([k, box]) => { if (box && box.prim) this._color[k] = PRIM_COLOR }))
+      // 회수된 메모리(freed·tombstone) 박스는 빨강 — 허상(dangling) 포인터가 여기로 꽂힌다.
+      ;(s.steps || []).forEach((st) => Object.entries(st.heap || {}).forEach(([k, box]) => { if (box && box.freed) this._color[k] = '#dc2626' }))
       // 원시값 셀(model B, ADR 0007): 슬롯 값을 값 메모리에 둔다 — 셀 id = 'p:'+frame#name, 초록 고정.
       ;(s.steps || []).forEach((st) => (st.stack || []).forEach((f) => (f.slots || []).forEach((sl) => {
         if (!('ref' in sl && sl.ref)) this._color['p:' + f.name + '#' + sl.name] = PRIM_COLOR
@@ -92,6 +94,8 @@
           .hfkey { color:var(--muted,#6b7280); }
           .hfval { color:var(--text,#1f2937); }
           .hbox.faded { opacity:.4; border-style:dashed; }
+          .hbox.freed { border-style:dashed !important; background:rgba(220,38,38,.05); }
+          .hbox.freed .hlabel { color:#dc2626; font-weight:700; }
           .hbox.person { align-items:center; gap:10px; padding:10px 12px; }
           .pavatar { font-size:34px; line-height:1; flex:none; transition:transform .2s; }
           .hbox.person.flash .pavatar { transform:scale(1.25); }
@@ -260,7 +264,7 @@
       const renderBox = (id) => {
         const c = this._color[id] || '#888'
         const box = heap[id]
-        const sig = JSON.stringify([!!box.faded, box.person || 0, box.name || 0, box.items || 0, box.fields || 0, box.label != null ? String(box.label) : 0])
+        const sig = JSON.stringify([!!box.faded, !!box.freed, box.person || 0, box.name || 0, box.items || 0, box.fields || 0, box.label != null ? String(box.label) : 0])
         curHeaps.add(id); curLabels[id] = sig
         let anim = ''
         if (!prev.heaps.has(id)) anim = ' enter'
@@ -269,7 +273,10 @@
         if (box.faded) cls += ' faded'
         if (box.prim) cls += ' prim'
         if (box.bad) cls += ' bad'
-        if (box.person) {
+        if (box.freed) cls += ' freed'
+        if (box.freed) {
+          body = `<span class="hlabel">💥 사라진 메모리 <small style="opacity:.7;font-weight:400">(회수됨)</small></span>`
+        } else if (box.person) {
           cls += ' person'
           body = `<span class="pavatar">${esc(box.person)}</span><div class="pinfo"><div class="pname">${esc(box.name)}</div>${fieldRows(box.fields || [], true)}</div>`
         } else if (box.items) {
@@ -286,8 +293,8 @@
         } else {
           body = `<span class="hlabel">${esc(box.label)}</span>`
         }
-        const bc = box.prim ? PRIM_COLOR : c
-        const tag = box.prim ? '' : `<span class="htag" style="background:${c}">${esc(id)}</span>`
+        const bc = box.prim ? PRIM_COLOR : (box.freed ? '#dc2626' : c)
+        const tag = (box.prim || box.freed) ? '' : `<span class="htag" style="background:${c}">${esc(id)}</span>`
         return `<div class="${cls}${anim}" data-heap="${esc(id)}" style="border-color:${bc}">${tag}${body}</div>`
       }
       // 값 메모리(개념) = 원시값 구역 + 힙 구역. 실제 엔진 = 원시값은 슬롯 인라인이라 힙(객체)만 남는다.
