@@ -156,6 +156,11 @@ nav {
 .toc-step-toggle { flex: none; background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 11px; line-height: 1; padding: 4px 6px; border-radius: 6px; transition: transform .15s, color .15s; }
 .toc-step-toggle:hover { color: #cbd5e1; background: rgba(255, 255, 255, 0.06); }
 .toc-step-toggle.open { transform: rotate(90deg); color: var(--brand); }
+/* 강(챕터) 접기 chevron — 왼쪽, 파트 chevron처럼. 자식 없는 행은 빈칸으로 정렬. */
+.toc-lesson-toggle { flex: none; background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 11px; line-height: 1; padding: 4px 5px; border-radius: 6px; transition: transform .15s, color .15s; }
+.toc-lesson-toggle:hover { color: #e2e8f0; background: rgba(255, 255, 255, 0.08); }
+.toc-lesson-toggle.open { transform: rotate(90deg); color: var(--brand); }
+.toc-lesson-toggle-blank { flex: none; width: 21px; }
 .toc-check {
   flex: none;
   width: 15px;
