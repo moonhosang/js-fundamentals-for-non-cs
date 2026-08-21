@@ -50,10 +50,16 @@
       <span class="learn-tag">📎 ▶ 다음 단계로 addTax 프레임이 쌓였다 사라지는 걸 보라</span>
       <div data-m="mem-stack"></div>
 
-      <h3 class="section-title">② 왜 중요한가</h3>
+      <h3 class="section-title">② 재귀 — 자기를 부르면 프레임이 겹겹이 쌓인다</h3>
+      <span class="learn-tag">📎 함수가 자기 자신을 부르면(재귀) 프레임이 여러 개 동시에 쌓인다 — 각자 다른 n · base에 닿아야 하나씩 pop</span>
+      <div data-m="qz-recur"></div>
+      <div class="card"><div class="file-label">🔬 ▶ — countDown(2)가 겹겹이 쌓였다 풀린다</div><div data-m="sim-recur"></div></div>
+      <p class="section-desc">🔑 재귀 = <b>자기를 다시 부르는</b> 함수. 부를 때마다 새 프레임이 <b>위로 쌓이고</b>(각자 다른 <code>n</code>), 안쪽이 <b>멈추는 조건(base case)</b>에 닿아야 하나씩 반환·pop된다. base가 없으면 <b>끝없이 쌓여 Stack Overflow</b>(스택이 꽉 참) — 아래 ③의 그 에러다.</p>
+
+      <h3 class="section-title">③ 왜 중요한가</h3>
       <ul class="section-list">
         <li>함수가 끝나면 그 안의 지역변수는 <b>없어진다</b> → 그래서 함수 밖에서 못 쓴다(스코프).</li>
-        <li>스택이 너무 깊이 쌓이면(끝없는 재귀) <b>Stack Overflow</b> 에러 — 스택이 꽉 찬 것.</li>
+        <li><b>Stack Overflow</b> — ②에서 봤듯 base 없는 재귀가 프레임을 끝없이 쌓아 스택이 꽉 차면 나는 에러.</li>
         <li>그런데… <b>사라져야 할 지역변수가 안 사라지는</b> 경우가 있다. 그게 <b>클로저</b> — 다음 강의.</li>
       </ul>
 
@@ -70,6 +76,25 @@
     `
     root.querySelector('[data-m="mem-stack"]').append(MemoryModel(SCENARIO_STACK))
     root.querySelector('[data-m="qzcs"]').append(Quiz({ q: '<code>addTax(1000)</code>를 부르는 순간, 스택엔 프레임이 몇 개?', options: ['1개 (addTax만)', '2개 (main + addTax)'], answer: 1, explain: '프로그램의 <b>main</b> 프레임 위에 <b>addTax</b> 프레임이 쌓인다 → 2개. addTax가 반환하면 pop되어 다시 1개.' }))
+    root.querySelector('[data-m="qz-recur"]').append(Quiz({
+      q: '<code>countDown(2)</code>가 자기를 부르며 내려간다(2→1→0). 그 순간 스택에 <b>countDown 프레임</b>이 최대 몇 개 겹칠까?<pre class="err-code" style="color:inherit;background:transparent">function countDown(n) {\n  if (n === 0) return "끝"\n  return countDown(n - 1)\n}\ncountDown(2)</pre>',
+      options: ['1개 — 하나 끝나고 다음', '3개 — n=2, n=1, n=0이 동시에 쌓인다', '2개'],
+      answer: 1,
+      explain: '재귀는 <b>안쪽이 끝나야 바깥이 끝난다</b> — countDown(2)는 countDown(1)의 반환을 기다리고, 그건 countDown(0)을 기다린다. 그래서 <b>n=2·1·0 세 프레임이 동시에</b> 쌓인다. base(n===0)에 닿아야 위에서부터 하나씩 pop. base가 없으면 끝없이 쌓여 <b>Stack Overflow</b>.',
+    }))
+    root.querySelector('[data-m="sim-recur"]').append(MemoryModel({
+      title: 'countDown(2) — 재귀는 프레임이 겹겹이 쌓였다 하나씩 pop',
+      stackLabel: '📚 스택 (이름표 장부)',
+      code: ['function countDown(n) {', '  if (n === 0) return "끝"', '  return countDown(n - 1)', '}', 'countDown(2)'],
+      steps: [
+        { line: 4, stack: [{ name: 'main', slots: [] }], heap: {}, note: '<code>countDown(2)</code> 호출 시작 — 아직 main만.' },
+        { line: 2, stack: [{ name: 'main', slots: [] }, { name: 'countDown', slots: [{ name: 'n', value: '2' }] }], heap: {}, note: '<b>countDown(2) push</b> — n=2, base(n===0) 아님 → <code>countDown(1)</code>을 부른다.' },
+        { line: 2, stack: [{ name: 'main', slots: [] }, { name: 'countDown', slots: [{ name: 'n', value: '2' }] }, { name: 'countDown', slots: [{ name: 'n', value: '1' }] }], heap: {}, note: '<b>countDown(1) push</b> — countDown(2)는 <b>아직 대기</b>(반환 기다림). 이제 <b>2개</b>가 겹쳤다.' },
+        { line: 2, stack: [{ name: 'main', slots: [] }, { name: 'countDown', slots: [{ name: 'n', value: '2' }] }, { name: 'countDown', slots: [{ name: 'n', value: '1' }] }, { name: 'countDown', slots: [{ name: 'n', value: '0' }] }], heap: {}, note: '<b>countDown(0) push</b> — <b>3개!</b> 자기를 부를 때마다 <b>위로 쌓인다</b>(각자 다른 n). base 없으면 여기서 무한히 쌓여 <b>Stack Overflow</b>.' },
+        { line: 1, stack: [{ name: 'main', slots: [] }, { name: 'countDown', slots: [{ name: 'n', value: '2' }] }, { name: 'countDown', slots: [{ name: 'n', value: '1' }] }], heap: {}, returning: { value: '"끝"' }, note: '<b>countDown(0): n===0 → base!</b> <code>return "끝"</code> → countDown(0) pop, "끝"이 통로로. 이제 <b>위에서부터 하나씩</b> 풀린다.' },
+        { line: 2, stack: [{ name: 'main', slots: [] }], heap: {}, returning: { value: '"끝"' }, note: '<b>역순으로 pop</b> — countDown(1)·countDown(2)도 "끝"을 그대로 반환하며 차례로 pop → main만 남고 최종 "끝". <b>쌓인 만큼 되돌아 나온다.</b>' },
+      ],
+    }))
     wireGoto(root)
   }
 
