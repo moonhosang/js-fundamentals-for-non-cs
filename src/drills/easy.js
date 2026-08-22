@@ -29,7 +29,7 @@
       {"label":"글자의 타입","ask":"글자 \"안녕\"의 타입 이름은?","code":"print((typeof \"안녕\") === \"____\")","expect":"true","answer":"string","hint":"글자 = string","explain":"따옴표로 감싼 값은 <b>문자열</b> → <code>\"string\"</code>.","see":"builtins"},
       {"label":"참거짓의 타입","ask":"참/거짓 값의 타입 이름은?","code":"print((typeof true) === \"____\")","expect":"true","answer":"boolean","hint":"참거짓 = boolean","explain":"<code>true</code>·<code>false</code>는 <b>불리언</b> → <code>\"boolean\"</code>.","see":"builtins"},
       {"label":"재할당 결과","ask":"x = 10 다음 x = x + 5 를 하면 x는?","code":"let x = 10\nx = x + 5\nprint(x === ____)","expect":"true","answer":"15","hint":"10 + 5","explain":"<code>x = x + 5</code>는 <b>지금 x의 값(10)에 5를 더한 15</b>를 다시 x에 담는다."},
-      {"label":"복사는 독립","ask":"a를 복사해 b를 만들고 b만 9로 바꾸면 a는?","code":"let a = 5\nlet b = a\nb = 9\nprint(a === ____)","expect":"true","answer":"5","hint":"원시값 복사 → a는 그대로","explain":"원시값은 <code>=</code>로 넘길 때 <b>값을 복제</b>한다. b를 바꿔도 a의 셀은 그대로 10."}
+      {"label":"복사는 독립","ask":"a를 복사해 b를 만들고 b만 9로 바꾸면 a는?","code":"let a = 5\nlet b = a\nb = 9\nprint(a === ____)","expect":"true","answer":"5","hint":"원시값 복사 → a는 그대로","explain":"원시값은 <code>=</code>로 넘길 때 <b>값을 복제</b>한다. b를 바꿔도 a의 셀은 그대로 5."}
     ],
   }
   E["2"] = {
