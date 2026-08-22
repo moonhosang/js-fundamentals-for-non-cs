@@ -320,4 +320,14 @@
       {label:"중첩 — 안쪽서 잡힘", ask:"안쪽 try가 잡으면 바깥 catch는?", code:"let outer = false\ntry { try { null.x } catch (e) { } } catch (e) { outer = true }\nprint(outer === ____)", expect:"true", answer:"false", hint:"먼저 만난 catch가 잡으면 끝", explain:"에러는 <b>가장 안쪽 catch</b>가 먼저 잡는다. 안쪽이 처리했으니 <b>바깥 catch까진 안 올라간다</b> → outer는 false."}
     ],
   }
+  N["json"] = {
+    pattern: "🟡 보통 · JSON 변형 — 왕복 복원·깊은 복사·중첩 (=== true 면 정답)",
+    problems: [
+      {label:"왕복 복원", ask:"stringify→parse 후 x는?", code:"let o = { x: 1 }\nlet c = JSON.parse(JSON.stringify(o))\nprint(c.x === ____)", expect:"true", answer:"1", hint:"글자로 폈다 다시 객체로", explain:"객체→글자→객체로 왕복하면 <b>값이 복원</b>된다 → c.x = 1. (단 새 객체다)", see:"json"},
+      {label:"깊은 복사 독립", ask:"왕복 사본의 중첩을 바꾸면 원본은?", code:"let o = { n: { v: 1 } }\nlet c = JSON.parse(JSON.stringify(o))\nc.n.v = 9\nprint(o.n.v === ____)", expect:"true", answer:"1", hint:"왕복=깊은 복사(중첩까지 독립)", explain:"JSON 왕복은 <b>깊은 복사</b> — 중첩까지 새 객체라 <code>c.n.v=9</code>가 <b>o.n.v를 안 건드린다</b>(1). 스프레드(얕은 복사)와 대비.", see:"spread"},
+      {label:"중첩 parse", ask:"중첩 글자를 parse해 안쪽 b는?", code:"let o = JSON.parse('{\"a\":{\"b\":2}}')\nprint(o.a.b === ____)", expect:"true", answer:"2", hint:"중첩도 그대로 복원", explain:"JSON은 중첩 객체도 복원한다 → o.a.b = 2."},
+      {label:"불리언 parse", ask:"'true' 글자를 parse하면?", code:"print(JSON.parse('true') === ____)", expect:"true", answer:"true", hint:"글자 → 진짜 불리언", explain:"<code>JSON.parse('true')</code>는 글자를 <b>불리언 true</b>로 복원 → === true 참."},
+      {label:"글자엔 속성 없음", ask:"stringify 결과(글자)의 .name은?", code:"let t = JSON.stringify({ name: \"민지\" })\nprint((t.name === undefined) === ____)", expect:"true", answer:"true", hint:"t는 객체가 아니라 글자", explain:"<code>t</code>는 <b>문자열</b>이라 객체 속성 <code>.name</code>이 없다 → undefined. (JSON은 객체가 아니라 글자!)", see:"json"}
+    ],
+  }
 })()

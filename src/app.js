@@ -62,10 +62,14 @@
       plan: ['객체 { key: value } · 점(.)으로 꺼내기', '배열 안의 객체 (실전 데이터 모양)', '화면: 프로필 카드 만들기', '유형 드릴 ×10'] },
     // 🎁 구조분해 (객체·배열 뒤) — spread의 역: 모양 맞춰 값 꺼내기.
     { id: 'destructuring', badge: '🎁 추출', title: '구조분해 { } [ ]', subtitle: '모양 맞춰 꺼내기 · spread의 역' },
+    // 📦 JSON (객체·문자열 뒤) — 객체 ↔ 문자열 왕복, 저장·전송의 형태.
+    { id: 'json', badge: '📦 데이터', title: 'JSON', subtitle: '객체를 문자열로 · stringify/parse' },
     // 🧬 클래스 (선택 심화 · 객체 뒤) — class=프로토타입 문법설탕, 인스턴스=힙 객체.
     { id: 'class', badge: '🧬 선택', title: '클래스', subtitle: '객체 찍는 틀 · new · 프로토타입 설탕' },
     // 🛟 에러 처리 (함수·객체 뒤) — try/catch/finally, 8강 TypeError 후속.
     { id: 'errors', badge: '🛟 오류', title: '에러 처리', subtitle: 'try · catch · finally · throw' },
+    // ⏳ 비동기 (콜스택·에러 뒤) — setTimeout·Promise·async/await, 이벤트 루프. 순서예측 Quiz 중심.
+    { id: 'async', badge: '⏳ 시간', title: '비동기', subtitle: 'setTimeout · Promise · async/await' },
     { id: 9, name: '화면 조작 (DOM)', subtitle: '선택 · 바꾸기 · 이벤트',
       plan: ['요소 선택 querySelector', 'textContent · style 로 바꾸기', '버튼 클릭에 반응 addEventListener', '유형 드릴 ×10'] },
     { id: 10, name: '실전 미니앱', subtitle: '배운 걸 합쳐 하나 만들기',
@@ -145,7 +149,7 @@
     // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다. 함수 뒤에 메모리 심화.
     { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5), 'callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     // 객체(8강) 뒤에 그래프·클래스.
-    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'destructuring', ...P('destructuring'), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class'), 'errors', ...P('errors'), 'cf', 'cf-1', 'cf-2', 'cf-3', 'cf-4', 'cf-5'] },
+    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'destructuring', ...P('destructuring'), 'json', ...P('json'), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class'), 'errors', ...P('errors'), 'async', ...P('async'), 'cf', 'cf-1', 'cf-2', 'cf-3', 'cf-4', 'cf-5'] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
     { tag: '📚', title: '레퍼런스', items: ['builtins', 'builtins-1', 'builtins-2', 'builtins-3', 'builtins-4', 'builtins-5', 'coercion'] },
   ]

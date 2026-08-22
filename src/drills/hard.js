@@ -331,4 +331,14 @@
       {label:"에러도 값 — instanceof", ask:"new Error(...)는 Error의 인스턴스?", code:"let ok = false\ntry { throw new Error(\"z\") } catch (e) { ok = (e instanceof Error) }\nprint(ok === ____)", expect:"true", answer:"true", hint:"Error도 객체(힙)·클래스 인스턴스", explain:"<code>new Error(...)</code>는 <b>Error 클래스의 인스턴스</b>(힙 객체) → <code>e instanceof Error</code>는 true. 에러도 결국 값(객체)이다.", see:"class"}
     ],
   }
+  H["json"] = {
+    pattern: "🔴 어려움 · JSON 함정 — 함수/undefined 소실·깊은복사 정체 (=== true 면 정답)",
+    problems: [
+      {label:"함수는 사라짐", ask:"함수를 stringify→parse하면 그 키는?", code:"let o = { a: 1, f: function () {} }\nlet c = JSON.parse(JSON.stringify(o))\nprint((c.f === undefined) === ____)", expect:"true", answer:"true", hint:"JSON은 데이터만 — 함수 제외", explain:"JSON은 <b>데이터만</b> 담는다 → <b>함수는 stringify에서 빠진다</b> → 왕복 후 c.f는 undefined. (메서드가 사라지는 실전 함정)", see:"json"},
+      {label:"undefined 빠짐", ask:"{a:undefined}를 stringify하면?", code:"print(JSON.stringify({ a: undefined }) === '____')", expect:"true", answer:"{}", hint:"undefined도 값이 아니라 제외", explain:"<code>undefined</code>인 키는 stringify에서 <b>통째로 빠진다</b> → <code>{}</code>. (null은 남지만 undefined는 사라진다)"},
+      {label:"깊은복사=다른 객체", ask:"왕복 사본의 중첩은 원본과 같은 객체?", code:"let o = { n: {} }\nlet c = JSON.parse(JSON.stringify(o))\nprint((c.n === o.n) === ____)", expect:"true", answer:"false", hint:"깊은 복사 → 다른 봉투", explain:"왕복은 <b>전부 새로 만든다</b> → c.n과 o.n은 <b>다른 객체</b>(===는 주소 비교라 false). 얕은 복사(스프레드)면 같은 객체였다.", see:"spread"},
+      {label:"숫자키→문자열", ask:"{1:'a'}를 stringify하면?", code:"print(JSON.stringify({ 1: \"a\" }) === '____')", expect:"true", answer:"{\"1\":\"a\"}", hint:"JSON 키는 항상 문자열", explain:"JSON에서 <b>키는 언제나 문자열</b> → 숫자 키 1도 <code>\"1\"</code>로 → <code>{\"1\":\"a\"}</code>."},
+      {label:"원시 왕복", ask:"42를 왕복하면?", code:"print(JSON.parse(JSON.stringify(42)) === ____)", expect:"true", answer:"42", hint:"원시값도 왕복 가능", explain:"JSON은 객체만이 아니라 <b>원시값</b>도 왕복한다 → 42→\"42\"→42. (숫자 그대로 복원)"}
+    ],
+  }
 })()

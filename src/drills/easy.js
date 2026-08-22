@@ -317,4 +317,14 @@
       {label:"finally", ask:"에러가 나도 finally는 도나?", code:"let ran = false\ntry { null.x } catch (e) { } finally { ran = true }\nprint(ran === ____)", expect:"true", answer:"true", hint:"finally는 항상", explain:"<code>finally</code>는 <b>잡히든 말든 항상</b> 실행 → ran = true. 뒷정리(로딩 끄기 등) 담당.", see:"errors"}
     ],
   }
+  E["json"] = {
+    pattern: "🟢 쉬움 · JSON 왕복 — stringify(객체→글자)·parse(글자→객체) (=== true 면 정답)",
+    problems: [
+      {label:"결과는 문자열", ask:"JSON.stringify의 결과 타입은?", code:"let t = JSON.stringify({ a: 1 })\nprint((typeof t) === \"____\")", expect:"true", answer:"string", hint:"stringify=객체→글자", explain:"<code>JSON.stringify</code>는 객체를 <b>글자(문자열)</b>로 바꾼다 → typeof는 \"string\". (객체가 아니라 글자!)", see:"json"},
+      {label:"parse로 꺼내기", ask:"parse한 객체의 a는?", code:"let o = JSON.parse('{\"a\":1}')\nprint(o.a === ____)", expect:"true", answer:"1", hint:"parse=글자→객체", explain:"<code>JSON.parse</code>가 글자를 <b>객체</b>로 되돌린다 → 점으로 꺼내 o.a = 1.", see:"json"},
+      {label:"stringify 결과", ask:"{a:1}을 stringify하면?", code:"print(JSON.stringify({ a: 1 }) === '____')", expect:"true", answer:"{\"a\":1}", hint:"키가 큰따옴표로 감싸진다", explain:"JSON 문자열은 <b>키를 큰따옴표</b>로 감싼다 → <code>{\"a\":1}</code>."},
+      {label:"배열도 parse", ask:"[1,2,3] 글자를 parse하면 길이는?", code:"let a = JSON.parse('[1,2,3]')\nprint(a.length === ____)", expect:"true", answer:"3", hint:"배열도 JSON", explain:"JSON은 배열도 다룬다 → parse하면 진짜 배열 → 길이 3."},
+      {label:"숫자 parse", ask:"'5' 글자를 parse하면?", code:"print(JSON.parse('5') === ____)", expect:"true", answer:"5", hint:"글자 5 → 숫자 5", explain:"<code>JSON.parse('5')</code>는 글자를 <b>숫자 5</b>로 복원 → 5 (=== 5 참)."}
+    ],
+  }
 })()

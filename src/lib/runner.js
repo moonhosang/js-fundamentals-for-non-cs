@@ -150,9 +150,21 @@
       }
     }
 
+    // 늦게 오는(비동기) print를 콘솔에 라이브로 덧붙인다 — setTimeout·Promise 출력이 진짜로 뜨게.
+    function appendLine(s) {
+      const empty = consoleBody.querySelector('.runner-empty')
+      if (empty) empty.remove()
+      const line = document.createElement('div')
+      line.className = 'runner-line'
+      line.textContent = s
+      consoleBody.append(line)
+    }
+
     function run() {
       const logs = []
-      const print = (...args) => logs.push(args.map(fmt).join(' '))
+      let rendered = false
+      // 동기 print는 logs에 모아 renderConsole이 그리고, 렌더 이후(비동기) print는 라이브로 덧붙인다.
+      const print = (...args) => { const s = args.map(fmt).join(' '); logs.push(s); if (rendered) appendLine(s) }
       clearBox()
       let error = null
       try {
@@ -174,6 +186,7 @@
         }
       }
       renderConsole(logs, error, true, verdict)
+      rendered = true // 이후 도착하는(비동기) print는 appendLine으로 라이브 표시
     }
 
     runBtn.onclick = run
