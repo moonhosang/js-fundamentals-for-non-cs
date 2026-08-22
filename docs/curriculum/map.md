@@ -43,6 +43,7 @@ IT 전공자가 아닌 사람이 **완전 제로**에서 시작하는 실습형 
 - ✅ **7강 · 반복과 map** — for·forEach(반환X)·**map/filter/reduce**·오해(map이 원본 바꾼다) 정면돌파·map 메모리모델(새 배열은 힙 새 칸). 드릴 7-1~7-10.
 - ✅ **8강 · 객체** — `{ key: value }`·점/대괄호·없는 키=undefined·중첩·배열 안 객체(실전 데이터)·메서드·힙 참조 공유(M4).
 - ✅ **🎁 구조분해 `{ } [ ]`** — spread의 역(모양 맞춰 꺼내기). 객체=키(순서 무관·별칭·기본값)·배열=위치(건너뛰기·rest). 꺼낸 값은 M4 그대로(원시=복사·객체=주소). 함수 매개변수 구조분해·스왑. 드릴 3단계.
+- ✅ **📦 JSON** — 객체↔문자열 왕복(stringify/parse). 저장·전송의 형태. **왕복=깊은 복사**(스프레드 얕은복사와 대비)·함정(함수·undefined 소실). 드릴 3단계.
 
 ### 🕸️ 객체 그래프 (8강 객체에 이어 · 급하면 9강으로 건너뛰기)
 - ✅ **G1 · 별칭·중첩** — 효니 별칭(양방향)·2중 그래프·**같은 그림 다른 코드 / 같은 코드 다른 그림**.
@@ -55,6 +56,9 @@ IT 전공자가 아닌 사람이 **완전 제로**에서 시작하는 실습형 
 
 ### 🛟 에러 처리 (함수·객체 뒤 · 8강 TypeError 후속)
 - ✅ **에러 처리 `try/catch/finally`** — 에러=던져지는(throw) 값. error-first Runner(안 잡으면 흐름 끊김)→try/catch로 붙잡기→e.name/e.message·throw new Error→콜스택 전파 MemoryModel→finally. 오해정면돌파: "try면 에러가 사라진다"·빈 catch 금지. 드릴 3단계(전파·재던지기·instanceof 포함).
+
+### ⏳ 비동기 (콜스택·에러 뒤 · '시간' 축)
+- ✅ **비동기 `setTimeout/Promise/async·await`** — 동기 vs 비동기 순서(Runner가 A·C·B 실증)·**이벤트 루프**(콜스택 비면 대기 큐에서 꺼냄, MemoryModel)·Promise/then·async/await(동기처럼 읽기). 오해정면돌파: "setTimeout(_,0)=지금"·"await=전체 정지". **순서 예측 Quiz 중심**(값-드릴은 포맷 부적합이라 생략 — 본문 노트). 더 깊은 주제(마이크로태스크·Promise.all)는 후속 파트.
 
 ## 파트 4 · 화면을 움직이기
 - ✅ **9강 · DOM** — querySelector(첫 하나)·textContent/style·createElement+append(7강 forEach 합체)·addEventListener(콜백)·실전 카운터. 드릴 9-1~9-10.
