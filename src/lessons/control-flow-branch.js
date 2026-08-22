@@ -88,13 +88,13 @@
     `
 
     root.querySelector('[data-m="qz1"]').append(Quiz({
-      q: '<code>score = 85</code>. 사다리 — <code>if (score >= 90) g="A"; else if (score >= 80) g="B"; else if (score >= 70) g="C"; else g="F"</code>. g는?',
+      q: '<code>score = 85</code>일 때, 이 사다리의 최종 <code>g</code>는?<pre class="err-code" style="color:inherit;background:transparent">if (score >= 90) g = "A"\nelse if (score >= 80) g = "B"\nelse if (score >= 70) g = "C"\nelse g = "F"</pre>',
       options: ['"B" — 참인 첫 갈래에서 멈춘다', '"C" — 85는 70 이상이기도 하니 아래 갈래가 g를 또 덮어쓴다', '"B" 그리고 "C" — 참인 갈래가 둘이니 둘 다 실행'],
       answer: 0,
       explain: '사다리는 <b>위에서부터</b> — <code>85 >= 90</code> 거짓, <code>85 >= 80</code> <b>참 → 여기서 실행하고 사다리 전체를 빠져나온다</b>. <code>85 >= 70</code>도 참이지만 <b>검사조차 안 한다</b>(4강에서 밟았던 그 길).',
     }))
     root.querySelector('[data-m="qz2"]').append(Quiz({
-      q: '이번엔 else를 다 뗐다 — <code>if (score >= 90) g="A"; if (score >= 80) g="B"; if (score >= 70) g="C"</code>. 같은 <code>score = 85</code>. 마지막에 g는?',
+      q: '이번엔 <code>else</code>를 다 뗐다. 같은 <code>score = 85</code>, 마지막에 <code>g</code>는?<pre class="err-code" style="color:inherit;background:transparent">if (score >= 90) g = "A"\nif (score >= 80) g = "B"\nif (score >= 70) g = "C"</pre>',
       options: ['"B" — 아까처럼 참인 첫 갈래에서 멈춘다', '"C" — 참인 두 갈래가 다 실행되고 마지막이 덮어쓴다', '에러 — if를 연달아 쓸 수 없다'],
       answer: 1,
       explain: 'else 고리가 없으면 <b>서로 남남인 if 3개</b> — 각자 자기 검사를 한다. <code>85 >= 80</code> 참 → g="B", 이어서 <code>85 >= 70</code>도 참 → g="C"로 <b>덮어쓴다</b>. "하나만 실행"은 if의 성질이 아니라 <b>else if가 만들어 주는 성질</b>이다.',

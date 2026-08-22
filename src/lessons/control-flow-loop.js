@@ -156,7 +156,7 @@
     `
 
     root.querySelector('[data-m="qz-total"]').append(Quiz({
-      q: '<code>for (let i = 1; i &lt;= 3; i++) { for (let j = 1; j &lt;= 3; j++) { print(i, j) } }</code> — 안쪽 몸통 print는 <b>총 몇 번</b> 실행될까?',
+      q: '이 중첩 반복에서 안쪽 몸통 <code>print</code>는 <b>총 몇 번</b> 실행될까?<pre class="err-code" style="color:inherit;background:transparent">for (let i = 1; i &lt;= 3; i++) {\n  for (let j = 1; j &lt;= 3; j++) {\n    print(i, j)\n  }\n}</pre>',
       options: ['3번 — 같이 한 바퀴씩 돈다', '6번 — 3번 + 3번', '9번 — 바깥 3 × 안쪽 3'],
       answer: 2,
       explain: '더하기(3+3)가 아니라 <b>곱하기</b>다. 바깥이 <b>한 바퀴 갈 때마다</b> 안쪽이 3바퀴를 <b>다</b> 돌기 때문 — i=1에서 3번, i=2에서 3번, i=3에서 3번 = <b>3 × 3 = 9번</b>.',

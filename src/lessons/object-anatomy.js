@@ -170,7 +170,7 @@ me.name = name
     }))
 
     root.querySelector('[data-m="qz-life"]').append(Quiz({
-      q: '<code>function make() { let p = { hp: 100 }; return p }</code> — make가 끝나 스택이 pop되면, <b>hp의 100</b>(원시)은?',
+      q: 'make가 끝나 스택이 pop되면, <b>hp의 100</b>(원시)은?<pre class="err-code" style="color:inherit;background:transparent">function make() {\n  let p = { hp: 100 }\n  return p\n}</pre>',
       options: ['사라진다 — 원시는 스택이라 pop과 함께 지워진다', '산다 — hp는 객체의 부품이라, 객체(힙)가 사는 한 같이 산다'],
       answer: 1,
       explain: 'pop으로 사라지는 건 <b>스택 슬롯(이름표 p)</b>뿐이다. 반환된 객체는 힙에 살아남고(M3), hp는 그 <b>봉투 안</b>에 있으니 <b>봉투째 같이 산다</b>. 속성이 스택에 살았다면 "속만 빈 봉투"가 됐을 것 — 이게 속성이 객체를 따라가는 이유(수명).',

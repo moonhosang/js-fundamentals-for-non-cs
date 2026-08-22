@@ -457,10 +457,10 @@
       explain: 'b가 0이라 첫 줄 <code>return "못 나눔"</code>에서 <b>함수가 즉시 끝난다</b> — 아래 <code>return a/b</code>는 <b>실행조차 안 됨</b>(dead). return은 값을 내보내며 <b>함수를 종료</b>한다.',
     }))
     root.querySelector('[data-m="qz4"]').append(Quiz({
-      q: '<code>grade</code>: <code>if(≥90)return"A"; if(≥80)return"B"; return"C"</code>. <b>grade(85)</b>는?',
+      q: '이 <code>grade</code> 함수에서 <b>grade(85)</b>는?<pre class="err-code" style="color:inherit;background:transparent">function grade(score) {\n  if (score >= 90) return "A"\n  if (score >= 80) return "B"\n  return "C"\n}</pre>',
       options: ['"A"', '"B"', '"C"'],
       answer: 1,
-      explain: '첫 <code>if(≥90)</code>는 거짓(건너뜀), 둘째 <code>if(≥80)</code>는 참 → <b>return "B"</b>에서 끝(셋째 "C"는 안 옴). 점수가 달랐다면 다른 return이 실행됐을 것.',
+      explain: '첫 <code>if (85 >= 90)</code>는 거짓(건너뜀), 둘째 <code>if (85 >= 80)</code>는 참 → <b>return "B"</b>에서 함수가 끝난다(셋째 "C"는 안 옴). 점수가 달랐다면 다른 return이 실행됐을 것.',
     }))
     root.querySelector('[data-m="f1"]').append(MemoryModel({
       title: '① 있음 — return이 값을 밖으로 내보낸다',
