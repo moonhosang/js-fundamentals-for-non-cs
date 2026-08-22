@@ -660,6 +660,19 @@
     return sec
   }
 
+  // 열린 메뉴(활성 항목)를 사이드바 목차의 '정중앙'으로 스크롤한다.
+  // window는 안 건드리고 .toc(overflow-y:auto) 내부만 움직인다 — getBoundingClientRect 델타로 위치 무관 계산.
+  function centerActiveInToc(smooth) {
+    const el = toc.querySelector('.toc-item.active') || toc.querySelector('.toc-home.active')
+    if (!el || toc.clientHeight === 0) return // 접힌/숨은 사이드바(모바일)면 건너뜀
+    requestAnimationFrame(() => {
+      const tr = toc.getBoundingClientRect()
+      const er = el.getBoundingClientRect()
+      const delta = (er.top - tr.top) - (tr.height - er.height) / 2 // 항목을 toc 뷰 정중앙으로
+      toc.scrollTo({ top: toc.scrollTop + delta, behavior: smooth ? 'smooth' : 'auto' })
+    })
+  }
+
   // ── 내비게이션 ────────────────────────────────────────────
   let firstSync = true
   function go(id) {
@@ -675,6 +688,7 @@
     try { window.scrollTo(0, 0) } catch {}
     if (window.innerWidth <= 720) setSidebar(false)
     renderToc()
+    centerActiveInToc(true)
     renderPage()
   }
 
@@ -683,7 +697,7 @@
 
   window.addEventListener('hashchange', () => {
     const h = hashToId()
-    if (validId(h) && h !== state.currentId) { state.currentId = h; revealCurrent(); renderToc(); renderPage() }
+    if (validId(h) && h !== state.currentId) { state.currentId = h; revealCurrent(); renderToc(); centerActiveInToc(true); renderPage() }
   })
   window.addEventListener('resize', () => { backdrop.hidden = !state.sidebarOpen || window.innerWidth > 720 })
 
@@ -693,5 +707,6 @@
   renderCheckTabs()
   renderProgress()
   renderToc()
+  centerActiveInToc(false) // 최초 로드 — 현재 강의를 정중앙에 (애니메이션 없이 즉시)
   renderPage()
 })()
