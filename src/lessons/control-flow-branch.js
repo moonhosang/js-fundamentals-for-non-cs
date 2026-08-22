@@ -1,6 +1,10 @@
 // 🔀 제어 흐름 · 조합과 중첩 (branch 쪽: 개요 + if 사다리·중첩 if·if×switch)
 // 개별 문(if·switch·for·while)은 이미 4강·7강에서 배웠다 — 여기선 '겹쳐 쓰기(중첩)'에 집중.
 // 비교 연산자·truthy/falsy는 재설명 없이 링크(4강·coercion, SSOT). 드릴은 인라인(계약테스트 무손상).
+//
+// 오해: if 여러 개나 else if나 같다 · 중첩 if와 &&는 아무거나 · switch로 범위(score>=90)도 된다
+// 왜:   else 없으면 참인 갈래 다 실행→덮어씀 · switch는 === 값 하나만(범위 X) · 바깥 거짓이면 안쪽은 계산조차 안 함
+// 대비: else if 사다리(하나만) vs 독립 if(덮어씀) · 값 하나=switch vs 범위=if
 ;(function () {
   window.Lessons = window.Lessons || {}
   const wireNav = (root) => root.querySelectorAll('[data-goto]').forEach((el) => {

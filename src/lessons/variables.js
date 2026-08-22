@@ -1,6 +1,10 @@
 // 1강 · 변수 — 값에 이름 붙이기
 // 완전 처음이라 가정. 'Figma 컬러 스타일 이름'·'연락처 이름 저장' 같은 일상 비유로 연다.
 // window.Lessons[1] 에 render 함수를 등록한다. (app.js가 불러 화면에 그린다)
+//
+// 오해: 변수 = 값을 담는 상자/밥통 (그래서 재할당을 "값이 변신"으로, const를 "값 잠금"으로 오해)
+// 왜:   변수는 값을 담는 그릇이 아니라 값을 가리키는 이름표(포인터) — 재할당=화살표 이동, 값 자체는 불변
+// 대비: const = 이름표 고정(재할당 X)이지 값 고정이 아님 → const obj여도 obj.x=… 는 됨(M4-2)
 
 ;(function () {
   window.Lessons = window.Lessons || {}
@@ -106,8 +110,9 @@
         <div class="file-label">🔬 const에 다시 담으면?</div>
         <div data-m="v4"></div>
       </div>
-      <p class="section-desc" style="margin-top:-2px">규칙: <b>바뀌지 않을 값이면 <code>const</code>, 바뀔 값이면 <code>let</code></b>.
-      실무에선 대부분 const로 시작하고, 꼭 바꿔야 할 때만 let으로 바꾼다. (옛날 방식 <code>var</code>도 있지만 함정이 있어 <b>지금은 안 쓴다</b> — <b>let·const만</b> 기억.)</p>
+      <p class="section-desc" style="margin-top:-2px">규칙: <b>이름표를 나중에 <u>다시 가리킬</u> 값이면 <code>let</code>, 한 번 정하고 안 옮길 값이면 <code>const</code></b>.
+      실무에선 대부분 const로 시작하고, 꼭 다시 가리켜야 할 때만 let. (옛날 방식 <code>var</code>도 있지만 함정이 있어 <b>지금은 안 쓴다</b> — <b>let·const만</b> 기억.)
+      <br><span style="opacity:.72;font-size:12.5px">💡 정확히는 <b>값 자체가 "바뀌는"</b> 게 아니라 <b>이름표가 다른 값을 가리키도록 옮기는 것</b>(재할당) — 원시값은 안 변한다. 이 그림은 🧠 M4에서 정면으로 본다.</span></p>
 
       <h3 class="section-title">⑤ const에 객체를 담으면? — 가장 헷갈리는 지점</h3>
       <div data-m="qz5"></div>

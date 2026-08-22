@@ -1,5 +1,9 @@
 // 🔀 제어 흐름 · 조합과 중첩 (loop 쪽: 반복 × 조건 · 중첩 반복)
 // cf-3(for 안의 if · 목록 거르기) · cf-4(for 안의 for · 격자·구구단). 인라인 드릴(계약테스트 무손상).
+//
+// 오해: 바깥 for가 2로 가면 안쪽 j는 이어서 시작한다 · for 안의 if는 한 번만 검사한다
+// 왜:   바깥 1바퀴마다 안쪽 for 전체가 매번 새로 실행(j 리셋) · for 안 if는 매 요소 검사(i×j회)
+// 대비: for 밖 if(한 번) vs for 안 if(매 요소) · 위치가 곧 검사 횟수
 ;(function () {
   window.Lessons = window.Lessons || {}
   const wireNav = (root) => root.querySelectorAll('[data-goto]').forEach((el) => {
