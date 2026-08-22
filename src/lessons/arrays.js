@@ -163,7 +163,7 @@
     }))
 
     root.querySelector('[data-m="qz"]').append(Quiz({
-      q: '<code>let a = [1, 2]; let b = a; b.push(9)</code> — 이제 <b>a</b>는?',
+      q: '아래를 실행하면 <b>a</b>는?<pre class="err-code" style="color:inherit;background:transparent">let a = [1, 2]\nlet b = a\nb.push(9)</pre>',
       options: ['[1, 2] — b만 바뀜(복사본)', '[1, 2, 9] — a도 바뀜(같은 배열)'],
       answer: 1,
       explain: '<code>let b = a</code>는 배열을 <b>복사하는 게 아니라 같은 배열을 가리킨다</b>(주소만 복사=참조). b·a가 <b>같은 힙 배열</b>이라 <code>b.push(9)</code>가 a에도 보인다 → <code>[1, 2, 9]</code>. 원본을 지키려면 <code>[...a]</code>로 복사. (🧠 M4 별칭)',

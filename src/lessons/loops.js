@@ -136,7 +136,7 @@
 
     // 🔁 while — for와 같은 심장(매 바퀴 expr→참/거짓), 다른 건 카운터가 내 손이라는 것뿐.
     root.querySelector('[data-m="qz-while"]').append(Quiz({
-      q: '🔮 예측 — <code>let n = 3; while (n &gt; 0) { n-- }</code> 몸통은 <b>몇 번</b> 실행되나?',
+      q: '🔮 예측 — 아래 몸통은 <b>몇 번</b> 실행되나?<pre class="err-code" style="color:inherit;background:transparent">let n = 3\nwhile (n &gt; 0) { n-- }</pre>',
       options: ['2번', '3번 (n = 3, 2, 1)', '4번 (n = 0까지)'],
       answer: 1,
       explain: 'while도 위 for처럼 <b>매 바퀴 <code>n &gt; 0</code>을 다시 접는다</b> — 3&gt;0 참, 2&gt;0 참, 1&gt;0 참, 그리고 <code>0 &gt; 0</code>은 <b>거짓</b>이라 멈춘다. 참이었던 <b>3번</b>만 실행.',
@@ -197,7 +197,7 @@
     ].join('\n') }))
 
     root.querySelector('[data-m="qz-fe"]').append(Quiz({
-      q: '<code>let r = [1, 2, 3].forEach(function(x){ return x * 2 })</code> — <b>r</b>은?',
+      q: '아래에서 <b>r</b>은?<pre class="err-code" style="color:inherit;background:transparent">let r = [1, 2, 3].forEach(function(x) {\n  return x * 2\n})</pre>',
       options: ['[2, 4, 6]', 'undefined (forEach는 값을 안 돌려줌)', '[1, 2, 3]'],
       answer: 1,
       explain: '<code>forEach</code>는 각 요소로 함수를 <b>실행만</b> 하고 <b>아무것도 돌려주지 않는다</b>(undefined). 변환한 새 배열이 필요하면 <b>map</b>을 써야 한다.',

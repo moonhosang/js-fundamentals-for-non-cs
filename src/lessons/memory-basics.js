@@ -922,7 +922,7 @@
     root.querySelector('[data-m="imm-num"]').append(MemoryModel(SCENARIO_IMM_NUM))
     root.querySelector('[data-m="imm-str"]').append(MemoryModel(SCENARIO_IMM_STR))
     root.querySelector('[data-m="imm-bool"]').append(MemoryModel(SCENARIO_IMM_BOOL))
-    root.querySelector('[data-m="qzr1"]').append(Quiz({ q: '<code>let x = 10; let y = x; y = 20</code> — 이제 x는?', options: ['10 (각자 복사)', '20 (같이 바뀜)'], answer: 0, explain: '원시값은 <b>값을 복사</b> → y는 자기 셀. y=20은 y만 바꾼다. x는 그대로 <b>10</b>.' }))
+    root.querySelector('[data-m="qzr1"]').append(Quiz({ q: '아래를 실행하면 <b>x</b>는?<pre class="err-code" style="color:inherit;background:transparent">let x = 10\nlet y = x\ny = 20</pre>', options: ['10 (각자 복사)', '20 (같이 바뀜)'], answer: 0, explain: '원시값은 <b>값을 복사</b> → y는 자기 셀. y=20은 y만 바꾼다. x는 그대로 <b>10</b>.' }))
     wireCTA(root)
   }
 
@@ -1013,7 +1013,7 @@
       ], 20,
     ))
     root.querySelector('[data-m="bundle"]').append(MemoryModel(SCENARIO_BUNDLE))
-    root.querySelector('[data-m="qzr2"]').append(Quiz({ q: '<code>let a = { n: 1 }; let b = a; b.n = 9</code> — a.n은?', options: ['1 (안 바뀜)', '9 (같은 객체 공유)'], answer: 1, explain: '<code>let b = a</code>는 <b>주소 복사</b> → a·b가 <b>같은 객체</b>(별칭). b.n=9가 a.n에도 보인다 → <b>9</b>.' }))
+    root.querySelector('[data-m="qzr2"]').append(Quiz({ q: '아래를 실행하면 <b>a.n</b>은?<pre class="err-code" style="color:inherit;background:transparent">let a = { n: 1 }\nlet b = a\nb.n = 9</pre>', options: ['1 (안 바뀜)', '9 (같은 객체 공유)'], answer: 1, explain: '<code>let b = a</code>는 <b>주소 복사</b> → a·b가 <b>같은 객체</b>(별칭). b.n=9가 a.n에도 보인다 → <b>9</b>.' }))
     wireCTA(root)
   }
 

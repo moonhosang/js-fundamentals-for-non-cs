@@ -274,7 +274,7 @@
       'print(sumAll(1, 2, 3, 4))   // 10  (넘긴 걸 배열 nums로 다 모음)',
     ].join('\n') }))
     root.querySelector('[data-m="qz-ar1"]').append(Quiz({
-      q: '<code>function add(a, b) { return a + b }</code> — <b>인수를 하나만</b> 넘겨 <code>add(10)</code>을 부르면?',
+      q: '이 함수에 <b>인수를 하나만</b> 넘겨 <code>add(10)</code>을 부르면?<pre class="err-code" style="color:inherit;background:transparent">function add(a, b) {\n  return a + b\n}</pre>',
       options: ['에러가 난다 (인수 부족)', 'NaN — b가 undefined라 10 + undefined', '10 — b는 그냥 무시된다', 'undefined'],
       answer: 1,
       explain: '에러가 <b>아니다!</b> b에 넣을 인수가 없어 <b>b는 undefined</b> → <code>10 + undefined = NaN</code>. "개수 안 맞으면 에러"가 최대 착각 — JS는 조용히 undefined로 채운다.',

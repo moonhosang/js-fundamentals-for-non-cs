@@ -189,7 +189,7 @@ me.name = name
       ],
     }))
     root.querySelector('[data-m="qz-assign"]').append(Quiz({
-      q: '<code>let me = {}; const age = 30; me.age = age;</code> 그다음 <code>me.age = 99</code>. 변수 <b>age</b>는?',
+      q: '아래를 실행한 뒤, 변수 <b>age</b>는?<pre class="err-code" style="color:inherit;background:transparent">let me = {}\nconst age = 30\nme.age = age\nme.age = 99</pre>',
       options: ['99 — 같이 바뀐다(연결돼 있으니)', '30 — 넣을 때 값이 복사돼 별개라 그대로'],
       answer: 1,
       explain: '<code>me.age = age</code>는 값 30을 <b>복사</b>해 봉투 칸에 넣은 것. 봉투 안 사본을 99로 바꿔도 <b>변수 age는 그대로 30</b> — 원시는 넣을 때 복사돼 독립. (객체를 넣었다면 주소 공유라 이야기가 다르다 — (3))',
