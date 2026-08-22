@@ -303,4 +303,32 @@
       {"label":"같은 객체 두 매개변수","ask":"같은 객체를 두 매개변수로 넘겨 하나를 바꾸면 — u.hp는?","code":"let u = { hp: 100 }\nfunction two(a, b) { a.hp = 0 }\ntwo(u, u)\nprint((u.hp) === ____)","expect":"true","answer":"0","hint":"a·b·u 셋 다 같은 봉투","explain":"<code>two(u, u)</code>는 a와 b <b>둘 다 u의 주소</b>를 받는다 → a·b·u가 <b>같은 봉투</b>. <code>a.hp=0</code>이 u.hp에도 → 0. (b로 봐도 0)"}
     ],
   }
+  H["destructuring"] = {
+    pattern: "🔴 어려움 · 구조분해 응용·전이 — 함수 매개변수·M4 복사vs공유·rest (=== true 면 정답)",
+    problems: [
+      {label:"함수 매개변수", ask:"인자를 { }로 풀어 받으면?", code:"function f({ hp }) { return hp }\nprint(f({ hp: 50 }) === ____)", expect:"true", answer:"50", hint:"매개변수 자리에서 바로 꺼냄", explain:"함수 매개변수 자리에서 <code>{ hp }</code>로 <b>인자 객체의 hp를 바로 꺼낸다</b>(실무 최다 패턴) → 50.", see:"destructuring"},
+      {label:"원시=복사(독립)", ask:"꺼낸 원시를 바꾸면 원본은?", code:"let o = { n: 1 }\nlet { n } = o\nn = 9\nprint((o.n) === ____)", expect:"true", answer:"1", hint:"원시는 꺼낼 때 값 복사 → 독립", explain:"<code>n</code>은 <b>원시</b>라 구조분해가 <b>값을 복사</b>(독립 셀) → <code>n=9</code>는 n만 바꿔 <b>o.n은 1 그대로</b>. (M4: 원시=값 복사)", see:"ref",
+        mem:{title:"o.n은 1 그대로 — 꺼낸 원시는 값 복사(독립)", stackLabel:"📇 이름표 장부", code:["let o = { n: 1 }","let { n } = o","n = 9"], steps:[
+          {line:1, stack:[{name:"main", slots:[{name:"o", ref:"h1"},{name:"n", value:"1"}]}], heap:{h1:{fields:[{key:"n", value:"1"}]}}, note:"<code>{ n } = o</code> → o.n의 <b>값 1을 복사</b> → 변수 n은 <b>자기 셀</b>(독립)."},
+          {line:2, stack:[{name:"main", slots:[{name:"o", ref:"h1"},{name:"n", value:"9", bad:true}]}], heap:{h1:{fields:[{key:"n", value:"1"}]}}, note:"<code>n = 9</code>는 <b>n 셀만</b> 바꾼다 → <b>o.n은 1 그대로</b>."}
+        ]}},
+      {label:"객체=주소(공유)", ask:"꺼낸 객체를 바꾸면 원본은?", code:"let o = { inner: { v: 1 } }\nlet { inner } = o\ninner.v = 9\nprint((o.inner.v) === ____)", expect:"true", answer:"9", hint:"객체는 꺼낼 때 주소 복사 → 공유", explain:"<code>inner</code>는 <b>객체</b>라 구조분해가 <b>주소를 복사</b>(공유) → inner와 o.inner가 같은 봉투. <code>inner.v=9</code>가 그걸 고쳐 <b>o.inner.v도 9</b>. (M4: 객체=주소 복사)", see:"ref",
+        mem:{title:"o.inner.v도 9 — 꺼낸 객체는 주소 복사(공유)", stackLabel:"📇 이름표 장부", code:["let o = { inner: { v: 1 } }","let { inner } = o","inner.v = 9"], steps:[
+          {line:1, stack:[{name:"main", slots:[{name:"o", ref:"h1"},{name:"inner", ref:"h2"}]}], heap:{h1:{fields:[{key:"inner", ref:"h2"}]}, h2:{fields:[{key:"v", value:"1"}]}}, note:"<code>{ inner } = o</code> → inner는 객체라 <b>주소 h2를 복사</b> → inner와 o.inner가 <b>같은 봉투</b>."},
+          {line:2, stack:[{name:"main", slots:[{name:"o", ref:"h1"},{name:"inner", ref:"h2"}]}], heap:{h1:{fields:[{key:"inner", ref:"h2"}]}, h2:{fields:[{key:"v", value:"9", bad:true}]}}, note:"<code>inner.v = 9</code> → h2를 고침 → <b>o.inner.v도 9</b>."}
+        ]}},
+      {label:"나머지 rest", ask:"[a, ...rest]에서 rest 길이는?", code:"let [ a, ...rest ] = [1, 2, 3]\nprint(rest.length === ____)", expect:"true", answer:"2", hint:"첫째 빼고 나머지를 배열로", explain:"<code>...rest</code>는 <b>남은 요소를 새 배열로</b> 모은다 → a=1, rest=[2,3] → 길이 2. (spread의 ... 를 꺼내는 쪽에서 쓴 것)", see:"spread"},
+      {label:"별칭+기본값", ask:"없는 키를 별칭+기본값으로?", code:"let { a: x = 5 } = {}\nprint(x === ____)", expect:"true", answer:"5", hint:"별칭 x, 없으니 기본값 5", explain:"<code>{ a: x = 5 }</code>는 a를 x로 받되 <b>a가 없으면 5</b>. 빈 객체라 x = 5. (별칭 : 과 기본값 = 을 함께)"}
+    ],
+  }
+  H["errors"] = {
+    pattern: "🔴 어려움 · 에러 응용·전이 — 콜스택 전파·재던지기·instanceof (=== true 면 정답)",
+    problems: [
+      {label:"함수 속 에러 전파", ask:"함수 안 에러를 호출부 try가 잡나?", code:"function boom() { null.x }\nlet caught = false\ntry { boom() } catch (e) { caught = true }\nprint(caught === ____)", expect:"true", answer:"true", hint:"에러는 콜스택 타고 위로", explain:"boom엔 catch가 없어 에러가 <b>콜스택을 타고 호출부로 전파</b> → main의 try/catch가 붙잡는다 → true.", see:"errors"},
+      {label:"에러 뒤 줄은 죽음", ask:"try 안 에러 후 그 아래 줄은 도나?", code:"let after = false\ntry { null.x\nafter = true } catch (e) { }\nprint(after === ____)", expect:"true", answer:"false", hint:"에러 지점서 즉시 catch로 점프", explain:"에러가 던져지면 <b>그 지점에서 즉시 catch로 점프</b> → try 안 나머지 줄(<code>after = true</code>)은 <b>건너뛴다</b> → false. (안 잡으면 그 아래가 안 도는 이유)"},
+      {label:"catch·finally 순서", ask:"잡히고 finally도 돌면 log는?", code:"let log = \"\"\ntry { throw 1 } catch (e) { log = log + \"c\" } finally { log = log + \"f\" }\nprint(log === \"____\")", expect:"true", answer:"cf", hint:"catch 먼저, finally 나중", explain:"throw → <b>catch 실행</b>(log=\"c\") → 그다음 <b>finally 실행</b>(log=\"cf\"). 순서는 catch → finally.", see:"errors"},
+      {label:"재던지기", ask:"catch에서 다시 throw하면 바깥이 잡나?", code:"let outer = \"\"\ntry { try { throw \"x\" } catch (e) { throw \"y\" } } catch (e) { outer = e }\nprint(outer === \"____\")", expect:"true", answer:"y", hint:"catch 안 throw는 바깥으로 다시 전파", explain:"안쪽 catch가 \"x\"를 잡았지만 <b>다시 <code>throw \"y\"</code></b> → 그 에러는 <b>바깥 catch로 전파</b> → outer=\"y\". (처리 못 하면 다시 던지는 실전 패턴)"},
+      {label:"에러도 값 — instanceof", ask:"new Error(...)는 Error의 인스턴스?", code:"let ok = false\ntry { throw new Error(\"z\") } catch (e) { ok = (e instanceof Error) }\nprint(ok === ____)", expect:"true", answer:"true", hint:"Error도 객체(힙)·클래스 인스턴스", explain:"<code>new Error(...)</code>는 <b>Error 클래스의 인스턴스</b>(힙 객체) → <code>e instanceof Error</code>는 true. 에러도 결국 값(객체)이다.", see:"class"}
+    ],
+  }
 })()

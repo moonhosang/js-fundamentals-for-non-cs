@@ -297,4 +297,24 @@
       {"label":"함수·원시 전달","ask":"숫자를 함수에 넘겨 함수 안에서 0으로 바꾸면 — 원본 money는?","code":"let money = 100\nfunction pay(n) { n = 0 }\npay(money)\nprint((money) === ____)","expect":"true","answer":"100","hint":"원시는 복사본이 전달 — 원본 안전","explain":"함수에 넘길 때 <b>값이 복사</b>돼 매개변수 n은 money의 독립 사본. <code>n = 0</code>은 사본만 바꾼다 → 원본 <b>money는 100 그대로</b>. <b>원시=값 복사(독립)</b> — 대입일 때와 똑같다.","mem":{"title":"왜 money는 100 그대로 — 원시는 복사본이 전달","stackLabel":"📇 이름표 장부","code":["let money = 100","pay(money) → n = money","n = 0  (함수 안)"],"steps":[{"line":0,"stack":[{"name":"main","slots":[{"name":"money","value":"100"}]}],"heap":{},"note":"money = 100."},{"line":1,"stack":[{"name":"main","slots":[{"name":"money","value":"100"}]},{"name":"pay","slots":[{"name":"n","value":"100"}]}],"heap":{},"note":"<code>pay(money)</code> → 매개변수 <b>n에 100을 복사</b>(원시=값 복사). money와 n은 <b>각자 셀</b>."},{"line":2,"stack":[{"name":"main","slots":[{"name":"money","value":"100"}]},{"name":"pay","slots":[{"name":"n","value":"0","bad":true}]}],"heap":{},"note":"<code>n = 0</code>은 <b>n 셀만</b> 바꾼다. <b>money는 100 그대로</b> — 원본 안전."}]}}
     ],
   }
+  E["destructuring"] = {
+    pattern: "🟢 쉬움 · 구조분해로 값 꺼내기 — 객체는 키, 배열은 위치 (=== true 면 정답)",
+    problems: [
+      {label:"객체 키", ask:"{a}로 꺼내면 a는?", code:"let { a } = { a: 1, b: 2 }\nprint(a === ____)", expect:"true", answer:"1", hint:"키 이름으로 꺼낸다", explain:"<code>{ a }</code>는 객체에서 <b>키 a의 값</b>을 꺼내 같은 이름 변수에 담는다 → 1.", see:"destructuring"},
+      {label:"배열 위치", ask:"[x]로 꺼내면 x는?", code:"let [ x ] = [10, 20]\nprint(x === ____)", expect:"true", answer:"10", hint:"0번(첫) 위치", explain:"배열 구조분해는 <b>위치</b>로 꺼낸다 — x는 0번 요소 → 10.", see:"destructuring"},
+      {label:"건너뛰기", ask:"[ , y ]로 꺼내면 y는?", code:"let [ , y ] = [10, 20]\nprint(y === ____)", expect:"true", answer:"20", hint:"쉼표로 0번을 건너뛴다", explain:"앞 쉼표가 0번을 <b>건너뛴다</b> → y는 1번 요소 → 20. 위치가 중요."},
+      {label:"여러 키 합", ask:"{a,b} 꺼내 a+b는?", code:"let { a, b } = { a: 1, b: 2 }\nprint((a + b) === ____)", expect:"true", answer:"3", hint:"둘 다 키로 꺼냄", explain:"a=1, b=2를 각각 키로 꺼내 → 1+2 = 3."},
+      {label:"없는 키", ask:"없는 키를 꺼내면? (에러 아님)", code:"let { z } = { a: 1 }\nprint((z === undefined) === ____)", expect:"true", answer:"true", hint:"없는 키 = undefined", explain:"객체에 <b>없는 키</b>를 구조분해하면 에러가 아니라 <code>undefined</code>(8강 없는 속성과 같은 규칙).", see:"objects"}
+    ],
+  }
+  E["errors"] = {
+    pattern: "🟢 쉬움 · try/catch로 에러 붙잡기 — 잡히나? 그 뒤 흐름은? (=== true 면 정답)",
+    problems: [
+      {label:"잡으면 이어감", ask:"에러를 catch로 잡으면 뒤 코드는 도나?", code:"let done = false\ntry { null.x } catch (e) { }\ndone = true\nprint(done === ____)", expect:"true", answer:"true", hint:"catch가 잡아 죽지 않는다", explain:"<code>null.x</code>가 에러를 던지지만 <code>catch</code>가 붙잡아 <b>프로그램이 안 죽는다</b> → 뒤의 <code>done = true</code>가 실행 → true.", see:"errors"},
+      {label:"에러 이름", ask:"없는 것의 속성을 읽은 에러 이름은?", code:"let n = \"\"\ntry { null.x } catch (e) { n = e.name }\nprint(n === \"____\")", expect:"true", answer:"TypeError", hint:"catch(e)의 e.name", explain:"null/undefined의 속성 접근은 <b>TypeError</b>. <code>e.name</code>으로 종류를 읽는다(8강 💥 그 에러).", see:"errors"},
+      {label:"정상은 안 잡힘", ask:"에러가 없으면 catch는 도나?", code:"let caught = false\ntry { let a = 1 } catch (e) { caught = true }\nprint(caught === ____)", expect:"true", answer:"false", hint:"에러 없으면 catch 안 탐", explain:"try 안에서 에러가 <b>안 나면</b> catch는 <b>건너뛴다</b> → caught는 false 그대로."},
+      {label:"throw 값", ask:"throw로 던진 값을 catch로 받으면?", code:"let got = 0\ntry { throw 42 } catch (e) { got = e }\nprint(got === ____)", expect:"true", answer:"42", hint:"throw x → catch(e)의 e가 x", explain:"<code>throw 42</code>는 42를 던지고, <code>catch (e)</code>의 e가 <b>그 값 42</b>를 받는다 → 42. (보통은 new Error를 던진다)"},
+      {label:"finally", ask:"에러가 나도 finally는 도나?", code:"let ran = false\ntry { null.x } catch (e) { } finally { ran = true }\nprint(ran === ____)", expect:"true", answer:"true", hint:"finally는 항상", explain:"<code>finally</code>는 <b>잡히든 말든 항상</b> 실행 → ran = true. 뒷정리(로딩 끄기 등) 담당.", see:"errors"}
+    ],
+  }
 })()
