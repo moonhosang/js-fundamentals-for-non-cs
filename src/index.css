@@ -1552,6 +1552,15 @@ button.tech-tag.link:hover { background: var(--brand); color: #fff; border-color
 .runner-error {
   font-family: var(--font-mono); font-size: 12.5px; color: #fca5a5; margin: 0; white-space: pre-wrap;
 }
+/* repair drill 판정 배너 — 🎯 예상 에러 / ✅ 통과 / ⚠️ 불일치 */
+.runner-verdict {
+  font-family: var(--font-mono); font-size: 12.5px; font-weight: 700;
+  margin: 0 0 8px; padding: 7px 10px; border-radius: 8px; border: 1px solid; white-space: pre-wrap;
+}
+.runner-verdict.expected { color: #fbbf24; border-color: rgba(251,191,36,.45); background: rgba(251,191,36,.10); }
+.runner-verdict.pass     { color: #4ade80; border-color: rgba(74,222,128,.45); background: rgba(74,222,128,.12); }
+.runner-verdict.mismatch { color: #fca5a5; border-color: rgba(252,165,165,.45); background: rgba(252,165,165,.10); }
+
 .runner-box {
   min-height: 64px; border: 1px dashed var(--border); border-radius: 10px;
   padding: 12px; background: var(--panel); display: flex; align-items: center; justify-content: center;

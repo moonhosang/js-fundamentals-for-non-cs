@@ -137,7 +137,7 @@
       ']',
       'print(users[1].name)   // "지훈"  (배열[번호].이름)',
     ].join('\n') }))
-    root.querySelector('[data-m="crash"]').append(Runner({ showBox: false, code: [
+    root.querySelector('[data-m="crash"]').append(Runner({ showBox: false, expectError: 'Cannot read properties', code: [
       'let me = { name: "나" }        // job 속성이 없다',
       '',
       'print(me.job)          // undefined  ← 없는 키 하나는 안전(에러 아님)',

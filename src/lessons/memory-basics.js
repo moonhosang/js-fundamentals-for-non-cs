@@ -292,6 +292,7 @@
     }))
     root.querySelector('[data-m="letconst"]').append(Runner({
       showBox: false,
+      expectError: 'Assignment to constant',
       code: [
         'const rate = 0.1     // 세율 — const(상수)로 잡았다',
         'rate = 0.2           // 이름표를 옮기려 하면?',

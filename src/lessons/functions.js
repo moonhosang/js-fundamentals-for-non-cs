@@ -591,7 +591,7 @@
       answer: 1,
       explain: '함수 안 <b>매개변수 n</b>이 바깥 <code>n=9</code>를 <b>가린다</b>(shadowing) — 안에선 매개변수 n(=1)만 보여 <code>1*2=2</code>. 이름이 같아도 <b>다른 프레임의 다른 셀</b>이라 안 부딪히고, 안쪽이 우선. 바깥 n은 그대로 9.',
     }))
-    root.querySelector('[data-m="param-crash"]').append(Runner({ showBox: false, code: [
+    root.querySelector('[data-m="param-crash"]').append(Runner({ showBox: false, expectError: 'is not defined', code: [
       'function greet(who) {',
       '  return who + " 님 환영"',
       '}',

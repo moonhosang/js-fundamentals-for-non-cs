@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>expectError repair-drill 검증</title>
+  <link rel="stylesheet" href="../src/index.css" />
+  <style>
+    body { max-width: 760px; margin: 24px auto; padding: 0 16px; }
+    h1 { font-size: 18px; } h2 { font-size: 14px; margin-top: 26px; color: #94a3b8; }
+    .note { font-size: 12.5px; color: #64748b; margin: 4px 0 10px; }
+  </style>
+</head>
+<body>
+  <h1>🧪 expectError (repair drill) 검증 — ▶ 눌러 배너 확인</h1>
+  <p class="note">기대: 처음 실행 시 🎯(expected). 안내대로 고쳐 다시 실행하면 ✅(pass). 마지막 칸은 일부러 다른 에러 → ⚠️(mismatch).</p>
+
+  <h2>① undefined.x → Cannot read properties (고치기: .title 앞에 ? 넣기)</h2>
+  <div id="d1"></div>
+
+  <h2>② 매개변수 지역 → is not defined (고치기: 반환값 받아 쓰기)</h2>
+  <div id="d2"></div>
+
+  <h2>③ const 재할당 → Assignment to constant (고치기: const→let)</h2>
+  <div id="d3"></div>
+
+  <h2>④ 중괄호 짝(SyntaxError) → expectError:true (고치기: } 한 줄 추가)</h2>
+  <div id="d4"></div>
+
+  <h2>⑤ [대조군] 이미 고쳐진 코드 → 처음부터 ✅ pass 여야 함</h2>
+  <div id="d5"></div>
+
+  <h2>⑥ [대조군] 예상과 다른 에러 → ⚠️ mismatch 여야 함</h2>
+  <div id="d6"></div>
+
+  <script src="../src/lib/runner.js"></script>
+  <script>
+    d1.append(Runner({ showBox: false, expectError: 'Cannot read properties', code: [
+      'let me = { name: "나" }',
+      'print(me.job)          // undefined (안전)',
+      'print(me.job.title)    // 💥 크래시 — .title 앞에 ? 를 넣어 고치기: me.job?.title',
+    ].join('\n') }))
+
+    d2.append(Runner({ showBox: false, expectError: 'is not defined', code: [
+      'function greet(who) { return who + " 님" }',
+      'greet("민지")',
+      'print(who)   // 💥 — 지우고, 아래 두 줄 주석 풀기',
+      '// let msg = greet("민지")',
+      '// print(msg)',
+    ].join('\n') }))
+
+    d3.append(Runner({ showBox: false, expectError: 'Assignment to constant', code: [
+      'const rate = 0.1   // → let 으로 바꾸면 통과',
+      'rate = 0.2',
+    ].join('\n') }))
+
+    d4.append(Runner({ showBox: false, expectError: true, code: [
+      'let a = true, b = true',
+      'if (a) {',
+      '  if (b) {',
+      '    print("둘 다 참!")',
+      '  // ← } 빠짐. print 아래에 } 한 줄 추가',
+      '}',
+    ].join('\n') }))
+
+    d5.append(Runner({ showBox: false, expectError: 'Cannot read properties', code: [
+      'let me = { name: "나" }',
+      'print(me.job?.title)   // 이미 ? 로 고쳐진 상태 → 에러 없음 → ✅',
+    ].join('\n') }))
+
+    d6.append(Runner({ showBox: false, expectError: 'Cannot read properties', code: [
+      'print(nope)   // ReferenceError — 기대한 "Cannot read properties"가 아니므로 ⚠️',
+    ].join('\n') }))
+  </script>
+</body>
+</html>

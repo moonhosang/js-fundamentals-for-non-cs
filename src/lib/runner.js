@@ -4,6 +4,10 @@
 //
 // 쓰는 법:  const node = Runner({ code, editable, showBox, autorun, rows })
 //           container.append(node)
+// expectError (repair drill / error-first): 이 코드는 '에러가 정답'이다.
+//   문자열(에러 메시지에 포함될 조각, 예 'Cannot read properties') 또는 true(아무 에러나).
+//   처음 ▶: 예상 에러 → 🎯(expected, 아직 통과 아님). 고쳐서 에러가 사라지면 → ✅(pass). 다른 에러 → ⚠️(mismatch).
+//   expectError면 정답-주석 마스킹을 끈다(주석이 '정답 값'이 아니라 '고치는 법 지시'라서).
 
 ;(function () {
   // 값을 사람이 읽기 좋은 글자로. 문자열은 따옴표로 감싸 숫자 5와 글자 "5"를 구분한다.
@@ -30,13 +34,14 @@
   window.Runner = function Runner(opts) {
     // autorun 기본 false — 커리큘럼 철학이 '읽고 → 눌러 보고'라, 학습자가 직접 ▶실행을 눌러
     // 결과를 확인하게 한다(자동 실행은 결과를 미리 보여줘 '예측→실행' 경험을 없앤다).
-    const { code = '', editable = true, showBox = true, autorun = false, rows } = opts || {}
+    const { code = '', editable = true, showBox = true, autorun = false, rows, expectError = null } = opts || {}
 
     const root = document.createElement('div')
     root.className = 'runner'
 
     // 정답(결과) 주석 가리기 — print 줄 끝 결과는 스포일러라 기본 '// ?'로 가림. 💡로 펼침.
-    const masked = maskResults(code)
+    // expectError(repair drill)일 땐 마스킹 안 함 — 주석이 '정답'이 아니라 '고치는 법 지시'라 가리면 안 된다.
+    const masked = expectError ? code : maskResults(code)
     const hasSpoiler = masked !== code
     let revealed = false
     let hintBtn = null
@@ -117,21 +122,27 @@
       if (box) { box.innerHTML = ''; box.removeAttribute('style'); box.className = 'runner-box' }
     }
 
-    function renderConsole(logs, error, ran) {
+    function renderConsole(logs, error, ran, verdict) {
       consoleBody.innerHTML = ''
+      if (verdict) {
+        const v = document.createElement('div')
+        v.className = 'runner-verdict ' + verdict.kind
+        v.textContent = verdict.text
+        consoleBody.append(v)
+      }
+      // print로 찍힌 값은 에러가 나도 '멈추기 직전까지' 보여준다 — 크래시 전 로그가 단서다.
+      logs.forEach((l) => {
+        const line = document.createElement('div')
+        line.className = 'runner-line'
+        line.textContent = l
+        consoleBody.append(line)
+      })
       if (error) {
         const pre = document.createElement('pre')
         pre.className = 'runner-error'
         pre.textContent = '⚠️ ' + error
         consoleBody.append(pre)
-      } else if (logs.length) {
-        logs.forEach((l) => {
-          const line = document.createElement('div')
-          line.className = 'runner-line'
-          line.textContent = l
-          consoleBody.append(line)
-        })
-      } else {
+      } else if (!logs.length && !verdict) {
         const empty = document.createElement('div')
         empty.className = 'runner-empty'
         empty.textContent = ran ? '(print로 찍은 값이 없어요)' : '▶ 실행을 눌러 보세요'
@@ -151,7 +162,18 @@
       } catch (e) {
         error = (e && e.message) || String(e)
       }
-      renderConsole(logs, error, true)
+      // repair drill 판정 — '에러가 정답'인 코드. 처음엔 예상 에러(🎯), 고쳐서 에러가 사라지면 통과(✅).
+      let verdict = null
+      if (expectError) {
+        if (!error) {
+          verdict = { kind: 'pass', text: '✅ 통과! 에러를 고쳤습니다.' }
+        } else if (expectError === true || error.indexOf(expectError) !== -1) {
+          verdict = { kind: 'expected', text: '🎯 예상대로 바로 그 에러가 났어요 — 이제 코드를 고쳐 통과(✅)시켜 보세요.' }
+        } else {
+          verdict = { kind: 'mismatch', text: '⚠️ 예상과 다른 에러예요. 기대한 것: "' + expectError + '"' }
+        }
+      }
+      renderConsole(logs, error, true, verdict)
     }
 
     runBtn.onclick = run

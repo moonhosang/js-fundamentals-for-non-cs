@@ -275,7 +275,7 @@
       <div class="card" style="border-color:var(--red)">
         <div class="file-label">🐛 직접 체험 — } 하나가 빠졌다. ▶ 실행해 에러를 보고, 고쳐서 다시 ▶</div>
         <div data-m="brace"></div>
-        <p class="section-desc" style="margin:8px 0 0">에러 메시지는 <code>Unexpected end of input</code> — <b>맨 끝</b>을 가리킨다. 정작 빠진 <code>}</code>는 <code>print</code> 다음 줄인데. 이래서 "<b>엉뚱한 줄</b>"이다. <code>print(...)</code> 아래에 <code>}</code> 한 줄을 넣고 다시 ▶ 하면 통과한다.</p>
+        <p class="section-desc" style="margin:8px 0 0">에러 메시지(예: <code>Unexpected token ')'</code>)는 정작 <code>}</code>가 빠진 <code>print</code> 다음 줄이 아니라 <b>엉뚱한 끝자락</b>을 가리킨다 — 이래서 "<b>에러 줄 ≠ 진짜 원인 줄</b>". <code>print(...)</code> 아래에 <code>}</code> 한 줄을 넣고 다시 ▶ 하면 <b>✅ 통과</b>한다.</p>
       </div>
 
       <h3 class="section-title">④ 🔁 반복 드릴 — 관문을 값만 바꿔 통과시켜 보기</h3>
@@ -377,7 +377,7 @@
         'box.style.cssText = "padding:14px 22px;font-size:22px;font-weight:800;color:white;border-radius:12px;background:#4D96FF"',
       ].join('\n'),
     }))
-    root.querySelector('[data-m="brace"]').append(Runner({ showBox: false, code: [
+    root.querySelector('[data-m="brace"]').append(Runner({ showBox: false, expectError: true, code: [
       'let a = true, b = true',
       '',
       'if (a) {',
