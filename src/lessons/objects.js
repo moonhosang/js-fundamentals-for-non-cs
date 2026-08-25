@@ -74,11 +74,12 @@
         <div data-m="crash"></div>
         <p class="section-desc" style="margin:8px 0 0">핵심 구분 — <code>me.job</code>(없는 키) 하나는 <b>undefined</b>(에러 아님). 하지만 <code>me.job.title</code>은 곧 <b>undefined.title</b>이라 <b>💥 TypeError: Cannot read properties of undefined</b> — <b>실전 입문자 에러 1위</b>다. 고치려면 <code>me.job?.title</code>(있으면 파고, 없으면 undefined로 안전 착지)로 바꿔 다시 ▶.</p>
       </div>
+      <span class="learn-tag">📎 이 객체(엔티티)가 <b>메모리에 어떻게 사나</b> · 왜 <b>참조로 공유</b>되나는 → <button class="inline-goto" data-goto="objanat">🧠 객체 해부(M3)</button>에서 봉투 그림으로 해부했다</span>
       <div data-m="objmem"></div>
 
       <h3 class="section-title">⑤ 메서드 — 값이 '함수'인 속성</h3>
       <span class="learn-tag">📎 <b>함수도 값</b>(5-7)이라 속성에 담을 수 있다 → 그게 '메서드'. <code>obj.행동()</code> 으로 부른다 (5강 함수가 바탕)</span>
-      <div class="card"><div class="file-label">🔬 강아지의 bark() 메서드</div><div data-m="method"></div></div>
+      <div class="card"><div class="file-label">🔬 캐릭터의 attack() 메서드 — 🧩에서 본 그 hero</div><div data-m="method"></div></div>
 
       <h3 class="section-title">⑥ 화면 — 객체로 프로필 카드</h3>
       <span class="learn-tag">📎 실전 — 사람 객체 하나로 이름·나이 카드를 그린다</span>
@@ -181,13 +182,14 @@
     }))
 
     root.querySelector('[data-m="method"]').append(Runner({ showBox: false, code: [
-      'let dog = {',
-      '  name: "콩이",',
-      '  bark: function () { return "멍멍!" },   // 값이 함수 = 메서드',
+      'let hero = {',
+      '  name: "용사",',
+      '  hp: 100,',
+      '  attack: function () { return "공격! 💥" },   // 값이 함수 = 메서드(행동)',
       '}',
-      'print(dog.name)      // "콩이"  (보통 속성)',
-      'print(dog.bark())    // "멍멍!"',
-      '// 메서드 — ()로 부른다',
+      'print(hero.name)       // "용사"  (보통 속성 = 데이터)',
+      'print(hero.hp)         // 100',
+      'print(hero.attack())   // "공격! 💥"  (메서드는 ()로 부른다 = 행동)',
     ].join('\n') }))
 
     root.querySelector('[data-m="card"]').append(Runner({ code: [

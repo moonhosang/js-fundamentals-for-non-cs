@@ -1271,6 +1271,7 @@ arr.concat([9])         // 이어붙인 새 배열
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p><code>me.bestFriend</code>가 효니 객체를 가리키면, 효니를 가리키는 화살표가 <b>둘</b>(hyoni · me.bestFriend)이 된다. 같은 객체라 <b>어느 쪽으로 바꿔도 양쪽에 보인다</b> — 두 방향을 각각 본다.</p>
+        <p class="section-desc" style="margin:8px 0 0">🧩 효니도 <b>객체</b> — <button class="inline-goto" data-goto="8">8강</button>의 그 <b>엔티티</b>(데이터를 가진 '것')다. 여기서 보는 건 <b>"한 엔티티에 이름표가 둘"</b>(별칭) — 그래서 효니 머리를 자르면 <code>hyoni</code>·<code>me.bestFriend</code> 양쪽에 보인다(<b>한 캐릭터, 두 이름표</b>).</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">객체 ↗</a> · <a href="https://ko.wikipedia.org/wiki/그래프_(자료_구조)" target="_blank" rel="noopener noreferrer">그래프(자료구조) ↗</a></p>
       </div>
 
