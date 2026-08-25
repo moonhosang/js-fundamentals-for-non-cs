@@ -14,6 +14,12 @@
         <p>"원시타입은 <b>스택</b>에 산다"고 배웠다. 그런데 <code>p = { age: 30 }</code>의 <b>age도 분명 number(원시)</b>인데 <b>힙 객체 안</b>에 들어가 있다. 스택이야 힙이야? — 이 모순을 정면으로 부순다.</p>
       </header>
 
+      <div class="concept" style="border-color:var(--brand)">
+        <p class="concept-lead">🧩 먼저 — 객체가 뭐였더라?</p>
+        <p class="section-desc" style="margin-top:0"><b>객체 = 현실의 '것' 하나에 딸린 걸 묶은 것.</b> 게임 <b>캐릭터</b>를 떠올리면 쉽다 — 이름·hp·레벨 같은 <b>데이터</b>와, 공격·레벨업 같은 <b>행동</b>이 <b>한 캐릭터에 묶인 한 덩어리</b>. 코드로 <code>{ name: "용사", hp: 100 }</code>. (만들고 쓰는 법은 <button class="inline-goto" data-goto="8">8강 · 객체</button>에서 제대로 — 여긴 그 객체가 <b>메모리에 어떻게 사나</b>를 해부한다.)</p>
+        <p class="section-desc" style="margin:8px 0 0">🗄️ 메모리에선 이 객체(캐릭터)를 <b>자기 데이터를 담은 상자</b>로 그린다 — 아래부터 이 상자를 <b>봉투</b>라 부르며 하나씩 열어 본다. 그리고 변수는 그 봉투를 <b>직접 쥔 게 아니라 가리킨다</b>(화살표) — 이 간접이 객체의 핵심이다.</p>
+      </div>
+
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
         <p><b>타입이 위치를 정하는 게 아니다 — "누가 들고 있느냐(소속)"가 정한다. 값은 담긴 그릇을 따라간다.</b>
