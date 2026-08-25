@@ -11,16 +11,36 @@
     root.innerHTML = `
       <header class="lesson-header">
         <span class="badge">8강</span>
-        <h2>객체 — 이름표를 붙인 값 묶음</h2>
-        <p>배열이 <b>번호</b>로 꺼낸다면, 객체는 <b>이름(key)</b>으로 꺼낸다. 관련된 값들을 하나로 묶어 <code>{ 이름: 값 }</code>. 실전 데이터의 기본 모양이다.</p>
+        <h2>객체 — 하나의 '것'을, 데이터와 행동으로 묶기</h2>
+        <p>게임 캐릭터·자동차·고양이… 현실의 '것' 하나엔 <b>딸린 정보(데이터)</b>와 <b>할 수 있는 일(행동)</b>이 있다. 그 둘을 <b>한 덩어리</b>로 묶은 게 객체다. 코드로는 <code>{ 이름: 값 }</code> — 실전 데이터의 기본 모양.</p>
       </header>
 
       <div class="lesson-goal">
         <span class="lesson-goal-tag">🎯 학습 포인트</span>
-        <p>객체는 <code>{ key: value }</code> — <b>이름:값</b> 쌍의 묶음. <code>obj.key</code>(점) 또는 <code>obj["key"]</code>(대괄호)로 꺼내고 넣는다.
+        <p>객체 = 한 '것'에 속한 <b>데이터(속성)</b> + <b>행동(메서드)</b>을 <code>{ 이름: 값 }</code>으로 묶은 것. <code>obj.key</code>(점) 또는 <code>obj["key"]</code>(대괄호)로 꺼내고 넣는다.
         <b>없는 키</b>는 <code>undefined</code>. 값이 함수면 <b>메서드</b>(5강). 객체는 <b>힙에 살고 참조로 공유</b>(M4)된다.</p>
         <p class="section-desc" style="margin:8px 0 0;opacity:.82">📚 관련 용어(위키): <a href="https://ko.wikipedia.org/wiki/객체_(컴퓨터_과학)" target="_blank" rel="noopener noreferrer">객체 ↗</a> · <a href="https://ko.wikipedia.org/wiki/연관_배열" target="_blank" rel="noopener noreferrer">연관 배열(key:value) ↗</a></p>
       </div>
+
+      <h3 class="section-title">🧩 객체란? — 하나의 '것'에 속한 걸 한 덩어리로</h3>
+      <span class="learn-tag">📎 흩어진 변수 여러 개가 아니라, 한 '것'에 딸린 <b>정보(데이터)</b>와 <b>할 수 있는 일(행동)</b>을 한 뭉치로</span>
+      <p class="section-desc">현실의 '것' 하나를 떠올려 보라 — <b>게임 캐릭터</b>. 캐릭터엔 <b>딸린 정보</b>가 있다(이름·HP·레벨). 그리고 <b>할 수 있는 일</b>이 있다(공격·레벨업). 이 <b>정보(데이터)</b>와 <b>행동</b>이 <b>한 캐릭터에 묶인 한 덩어리</b> — 그게 객체다. 자동차든 고양이든 똑같다:</p>
+      <div class="falsy-grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><div class="file-label">🎮 게임 캐릭터</div>
+          <p class="section-desc" style="margin:0"><b>데이터</b> — 이름 "용사" · hp 100 · 레벨 5<br><b>행동</b> — 공격() · 레벨업()</p></div>
+        <div class="card" style="margin:0"><div class="file-label">🚗 자동차</div>
+          <p class="section-desc" style="margin:0"><b>데이터</b> — 색 "빨강" · 연료 80 · 속도 0<br><b>행동</b> — 가속() · 멈춤()</p></div>
+        <div class="card" style="margin:0"><div class="file-label">🐱 고양이</div>
+          <p class="section-desc" style="margin:0"><b>데이터</b> — 이름 "나비" · 나이 3<br><b>행동</b> — 야옹() · 먹기()</p></div>
+      </div>
+      <p class="section-desc" style="margin-top:12px">코드로는 <code>{ }</code> 안에 <b>이름: 값</b>으로 담는다 — 값이 <b>데이터</b>면 속성, 값이 <b>함수</b>면 행동(메서드):</p>
+      <pre class="err-code" style="color:inherit;background:transparent">let hero = {
+  name: "용사",               // ← 데이터(속성)
+  hp: 100,
+  attack() { print("공격!") }  // ← 행동(메서드)
+}</pre>
+      <p class="section-desc">📌 <b>왜 묶나?</b> 이름·hp·레벨을 <b>따로따로 변수</b>로 두면(<code>heroName</code>, <code>heroHp</code>, <code>heroLevel</code>…) 캐릭터가 둘·셋만 돼도 관리가 지옥이다. <b>한 캐릭터에 속한 걸 한 덩어리로</b> 묶으면 — <code>hero</code> 하나로 다 들고 다닌다. 이게 객체를 쓰는 이유다.</p>
+      <p class="section-desc" style="opacity:.85">👉 첫 객체는 <b>데이터만</b>으로도 충분히 객체다(<code>{ name, hp }</code>). <b>행동(메서드)</b>은 뒤 ⑤에서 붙인다 — 함수도 값이라 속성에 담을 수 있으니까(<button class="inline-goto" data-goto="5-7">5-7 · 함수도 값</button>).</p>
 
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚠️ 가장 흔한 오해 — "객체도 순서(번호)로 꺼낸다"</div>
