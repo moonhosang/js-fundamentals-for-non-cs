@@ -45,12 +45,32 @@
       <span class="learn-tag">📎 ▶ — copy.hp는 원본과 갈라서고(독립), copy.best는 원본과 같은 봉투(공유)로 남는다</span>
       <div data-m="mem"></div>
 
-      <h3 class="section-title">③ 배열도 똑같다 — <code>[ ...arr ]</code></h3>
+      <h3 class="section-title">③ 🎚️ 그래서 '얕다'가 뭔데? — 깊이(층)로 보기</h3>
+      <span class="learn-tag">📎 객체가 객체를 품으면 '층(깊이)'이 생긴다 · 얕은 복사 = 맨 위 1층만 새로, 그 아래 층은 원본과 공유</span>
+      <p class="section-desc">②는 2층짜리였다(<code>best</code> 봉투 안에 효니). 층이 더 깊어지면? 먼저 <b>'깊이'</b>부터 — 객체 안에 객체, 그 안에 또 객체. 이 <b>겹의 수가 깊이(층)</b>다:</p>
+      <div style="font-family:var(--font-mono);font-size:13px;line-height:1.5;margin:12px 0">
+        <div style="border:2px solid #4D96FF;border-radius:10px;padding:10px 12px;background:rgba(77,150,255,.07)">
+          <b style="color:#4D96FF">1층 · a</b> = { x: 1,&nbsp; child: ↓ }
+          <div style="border:2px solid #a78bfa;border-radius:10px;padding:10px 12px;margin-top:8px;background:rgba(167,139,250,.07)">
+            <b style="color:#a78bfa">2층 · child</b> = { y: 2,&nbsp; grand: ↓ }
+            <div style="border:2px solid #f472b6;border-radius:10px;padding:10px 12px;margin-top:8px;background:rgba(244,114,182,.07)">
+              <b style="color:#f472b6">3층 · grand</b> = { z: 3 }
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="section-desc"><b>얕은 복사(shallow)</b> = <code>{ ...a }</code>는 <b>맨 바깥 1층만</b> 새 봉투로 뜬다. 1층의 <b>원시 칸</b>(x)은 값이 복제돼 그 자리서 독립, <b>객체 칸</b>(child)은 <b>주소만</b> 복제 → <b style="color:#a78bfa">2층</b>·<b style="color:#f472b6">3층</b>은 <b>원본과 똑같은 봉투(공유)</b>. "얕다"= 표면 <b>한 겹</b>만 긁는다는 뜻이다. <b>깊은 복사(deep)</b> = <b>바닥층까지 전부</b> 새로 떠 아무것도 안 공유.</p>
+      <div class="card"><div class="file-label">🎬 3층 그래프에서 — <code>{ ...a }</code>가 어디까지 새로 뜨고 어디부터 공유인가 (▶ 한 단계씩)</div><div data-m="sim-depth"></div></div>
+      <div data-m="qz-depth"></div>
+      <p class="section-desc">🔑 규칙은 <b>모든 층에서 똑같다</b> — 그 칸이 <b>원시면 값 복제</b>(그 층에서 독립), <b>객체면 주소 복제</b>(다음 층 공유). 얕은 복사가 특별한 건 <b>딱 1층에서만</b> 이 복제를 하고 멈춘다는 것 → 그래서 <b>첫 객체 칸을 만나는 순간, 그 아래로는 전부 공유</b>. 깊이 끊으려면 <b>층마다 스프레드</b>하거나 → <button class="inline-goto" data-goto="json">JSON 왕복(깊은 복사)</button>:</p>
+      <div class="card"><div class="file-label">🔬 얕은 복사(깊은 것 샘) vs 깊은 복사(층마다 스프레드 = 완전 독립)</div><div data-m="deepcopy"></div></div>
+
+      <h3 class="section-title">④ 배열도 똑같다 — <code>[ ...arr ]</code></h3>
       <span class="learn-tag">📎 [ ...arr ]도 새 배열(한 겹) — 원소가 원시면 독립, 객체면 그 원소는 여전히 공유</span>
       <div data-m="qz-arrobj"></div>
       <div class="card"><div class="file-label">🔬 배열 사본 — 원시 원소는 독립, 객체 원소는 공유(대비)</div><div data-m="arr"></div></div>
 
-      <h3 class="section-title">④ 불변 업데이트 — "고치지 말고 새로 떠라"</h3>
+      <h3 class="section-title">⑤ 불변 업데이트 — "고치지 말고 새로 떠라"</h3>
       <span class="learn-tag">📎 { ...obj, key: 새값 } — 원본은 그대로 두고, 한 칸만 바꾼 새 봉투를 만든다(React의 그 관례)</span>
       <div data-m="qz-imm"></div>
       <div data-m="qz-nested"></div>
@@ -63,7 +83,7 @@
         원시 칸은 값 복사(독립) · 객체 칸은 주소 복사(공유·얕은 복사). 깊이 독립시키려면 <b>중첩도 각각 스프레드</b>(<code>{ ...p, best: { ...p.best } }</code>). 불변 업데이트 = <code>{ ...obj, key: 새값 }</code>.</p>
       </div>
 
-      <h3 class="section-title">⑤ 🎯 예측 드릴 — 손에 붙이자</h3>
+      <h3 class="section-title">⑥ 🎯 예측 드릴 — 손에 붙이자</h3>
       <p class="section-desc">매 문제, <b>그 칸이 원시(값·독립)냐 객체(주소·공유)냐</b>부터 판정하라. 사이드바 이 강의 아래 <b>쉬움·보통·어려움</b> 3단계:</p>
       <div class="practice-cta"><span>예측 드릴 —</span><button class="chip on" data-goto="spread:easy">🟢 쉬움</button><button class="chip on" data-goto="spread:normal">🟡 보통</button><button class="chip on" data-goto="spread:hard">🔴 어려움</button></div>
 
@@ -139,6 +159,63 @@
       'let ok = { ...state2, todos: [...state2.todos, "공부"] }',
       'print(state2.todos.length)   // 1  ← 원본 안전',
       'print(ok.todos.length)       // 2',
+    ].join('\n') }))
+    root.querySelector('[data-m="sim-depth"]').append(MemoryModel({
+      title: '얕은 복사 { ...a } — 1층만 새 봉투, 2·3층은 공유',
+      stackLabel: '📇 이름표 장부',
+      code: [
+        'let a = { x: 1, child: { y: 2, grand: { z: 3 } } }',
+        'let b = { ...a }          // 얕은 복사 — 1층만',
+        'b.x = 9                   // 1층 원시',
+        'b.child.grand.z = 9       // 3층 깊숙이',
+      ],
+      steps: [
+        { line: 0,
+          stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }] }],
+          heap: { h1: { fields: [{ key: 'x', value: '1' }, { key: 'child', ref: 'h2' }] }, h2: { fields: [{ key: 'y', value: '2' }, { key: 'grand', ref: 'h3' }] }, h3: { fields: [{ key: 'z', value: '3' }] } },
+          note: '<b>3층 그래프</b> — a(h1)의 child 칸은 <b>주소표(→h2)</b>, h2의 grand 칸도 <b>주소표(→h3)</b>. 각 층 원시(x·y·z)만 그 봉투 안에 든 값이다.',
+          engine: '리터럴 3개 → 힙 할당 3번(h1·h2·h3). child·grand 필드엔 포인터.' },
+        { line: 1,
+          stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h4' }] }],
+          heap: { h1: { fields: [{ key: 'x', value: '1' }, { key: 'child', ref: 'h2' }] }, h2: { fields: [{ key: 'y', value: '2' }, { key: 'grand', ref: 'h3' }] }, h3: { fields: [{ key: 'z', value: '3' }] }, h4: { fields: [{ key: 'x', value: '1' }, { key: 'child', ref: 'h2' }] } },
+          note: '<b>{ ...a } → 새 봉투 h4는 딱 1층만.</b> x는 값 1 <b>복제</b>(독립 칸) · child 칸은 <b>주소만 복제 → h4.child도 h2</b>(a.child와 <b>같은 봉투</b>!). <b>2·3층(h2·h3)은 새로 안 만든다 — 공유.</b> 얕은 복사는 여기서 멈춘다.',
+          engine: 'h4는 새 객체지만 child 필드엔 h2 포인터를 그대로 복사. h2·h3는 재사용(할당 없음).' },
+        { line: 2,
+          stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h4' }] }],
+          heap: { h1: { fields: [{ key: 'x', value: '1' }, { key: 'child', ref: 'h2' }] }, h2: { fields: [{ key: 'y', value: '2' }, { key: 'grand', ref: 'h3' }] }, h3: { fields: [{ key: 'z', value: '3' }] }, h4: { fields: [{ key: 'x', value: '9', bad: true }, { key: 'child', ref: 'h2' }] } },
+          note: '<code>b.x = 9</code> → <b>h4의 x만</b> 9. <b>a.x는 1 그대로</b> — 1층 원시라 값이 복제돼 독립.',
+          engine: 'h4의 x 슬롯만 갱신. h1 손 안 댐.' },
+        { line: 3,
+          stack: [{ name: 'main', slots: [{ name: 'a', ref: 'h1' }, { name: 'b', ref: 'h4' }] }],
+          heap: { h1: { fields: [{ key: 'x', value: '1' }, { key: 'child', ref: 'h2' }] }, h2: { fields: [{ key: 'y', value: '2' }, { key: 'grand', ref: 'h3' }] }, h3: { fields: [{ key: 'z', value: '9', bad: true }] }, h4: { fields: [{ key: 'x', value: '9', bad: true }, { key: 'child', ref: 'h2' }] } },
+          note: '<code>b.child.grand.z = 9</code> → b.child는 <b>h2(공유)</b> → grand는 <b>h3(공유)</b> → z를 9로. <b>a.child.grand.z도 9!</b> — 3층은 공유 경계 아래라 원본에 샌다. <b>첫 객체 칸(child)을 만나는 순간, 아래로는 전부 공유.</b>',
+          engine: 'h3의 z를 고침 — h1·h4 둘 다 h2→h3 경로로 도달하므로 양쪽에서 보인다.' },
+      ],
+    }))
+    root.querySelector('[data-m="qz-depth"]').append(Quiz({
+      q: '🎯 판별 — <code>b.x=9</code>·<code>b.child.grand.z=9</code> 후, <b>a.x</b>와 <b>a.child.grand.z</b>는?<pre class="err-code" style="color:inherit;background:transparent">let a = { x: 1, child: { y: 2, grand: { z: 3 } } }\nlet b = { ...a }\nb.x = 9\nb.child.grand.z = 9</pre>',
+      options: [
+        'a.x=1, a.child.grand.z=3 — <code>{ ...a }</code>로 복사했으니 다 독립',
+        'a.x=9, a.child.grand.z=9 — 복사본이 원본과 이어져 다 샌다',
+        'a.x=1, a.child.grand.z=9 — 1층 원시는 독립, 깊은 객체는 공유',
+        'a.x=9, a.child.grand.z=3 — 얕으니 얕은(1층) 것만 샌다',
+      ],
+      answer: 2,
+      explain: '1층 <b>x는 원시</b> → 값 복제라 독립 → a.x는 <b>1</b>. child는 <b>객체 칸</b>이라 얕은 복사가 <b>주소만</b> 복제 → b.child·a.child는 같은 봉투 → 그 아래 grand·z도 공유 → a.child.grand.z도 <b>9</b>. <b>"얕다"는 깊은 걸 안 건드린다가 아니라, 1층만 새로 뜨고 그 아래(깊은 것)는 원본과 공유</b>라는 뜻 — 오히려 깊은 쪽이 샌다.',
+    }))
+    root.querySelector('[data-m="deepcopy"]').append(Runner({ showBox: false, code: [
+      'let a = { x: 1, child: { grand: { z: 3 } } }',
+      '',
+      '// ❌ 얕은 복사 — 1층만 새로, 깊은 grand는 공유',
+      'let sh = { ...a }',
+      'sh.child.grand.z = 9',
+      'print(a.child.grand.z)   // 9  ← 깊은 것이 샜다',
+      '',
+      '// ✅ 깊은 복사 — 층마다 스프레드해서 바닥까지 새로',
+      'let a2 = { x: 1, child: { grand: { z: 3 } } }',
+      'let dp = { ...a2, child: { ...a2.child, grand: { ...a2.child.grand } } }',
+      'dp.child.grand.z = 9',
+      'print(a2.child.grand.z)  // 3  ← 원본 안전 (완전 독립)',
     ].join('\n') }))
 
     wireGoto(root)
