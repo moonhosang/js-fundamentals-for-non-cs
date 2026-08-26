@@ -45,7 +45,13 @@
       <span class="learn-tag">📎 판별은 <b>위치(중첩)가 아니라 타입</b> — 막둥이 <code>{ ...hyoni }</code>: name·age는 <b>값을 복사(사본)</b>라 효니와 갈라서고, mother·father는 <b>주소를 복사(참조)</b>라 <b>같은 부모를 공유</b>(형제처럼)</span>
       <div data-m="mem"></div>
 
-      <h3 class="section-title">③ 🎚️ 그래서 '얕다'가 뭔데? — 깊이(층)로 보기</h3>
+      <h3 class="section-title">③ 🔬 해부 — 얕은 복사는 '속성 목록을 하나씩' 복제한다</h3>
+      <span class="learn-tag">📎 <code>{ ...obj }</code> = obj <b>자신의 속성 목록(키)을 뽑아</b> 하나씩 복제 · 원시면 값·객체/함수면 주소 · <b>메소드도 "값이 함수인 속성"</b>이라 목록에 포함(같은 함수 공유)</span>
+      <p class="section-desc">"얕은 복사는 <b>속성명·메소드명 목록을 뽑아 하나하나 복제</b>하는 것" — <b>맞다.</b> <code>{ ...obj }</code>는 빈 봉투를 만들고 obj의 <b>속성 목록</b>을 순서대로 뽑아, 칸마다 <b>원시면 값을, 객체·함수면 주소를</b> 복사한다. 아래에서 <b>원시·객체·메소드를 섞어</b> 한 속성씩 낱낱이 밟아 본다:</p>
+      <div class="card"><div class="file-label">🔬 { ...효니 } — 속성 4개(name·age·mother·greet)를 한 칸씩 복제 (▶ 한 속성씩)</div><div data-m="dissect"></div></div>
+      <p class="section-desc">📌 <b>오해 방지</b> — ① 복제되는 건 obj <b>자신의(own) 속성</b>만(프로토타입에서 물려받은 건 제외). ② <b>메소드</b>는 새로 안 만든다 — 함수도 객체라 <b>같은 함수를 가리키는 주소만</b> 복사(공유). ③ 그래서 얕은 복사는 <b>딱 한 겹</b> — 각 속성이 '원시(값)냐 주소냐'로만 갈린다.</p>
+
+      <h3 class="section-title">④ 🎚️ 그래서 '얕다'가 뭔데? — 깊이(층)로 보기</h3>
       <span class="learn-tag">📎 객체가 객체를 품으면 '층(깊이)'이 생긴다 · 얕은 복사 = 맨 위 1층만 새로, 그 아래 층은 원본과 공유</span>
       <p class="section-desc">②는 2층짜리였다(<code>best</code> 봉투 안에 효니). 층이 더 깊어지면? 먼저 <b>'깊이'</b>부터 — 객체 안에 객체, 그 안에 또 객체. 이 <b>겹의 수가 깊이(층)</b>다:</p>
       <div style="font-family:var(--font-mono);font-size:13px;line-height:1.5;margin:12px 0">
@@ -65,12 +71,12 @@
       <p class="section-desc">🔑 규칙은 <b>모든 층에서 똑같다</b> — 그 칸이 <b>원시면 값 복제</b>(그 층에서 독립), <b>객체면 주소 복제</b>(다음 층 공유). 얕은 복사가 특별한 건 <b>딱 1층에서만</b> 이 복제를 하고 멈춘다는 것 → 그래서 <b>첫 객체 칸을 만나는 순간, 그 아래로는 전부 공유</b>. 깊이 끊으려면 <b>층마다 스프레드</b>하거나 → <button class="inline-goto" data-goto="json">JSON 왕복(깊은 복사)</button>:</p>
       <div class="card"><div class="file-label">🔬 얕은 복사(깊은 것 샘) vs 깊은 복사(층마다 스프레드 = 완전 독립)</div><div data-m="deepcopy"></div></div>
 
-      <h3 class="section-title">④ 배열도 똑같다 — <code>[ ...arr ]</code></h3>
+      <h3 class="section-title">⑤ 배열도 똑같다 — <code>[ ...arr ]</code></h3>
       <span class="learn-tag">📎 [ ...arr ]도 새 배열(한 겹) — 원소가 원시면 독립, 객체면 그 원소는 여전히 공유</span>
       <div data-m="qz-arrobj"></div>
       <div class="card"><div class="file-label">🔬 배열 사본 — 원시 원소는 독립, 객체 원소는 공유(대비)</div><div data-m="arr"></div></div>
 
-      <h3 class="section-title">⑤ 불변 업데이트 — "고치지 말고 새로 떠라"</h3>
+      <h3 class="section-title">⑥ 불변 업데이트 — "고치지 말고 새로 떠라"</h3>
       <span class="learn-tag">📎 { ...obj, key: 새값 } — 원본은 그대로 두고, 한 칸만 바꾼 새 봉투를 만든다(React의 그 관례)</span>
       <div data-m="qz-imm"></div>
       <div data-m="qz-nested"></div>
@@ -83,7 +89,7 @@
         원시 칸은 값 복사(독립) · 객체 칸은 주소 복사(공유·얕은 복사). 깊이 독립시키려면 <b>중첩도 각각 스프레드</b>(<code>{ ...p, best: { ...p.best } }</code>). 불변 업데이트 = <code>{ ...obj, key: 새값 }</code>.</p>
       </div>
 
-      <h3 class="section-title">⑥ 🎯 예측 드릴 — 손에 붙이자</h3>
+      <h3 class="section-title">⑦ 🎯 예측 드릴 — 손에 붙이자</h3>
       <p class="section-desc">매 문제, <b>그 칸이 원시(값·독립)냐 객체(주소·공유)냐</b>부터 판정하라. 사이드바 이 강의 아래 <b>쉬움·보통·어려움</b> 3단계:</p>
       <div class="practice-cta"><span>예측 드릴 —</span><button class="chip on" data-goto="spread:easy">🟢 쉬움</button><button class="chip on" data-goto="spread:normal">🟡 보통</button><button class="chip on" data-goto="spread:hard">🔴 어려움</button></div>
 
@@ -104,6 +110,28 @@
       'print(b.hp)            // 100 ← 사본이라 원본은 안전',
     ].join('\n') }))
 
+    root.querySelector('[data-m="dissect"]').append(MemoryModel({
+      title: '{ ...hyoni } 해부 — 속성 목록 [name·age·mother·greet]을 한 칸씩 복제',
+      stackLabel: '📇 이름표 장부',
+      code: [
+        'const hyoni = {',
+        '  name: "효니",                // 원시',
+        '  age: 28,                    // 원시',
+        '  mother: { name: "신민아" },   // 객체',
+        '  greet: function () { … },    // 메소드(함수도 값!)',
+        '}',
+        'const copy = { ...hyoni }      // 속성 목록을 하나씩 복제',
+      ],
+      steps: [
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' } }, note: '효니엔 속성 <b>4개</b> — <b>name·age(원시)</b>, <b>mother(객체)</b>, <b>greet(함수=메소드)</b>. 메소드도 결국 <b>값이 함수인 속성</b>이라 목록에 함께 있다(greet 함수는 별도 봉투 hf).', engine: 'h1의 name·age는 인라인, mother·greet 필드엔 h2·hf 포인터. 함수도 힙 객체다.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'copy', ref: 'hc' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' }, hc: { fields: [] } }, note: '<b>{ ...hyoni } 시작</b> — ① <b>빈 새 봉투 hc</b>를 만들고 ② hyoni의 <b>속성 목록을 뽑는다</b> → <b>[name, age, mother, greet]</b> ③ 이제 하나씩 복제한다.', engine: '스프레드는 대상의 own·enumerable 키를 순회하며 새 객체에 정의한다. 아직 빈 객체.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'copy', ref: 'hc' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' }, hc: { fields: [{ key: 'name', value: '"효니"' }] } }, note: '<b>1/4 · name</b> — 값이 <b>"효니"(원시·문자열)</b> → <b>값을 복사</b>. hc.name은 효니와 <b>별개 사본</b>(독립 칸).', engine: 'name 슬롯에 문자열 값을 복사(개념 모델). copy만의 칸.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'copy', ref: 'hc' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' }, hc: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }] } }, note: '<b>2/4 · age</b> — <b>28(원시·숫자)</b> → 값을 복사. 역시 <b>독립 사본</b>.', engine: 'age 슬롯에 28(SMI) 복사. h1과 별개 저장 자리.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'copy', ref: 'hc' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' }, hc: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }] } }, note: '<b>3/4 · mother</b> — 값이 <b>객체</b>다. 값 자체가 아니라 <b>주소(→h2)를 복사</b> → hc.mother도 <b>같은 h2</b>(신민아 봉투)를 가리킨다(<b>공유</b>). 새 mother는 안 만든다.', engine: 'mother 필드에 h2 포인터를 복사. 새 힙 할당 없음 — 별칭.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'copy', ref: 'hc' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' }, hc: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] } }, note: '<b>4/4 · greet(메소드)</b> — <b>함수도 객체</b>라 <b>주소(→hf)를 복사</b> → hc.greet도 <b>같은 함수 hf</b>(공유). <b>새 함수는 안 만든다.</b> 메소드는 보통 상태가 없어 공유해도 안전.', engine: 'greet 필드에 hf 포인터 복사. 함수 객체는 재사용 — copy·hyoni가 같은 함수를 가리킨다.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'copy', ref: 'hc' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] }, h2: { fields: [{ key: 'name', value: '"신민아"' }] }, hf: { label: 'ƒ greet()' }, hc: { fields: [{ key: 'name', value: '"효니"' }, { key: 'age', value: '28' }, { key: 'mother', ref: 'h2' }, { key: 'greet', ref: 'hf' }] } }, note: '완료 — 목록 <b>4개 다 복제</b>. <b>원시(name·age) = 값 복사(사본·독립)</b> · <b>객체·함수(mother·greet) = 주소 복사(공유)</b>. 이게 얕은 복사 — <b>딱 한 겹, 속성마다 값이면 값·주소면 주소</b>.', engine: '요약: 스프레드는 own 키마다 값을 얕게 대입 — 원시는 값, 객체·함수는 포인터.' },
+      ],
+    }))
     root.querySelector('[data-m="qz-arrobj"]').append(Quiz({
       q: '🔮 예측 — <code>list[0].hp</code>는?<pre class="err-code" style="color:inherit;background:transparent">let list = [{ hp: 100 }]   // 원소가 객체!\nlet copy = [ ...list ]\ncopy[0].hp = 0</pre>',
       options: ['100 — 새 배열(<code>[...]</code>)이니 원소도 독립이다', '0 — 원소가 객체라 주소만 복사돼 그 객체는 공유', '에러 — 배열 안 객체는 스프레드가 안 된다'],
