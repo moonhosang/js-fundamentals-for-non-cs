@@ -41,8 +41,8 @@
       <span class="learn-tag">📎 let b = a는 같은 봉투(별칭) · let b = { ...a }는 새 봉투(사본)</span>
       <div class="card"><div class="file-label">🔬 별칭 vs 사본</div><div data-m="why"></div></div>
 
-      <h3 class="section-title">② 눈으로 — 얕은 복사의 경계 (원시는 독립, 중첩은 공유)</h3>
-      <span class="learn-tag">📎 ▶ — copy.hp는 원본과 갈라서고(독립), copy.best는 원본과 같은 봉투(공유)로 남는다</span>
+      <h3 class="section-title">② 눈으로 — 얕은 복사의 경계 (원시는 사본, 객체는 참조)</h3>
+      <span class="learn-tag">📎 판별은 <b>위치(중첩)가 아니라 타입</b> — 막둥이 <code>{ ...hyoni }</code>: name·hp는 <b>값을 복사(사본)</b>라 효니와 갈라서고, mother·father는 <b>주소를 복사(참조)</b>라 <b>같은 부모를 공유</b>(형제처럼)</span>
       <div data-m="mem"></div>
 
       <h3 class="section-title">③ 🎚️ 그래서 '얕다'가 뭔데? — 깊이(층)로 보기</h3>
@@ -123,14 +123,23 @@
     ].join('\n') }))
 
     root.querySelector('[data-m="mem"]').append(MemoryModel({
-      title: '{ ...p }는 새 봉투 — hp는 값복사(독립), best는 주소복사(공유)',
+      title: '얕은 복사 { ...hyoni } — name·hp는 사본(독립), 엄마·아빠는 참조(공유)',
       stackLabel: '📇 이름표 장부',
-      code: ['let p = { hp: 100, best: { n: "효니" } }', 'let copy = { ...p }', 'copy.hp = 0', 'copy.best.n = "보리"'],
+      code: [
+        'const hyoni = {',
+        '  name: "효니", hp: 100,        // 원시',
+        '  mother: { name: "엄마" },      // 객체',
+        '  father: { name: "아빠" },      // 객체',
+        '}',
+        'const youngest = { ...hyoni }   // 막둥이 — 얕은 복사',
+        'youngest.hp = 50                // 원시 → 사본(독립)',
+        'youngest.mother.name = "새엄마"  // 객체 → 참조(공유!)',
+      ],
       steps: [
-        { line: 0, stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'n', value: '"효니"' }] } }, note: 'p 봉투 <b>h1</b>: hp 칸엔 <b>값 100</b>, best 칸엔 <b>주소표(→h2)</b>. h2는 효니 봉투.', engine: 'h1은 hidden class(hp:SMI 인라인, best:포인터). h2는 별도 힙 객체.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }, { name: 'copy', ref: 'h3' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'n', value: '"효니"' }] }, h3: { fields: [{ key: 'hp', value: '100' }, { key: 'best', ref: 'h2' }] } }, note: '<b>{ ...p }</b> → <b>새 봉투 h3</b>를 만들고 p의 칸을 <b>한 겹</b> 복사. hp는 <b>값 100 복사</b>(독립된 칸) · best는 <b>주소만 복사</b> → h3.best도 <b>같은 h2</b>를 가리킨다! ← 얕은 복사.', engine: '스프레드는 자체(own·enumerable) 속성을 새 객체에 얕게 복사. 원시는 값, 객체 필드는 참조(포인터)만 복사된다.' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }, { name: 'copy', ref: 'h3' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'n', value: '"효니"' }] }, h3: { fields: [{ key: 'hp', value: '0', bad: true }, { key: 'best', ref: 'h2' }] } }, note: '<code>copy.hp = 0</code> → <b>h3만</b> 고친다. <b>p.hp는 100 그대로</b> — hp는 값이 복사돼 <b>독립</b>이니까.', engine: 'h3의 hp 슬롯만 제자리 갱신. h1은 손 안 댐.' },
-        { line: 3, stack: [{ name: 'main', slots: [{ name: 'p', ref: 'h1' }, { name: 'copy', ref: 'h3' }] }], heap: { h1: { fields: [{ key: 'hp', value: '100' }, { key: 'best', ref: 'h2' }] }, h2: { fields: [{ key: 'n', value: '"보리"', bad: true }] }, h3: { fields: [{ key: 'hp', value: '0', bad: true }, { key: 'best', ref: 'h2' }] } }, note: '<code>copy.best.n = "보리"</code> → copy.best와 p.best는 <b>같은 h2</b>! 그래서 <b>p.best.n도 "보리"</b>로 샌다. ← <b>얕은 복사의 함정</b>(중첩은 공유). 깊이 끊으려면 <code>best: { ...p.best }</code>도 떠야 한다.', engine: 'h2의 n 슬롯을 고침 — h1·h3 둘 다 h2를 가리키므로 양쪽에서 보인다.' },
+        { line: 0, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '100' }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] }, h2: { fields: [{ key: 'name', value: '"엄마"' }] }, h3: { fields: [{ key: 'name', value: '"아빠"' }] } }, note: '효니(h1) — <b>원시 칸</b>(name·hp)엔 값이 그대로, <b>mother·father 칸엔 주소표</b>(→엄마 h2·아빠 h3). 엄마·아빠는 각자 봉투다.', engine: 'h1의 name·hp는 인라인, mother·father 필드엔 h2·h3 포인터. 엄마·아빠는 별도 힙 객체.' },
+        { line: 5, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'youngest', ref: 'h4' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '100' }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] }, h2: { fields: [{ key: 'name', value: '"엄마"' }] }, h3: { fields: [{ key: 'name', value: '"아빠"' }] }, h4: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '100' }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] } }, note: '<b>{ ...hyoni } → 새 봉투 h4(막둥이).</b> name·hp는 <b>값을 복사(사본)</b> → 막둥이만의 칸. mother·father는 <b>주소를 복사(참조)</b> → 막둥이도 <b>같은 엄마(h2)·아빠(h3)</b>를 가리킨다! <b>형제가 부모를 공유</b>하듯 — 얕은 복사.', engine: '스프레드는 1층 자체 속성만 얕게 복사: 원시는 값, 객체 필드는 포인터(참조)만. h2·h3는 새로 안 만듦.' },
+        { line: 6, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'youngest', ref: 'h4' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '100' }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] }, h2: { fields: [{ key: 'name', value: '"엄마"' }] }, h3: { fields: [{ key: 'name', value: '"아빠"' }] }, h4: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '50', bad: true }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] } }, note: '<code>youngest.hp = 50</code> → <b>h4(막둥이)만</b>. <b>효니.hp는 100 그대로</b> — hp는 원시라 <b>사본(값 복사)</b>이니 독립.', engine: 'h4의 hp 슬롯만 갱신. h1 손 안 댐.' },
+        { line: 7, stack: [{ name: 'main', slots: [{ name: 'hyoni', ref: 'h1' }, { name: 'youngest', ref: 'h4' }] }], heap: { h1: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '100' }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] }, h2: { fields: [{ key: 'name', value: '"새엄마"', bad: true }] }, h3: { fields: [{ key: 'name', value: '"아빠"' }] }, h4: { fields: [{ key: 'name', value: '"효니"' }, { key: 'hp', value: '50', bad: true }, { key: 'mother', ref: 'h2' }, { key: 'father', ref: 'h3' }] } }, note: '<code>youngest.mother.name = "새엄마"</code> → 막둥이.mother와 효니.mother는 <b>같은 h2</b>(참조 공유)! 그래서 <b>효니.mother.name도 "새엄마"</b> — 한 엄마니까 당연. <b>원시(hp)는 사본이라 독립, 객체(mother)는 참조라 공유.</b>', engine: 'h2의 name을 고침 — h1·h4 둘 다 mother 칸이 h2를 가리키므로 양쪽에서 보인다.' },
       ],
     }))
 
