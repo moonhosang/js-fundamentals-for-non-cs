@@ -47,11 +47,14 @@
 
       <h3 class="section-title">③ 배열도 똑같다 — <code>[ ...arr ]</code></h3>
       <span class="learn-tag">📎 [ ...arr ]도 새 배열(한 겹) — 원소가 원시면 독립, 객체면 그 원소는 여전히 공유</span>
-      <div class="card"><div class="file-label">🔬 배열 사본</div><div data-m="arr"></div></div>
+      <div data-m="qz-arrobj"></div>
+      <div class="card"><div class="file-label">🔬 배열 사본 — 원시 원소는 독립, 객체 원소는 공유(대비)</div><div data-m="arr"></div></div>
 
       <h3 class="section-title">④ 불변 업데이트 — "고치지 말고 새로 떠라"</h3>
       <span class="learn-tag">📎 { ...obj, key: 새값 } — 원본은 그대로 두고, 한 칸만 바꾼 새 봉투를 만든다(React의 그 관례)</span>
       <div data-m="qz-imm"></div>
+      <div data-m="qz-nested"></div>
+      <div class="card" style="border-color:var(--red)"><div class="file-label">🐛 실전 지뢰 — 중첩 상태를 얕게만 복사했다가 원본 오염 → 고치기</div><div data-m="nestedfix"></div></div>
       <p class="section-desc" style="opacity:.85">React에서 <code>obj.age = 31; setState(obj)</code>가 화면을 안 바꾸는 이유가 objanat의 그 그림이다 — 봉투 <b>주소가 그대로</b>라 "같은 객체"로 보고 넘긴다. 그래서 <code>setState({ ...obj, age: 31 })</code>처럼 <b>새 봉투</b>를 떠서 준다. 스프레드가 그 새 봉투를 뜨는 도구.</p>
 
       <div class="concept">
@@ -81,14 +84,22 @@
       'print(b.hp)            // 100 ← 사본이라 원본은 안전',
     ].join('\n') }))
 
+    root.querySelector('[data-m="qz-arrobj"]').append(Quiz({
+      q: '🔮 예측 — <code>list[0].hp</code>는?<pre class="err-code" style="color:inherit;background:transparent">let list = [{ hp: 100 }]   // 원소가 객체!\nlet copy = [ ...list ]\ncopy[0].hp = 0</pre>',
+      options: ['100 — 새 배열(<code>[...]</code>)이니 원소도 독립이다', '0 — 원소가 객체라 주소만 복사돼 그 객체는 공유', '에러 — 배열 안 객체는 스프레드가 안 된다'],
+      answer: 1,
+      explain: '배열의 <b>0번 칸엔 객체 주소</b>가 들었다 → <code>[ ...list ]</code>는 그 <b>주소만 복사</b>(얕은 복사) → copy[0]과 list[0]은 <b>같은 봉투</b> → <code>copy[0].hp=0</code>이 list[0].hp도 0. "새 배열이니 독립"은 <b>한 겹</b>만 맞다 — 배열도 <b>객체를 담으면 그 칸은 주소</b>. (원소가 원시(숫자)였다면 값복사라 독립 — 아래에서 나란히 본다.)',
+    }))
     root.querySelector('[data-m="arr"]').append(Runner({ showBox: false, code: [
-      'let nums = [1, 2]',
-      'let copy = [ ...nums ]   // 새 배열',
-      'copy.push(9)',
-      'print(nums.length)       // 2   ← 원본 그대로(원소가 원시라 독립)',
+      'let nums = [1, 2]              // 원소가 원시(숫자)',
+      'let copyA = [ ...nums ]',
+      'copyA.push(9)',
+      'print(nums.length)            // 2   ← 원본 그대로(원시 원소라 독립)',
       '',
-      'let merged = [ ...nums, ...copy ]  // 이어붙이기',
-      'print(merged.length)     // 5',
+      'let list = [{ hp: 100 }]      // 원소가 객체!',
+      'let copyB = [ ...list ]',
+      'copyB[0].hp = 0',
+      'print(list[0].hp)             // 0   ← 원본도 바뀜! 객체 원소는 주소만 복사(공유)',
     ].join('\n') }))
 
     root.querySelector('[data-m="mem"]').append(MemoryModel({
@@ -109,6 +120,26 @@
       answer: 0,
       explain: '<code>{ ...p, hp: 50 }</code>는 p의 칸을 새 봉투에 복사한 뒤 hp만 50으로 <b>덮어쓴다</b>(뒤 값이 우선) — 원본 p는 그대로. 나머지 둘은 원본을 고치거나(<code>p.hp=50</code>) 별칭이라(<code>q=p</code>) 원본도 바뀐다.',
     }))
+    root.querySelector('[data-m="qz-nested"]').append(Quiz({
+      q: '🔮 예측 — <code>{ ...state }</code>로 새로 떴는데도 <code>state.todos</code>가 오염될까?<pre class="err-code" style="color:inherit;background:transparent">let state = { title: "할일", todos: ["산책"] }\nlet next = { ...state }\nnext.todos.push("공부")</pre>',
+      options: ['["산책"] — <code>{ ...state }</code>로 새 객체를 떴으니 todos도 독립', '["산책", "공부"] — todos 칸은 배열 주소만 복사돼 공유, push가 원본에 샌다', '["공부"] — push가 기존 걸 덮어쓴다'],
+      answer: 1,
+      explain: '<code>{ ...state }</code>는 <b>한 겹</b>만 복사한다 — title(문자열)은 값복사로 독립이지만, <b>todos 칸엔 배열 \'주소\'</b>가 들어 그 주소만 복사된다. next.todos와 state.todos는 <b>같은 배열</b> → push가 원본에도 샌다. <b>이게 불변 업데이트 최대 지뢰</b>("스프레드했으니 안전"이 착각). 안전하려면 <b>중첩도 새로</b>: <code>{ ...state, todos: [...state.todos, "공부"] }</code>.',
+    }))
+    root.querySelector('[data-m="nestedfix"]').append(Runner({ showBox: false, code: [
+      'let state = { title: "할일", todos: ["산책"] }',
+      '',
+      '// ❌ 얕게만 복사 — todos(배열 칸)는 주소 공유라 원본이 오염된다',
+      'let bad = { ...state }',
+      'bad.todos.push("공부")',
+      'print(state.todos.length)    // 2  ← 원본이 샜다! (버그)',
+      '',
+      '// ✅ 중첩(todos)도 새로 떠서 공유를 끊는다',
+      'let state2 = { title: "할일", todos: ["산책"] }',
+      'let ok = { ...state2, todos: [...state2.todos, "공부"] }',
+      'print(state2.todos.length)   // 1  ← 원본 안전',
+      'print(ok.todos.length)       // 2',
+    ].join('\n') }))
 
     wireGoto(root)
   }

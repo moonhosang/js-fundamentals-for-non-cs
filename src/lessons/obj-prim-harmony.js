@@ -68,6 +68,7 @@
       <span class="learn-tag">📎 { ...o }는 봉투 칸을 한 겹만 복사 — 원시 필드는 값이 복사돼 독립, 객체 필드는 주소만 복사돼 여전히 공유</span>
       <div data-m="qz-g1"></div>
       <div data-m="qz-g2"></div>
+      <div data-m="qz-g3"></div>
 
       <h3 class="section-title">⑧ H · 함수에 전달 — 매개변수도 결국 '대입'이다</h3>
       <span class="learn-tag">📎 f(인자) 호출은 매개변수 = 인자 대입과 같다 — 그래서 넣기·꺼내기와 똑같은 규칙</span>
@@ -229,6 +230,12 @@ function 재할당(p) { p = { hp: 0 } }  // p를 아예 새 봉투로 갈아끼�
       options: ['1 — 복사했으니 안쪽도 독립이다', '9 — 객체 필드는 주소만 복사돼 안쪽 봉투는 여전히 공유'],
       answer: 1,
       explain: 'f 칸엔 <b>주소표</b> → 복사되는 건 <b>주소뿐</b>이다. c.f와 o.f는 <b>같은 안쪽 봉투</b> — 그래서 <code>c.f.v = 9</code>가 o.f.v로도 보인다. 이게 <b>"얕은" 복사</b>의 정체: 한 겹만 새 봉투, 안쪽은 공유. 규칙은 그대로 — <b>원시=복사 · 객체=공유</b>가 필드마다 적용될 뿐.',
+    }))
+    root.querySelector('[data-m="qz-g3"]').append(Quiz({
+      q: '🎯 판별 — 한 사본에서 <b>둘 다</b> 바꿨다. <code>o.n</code>과 <code>o.f.v</code>는 각각?<pre class="err-code" style="color:inherit;background:transparent">let o = { n: 5, f: { v: 1 } }\nlet c = { ...o }\nc.n = 9\nc.f.v = 9</pre>',
+      options: ['o.n=5, o.f.v=1 — 복사했으니 둘 다 독립', 'o.n=9, o.f.v=9 — 복사본이 원본과 이어져 둘 다 샌다', 'o.n=5, o.f.v=9 — 원시 n은 독립, 객체 f는 공유', 'o.n=9, o.f.v=1 — 1단계는 공유, 안쪽은 독립'],
+      answer: 2,
+      explain: '<b>칸마다 규칙이 따로 적용된다</b> — n 칸엔 <b>값 5</b>라 값복사=독립 → <code>c.n=9</code>여도 <b>o.n은 5</b>. f 칸엔 <b>주소표</b>라 주소만 복사=공유 → <code>c.f.v=9</code>가 <b>o.f.v도 9</b>. "복사=전부 독립"도 "전부 공유"도 틀렸다. <b>한 봉투 안에서도 원시 칸은 독립, 객체 칸은 공유</b> — \'칸에 값이냐 주소표냐\'만 보면 어떤 훼이크에도 안 휘둘린다.',
     }))
 
     // ── H 함수에 전달 (매개변수 = 대입) ──────────────────────
