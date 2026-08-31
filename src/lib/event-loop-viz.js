@@ -48,7 +48,12 @@
       this.shadowRoot.innerHTML = `
         <style>
           :host { display:block; font-family: var(--font-sans, system-ui, sans-serif); color: var(--text,#1f2937); }
-          .wrap { border:1px solid var(--border,#e5e7eb); border-radius:14px; overflow:hidden; background:var(--panel,#fff); }
+          .wrap { border:1px solid var(--border,#e5e7eb); border-radius:14px; overflow:hidden; background:var(--panel,#fff); position:relative; }
+          /* ✈️ 큐 → 콜스택 비행체(FLIP): 큐 칩이 떠올라 콜스택으로 날아가 착지 */
+          .flyer { position:absolute; z-index:6; font-family:var(--font-mono,monospace); font-size:12px; border:1.5px solid; border-radius:999px; padding:4px 11px; background:var(--panel,#fff); white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,.16); transition:transform .62s cubic-bezier(.34,.02,.2,1), opacity .62s ease; will-change:transform, opacity; pointer-events:none; }
+          .flyer.micro { border-color:#7c3aed; color:#7c3aed; }
+          .flyer.macro { border-color:#d97706; color:#b45309; }
+          .frame.arriving { opacity:0; }
           .head { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border,#e5e7eb); flex-wrap:wrap; }
           .title { font-weight:700; font-size:14px; }
           .phase { margin-left:auto; font-size:11.5px; font-weight:800; color:#fff; border-radius:999px; padding:3px 11px; }
@@ -78,8 +83,7 @@
           .frame.top .run { animation: elv-pulse 1.1s ease-in-out infinite; }
           .frame .run { font-size:11px; color:var(--brand,#6366f1); }
           .frame .dot { width:9px; height:9px; border-radius:50%; flex:none; }
-          .frame.from-micro { animation: elv-fly-micro .42s cubic-bezier(.2,.7,.3,1); }
-          .frame.from-macro { animation: elv-fly-macro .42s cubic-bezier(.2,.7,.3,1); }
+          /* from-micro/from-macro는 '방금 큐에서 온 프레임' 표시자 — 실제 이동은 .flyer가 담당 */
           /* 큐 — 앞(다음 차례)이 왼쪽 */
           .queue { display:flex; align-items:center; gap:7px; flex-wrap:wrap; min-height:34px; }
           .chip { font-family:var(--font-mono,monospace); font-size:12px; border:1.5px solid; border-radius:999px; padding:4px 11px; background:var(--panel,#fff); position:relative; white-space:nowrap; }
@@ -163,6 +167,15 @@
       const $ = (sel) => this.shadowRoot.querySelector(sel)
       const prev = this._prev || { stack: new Set(), webapi: new Set(), micro: new Set(), macro: new Set(), out: 0 }
 
+      // ✈️ 비행 애니: 재렌더 '전에' 각 큐 맨 앞 칩의 화면 위치를 붙잡아 둔다(곧 콜스택으로 날아갈 후보).
+      const flySrc = {}
+      if (!this._reduceMotion()) {
+        ;['micro', 'macro', 'webapi'].forEach((k) => {
+          const c = this.shadowRoot.querySelector('.' + k + 'q .chip')
+          if (c) { const r = c.getBoundingClientRect(); flySrc[k] = { left: r.left, top: r.top, w: r.width, text: c.textContent } }
+        })
+      }
+
       // 코드 하이라이트
       $('.code').innerHTML = (s.code || []).map((line, i) =>
         `<span class="ln${i === st.line ? ' active' : ''}">${esc(line)}</span>`).join('')
@@ -241,6 +254,43 @@
       $('.counter').textContent = `${this._step + 1} / ${s.steps.length}`
 
       this._prev = { stack: curStack, webapi: wa.curSet, micro: mi.curSet, macro: ma.curSet, out: out.length }
+
+      // ✈️ 방금 큐에서 온 프레임(from-*)을 그 출처 큐 위치에서 콜스택으로 날려 보낸다.
+      this._flyIntoStack(flySrc)
+    }
+
+    _reduceMotion() { try { return matchMedia('(prefers-reduced-motion: reduce)').matches } catch { return false } }
+
+    _flyIntoStack(flySrc) {
+      const wrap = this.shadowRoot.querySelector('.wrap')
+      if (!wrap) return
+      const frames = this.shadowRoot.querySelectorAll('.frame.from-micro, .frame.from-macro')
+      if (!frames.length) return
+      requestAnimationFrame(() => {
+        const wr = wrap.getBoundingClientRect()
+        frames.forEach((fr) => {
+          const kind = fr.classList.contains('from-micro') ? 'micro' : 'macro'
+          const src = flySrc[kind]
+          if (!src) return
+          const dr = fr.getBoundingClientRect()
+          fr.classList.add('arriving') // 착지 전까지 실제 프레임은 숨김(비행체가 대신 이동)
+          const flyer = document.createElement('div')
+          flyer.className = 'flyer ' + kind
+          flyer.textContent = src.text
+          flyer.style.left = (src.left - wr.left) + 'px'
+          flyer.style.top = (src.top - wr.top) + 'px'
+          flyer.style.width = src.w + 'px'
+          wrap.appendChild(flyer)
+          flyer.getBoundingClientRect() // reflow — 시작 위치 확정
+          const dx = dr.left - src.left, dy = dr.top - src.top
+          flyer.style.transform = `translate(${dx}px, ${dy}px)`
+          flyer.style.opacity = '.6'
+          let done = false
+          const finish = () => { if (done) return; done = true; fr.classList.remove('arriving'); flyer.remove() }
+          flyer.addEventListener('transitionend', finish, { once: true })
+          setTimeout(finish, 780) // 폴백(transitionend 누락 대비)
+        })
+      })
     }
   }
 
