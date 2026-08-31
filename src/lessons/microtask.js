@@ -60,6 +60,7 @@
 
       <h3 class="section-title">⑤ 그런데 <code>await</code>는 왜 🟣인가 — async는 사실 <code>.then</code>이다 (한 겹씩 풀기)</h3>
       <span class="learn-tag">📎 🔻 다음 — async/await가 Promise.then 사다리로 '풀리는' 과정. await 하나가 '함수를 자르는 가위'다</span>
+      <p class="section-desc" style="margin-top:0">아래 <code>getA()</code>·<code>getB()</code>는 <b>Promise를 돌려주는 함수</b>(예: 서버에서 값 받아오기 — 결과가 나중에 온다)라고 보면 된다. 좌(우리가 쓰는 async)와 우(엔진이 보는 <code>.then</code>)는 <b>완전히 같은 동작</b>이다.</p>
       <div data-m="desugar"></div>
       <p class="section-desc"><code>await</code> 뒷부분이 곧 <code>.then</code> 콜백 → <b>🟣마이크로태스크</b>. 그래서 <code>await</code> 다음 줄은 <code>setTimeout</code>보다 <b>항상 먼저</b> 돈다(아래 마지막 퀴즈로 확인).</p>
 
@@ -116,12 +117,12 @@
       ],
       steps: [
         { line: 0, phase: 'sync', stack: ['main'], micro: [], macro: [], out: ['1'], note: '<code>print("1")</code> — 동기라 <b>콜스택(main)에서 지금</b> 실행 → 출력 <b>1</b>. 두 큐 모두 비어 있다.' },
-        { line: 1, phase: 'sync', stack: ['main'], micro: [], macro: ['() → print "2"'], out: ['1'], note: '<code>setTimeout(_, 0)</code> — 콜백을 <b>🟠매크로 큐</b>에 넣고 <b>즉시 다음 줄로</b>(실행 안 함). 0ms여도 "지금"이 아니다.' },
-        { line: 2, phase: 'sync', stack: ['main'], micro: ['() → print "3"'], macro: ['() → print "2"'], out: ['1'], note: '<code>.then(_)</code> — 콜백을 <b>🟣마이크로 큐</b>로. 이제 두 줄에 하나씩(🟠 먼저 등록, 🟣 나중 등록).' },
-        { line: 3, phase: 'sync', stack: ['main'], micro: ['() → print "3"'], macro: ['() → print "2"'], out: ['1', '4'], note: '<code>print("4")</code> — 여전히 동기 → 출력 <b>4</b>. 콜스택이 <b>안 비었으니</b> 두 큐는 <b>계속 대기</b>.' },
-        { line: 4, phase: 'idle', stack: [], micro: ['() → print "3"'], macro: ['() → print "2"'], out: ['1', '4'], note: '동기 코드 끝 → <b>콜스택 텅 빔</b>. 이제 루프가 큐를 본다. <b>규칙: 🟣마이크로부터 전부</b> — 🟠는 아직 쳐다도 안 본다.' },
-        { line: 4, phase: 'drain-micro', stack: [{ label: 'then 콜백', from: 'micro' }], micro: [], macro: ['() → print "2"'], out: ['1', '4', '3'], note: '🟣마이크로에서 콜백을 꺼내 콜스택에 올려 실행 → 출력 <b>3</b>. 마이크로 큐가 비었다.' },
-        { line: 4, phase: 'idle', stack: [], micro: [], macro: ['() → print "2"'], out: ['1', '4', '3'], note: '🟣마이크로 큐 <b>비었음</b> → <b>이제서야</b> 🟠매크로 차례. 큐에서 <b>딱 하나</b> 꺼낸다.' },
+        { line: 1, phase: 'sync', stack: ['main'], micro: [], macro: ['() => print("2")'], out: ['1'], note: '<code>setTimeout(_, 0)</code> — 콜백을 <b>🟠매크로 큐</b>에 넣고 <b>즉시 다음 줄로</b>(실행 안 함). 0ms여도 "지금"이 아니다.' },
+        { line: 2, phase: 'sync', stack: ['main'], micro: ['() => print("3")'], macro: ['() => print("2")'], out: ['1'], note: '<code>.then(_)</code> — 콜백을 <b>🟣마이크로 큐</b>로. 이제 두 줄에 하나씩(🟠 먼저 등록, 🟣 나중 등록).' },
+        { line: 3, phase: 'sync', stack: ['main'], micro: ['() => print("3")'], macro: ['() => print("2")'], out: ['1', '4'], note: '<code>print("4")</code> — 여전히 동기 → 출력 <b>4</b>. 콜스택이 <b>안 비었으니</b> 두 큐는 <b>계속 대기</b>.' },
+        { line: 4, phase: 'idle', stack: [], micro: ['() => print("3")'], macro: ['() => print("2")'], out: ['1', '4'], note: '동기 코드 끝 → <b>콜스택 텅 빔</b>. 이제 루프가 큐를 본다. <b>규칙: 🟣마이크로부터 전부</b> — 🟠는 아직 쳐다도 안 본다.' },
+        { line: 4, phase: 'drain-micro', stack: [{ label: 'then 콜백', from: 'micro' }], micro: [], macro: ['() => print("2")'], out: ['1', '4', '3'], note: '🟣마이크로에서 콜백을 꺼내 콜스택에 올려 실행 → 출력 <b>3</b>. 마이크로 큐가 비었다.' },
+        { line: 4, phase: 'idle', stack: [], micro: [], macro: ['() => print("2")'], out: ['1', '4', '3'], note: '🟣마이크로 큐 <b>비었음</b> → <b>이제서야</b> 🟠매크로 차례. 큐에서 <b>딱 하나</b> 꺼낸다.' },
         { line: 4, phase: 'drain-macro', stack: [{ label: 'timer 콜백', from: 'macro' }], micro: [], macro: [], out: ['1', '4', '3', '2'], note: '🟠매크로 콜백 실행 → 출력 <b>2</b>. <b>그래서 2가 꼴찌</b> — 최종 <b>1 · 4 · 3 · 2</b>. 나중 등록한 🟣가 먼저 등록한 🟠(0ms)를 앞질렀다.' },
         { line: 4, phase: 'idle', stack: [], micro: [], macro: [], out: ['1', '4', '3', '2'], note: '두 큐 모두 비었다 — 끝. <b>핵심: 콜스택 빔 → 🟣 전부 → 🟠 하나.</b> 이 한 규칙이 모든 순서를 정한다.' },
       ],

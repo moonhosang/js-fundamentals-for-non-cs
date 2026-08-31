@@ -122,7 +122,7 @@
     ].join('\n') }))
 
     root.querySelector('[data-m="qz-timing"]').append(Quiz({
-      q: '각 <code>task</code>가 500ms일 때, 아래는 총 몇 ms?<pre class="err-code" style="color:inherit;background:transparent">const pa = task("A", 500)\nconst pb = task("B", 500)\nawait pa\nawait pb</pre>',
+      q: '각 <code>task</code>가 500ms일 때, 아래는 총 몇 ms?<pre class="err-code" style="color:inherit;background:transparent">// task(name, ms) = ms 뒤 name으로 끝나는 Promise (위 예제와 동일)\nconst pa = task("A", 500)\nconst pb = task("B", 500)\nawait pa\nawait pb</pre>',
       options: [
         '약 500ms — pa·pb를 <b>먼저 만들어</b> 둘 다 이미 시작했다(병렬)',
         '약 1000ms — await가 2개니 500 + 500',

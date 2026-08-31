@@ -90,13 +90,13 @@
     root.querySelector('[data-m="mem"]').append(MemoryModel({
       title: '이벤트 루프 — 콜스택이 비어야 대기 큐에서 꺼낸다',
       stackLabel: '📚 콜스택 (지금 실행)', heapLabel: '⏳ 대기 큐 (콜백이 기다림)',
-      code: ['print("A")', 'setTimeout(cb, 0)  // cb를 큐로', 'print("C")', '// 콜스택 빔 → 루프가 cb 실행'],
+      code: ['print("A")', 'setTimeout(() => print("B"), 0)  // 이 콜백을 대기 큐로', 'print("C")', '// 콜스택 빔 → 루프가 콜백 실행'],
       steps: [
         { line: 0, stack: [{ name: 'main', slots: [{ name: '단계', value: 'A 출력' }] }], heap: {}, note: '<code>print("A")</code> — 동기라 <b>콜스택에서 지금</b> 실행. 대기 큐는 비어 있다.' },
-        { line: 1, stack: [{ name: 'main', slots: [{ name: '단계', value: 'setTimeout' }] }], heap: { cb: { label: '⏰ cb (print "B")' } }, note: '<code>setTimeout(cb, 0)</code> — cb를 <b>지금 실행하지 않고 대기 큐에 넣는다</b>. main은 <b>멈추지 않고 다음 줄로</b>.' },
-        { line: 2, stack: [{ name: 'main', slots: [{ name: '단계', value: 'C 출력' }] }], heap: { cb: { label: '⏰ cb (print "B")' } }, note: '<code>print("C")</code> — 여전히 동기 코드가 콜스택에서 실행 중. cb는 큐에서 <b>계속 대기</b>(콜스택이 안 비었으니 못 꺼냄).' },
-        { line: 3, stack: [], heap: { cb: { label: '⏰ cb (print "B")' } }, note: '동기 코드가 다 끝나 <b>콜스택이 텅 빔</b> → 이제 <b>이벤트 루프</b>가 대기 큐를 본다.' },
-        { line: 3, stack: [{ name: 'cb', slots: [{ name: '단계', value: 'B 출력' }] }], heap: {}, note: '루프가 큐에서 <b>cb를 꺼내 콜스택에 올려 실행</b> → 이제야 "B" 출력. <b>그래서 B가 꼴찌</b> — 순서 = A · C · B.' },
+        { line: 1, stack: [{ name: 'main', slots: [{ name: '단계', value: 'setTimeout' }] }], heap: { q1: { label: '⏰ () => print("B")' } }, note: '<code>setTimeout(() => print("B"), 0)</code> — 그 <b>콜백(<code>() => print("B")</code>)을 지금 실행하지 않고 대기 큐에 넣는다</b>. main은 <b>멈추지 않고 다음 줄로</b>.' },
+        { line: 2, stack: [{ name: 'main', slots: [{ name: '단계', value: 'C 출력' }] }], heap: { q1: { label: '⏰ () => print("B")' } }, note: '<code>print("C")</code> — 여전히 동기 코드가 콜스택에서 실행 중. 그 콜백은 큐에서 <b>계속 대기</b>(콜스택이 안 비었으니 못 꺼냄).' },
+        { line: 3, stack: [], heap: { q1: { label: '⏰ () => print("B")' } }, note: '동기 코드가 다 끝나 <b>콜스택이 텅 빔</b> → 이제 <b>이벤트 루프</b>가 대기 큐를 본다.' },
+        { line: 3, stack: [{ name: '콜백', slots: [{ name: '단계', value: 'B 출력' }] }], heap: {}, note: '루프가 큐에서 <b>그 콜백을 꺼내 콜스택에 올려 실행</b> → 이제야 "B" 출력. <b>그래서 B가 꼴찌</b> — 순서 = A · C · B.' },
       ],
     }))
 

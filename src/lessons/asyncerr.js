@@ -102,9 +102,9 @@
         '// ↓ 나중, 빈 콜스택에서 콜백 실행',
       ],
       steps: [
-        { line: 1, phase: 'sync', stack: ['main · try{ }catch'], micro: [], macro: ['() → null.x 💥'], out: [], note: '<code>setTimeout</code> — 콜백을 <b>🟠매크로 큐에 등록만</b> 하고 즉시 통과. 지금 <code>try/catch</code>는 main 위에 <b>살아 있지만</b>, 콜백은 <b>아직 안 돈다</b>(큐에서 대기).' },
-        { line: 3, phase: 'sync', stack: ['main · try{ }catch'], micro: [], macro: ['() → null.x 💥'], out: ['try/catch 통과 (에러 없음)'], note: 'try 블록이 <b>에러 없이 정상 종료</b> → <code>catch</code>는 잡을 게 없어 <b>실행 안 됨</b>. 콜백은 여전히 큐에서 대기.' },
-        { line: 4, phase: 'idle', stack: [], micro: [], macro: ['() → null.x 💥'], out: ['try/catch 통과 (에러 없음)'], note: '<b>main이 끝나 콜스택에서 pop</b> → <b>try/catch가 main과 함께 사라졌다.</b> 이제 콜백을 지켜 줄 안전망이 어디에도 없다.' },
+        { line: 1, phase: 'sync', stack: ['main · try{ }catch'], micro: [], macro: ['() => { null.x }  💥'], out: [], note: '<code>setTimeout</code> — 콜백을 <b>🟠매크로 큐에 등록만</b> 하고 즉시 통과. 지금 <code>try/catch</code>는 main 위에 <b>살아 있지만</b>, 콜백은 <b>아직 안 돈다</b>(큐에서 대기).' },
+        { line: 3, phase: 'sync', stack: ['main · try{ }catch'], micro: [], macro: ['() => { null.x }  💥'], out: ['try/catch 통과 (에러 없음)'], note: 'try 블록이 <b>에러 없이 정상 종료</b> → <code>catch</code>는 잡을 게 없어 <b>실행 안 됨</b>. 콜백은 여전히 큐에서 대기.' },
+        { line: 4, phase: 'idle', stack: [], micro: [], macro: ['() => { null.x }  💥'], out: ['try/catch 통과 (에러 없음)'], note: '<b>main이 끝나 콜스택에서 pop</b> → <b>try/catch가 main과 함께 사라졌다.</b> 이제 콜백을 지켜 줄 안전망이 어디에도 없다.' },
         { line: 4, phase: 'drain-macro', stack: [{ label: 'timer 콜백 (try/catch 없음!)', from: 'macro' }], micro: [], macro: [], out: ['try/catch 통과 (에러 없음)', '💥 null.x — Uncaught!'], note: '콜백이 <b>텅 빈 콜스택</b> 위에서 실행 → <code>null.x</code> 터짐. 이 콜스택엔 <code>try/catch</code>가 <b>없다</b>(아까 그건 이미 소멸). → <b>Uncaught 에러</b>로 새어 나간다. 그래서 바깥 try/catch로는 절대 못 잡는다.' },
       ],
     }))
@@ -157,7 +157,7 @@
     }))
 
     root.querySelector('[data-m="qz-2"]').append(Quiz({
-      q: '<code>Promise.all</code>이 실패했다. 어떻게 잡나?<pre class="err-code" style="color:inherit;background:transparent">const r = Promise.all([okP, failP])\n// failP가 reject → all이 reject</pre>',
+      q: '<code>Promise.all</code>이 실패했다. 어떻게 잡나?<pre class="err-code" style="color:inherit;background:transparent">const okP   = Promise.resolve("ok")           // 성공 Promise\nconst failP = Promise.reject(new Error("펑"))  // 실패 Promise\nconst r = Promise.all([okP, failP])           // failP 때문에 r은 reject</pre>',
       options: [
         '<code>r.catch(e => …)</code> 또는 <code>try { await r } catch (e) { … }</code>',
         '<code>try { Promise.all([...]) } catch</code> 로 감싸면 잡힌다',
