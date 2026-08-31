@@ -84,9 +84,10 @@
 ## 🔁 EventLoopViz — 이벤트 루프 큐 드레인 애니 (비동기 심화 핵심 자산)
 `src/lib/event-loop-viz.js` · `EventLoopViz(config) → <event-loop-viz>` (shadow DOM)
 
-**📜코드 · 📚콜스택 · 🟣마이크로 큐 · 🟠매크로 큐 · 🖨️출력** 5구역. 콜백이 큐→콜스택→출력으로 **이동하는 걸 단계 애니**로. MemoryModel이 '값이 어디 사나'라면 이건 '콜백이 언제 도나'(시간 축). 씀: `microtask`(1·4·3·2 드레인) · `asyncerr`(try/catch가 콜백 전에 pop).
-- `code:[...]` · `steps:[{ line, phase, stack, micro, macro, out, note }]`.
-- `phase`: `'sync'|'drain-micro'|'drain-macro'|'idle'` — 국면 배지 + 활성 구역 하이라이트.
+**📜코드 · 📚콜스택 · 🌐Web API · 🟣마이크로 큐 · 🟠매크로 큐 · 🖨️출력** 구역. 콜백이 (Web API→)큐→콜스택→출력으로 **이동하는 걸 단계 애니**로. MemoryModel이 '값이 어디 사나'라면 이건 '콜백이 언제 도나'(시간 축). 씀: `eventloop`(위임: setTimeout→Web API→큐) · `microtask`(1·4·3·2 드레인) · `asyncerr`(try/catch가 콜백 전에 pop).
+- `code:[...]` · `steps:[{ line, phase, stack, webapi, micro, macro, out, note }]`.
+- `phase`: `'sync'|'delegate'|'drain-micro'|'drain-macro'|'idle'` — 국면 배지 + 활성 구역 하이라이트.
+- **🌐 Web API 존**: `webapi:[...]`(setTimeout 콜백이 타이머 도는 동안 대기하는 곳). **쓰는 시나리오에만 자동 노출**(`webapi` 넣은 스텝이 하나도 없으면 존 숨김) — microtask/asyncerr처럼 위임 단계가 불필요하면 3구역으로 깔끔.
 - `stack` 항목: `'main'`(문자열) 또는 `{label, from:'micro'|'macro'}` — `from`이면 그 큐 색으로 **날아드는(fly-in) 애니**. `micro`/`macro`: 콜백 라벨 배열(앞=다음 차례, `다음 ▶` 표시). `out`: 누적 출력(마지막 칩만 pop).
 - ▶ 다음 단계 / **▶▶ 자동재생**(1.15s 간격) / ◀ 이전 / ↺.
 

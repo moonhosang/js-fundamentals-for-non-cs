@@ -69,6 +69,8 @@
     // 🛟 에러 처리 (함수·객체 뒤) — try/catch/finally, 8강 TypeError 후속.
     { id: 'errors', badge: '🛟 오류', title: '에러 처리', subtitle: 'try · catch · finally · throw' },
     // ⏳ 비동기 (콜스택·에러 뒤) — setTimeout·Promise·async/await, 이벤트 루프. 순서예측 Quiz 중심.
+    // ⏳ 비동기 뿌리 (async 앞) — 왜 이벤트 루프가 존재하나: 프로세스·스레드·싱글스레드·블로킹·위임.
+    { id: 'eventloop', badge: '⏳ 뿌리', title: '이벤트 루프는 왜 있나', subtitle: '프로세스·스레드·싱글 스레드' },
     { id: 'async', badge: '⏳ 시간', title: '비동기', subtitle: 'setTimeout · Promise · async/await' },
     // ⏳ 비동기 심화 (async 후속) — 이벤트 루프 두 큐 · 병렬 조합기 · 에러 전파. 전용 애니메이션 위젯.
     { id: 'microtask', badge: '⏳ 심화', title: '마이크로 vs 매크로 큐', subtitle: 'Promise가 setTimeout보다 먼저' },
@@ -153,7 +155,7 @@
     // 표현식(3강)·함수(5강)는 개념 단계(3-1~3-7 / 5-1~5-7) + 드릴을 items에 펼친다. 함수 뒤에 메모리 심화.
     { n: '2', title: '값 다루기와 함수', items: [2, ...P(2), 3, '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', '3-7', ...P(3), 4, ...P(4), 5, '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', ...P(5), 'callstack', ...P('callstack'), 'closure', ...P('closure'), 'gc', ...P('gc')] },
     // 객체(8강) 뒤에 그래프·클래스.
-    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'destructuring', ...P('destructuring'), 'json', ...P('json'), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class'), 'errors', ...P('errors'), 'async', ...P('async'), 'microtask', 'promiseall', 'asyncerr', 'cf', 'cf-1', 'cf-2', 'cf-3', 'cf-4', 'cf-5'] },
+    { n: '3', title: '여러 값 · 반복 · 객체', items: [6, ...P(6), 7, ...P(7), 8, ...P(8), 'destructuring', ...P('destructuring'), 'json', ...P('json'), 'graph', ...P('graph'), 'friends', ...P('friends'), 'family', ...P('family'), 'cycle', ...P('cycle'), 'class', ...P('class'), 'errors', ...P('errors'), 'eventloop', 'async', ...P('async'), 'microtask', 'promiseall', 'asyncerr', 'cf', 'cf-1', 'cf-2', 'cf-3', 'cf-4', 'cf-5'] },
     { n: '4', title: '화면을 움직이기', items: [9, ...P(9), 10, ...P(10)] },
     { tag: '📚', title: '레퍼런스', items: ['builtins', 'builtins-1', 'builtins-2', 'builtins-3', 'builtins-4', 'builtins-5', 'coercion'] },
   ]

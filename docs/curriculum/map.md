@@ -58,6 +58,7 @@ IT 전공자가 아닌 사람이 **완전 제로**에서 시작하는 실습형 
 - ✅ **에러 처리 `try/catch/finally`** — 에러=던져지는(throw) 값. error-first Runner(안 잡으면 흐름 끊김)→try/catch로 붙잡기→e.name/e.message·throw new Error→콜스택 전파 MemoryModel→finally. 오해정면돌파: "try면 에러가 사라진다"·빈 catch 금지. 드릴 3단계(전파·재던지기·instanceof 포함).
 
 ### ⏳ 비동기 (콜스택·에러 뒤 · '시간' 축)
+- ✅ **⏳ 뿌리 · 이벤트 루프는 왜 있나(`eventloop`)** — async 트랙 **최하층 '왜'**. 완전 제로 청중에 **프로그램·프로세스·스레드**부터(식당 비유: 프로세스=식당 한 채·스레드=요리사, 메모리 강+5강 콜스택 재소환). **싱글 스레드**(요리사 한 명·콜스택 하나) → **블로킹 실증**(busy-while로 페이지 얼림 Runner) → **위임**(🌐 Web API) → 콜스택 빔 → 큐에서 꺼냄 = **이벤트 루프**. 오해정면돌파: "JS는 멀티스레드로 진짜 동시". 심화: 싱글 스레드 거래(레이스 없음 ↔ 위임 필요)·run-to-completion. **EventLoopViz에 🌐 Web API 존 추가**(위임의 시각적 실체). → `async`로.
 - ✅ **비동기 `setTimeout/Promise/async·await`** — 동기 vs 비동기 순서(Runner가 A·C·B 실증)·**이벤트 루프**(콜스택 비면 대기 큐에서 꺼냄, MemoryModel)·Promise/then·async/await(동기처럼 읽기). 오해정면돌파: "setTimeout(_,0)=지금"·"await=전체 정지". **순서 예측 Quiz 중심**(값-드릴은 포맷 부적합이라 생략 — 본문 노트). 이 강은 **입문 on-ramp**(대기 큐를 '하나'로 뭉뚱그림); 심화는 아래 3강으로 이어짐.
 - ✅ **⏳ 심화 · 마이크로 vs 매크로 큐(`microtask`)** — "대기 큐 하나"를 🟣마이크로(Promise.then·await 뒷부분)·🟠매크로(setTimeout·이벤트) **둘로 분해**. 규칙: 콜스택 빌 때마다 🟣 전부 → 🟠 하나. 오해정면돌파: "먼저 등록=먼저 실행"·"setTimeout(0)이 제일 빠름". **전용 애니메이션 위젯 `EventLoopViz`**(5구역 큐 드레인) + **`DesugarViz`**(async/await → .then 사다리 풀기). 중첩·혼합 예측 Quiz ×3.
 - ✅ **⏳ 병렬 · `Promise.all/race/allSettled/any`(`promiseall`)** — "Promise는 만들면 이미 시작" → 순차(await 줄줄이) vs 병렬(먼저 만들어 all). **실측 타이밍 Runner**(순차 ~1500 vs 병렬 ~500). **전용 위젯 `PromiseViz`**(가로 타임라인 동시 진행 + 모드 토글로 all↔race↔allSettled↔any 게이트 확정 시점 대비). fail-fast Quiz.

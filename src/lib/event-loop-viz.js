@@ -24,6 +24,7 @@
   const asItem = (x) => (x && typeof x === 'object') ? x : { label: String(x) }
   const PHASE = {
     sync: { t: '동기 실행', c: '#6366f1' },
+    delegate: { t: '🌐 브라우저에 위임', c: '#0891b2' },
     'drain-micro': { t: '🟣 마이크로 비우기', c: '#7c3aed' },
     'drain-macro': { t: '🟠 매크로 하나', c: '#d97706' },
     idle: { t: '큐 대기', c: '#6b7280' },
@@ -59,6 +60,7 @@
           .zone.hot { border-color:var(--brand,#6366f1); box-shadow:0 0 0 3px var(--brand-soft,#eef2ff); }
           .zone.hot.micro { border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,.18); }
           .zone.hot.macro { border-color:#d97706; box-shadow:0 0 0 3px rgba(217,119,6,.18); }
+          .zone.hot.webapi { border-color:#0891b2; box-shadow:0 0 0 3px rgba(8,145,178,.18); }
           .zlabel { font-size:11px; font-weight:800; color:var(--muted,#6b7280); letter-spacing:.02em; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
           .zlabel .cnt { margin-left:auto; font-weight:700; color:var(--muted,#9ca3af); font-variant-numeric:tabular-nums; }
           .col-right { display:flex; flex-direction:column; gap:14px; }
@@ -76,6 +78,7 @@
           .chip { font-family:var(--font-mono,monospace); font-size:12px; border:1.5px solid; border-radius:999px; padding:4px 11px; background:var(--panel,#fff); position:relative; white-space:nowrap; }
           .chip.micro { border-color:#7c3aed; color:#7c3aed; }
           .chip.macro { border-color:#d97706; color:#b45309; }
+          .chip.webapi { border-color:#0891b2; color:#0e7490; }
           .chip.next::before { content:'다음 ▶'; position:absolute; top:-9px; left:8px; font-size:8.5px; font-weight:800; color:var(--muted,#9ca3af); background:var(--panel,#fff); padding:0 3px; }
           .chip.enter { animation: elv-enter .34s cubic-bezier(.2,.7,.3,1); }
           .qempty { font-size:11.5px; color:var(--muted,#9ca3af); font-style:italic; padding:6px 4px; }
@@ -106,6 +109,7 @@
           <div class="stage">
             <div class="zone stackzone"><div class="zlabel">📚 콜스택 <small style="font-weight:500">(지금 실행)</small><span class="cnt scnt"></span></div><div class="stackcol"></div></div>
             <div class="col-right">
+              <div class="zone webapi"><div class="zlabel">🌐 Web API <small style="font-weight:500">(브라우저가 타이머·네트워크 대신 처리)</small><span class="cnt wacnt"></span></div><div class="queue webapiq"></div></div>
               <div class="zone micro"><div class="zlabel">🟣 마이크로 큐 <small style="font-weight:500">(Promise · 먼저·전부)</small><span class="cnt micnt"></span></div><div class="queue microq"></div></div>
               <div class="zone macro"><div class="zlabel">🟠 매크로 큐 <small style="font-weight:500">(setTimeout·이벤트 · 나중·하나)</small><span class="cnt macnt"></span></div><div class="queue macroq"></div></div>
             </div>
@@ -123,6 +127,9 @@
       `
       const $ = (s) => this.shadowRoot.querySelector(s)
       $('.title').textContent = this._s.title || '이벤트 루프 시뮬레이션'
+      // 🌐 Web API 존은 쓰는 시나리오(위임 있는)에서만 노출 — microtask처럼 안 쓰면 숨겨 깔끔하게.
+      this._hasWebapi = (this._s.steps || []).some((st) => (st.webapi || []).length)
+      if (!this._hasWebapi) $('.zone.webapi').style.display = 'none'
       $('[data-prev]').onclick = () => { this._stopAuto(); if (this._step > 0) { this._step--; this._update() } }
       $('[data-next]').onclick = () => { this._stopAuto(); this._next() }
       $('[data-reset]').onclick = () => { this._stopAuto(); this._step = 0; this._update() }
@@ -143,7 +150,7 @@
       const s = this._s
       const st = s.steps[this._step]
       const $ = (sel) => this.shadowRoot.querySelector(sel)
-      const prev = this._prev || { stack: new Set(), micro: new Set(), macro: new Set(), out: 0 }
+      const prev = this._prev || { stack: new Set(), webapi: new Set(), micro: new Set(), macro: new Set(), out: 0 }
 
       // 코드 하이라이트
       $('.code').innerHTML = (s.code || []).map((line, i) =>
@@ -177,8 +184,10 @@
         }).join('') : `<span class="qempty">(비어 있음)</span>`
         return { html, curSet, n: items.length }
       }
+      const wa = renderQueue(st.webapi, 'webapi', prev.webapi)
       const mi = renderQueue(st.micro, 'micro', prev.micro)
       const ma = renderQueue(st.macro, 'macro', prev.macro)
+      if (this._hasWebapi) $('.webapiq').innerHTML = wa.html
       $('.microq').innerHTML = mi.html
       $('.macroq').innerHTML = ma.html
 
@@ -190,11 +199,13 @@
 
       // 카운터
       $('.scnt').textContent = stack.length ? stack.length + '칸' : ''
+      if (this._hasWebapi) $('.wacnt').textContent = wa.n ? wa.n + '개' : ''
       $('.micnt').textContent = mi.n ? mi.n + '개' : ''
       $('.macnt').textContent = ma.n ? ma.n + '개' : ''
 
       // 활성 구역 하이라이트
       $('.stackzone').classList.toggle('hot', st.phase === 'sync' || (stack.length > 0 && st.phase !== 'idle'))
+      if (this._hasWebapi) $('.zone.webapi').classList.toggle('hot', st.phase === 'delegate')
       $('.zone.micro').classList.toggle('hot', st.phase === 'drain-micro')
       $('.zone.macro').classList.toggle('hot', st.phase === 'drain-macro')
 
@@ -206,7 +217,7 @@
       $('[data-next]').disabled = this._step >= s.steps.length - 1
       $('.counter').textContent = `${this._step + 1} / ${s.steps.length}`
 
-      this._prev = { stack: curStack, micro: mi.curSet, macro: ma.curSet, out: out.length }
+      this._prev = { stack: curStack, webapi: wa.curSet, micro: mi.curSet, macro: ma.curSet, out: out.length }
     }
   }
 
