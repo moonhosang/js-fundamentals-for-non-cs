@@ -58,6 +58,9 @@
       <div class="card"><div class="file-label">🔬 async 함수 안에서 await (직접 실행)</div><div data-m="await"></div></div>
       <span class="learn-tag">📎 ▶ 다음 단계 — <code>await</code>마다 함수가 <b>멈추고(양보) → 밖이 먼저 → 멈춘 자리부터 재개</b>. 두 번의 await를 각각 눈으로</span>
       <div data-m="await-elv"></div>
+      <span class="learn-tag">📎 🔻 다음 — 왼쪽 <code>async/await</code>와 오른쪽 <code>.then</code>은 <b>완전히 같은 동작</b>. <code>await</code>=<code>.then</code>, <code>try/catch</code>=<code>.catch</code>를 한 겹씩</span>
+      <p class="section-desc" style="margin-top:0"><code>getUser()</code>는 <b>서버에서 사용자를 받아오는 함수</b>(Promise를 돌려줌)라고 보면 된다.</p>
+      <div data-m="await-desugar"></div>
       <div data-m="qz-await"></div>
 
       <div class="concept">
@@ -157,6 +160,7 @@
       title: 'await마다 멈춤(양보) → 밖이 먼저 → 멈춘 자리부터 재개',
       singleQueue: true, queueLabel: '⏳ 대기 큐 <small style="font-weight:500">(멈춘 함수의 "이어서"가 기다림)</small>',
       code: [
+        'function wait(v) { return Promise.resolve(v) }   // v로 이미 준비된 약속을 돌려줌',
         'async function run() {',
         '  print("시작")',
         '  let a = await wait(1)   // ① 여기서 멈춤(양보)',
@@ -167,15 +171,37 @@
         'print("run()은 기다리지 않고 넘어감")',
       ],
       steps: [
-        { line: 6, phase: 'sync', stack: ['main', 'run()'], macro: [], out: [], note: '<code>run()</code> 호출 → run 프레임이 콜스택에 올라간다(main 위).' },
-        { line: 1, phase: 'sync', stack: ['main', 'run()'], macro: [], out: ['시작'], note: 'run() 본문 시작 → <code>print("시작")</code> 동기 실행 → 출력 <b>시작</b>.' },
-        { line: 2, phase: 'idle', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작'], note: '<b>① <code>await wait(1)</code> 만남</b> → run()은 <b>여기서 멈추고</b>(프레임이 스택에서 <b>내려감 = 제어 양보</b>), <b>await 뒤 나머지를 대기 큐에 예약</b>. a엔 1이 올 예정.' },
-        { line: 7, phase: 'sync', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '제어가 밖(main)으로 돌아와 <b>밖의 동기 코드가 먼저</b> 실행 → 출력. <b>run()은 안 기다린다</b> — 멈춘 채 큐에서 대기.' },
-        { line: 7, phase: 'idle', stack: [], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'main도 끝 → <b>콜스택 빔</b> → 대기 큐에서 run()의 "이어서"를 꺼낼 차례.' },
-        { line: 3, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'run()이 <b>멈춘 자리부터 재개</b> → <code>a</code>에 1 확정. 곧 <b>② <code>await wait(2)</code></b>를 만난다.' },
-        { line: 3, phase: 'idle', stack: [], macro: ['run() 이어서 · b=2 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '<b>두 번째 await</b> → <b>또 멈추고 양보</b>, 남은 부분을 다시 대기 큐로. (같은 일이 반복 — await 하나당 한 번씩)' },
-        { line: 4, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '다시 재개 → <code>b</code>에 2 확정 → <code>a+b=3</code> → 출력 <b>합계: 3</b>.' },
-        { line: 5, phase: 'idle', stack: [], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '끝. <b>핵심: <code>await</code>마다 함수가 멈추고(양보) → 밖이 먼저 돌고 → 멈춘 자리부터 재개.</b> 그래서 "run()은 안 기다리고" 밖이 먼저 찍혔다.' },
+        { line: 7, phase: 'sync', stack: ['main', 'run()'], macro: [], out: [], note: '<code>run()</code> 호출 → run 프레임이 콜스택에 올라간다(main 위). (<code>wait</code>은 값을 즉시 주는 약속 함수 — 맨 윗줄에 정의.)' },
+        { line: 2, phase: 'sync', stack: ['main', 'run()'], macro: [], out: ['시작'], note: 'run() 본문 시작 → <code>print("시작")</code> 동기 실행 → 출력 <b>시작</b>.' },
+        { line: 3, phase: 'idle', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작'], note: '<b>① <code>await wait(1)</code> 만남</b> → run()은 <b>여기서 멈추고</b>(프레임이 스택에서 <b>내려감 = 제어 양보</b>), <b>await 뒤 나머지를 대기 큐에 예약</b>. a엔 1이 올 예정.' },
+        { line: 8, phase: 'sync', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '제어가 밖(main)으로 돌아와 <b>밖의 동기 코드가 먼저</b> 실행 → 출력. <b>run()은 안 기다린다</b> — 멈춘 채 큐에서 대기.' },
+        { line: 8, phase: 'idle', stack: [], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'main도 끝 → <b>콜스택 빔</b> → 대기 큐에서 run()의 "이어서"를 꺼낼 차례.' },
+        { line: 4, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'run()이 <b>멈춘 자리부터 재개</b> → <code>a</code>에 1 확정. 곧 <b>② <code>await wait(2)</code></b>를 만난다.' },
+        { line: 4, phase: 'idle', stack: [], macro: ['run() 이어서 · b=2 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '<b>두 번째 await</b> → <b>또 멈추고 양보</b>, 남은 부분을 다시 대기 큐로. (같은 일이 반복 — await 하나당 한 번씩)' },
+        { line: 5, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '다시 재개 → <code>b</code>에 2 확정 → <code>a+b=3</code> → 출력 <b>합계: 3</b>.' },
+        { line: 6, phase: 'idle', stack: [], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '끝. <b>핵심: <code>await</code>마다 함수가 멈추고(양보) → 밖이 먼저 돌고 → 멈춘 자리부터 재개.</b> 그래서 "run()은 안 기다리고" 밖이 먼저 찍혔다.' },
+      ],
+    }))
+
+    root.querySelector('[data-m="await-desugar"]').append(DesugarViz({
+      title: 'await = .then · try/catch = .catch (같은 동작, 위→아래로 읽기)',
+      asyncCode: [
+        'async function load() {',
+        '  try {',
+        '    const user = await getUser()   // 값 기다림',
+        '    print("이름: " + user.name)',
+        '  } catch (e) {',
+        '    print("실패: " + e.message)',
+        '  }',
+        '}',
+      ],
+      steps: [
+        { aline: 0, then: ['function load() {'], hot: [0], note: 'async 함수도 <b>그냥 함수</b> — 그 안을 <code>.then</code> 사슬로 바꿔 보자.' },
+        { aline: 2, then: ['function load() {', '  return getUser()', '    .then((user) => {'], hot: [1, 2], note: '<b><code>await getUser()</code></b> → <b><code>getUser().then(user => …)</code></b>. "await로 기다린 값"이 <code>.then</code> 콜백의 매개변수 <code>user</code>로 들어온다.' },
+        { aline: 3, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)'], hot: [3], note: '<code>await</code> 다음 줄(정상 흐름)이 <code>.then</code> 콜백 <b>안으로</b>.' },
+        { aline: 4, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)', '    })', '    .catch((e) => {'], hot: [5], note: '<b><code>try/catch</code></b> → <b><code>.catch(e => …)</code></b>. 에러 처리가 사슬 <b>끝의 <code>.catch</code></b>로 간다.' },
+        { aline: 5, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)', '    })', '    .catch((e) => {', '      print("실패: " + e.message)', '    })', '}'], hot: [6], note: '<code>catch</code> 블록 내용이 <code>.catch</code> 콜백 안으로 → 사슬 마무리.' },
+        { aline: null, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)', '    })', '    .catch((e) => {', '      print("실패: " + e.message)', '    })', '}'], hot: [1, 5], note: '정리 — 왼쪽(<code>await</code>·<code>try/catch</code>)과 오른쪽(<code>.then</code>·<code>.catch</code>)은 <b>완전히 같은 동작</b>. <code>async/await</code>은 이 사슬을 <b>위→아래 평범한 코드처럼</b> 읽게 해줄 뿐 — 그게 편한 이유다.' },
       ],
     }))
 
