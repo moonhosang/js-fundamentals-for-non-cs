@@ -27,6 +27,7 @@
     delegate: { t: '🌐 브라우저에 위임', c: '#0891b2' },
     'drain-micro': { t: '🟣 마이크로 비우기', c: '#7c3aed' },
     'drain-macro': { t: '🟠 매크로 하나', c: '#d97706' },
+    render: { t: '🖼️ 화면 렌더', c: '#16a34a' },
     idle: { t: '큐 대기', c: '#6b7280' },
   }
 
@@ -61,6 +62,12 @@
           .zone.hot.micro { border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,.18); }
           .zone.hot.macro { border-color:#d97706; box-shadow:0 0 0 3px rgba(217,119,6,.18); }
           .zone.hot.webapi { border-color:#0891b2; box-shadow:0 0 0 3px rgba(8,145,178,.18); }
+          .zone.hot.render { border-color:#16a34a; box-shadow:0 0 0 3px rgba(22,163,74,.15); }
+          .screen { border:1.5px solid var(--border,#e5e7eb); border-radius:8px; padding:9px 11px; font-size:12.5px; background:var(--panel,#fff); transition:background .2s,border-color .2s; min-height:34px; display:flex; align-items:center; gap:8px; }
+          .screen.painting { border-color:#16a34a; background:rgba(22,163,74,.08); animation: elv-paint .55s ease; }
+          .screen .rf { margin-left:auto; color:var(--muted,#9ca3af); font-family:var(--font-mono,monospace); font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+          .screen .wait { color:var(--muted,#9ca3af); font-style:italic; }
+          @keyframes elv-paint { from { background:#bbf7d0; } to { background:rgba(22,163,74,.08); } }
           .zlabel { font-size:11px; font-weight:800; color:var(--muted,#6b7280); letter-spacing:.02em; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
           .zlabel .cnt { margin-left:auto; font-weight:700; color:var(--muted,#9ca3af); font-variant-numeric:tabular-nums; }
           .col-right { display:flex; flex-direction:column; gap:14px; }
@@ -112,6 +119,7 @@
               <div class="zone webapi"><div class="zlabel">🌐 Web API <small style="font-weight:500">(브라우저가 타이머·네트워크 대신 처리)</small><span class="cnt wacnt"></span></div><div class="queue webapiq"></div></div>
               <div class="zone micro"><div class="zlabel">🟣 마이크로 큐 <small style="font-weight:500">(Promise · 먼저·전부)</small><span class="cnt micnt"></span></div><div class="queue microq"></div></div>
               <div class="zone macro"><div class="zlabel">🟠 매크로 큐 <small style="font-weight:500">(setTimeout·이벤트 · 나중·하나)</small><span class="cnt macnt"></span></div><div class="queue macroq"></div></div>
+              <div class="zone render"><div class="zlabel">🖼️ 렌더 <small style="font-weight:500">(화면 그리기 · ~60fps '기회')</small></div><div class="renderbox screen"></div></div>
             </div>
           </div>
           <div class="outzone"><div class="zlabel">🖨️ 출력 <small style="font-weight:500">(찍힌 순서)</small></div><div class="outrow"></div></div>
@@ -130,6 +138,9 @@
       // 🌐 Web API 존은 쓰는 시나리오(위임 있는)에서만 노출 — microtask처럼 안 쓰면 숨겨 깔끔하게.
       this._hasWebapi = (this._s.steps || []).some((st) => (st.webapi || []).length)
       if (!this._hasWebapi) $('.zone.webapi').style.display = 'none'
+      // 🖼️ 렌더 존도 위임 존과 같은 정책 — render 쓰는 시나리오(렌더 강)에서만 노출.
+      this._hasRender = (this._s.steps || []).some((st) => st.render || st.phase === 'render')
+      if (!this._hasRender) $('.zone.render').style.display = 'none'
       $('[data-prev]').onclick = () => { this._stopAuto(); if (this._step > 0) { this._step--; this._update() } }
       $('[data-next]').onclick = () => { this._stopAuto(); this._next() }
       $('[data-reset]').onclick = () => { this._stopAuto(); this._step = 0; this._update() }
@@ -203,11 +214,23 @@
       $('.micnt').textContent = mi.n ? mi.n + '개' : ''
       $('.macnt').textContent = ma.n ? ma.n + '개' : ''
 
+      // 🖼️ 렌더 존 — st.render면 '그리는 중'(초록 플래시), 아니면 '그릴 차례 대기'. 프레임 = 지금까지 렌더 횟수.
+      if (this._hasRender) {
+        const painting = !!st.render
+        const rframe = s.steps.slice(0, this._step + 1).filter((x) => x.render).length
+        const rb = $('.renderbox')
+        rb.className = 'renderbox screen' + (painting ? ' painting' : '')
+        rb.innerHTML = painting
+          ? `🖼️ <b>화면 그림!</b>${typeof st.render === 'string' ? ' <span>' + esc(st.render) + '</span>' : ''}<span class="rf">프레임 ${rframe}</span>`
+          : `<span class="wait">🖼️ 그릴 차례 대기 (스택·마이크로 비어야 그림)</span><span class="rf">${rframe ? '최근 프레임 ' + rframe : '아직 못 그림'}</span>`
+      }
+
       // 활성 구역 하이라이트
-      $('.stackzone').classList.toggle('hot', st.phase === 'sync' || (stack.length > 0 && st.phase !== 'idle'))
+      $('.stackzone').classList.toggle('hot', st.phase === 'sync' || (stack.length > 0 && st.phase !== 'idle' && st.phase !== 'render'))
       if (this._hasWebapi) $('.zone.webapi').classList.toggle('hot', st.phase === 'delegate')
       $('.zone.micro').classList.toggle('hot', st.phase === 'drain-micro')
       $('.zone.macro').classList.toggle('hot', st.phase === 'drain-macro')
+      if (this._hasRender) $('.zone.render').classList.toggle('hot', st.phase === 'render' || !!st.render)
 
       // 설명
       $('.note').innerHTML = st.note ? `<b class="k">🔑</b> ${st.note}` : ''

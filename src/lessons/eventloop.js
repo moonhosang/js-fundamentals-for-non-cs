@@ -77,7 +77,7 @@
       <h3 class="section-title">④ 해결 = <b>위임 + 이벤트 루프</b> (애니메이션)</h3>
       <span class="learn-tag">📎 ▶ 다음 단계 — setTimeout 콜백은 🌐 Web API(브라우저)로 <b>맡겨지고</b>, 타이머 끝나면 🟠 큐로 → 콜스택 비면 루프가 꺼내 실행</span>
       <div data-m="elv"></div>
-      <p class="section-desc"><b>🌐 Web API</b> = 브라우저가 JS 대신 타이머·네트워크를 돌려 주는 '보조 주방'. JS 요리사는 거기 맡기고 <b>안 기다린다</b>. 다 되면 콜백이 🟠 큐에 서고, <b>콜스택이 빌 때</b> 이벤트 루프가 꺼내 온다 — <b>그래서 안 멈추고 번갈아</b> 돌아간다.</p>
+      <p class="section-desc"><b>🌐 Web API</b> = 브라우저가 JS 대신 돌려 주는 '보조 주방'. 여기 맡기는 느린 일엔 <b>타이머</b>(<code>setTimeout</code>), <b>네트워크</b>(<code>fetch</code>·XHR), <b>DOM 이벤트</b>(클릭·입력 대기), <b>위치</b>(Geolocation) 등이 있다. JS 요리사는 맡기고 <b>안 기다린다</b> — 다 되면 콜백이 🟠 큐에 서고, <b>콜스택이 빌 때</b> 이벤트 루프가 꺼내 온다. <b>그래서 안 멈추고 번갈아</b> 돌아간다.</p>
 
       <h3 class="section-title">⑤ 왜 하필 한 명인가 — 싱글 스레드의 거래(trade-off)</h3>
       <div class="card">
@@ -86,6 +86,10 @@
           <tr><td><b>🧵🧵 멀티 스레드</b><span>일꾼 여럿 → <b>진짜 병렬</b>로 빠름. <b>대신</b> 둘이 같은 메모리를 동시에 고치면 값이 깨져(<b>레이스</b>), 이를 막는 <b>락(lock)</b>이 복잡·버그 온상.</span></td></tr>
         </tbody></table>
         <p class="section-desc" style="margin:8px 0 0">JS는 <b>진짜 병렬을 포기하고 단순함(레이스 없음)</b>을 택했다. 그 대가로 "안 멈추기"를 <b>이벤트 루프</b>가 책임진다. <b>"왜 이렇게 만들었나"의 마지막 바닥이 이 거래다.</b></p>
+      </div>
+      <div class="card" style="opacity:.92">
+        <div class="file-label">🖥️ 참고 — 이건 '브라우저' 기준 (Node.js는 조금 다르다)</div>
+        <p class="section-desc" style="margin:0">여기 🌐 Web API·큐는 <b>브라우저 환경</b> 이야기다. <b>Node.js</b>는 브라우저 대신 <b>libuv</b>라는 엔진으로 이벤트 루프를 돌리고(파일·네트워크 담당), <code>process.nextTick</code>·<code>setImmediate</code> 같은 <b>추가 큐</b>가 더 있다. 세부는 달라도 <b>뿌리 원리는 똑같다</b> — <b>한 스레드 + 콜스택 비면 큐에서 꺼내 실행</b>. 지금은 이 원리만 확실히 쥐면 된다.</p>
       </div>
       <div data-m="qz-block"></div>
       <div data-m="qz-why"></div>

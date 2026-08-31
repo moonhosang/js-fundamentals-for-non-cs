@@ -58,13 +58,27 @@
         <p class="section-desc" style="margin:8px 0 0">판별 한마디: <b>Promise에서 나온 콜백이면 🟣, 타이머·이벤트에서 나온 콜백이면 🟠.</b> 🟣가 하나라도 남아 있으면 🟠는 <b>절대 차례가 안 온다.</b></p>
       </div>
 
-      <h3 class="section-title">⑤ 그런데 <code>await</code>는 왜 🟣인가 — async는 사실 <code>.then</code>이다 (한 겹씩 풀기)</h3>
+      <h3 class="section-title">⑤ 🖼️ 화면은 언제 그려지나 — 마이크로가 '렌더보다도' 먼저인 이유</h3>
+      <span class="learn-tag">📎 ▶ 다음 — 한 바퀴 = 🟠매크로 하나 → 🟣마이크로 전부 → 🖼️ 렌더(화면 그림). 🟣가 다 비어야 화면이 그려진다</span>
+      <div data-m="render-elv"></div>
+      <p class="section-desc" style="margin-top:8px">브라우저는 <b>~16.6ms(60fps)마다 화면을 그리려</b> 한다. 그런데 <b>렌더는 매크로·마이크로 사이 '틈'에서만</b> — <b>콜스택이 비고 🟣마이크로가 다 빠진 뒤</b>에만 일어난다. 그래서 세 결과가 <b>한 원리</b>에서 나온다:</p>
+      <div class="card">
+        <table class="fit-table" style="width:100%"><tbody>
+          <tr><td><b>😱 긴 동기 코드</b><span>그동안 콜스택이 안 비어 렌더 못 함 → <b>화면 얼음</b>(뿌리 강 ③ 블로킹 그것)</span></td></tr>
+          <tr><td><b>😱 🟣 마이크로 폭주</b>(무한 <code>.then</code>)<span>렌더 전에 🟣를 <b>'전부'</b> 비우려는데 계속 생겨 못 빠져나옴 → <b>역시 얼음</b></span></td></tr>
+          <tr><td><b>😌 🟠 매크로로 쪼갬</b>(<code>setTimeout</code>)<span>매크로 <b>사이사이 렌더 기회</b> → UI 안 얼음. <b>무거운 일은 쪼개라</b>는 실전 조언의 근거</span></td></tr>
+        </tbody></table>
+        <p class="section-desc" style="margin:8px 0 0">🎯 정확히: 렌더는 매 바퀴 <b>보장이 아니라</b> 브라우저가 필요할 때의 <b>'기회'</b>다(위 위젯의 "그릴 차례 대기"). 참고: <code>setTimeout(_, 0)</code>도 실제론 <b>최소 ~4ms</b>(중첩 시)·<b>비활성 탭은 더 느림</b> — 정밀 타이밍용이 아니다.</p>
+      </div>
+      <div data-m="qz-render"></div>
+
+      <h3 class="section-title">⑥ 그런데 <code>await</code>는 왜 🟣인가 — async는 사실 <code>.then</code>이다 (한 겹씩 풀기)</h3>
       <span class="learn-tag">📎 🔻 다음 — async/await가 Promise.then 사다리로 '풀리는' 과정. await 하나가 '함수를 자르는 가위'다</span>
       <p class="section-desc" style="margin-top:0">아래 <code>getA()</code>·<code>getB()</code>는 <b>Promise를 돌려주는 함수</b>(예: 서버에서 값 받아오기 — 결과가 나중에 온다)라고 보면 된다. 좌(우리가 쓰는 async)와 우(엔진이 보는 <code>.then</code>)는 <b>완전히 같은 동작</b>이다.</p>
       <div data-m="desugar"></div>
       <p class="section-desc"><code>await</code> 뒷부분이 곧 <code>.then</code> 콜백 → <b>🟣마이크로태스크</b>. 그래서 <code>await</code> 다음 줄은 <code>setTimeout</code>보다 <b>항상 먼저</b> 돈다(아래 마지막 퀴즈로 확인).</p>
 
-      <h3 class="section-title">⑥ 🎯 정곡 예측 — 섞이면 진짜 아나?</h3>
+      <h3 class="section-title">⑦ 🎯 정곡 예측 — 섞이면 진짜 아나?</h3>
       <p class="section-desc" style="margin-top:0">아래 3문제는 <b>중첩·혼합</b>이라 감으로는 틀린다. 매번 <b>"지금 콜스택 빔 → 🟣 남은 것부터 전부 → 🟠 하나"</b>만 적용하라.</p>
       <div data-m="qz-1"></div>
       <div data-m="qz-2"></div>
@@ -126,6 +140,37 @@
         { line: 4, phase: 'drain-macro', stack: [{ label: 'timer 콜백', from: 'macro' }], micro: [], macro: [], out: ['1', '4', '3', '2'], note: '🟠매크로 콜백 실행 → 출력 <b>2</b>. <b>그래서 2가 꼴찌</b> — 최종 <b>1 · 4 · 3 · 2</b>. 나중 등록한 🟣가 먼저 등록한 🟠(0ms)를 앞질렀다.' },
         { line: 4, phase: 'idle', stack: [], micro: [], macro: [], out: ['1', '4', '3', '2'], note: '두 큐 모두 비었다 — 끝. <b>핵심: 콜스택 빔 → 🟣 전부 → 🟠 하나.</b> 이 한 규칙이 모든 순서를 정한다.' },
       ],
+    }))
+
+    root.querySelector('[data-m="render-elv"]').append(EventLoopViz({
+      title: '한 바퀴: 🟠매크로 하나 → 🟣마이크로 전부 → 🖼️ 렌더',
+      code: [
+        '// 🟠 매크로 task 실행 (예: 버튼 클릭 콜백)',
+        'Promise.resolve().then(() => { /* 화면 수정 */ })  // 🟣 마이크로 등록',
+        '// task 끝 → 🟣 마이크로 전부 비우기',
+        '// 🟣 비었음 → 🖼️ 이제야 브라우저가 화면 그림',
+        '// 그다음에야 다음 🟠 매크로로',
+      ],
+      steps: [
+        { line: 0, phase: 'drain-macro', stack: [{ label: '클릭 콜백', from: 'macro' }], micro: [], macro: [], render: false, out: ['클릭 처리 시작'], note: '🟠매크로 task(버튼 클릭 콜백)가 콜스택에서 실행 중.' },
+        { line: 1, phase: 'drain-macro', stack: [{ label: '클릭 콜백', from: 'macro' }], micro: ['() => 화면 수정'], macro: [], render: false, out: ['클릭 처리 시작'], note: '실행 도중 <code>.then</code> → 화면 수정 콜백을 🟣마이크로에 등록.' },
+        { line: 2, phase: 'idle', stack: [], micro: ['() => 화면 수정'], macro: [], render: false, out: ['클릭 처리 시작'], note: 'task 끝 → 콜스택 빔. 규칙상 <b>렌더보다 🟣마이크로가 먼저</b> — 아직 화면 안 그린다(🖼️ "그릴 차례 대기").' },
+        { line: 2, phase: 'drain-micro', stack: [{ label: '화면 수정', from: 'micro' }], micro: [], macro: [], render: false, out: ['클릭 처리 시작', 'DOM 변경'], note: '🟣마이크로 실행 → DOM을 바꿈. 하지만 <b>아직 화면엔 안 보인다</b>(마이크로 다 비워야 렌더).' },
+        { line: 3, phase: 'render', stack: [], micro: [], macro: [], render: '클릭 결과 반영', out: ['클릭 처리 시작', 'DOM 변경'], note: '🟣 다 비었음 → <b>이제 🖼️ 브라우저가 화면을 그린다.</b> 그래서 마이크로가 <b>렌더보다도</b> 먼저다(화면 갱신이 마이크로 뒤로 밀림).' },
+        { line: 4, phase: 'idle', stack: [], micro: [], macro: [], render: false, out: ['클릭 처리 시작', 'DOM 변경'], note: '렌더 끝 → 다음 🟠매크로 차례. <b>한 바퀴 = 🟠매크로 하나 → 🟣마이크로 전부 → 🖼️ 렌더.</b> 이 바퀴가 계속 돈다.' },
+      ],
+    }))
+
+    root.querySelector('[data-m="qz-render"]').append(Quiz({
+      q: '무한 <code>.then</code>으로 🟣마이크로가 <b>끊임없이</b> 생기면(마이크로 폭주), 그동안 화면은?',
+      options: [
+        '<b>안 그려진다(얼음)</b> — 렌더는 🟣를 전부 비운 뒤인데, 계속 생겨 안 비니까',
+        '<code>.then</code>마다 조금씩 그려진다',
+        '<code>setTimeout</code>처럼 사이사이 그려진다',
+        '마이크로는 화면과 무관해 정상 그려진다',
+      ],
+      answer: 0,
+      explain: '렌더는 <b>콜스택이 비고 🟣마이크로가 전부 빠진 뒤</b>의 틈에만 일어난다. 무한 <code>.then</code>은 🟣가 <b>안 비어</b> 그 틈이 영영 안 온다 → 화면 얼음. 반대로 무거운 일을 <b>🟠 <code>setTimeout</code>으로 쪼개면</b> 매크로 사이마다 렌더 기회가 생겨 안 얼음. (긴 <b>동기</b> 코드도 콜스택을 안 비워 같은 이유로 얼린다 — 뿌리 강 ③ 블로킹.)',
     }))
 
     root.querySelector('[data-m="desugar"]').append(DesugarViz({
