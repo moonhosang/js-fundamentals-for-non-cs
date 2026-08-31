@@ -43,6 +43,7 @@
       <h3 class="section-title">② 눈으로 — 콜스택이 비면 🟣부터 전부, 🟠는 하나 (애니메이션)</h3>
       <span class="learn-tag">📎 ▶ 다음 단계(또는 ▶▶ 자동재생) — 두 큐에 각각 쌓인 뒤, 콜스택이 텅 비면 🟣를 <b>먼저·전부</b> 비우고 🟠로</span>
       <div data-m="elv"></div>
+      <p class="section-desc" style="margin-top:8px">🔑 <b>큐 vs 콜스택 구분</b>: 큐(🟣·🟠)는 콜백이 <b>차례를 기다리는 줄</b>일 뿐 — <b>코드가 실제로 실행되는 곳은 콜스택 하나뿐</b>이다(스레드 하나=작업대 하나, <button class="inline-goto" data-goto="eventloop">뿌리 강</button>). 그래서 큐에서 꺼낸 콜백은 <b>반드시 콜스택에 올라가야</b>(=호출돼야) 비로소 실행된다. "실행 = 콜스택에 올림"이라 기억하라.</p>
 
       <h3 class="section-title">③ 왜 마이크로가 먼저인가 — "한 호흡에 끝내기"</h3>
       <p class="section-desc" style="margin-top:0"><code>Promise</code> 연쇄(<code>.then().then()</code>)는 <b>한 논리적 작업의 마무리</b>다. 그 사이에 타이머·클릭·화면 다시 그리기 같은 <b>바깥 일</b>이 끼어들면 상태가 어긋난다. 그래서 엔진은 <b>지금 벌어진 Promise 뒷정리(마이크로)를 전부 끝낸 뒤에야</b> 다음 매크로(타이머·이벤트)로 넘어간다 — <b>일관성을 위해</b>. 매크로를 하나씩 처리하며 그 틈에 화면을 다시 그릴 기회를 주는 것도 이 구조 덕분(🟠 하나씩).</p>
@@ -135,7 +136,7 @@
         { line: 2, phase: 'sync', stack: ['main'], micro: ['() => print("3")'], macro: ['() => print("2")'], out: ['1'], note: '<code>.then(_)</code> — 콜백을 <b>🟣마이크로 큐</b>로. 이제 두 줄에 하나씩(🟠 먼저 등록, 🟣 나중 등록).' },
         { line: 3, phase: 'sync', stack: ['main'], micro: ['() => print("3")'], macro: ['() => print("2")'], out: ['1', '4'], note: '<code>print("4")</code> — 여전히 동기 → 출력 <b>4</b>. 콜스택이 <b>안 비었으니</b> 두 큐는 <b>계속 대기</b>.' },
         { line: 4, phase: 'idle', stack: [], micro: ['() => print("3")'], macro: ['() => print("2")'], out: ['1', '4'], note: '동기 코드 끝 → <b>콜스택 텅 빔</b>. 이제 루프가 큐를 본다. <b>규칙: 🟣마이크로부터 전부</b> — 🟠는 아직 쳐다도 안 본다.' },
-        { line: 4, phase: 'drain-micro', stack: [{ label: 'then 콜백', from: 'micro' }], micro: [], macro: ['() => print("2")'], out: ['1', '4', '3'], note: '🟣마이크로에서 콜백을 꺼내 콜스택에 올려 실행 → 출력 <b>3</b>. 마이크로 큐가 비었다.' },
+        { line: 4, phase: 'drain-micro', stack: [{ label: 'then 콜백', from: 'micro' }], micro: [], macro: ['() => print("2")'], out: ['1', '4', '3'], note: '🟣마이크로에서 콜백을 꺼내 <b>콜스택에 올려</b> 실행 → 출력 <b>3</b>. <b>왜 콜스택에 올리나?</b> 큐는 <b>기다리는 줄</b>일 뿐 — 코드가 <b>실제로 실행되는 곳은 콜스택 하나뿐</b>이다(스레드 하나=작업대 하나, 뿌리 강). 함수를 "실행"한다 = <b>콜스택에 올려 "호출"</b>한다. 끝나면 pop. 마이크로 큐가 비었다.' },
         { line: 4, phase: 'idle', stack: [], micro: [], macro: ['() => print("2")'], out: ['1', '4', '3'], note: '🟣마이크로 큐 <b>비었음</b> → <b>이제서야</b> 🟠매크로 차례. 큐에서 <b>딱 하나</b> 꺼낸다.' },
         { line: 4, phase: 'drain-macro', stack: [{ label: 'timer 콜백', from: 'macro' }], micro: [], macro: [], out: ['1', '4', '3', '2'], note: '🟠매크로 콜백 실행 → 출력 <b>2</b>. <b>그래서 2가 꼴찌</b> — 최종 <b>1 · 4 · 3 · 2</b>. 나중 등록한 🟣가 먼저 등록한 🟠(0ms)를 앞질렀다.' },
         { line: 4, phase: 'idle', stack: [], micro: [], macro: [], out: ['1', '4', '3', '2'], note: '두 큐 모두 비었다 — 끝. <b>핵심: 콜스택 빔 → 🟣 전부 → 🟠 하나.</b> 이 한 규칙이 모든 순서를 정한다.' },
