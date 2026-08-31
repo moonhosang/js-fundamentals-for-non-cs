@@ -128,6 +128,7 @@
 
     root.querySelector('[data-m="elv"]').append(EventLoopViz({
       title: '위임 → 이벤트 루프: setTimeout 콜백은 🌐 Web API를 거쳐 🟠 큐로',
+      showLoop: true, // 🔄 이벤트 루프 인디케이터 예시 — 주인공을 눈에 보이게(규칙, 일꾼 아님)
       code: [
         'print("주문 시작")                        // 동기',
         'setTimeout(() => print("배달 도착"), 1000) // 🌐 브라우저에 타이머 위임',

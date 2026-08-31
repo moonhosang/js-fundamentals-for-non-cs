@@ -100,6 +100,17 @@
           .ochip { font-family:var(--font-mono,monospace); font-size:13px; font-weight:700; border:1.5px solid var(--green,#16a34a); color:var(--green,#16a34a); border-radius:8px; padding:3px 11px; background:var(--panel,#fff); }
           .ochip.enter { animation: elv-pop .34s cubic-bezier(.2,.7,.3,1); }
           .oarrow { color:var(--muted,#cbd5e1); font-size:12px; }
+          /* 🔄 이벤트 루프 인디케이터 — '옮기는 규칙'(코드 실행자·일꾼 아님). 큐와 콜스택 사이의 순환. */
+          .eventloop { display:flex; align-items:center; gap:11px; margin:0 14px 12px; padding:9px 13px; border:1.5px dashed var(--border,#e5e7eb); border-radius:12px; background:var(--bg,#f6f7fb); transition:border-color .25s, background .25s; }
+          .eventloop.active { border-style:solid; border-color:var(--brand,#6366f1); background:var(--brand-soft,#eef2ff); }
+          .elp-ico { font-size:22px; line-height:1; display:inline-block; flex:none; }
+          .eventloop.active .elp-ico { animation: elv-spin 1.05s linear infinite; }
+          .elp-tag { font-weight:800; font-size:12px; color:var(--muted,#6b7280); white-space:nowrap; line-height:1.25; }
+          .elp-tag small { display:block; font-weight:500; opacity:.75; font-size:9.5px; }
+          .eventloop.active .elp-tag { color:var(--brand,#6366f1); }
+          .elp-state { font-size:12.5px; line-height:1.4; }
+          @keyframes elv-spin { to { transform: rotate(360deg); } }
+          @media (prefers-reduced-motion: reduce) { .eventloop.active .elp-ico { animation:none; } }
           .note { padding:11px 14px; font-size:13px; border-top:1px solid var(--border,#e5e7eb); line-height:1.6; }
           .note b.k { color:var(--brand,#6366f1); }
           .controls { display:flex; align-items:center; gap:8px; padding:10px 14px; border-top:1px solid var(--border,#e5e7eb); flex-wrap:wrap; }
@@ -127,6 +138,7 @@
               <div class="zone render"><div class="zlabel">🖼️ 렌더 <small style="font-weight:500">(화면 그리기 · ~60fps '기회')</small></div><div class="renderbox screen"></div></div>
             </div>
           </div>
+          <div class="eventloop"><span class="elp-ico">🔄</span><span class="elp-tag">이벤트 루프<small>옮기는 규칙 · 일꾼 아님</small></span><span class="elp-state"></span></div>
           <div class="outzone"><div class="zlabel">🖨️ 출력 <small style="font-weight:500">(찍힌 순서)</small></div><div class="outrow"></div></div>
           <div class="note"></div>
           <div class="controls">
@@ -146,6 +158,9 @@
       // 🖼️ 렌더 존도 위임 존과 같은 정책 — render 쓰는 시나리오(렌더 강)에서만 노출.
       this._hasRender = (this._s.steps || []).some((st) => st.render || st.phase === 'render')
       if (!this._hasRender) $('.zone.render').style.display = 'none'
+      // 🔄 이벤트 루프 인디케이터 — showLoop 켠 강의에서만(주인공을 가시화, progressive disclosure).
+      this._showLoop = !!this._s.showLoop
+      if (!this._showLoop) $('.eventloop').style.display = 'none'
       // 단일 대기 큐 모드(intro용) — 마이크로/매크로 구분을 아직 안 가르치는 강의에서 큐를 '하나'로.
       if (this._s.singleQueue) {
         $('.zone.micro').style.display = 'none'
@@ -251,6 +266,28 @@
       $('.zone.micro').classList.toggle('hot', st.phase === 'drain-micro')
       $('.zone.macro').classList.toggle('hot', st.phase === 'drain-macro')
       if (this._hasRender) $('.zone.render').classList.toggle('hot', st.phase === 'render' || !!st.render)
+
+      // 🔄 이벤트 루프 인디케이터 상태 — 규칙 관점: 스택 비면 큐에서 하나 꺼내 콜스택으로 올림.
+      if (this._showLoop) {
+        const el = $('.eventloop')
+        const queued = (st.webapi || []).length + (st.micro || []).length + (st.macro || []).length
+        let active = false, state = ''
+        if (st.phase === 'drain-micro' || st.phase === 'drain-macro' || st.phase === 'run') {
+          active = true; state = '큐에서 콜백을 꺼내 <b>콜스택에 올렸다</b> — 그래서 왼쪽 프레임이 방금 날아왔다.'
+        } else if (st.phase === 'idle' && ((st.micro || []).length + (st.macro || []).length)) {
+          active = true; state = '<b>콜스택이 비었다!</b> → 큐에서 <b>하나 꺼내 콜스택으로</b> 올릴 차례.'
+        } else if (st.phase === 'render') {
+          state = '큐가 비어 — 이제 🖼️ 화면 그릴 차례를 준다.'
+        } else if (st.phase === 'idle') {
+          state = queued ? '아직 위임한 일이 안 끝남 — <b>대기</b>.' : '큐도 비어 <b>할 일 없음</b> — 대기.'
+        } else if (st.phase === 'delegate') {
+          state = '느린 일은 🌐 Web API에 맡기는 중 — 루프는 <b>대기</b>.'
+        } else {
+          state = '콜스택이 실행 중이라 — 이벤트 루프는 <b>비기를 기다린다</b>(끼어들지 않음).'
+        }
+        el.classList.toggle('active', active)
+        el.querySelector('.elp-state').innerHTML = state
+      }
 
       // 설명
       $('.note').innerHTML = st.note ? `<b class="k">🔑</b> ${st.note}` : ''

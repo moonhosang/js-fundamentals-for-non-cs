@@ -89,6 +89,7 @@
 - `phase`: `'sync'|'delegate'|'drain-micro'|'drain-macro'|'render'|'idle'` — 국면 배지 + 활성 구역 하이라이트.
 - **선택 존 = progressive disclosure**(핵심 설계): 🌐 Web API(`webapi:[...]`)·🖼️ 렌더(`render:` truthy=그리는 중, 라벨 문자열 가능)는 **그 필드를 쓰는 스텝이 하나라도 있을 때만 자동 노출**. microtask 순서 드릴처럼 위임·렌더가 불필요하면 존이 숨어 깔끔 → **N개 맞춤 위젯이 아니라 옵션 존으로 조립되는 단일 정규 기구**(SSOT). 새 국면 요구 시 존을 더 붙인다(레슨 아니라 엔진이 자람).
 - ⚠️ 렌더는 매 사이클 보장 아닌 **~60fps '기회'**로 표기(과단순화 방지). 긴 동기·🟣폭주가 그 기회를 굶기는 걸로 블로킹·starvation을 한 원리로 회수.
+- **`showLoop:true`**: 🔄 **이벤트 루프 인디케이터**(큐↔스택 사이 순환의 주인공을 가시화). phase에 따라 흐림(대기)↔활성(회전) — 스택 비고 큐에 항목 있으면 "꺼내 올릴 차례", drain/run이면 "올렸다". ⚠️ **"옮기는 규칙 · 일꾼 아님"** 명시로 *두 번째 워커=멀티스레드* 오해 차단(캐릭터 의인화 금지, 그게 핵심 설계 판단). 예시: `eventloop` ④.
 - **`singleQueue:true`**(+`queueLabel?`): 마이크로/매크로를 아직 안 가르치는 **intro(`async` ②)**용 — 🟣존 숨기고 🟠존을 중립 "⏳ 대기 큐"로 relabel. 큐를 '하나'로 본 뒤 `microtask` 강에서 둘로 쪼개는 seam. (이걸로 async 트랙 전체가 EventLoopViz 단일 엔진으로 통일 — MemoryModel-relabel 하치 제거.)
 - **✈️ FLIP 비행**: 큐→콜스택 이동을 실제로 날려 보냄(재렌더 전 큐 앞칩 좌표 포착 → `from-*` 프레임 위치로 `.flyer` 클론 transition 0.62s, 착지 전 프레임 `arriving`으로 숨김). reduced-motion이면 생략.
 - `stack` 항목: `'main'`(문자열) 또는 `{label, from:'micro'|'macro'}` — `from`이면 그 큐 색으로 **날아드는(fly-in) 애니**. `micro`/`macro`: 콜백 라벨 배열(앞=다음 차례, `다음 ▶` 표시). `out`: 누적 출력(마지막 칩만 pop).
