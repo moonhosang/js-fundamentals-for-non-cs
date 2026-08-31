@@ -85,6 +85,15 @@
       <div data-m="qz-2"></div>
       <div data-m="qz-3"></div>
 
+      <h3 class="section-title">⑧ 🎬 난잡한 예제 3개 — 끝까지 애니로 (예측 → 확인)</h3>
+      <p class="section-desc" style="margin-top:0">중첩·체인·교차가 섞이면 감으로는 못 푼다. 매번 <b>"지금 콜스택 빔 → 🟣 남은 것부터 전부 → 🟠 하나 → (그게 만든 🟣 다시 전부)"</b>만 적용하며 ▶ 밟아라.</p>
+      <span class="learn-tag">📎 예제 1 — 🟣 <code>then</code> 안에 🟠 <code>setTimeout</code>이 있으면? (그 setTimeout은 매크로 <b>뒤에</b> 붙는다)</span>
+      <div data-m="mess1"></div>
+      <span class="learn-tag">📎 예제 2 — 🟣 <code>.then</code> <b>체인</b> + 🟠 setTimeout (체인은 <b>앞이 끝나야 다음이 등록</b>)</span>
+      <div data-m="mess2"></div>
+      <span class="learn-tag">📎 예제 3 — 🟠와 🟣가 <b>서로 안에</b> 중첩(제일 난잡): <b>매크로 하나마다 그 사이에 🟣 전부</b></span>
+      <div data-m="mess3"></div>
+
       <div class="concept">
         <p class="concept-lead">📖 한 줄 요약</p>
         <p class="section-desc" style="margin-top:0"><b>대기줄은 둘이다.</b> 콜스택이 빌 때마다 <b>🟣마이크로(Promise)를 전부</b> 비운 뒤 <b>🟠매크로(setTimeout·이벤트)를 하나</b> 꺼낸다 — 그 하나가 만든 🟣를 <b>다시 전부</b> 비우고 반복.
@@ -234,6 +243,94 @@
       ],
       answer: 0,
       explain: '<code>go()</code> 진입 → <b>1</b>(동기). <code>await null</code>을 만나면 <b>거기서 함수를 멈추고 제어를 밖으로 양보</b> — <b>await 뒷부분(<code>print("3")</code>)은 🟣마이크로로 예약</b>된다(위 디슈가 애니메이션의 <code>.then</code> 콜백). 밖으로 나와 동기 <code>print("2")</code> → <b>2</b>. 콜스택 빔 → 🟣마이크로(3) → <b>3</b> → 🟠매크로(4) → <b>4</b>. <b>1 · 2 · 3 · 4.</b>',
+    }))
+
+    root.querySelector('[data-m="mess1"]').append(EventLoopViz({
+      title: '예제 1 — 🟣 then 안의 🟠 setTimeout → A F C E B D',
+      showLoop: true,
+      code: [
+        'print("A")',
+        'setTimeout(() => print("B"), 0)          // 🟠',
+        'Promise.resolve().then(() => {           // 🟣',
+        '  print("C")',
+        '  setTimeout(() => print("D"), 0)        // 🟣 안의 🟠',
+        '})',
+        'Promise.resolve().then(() => print("E"))  // 🟣',
+        'print("F")',
+      ],
+      steps: [
+        { line: 0, phase: 'sync', stack: ['main'], micro: [], macro: [], out: ['A'], note: 'A 동기 출력.' },
+        { line: 1, phase: 'sync', stack: ['main'], micro: [], macro: ['() => print("B")'], out: ['A'], note: 'setTimeout(B) → 🟠매크로.' },
+        { line: 2, phase: 'sync', stack: ['main'], micro: ['() => { C; setTimeout(D) }'], macro: ['() => print("B")'], out: ['A'], note: '첫 .then(C 블록) → 🟣마이크로.' },
+        { line: 6, phase: 'sync', stack: ['main'], micro: ['() => { C; setTimeout(D) }', '() => print("E")'], macro: ['() => print("B")'], out: ['A'], note: '둘째 .then(E) → 🟣 뒤에. 🟣=[C블록, E].' },
+        { line: 7, phase: 'sync', stack: ['main'], micro: ['() => { C; setTimeout(D) }', '() => print("E")'], macro: ['() => print("B")'], out: ['A', 'F'], note: 'F 동기 → 출력 A F. 콜스택 아직 안 빔.' },
+        { line: 7, phase: 'idle', stack: [], micro: ['() => { C; setTimeout(D) }', '() => print("E")'], macro: ['() => print("B")'], out: ['A', 'F'], note: '콜스택 빔 → 🟣부터 전부.' },
+        { line: 7, phase: 'drain-micro', stack: [{ label: 'then(C) 콜백', from: 'micro' }], micro: ['() => print("E")'], macro: ['() => print("B")', '() => print("D")'], out: ['A', 'F', 'C'], note: '🟣 첫째 실행 → C. 그 안 <code>setTimeout(D)</code>는 🟠 <b>뒤에</b> 추가(지금 실행 X). 🟠=[B, D].' },
+        { line: 7, phase: 'drain-micro', stack: [{ label: 'then(E) 콜백', from: 'micro' }], micro: [], macro: ['() => print("B")', '() => print("D")'], out: ['A', 'F', 'C', 'E'], note: '🟣 둘째(E) → E. 🟣 다 비움.' },
+        { line: 7, phase: 'idle', stack: [], micro: [], macro: ['() => print("B")', '() => print("D")'], out: ['A', 'F', 'C', 'E'], note: '🟣 비었으니 🟠 하나. 큐=[B, D].' },
+        { line: 7, phase: 'drain-macro', stack: [{ label: 'timer(B)', from: 'macro' }], micro: [], macro: ['() => print("D")'], out: ['A', 'F', 'C', 'E', 'B'], note: '🟠 하나(B) → B.' },
+        { line: 7, phase: 'drain-macro', stack: [{ label: 'timer(D)', from: 'macro' }], micro: [], macro: [], out: ['A', 'F', 'C', 'E', 'B', 'D'], note: '🟠 하나(D) → D. <b>최종 A · F · C · E · B · D.</b> C가 만든 D가 맨 끝(매크로 뒤에 붙어서).' },
+        { line: 7, phase: 'idle', stack: [], micro: [], macro: [], out: ['A', 'F', 'C', 'E', 'B', 'D'], note: '전부 비었다 — 끝.' },
+      ],
+    }))
+
+    root.querySelector('[data-m="mess2"]').append(EventLoopViz({
+      title: '예제 2 — 🟣 .then 체인 + 🟠 setTimeout → P1 P3 P2 T1 T2',
+      showLoop: true,
+      code: [
+        'setTimeout(() => print("T1"), 0)          // 🟠',
+        'Promise.resolve()',
+        '  .then(() => print("P1"))                // 🟣',
+        '  .then(() => print("P2"))                // P1 끝나야 등록되는 체인',
+        'setTimeout(() => print("T2"), 0)          // 🟠',
+        'Promise.resolve().then(() => print("P3")) // 🟣',
+      ],
+      steps: [
+        { line: 0, phase: 'sync', stack: ['main'], micro: [], macro: ['() => print("T1")'], out: [], note: 'setTimeout(T1) → 🟠.' },
+        { line: 2, phase: 'sync', stack: ['main'], micro: ['() => print("P1")'], macro: ['() => print("T1")'], out: [], note: '.then(P1) → 🟣. (<b>.then(P2)는 아직 등록 안 됨</b> — P1이 끝나야!)' },
+        { line: 4, phase: 'sync', stack: ['main'], micro: ['() => print("P1")'], macro: ['() => print("T1")', '() => print("T2")'], out: [], note: 'setTimeout(T2) → 🟠 뒤에. 🟠=[T1, T2].' },
+        { line: 5, phase: 'sync', stack: ['main'], micro: ['() => print("P1")', '() => print("P3")'], macro: ['() => print("T1")', '() => print("T2")'], out: [], note: '.then(P3) → 🟣 뒤에. 🟣=[P1, P3].' },
+        { line: 5, phase: 'idle', stack: [], micro: ['() => print("P1")', '() => print("P3")'], macro: ['() => print("T1")', '() => print("T2")'], out: [], note: '콜스택 빔 → 🟣 전부.' },
+        { line: 5, phase: 'drain-micro', stack: [{ label: 'then(P1)', from: 'micro' }], micro: ['() => print("P3")', '() => print("P2")'], macro: ['() => print("T1")', '() => print("T2")'], out: ['P1'], note: '🟣 P1 실행 → P1. <b>이제야 .then(P2)가 🟣 뒤에 등록</b>(체인은 앞이 끝나야!). 🟣=[P3, P2].' },
+        { line: 5, phase: 'drain-micro', stack: [{ label: 'then(P3)', from: 'micro' }], micro: ['() => print("P2")'], macro: ['() => print("T1")', '() => print("T2")'], out: ['P1', 'P3'], note: '🟣 다음 = P3 → P3. 🟣=[P2].' },
+        { line: 5, phase: 'drain-micro', stack: [{ label: 'then(P2)', from: 'micro' }], micro: [], macro: ['() => print("T1")', '() => print("T2")'], out: ['P1', 'P3', 'P2'], note: '아직 🟣 비우는 중 → P2 → P2. <b>그래서 P2가 P3보다 늦다</b>(체인이라 나중 등록). 🟣 다 비움.' },
+        { line: 5, phase: 'idle', stack: [], micro: [], macro: ['() => print("T1")', '() => print("T2")'], out: ['P1', 'P3', 'P2'], note: '🟣 비었으니 🟠 하나씩.' },
+        { line: 5, phase: 'drain-macro', stack: [{ label: 'timer(T1)', from: 'macro' }], micro: [], macro: ['() => print("T2")'], out: ['P1', 'P3', 'P2', 'T1'], note: '🟠 T1 → T1.' },
+        { line: 5, phase: 'drain-macro', stack: [{ label: 'timer(T2)', from: 'macro' }], micro: [], macro: [], out: ['P1', 'P3', 'P2', 'T1', 'T2'], note: '🟠 T2 → T2. <b>최종 P1 · P3 · P2 · T1 · T2.</b>' },
+        { line: 5, phase: 'idle', stack: [], micro: [], macro: [], out: ['P1', 'P3', 'P2', 'T1', 'T2'], note: '끝.' },
+      ],
+    }))
+
+    root.querySelector('[data-m="mess3"]').append(EventLoopViz({
+      title: '예제 3 (제일 난잡) — 🟠·🟣 상호 중첩 → start end promise1 timeout1 P-in-T T-in-P',
+      showLoop: true,
+      code: [
+        'print("start")',
+        'setTimeout(() => {                       // 🟠',
+        '  print("timeout1")',
+        '  Promise.resolve().then(() => print("P-in-T"))  // 🟠 안의 🟣',
+        '}, 0)',
+        'Promise.resolve().then(() => {           // 🟣',
+        '  print("promise1")',
+        '  setTimeout(() => print("T-in-P"), 0)   // 🟣 안의 🟠',
+        '})',
+        'print("end")',
+      ],
+      steps: [
+        { line: 0, phase: 'sync', stack: ['main'], micro: [], macro: [], out: ['start'], note: 'start 동기.' },
+        { line: 1, phase: 'sync', stack: ['main'], micro: [], macro: ['() => { timeout1; then(P-in-T) }'], out: ['start'], note: 'setTimeout(블록) → 🟠.' },
+        { line: 5, phase: 'sync', stack: ['main'], micro: ['() => { promise1; setTimeout(T-in-P) }'], macro: ['() => { timeout1; then(P-in-T) }'], out: ['start'], note: '.then(블록) → 🟣.' },
+        { line: 9, phase: 'sync', stack: ['main'], micro: ['() => { promise1; setTimeout(T-in-P) }'], macro: ['() => { timeout1; then(P-in-T) }'], out: ['start', 'end'], note: 'end 동기 → 출력 start end.' },
+        { line: 9, phase: 'idle', stack: [], micro: ['() => { promise1; setTimeout(T-in-P) }'], macro: ['() => { timeout1; then(P-in-T) }'], out: ['start', 'end'], note: '콜스택 빔 → 🟣 전부 먼저.' },
+        { line: 9, phase: 'drain-micro', stack: [{ label: 'promise 콜백', from: 'micro' }], micro: [], macro: ['() => { timeout1; then(P-in-T) }', '() => print("T-in-P")'], out: ['start', 'end', 'promise1'], note: '🟣 실행 → promise1. 그 안 <code>setTimeout(T-in-P)</code> → 🟠 뒤에. 🟠=[timeout블록, T-in-P].' },
+        { line: 9, phase: 'idle', stack: [], micro: [], macro: ['() => { timeout1; then(P-in-T) }', '() => print("T-in-P")'], out: ['start', 'end', 'promise1'], note: '🟣 비었으니 🟠 하나.' },
+        { line: 9, phase: 'drain-macro', stack: [{ label: 'timer 콜백', from: 'macro' }], micro: ['() => print("P-in-T")'], macro: ['() => print("T-in-P")'], out: ['start', 'end', 'promise1', 'timeout1'], note: '🟠 하나(timeout 블록) → timeout1. 그 안 <code>.then(P-in-T)</code> → 🟣. macro=[T-in-P], micro=[P-in-T].' },
+        { line: 9, phase: 'idle', stack: [], micro: ['() => print("P-in-T")'], macro: ['() => print("T-in-P")'], out: ['start', 'end', 'promise1', 'timeout1'], note: '<b>매크로 하나 끝났으니 다시 🟣부터 전부!</b> (매 매크로 사이에 🟣 다 비운다) → P-in-T 차례.' },
+        { line: 9, phase: 'drain-micro', stack: [{ label: 'then(P-in-T)', from: 'micro' }], micro: [], macro: ['() => print("T-in-P")'], out: ['start', 'end', 'promise1', 'timeout1', 'P-in-T'], note: '🟣(P-in-T) → P-in-T. 🟣 비움.' },
+        { line: 9, phase: 'idle', stack: [], micro: [], macro: ['() => print("T-in-P")'], out: ['start', 'end', 'promise1', 'timeout1', 'P-in-T'], note: '🟣 비었으니 🟠 하나 = T-in-P.' },
+        { line: 9, phase: 'drain-macro', stack: [{ label: 'timer(T-in-P)', from: 'macro' }], micro: [], macro: [], out: ['start', 'end', 'promise1', 'timeout1', 'P-in-T', 'T-in-P'], note: '🟠(T-in-P) → T-in-P. <b>최종: start · end · promise1 · timeout1 · P-in-T · T-in-P.</b> 매크로 하나마다 사이에 🟣를 전부 비우는 게 핵심.' },
+        { line: 9, phase: 'idle', stack: [], micro: [], macro: [], out: ['start', 'end', 'promise1', 'timeout1', 'P-in-T', 'T-in-P'], note: '끝.' },
+      ],
     }))
 
     wireGoto(root)
