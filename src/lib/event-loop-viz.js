@@ -183,7 +183,7 @@
         const fromCls = (fresh && f.from) ? ' from-' + f.from : ''
         const dot = f.from === 'micro' ? '<span class="dot" style="background:#7c3aed"></span>' : f.from === 'macro' ? '<span class="dot" style="background:#d97706"></span>' : ''
         return `<div class="frame${top ? ' top' : ''}${fromCls}">${dot}<span>${esc(f.label)}</span>${top ? '<span class="run">● 실행 중</span>' : ''}</div>`
-      }).join('') : '<div class="qempty">(콜스택 비어 있음 — 이제 큐를 본다)</div>'
+      }).join('') : '<div class="qempty">(비어 있음 · 지금 실행 중인 코드 없음 → 이벤트 루프가 큐를 확인)</div>'
 
       // 큐 렌더러 (앞=다음 차례)
       const renderQueue = (arr, kind, prevSet) => {
