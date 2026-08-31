@@ -25,6 +25,7 @@
   const PHASE = {
     sync: { t: '동기 실행', c: '#6366f1' },
     delegate: { t: '🌐 브라우저에 위임', c: '#0891b2' },
+    run: { t: '▶ 큐에서 꺼내 실행', c: '#6366f1' },
     'drain-micro': { t: '🟣 마이크로 비우기', c: '#7c3aed' },
     'drain-macro': { t: '🟠 매크로 하나', c: '#d97706' },
     render: { t: '🖼️ 화면 렌더', c: '#16a34a' },
@@ -145,6 +146,12 @@
       // 🖼️ 렌더 존도 위임 존과 같은 정책 — render 쓰는 시나리오(렌더 강)에서만 노출.
       this._hasRender = (this._s.steps || []).some((st) => st.render || st.phase === 'render')
       if (!this._hasRender) $('.zone.render').style.display = 'none'
+      // 단일 대기 큐 모드(intro용) — 마이크로/매크로 구분을 아직 안 가르치는 강의에서 큐를 '하나'로.
+      if (this._s.singleQueue) {
+        $('.zone.micro').style.display = 'none'
+        const ml = $('.zone.macro .zlabel')
+        if (ml) ml.innerHTML = (this._s.queueLabel || '⏳ 대기 큐 <small style="font-weight:500">(콜백이 기다림)</small>') + '<span class="cnt macnt"></span>'
+      }
       $('[data-prev]').onclick = () => { this._stopAuto(); if (this._step > 0) { this._step--; this._update() } }
       $('[data-next]').onclick = () => { this._stopAuto(); this._next() }
       $('[data-reset]').onclick = () => { this._stopAuto(); this._step = 0; this._update() }
