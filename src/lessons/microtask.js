@@ -123,6 +123,7 @@
 
     root.querySelector('[data-m="elv"]').append(EventLoopViz({
       title: '콜스택이 비면 → 🟣마이크로 전부 → 🟠매크로 하나',
+      showLoop: true,
       code: [
         'print("1")                                // 동기',
         'setTimeout(() => print("2"), 0)           // 🟠 매크로로',
@@ -146,6 +147,7 @@
 
     root.querySelector('[data-m="render-elv"]').append(EventLoopViz({
       title: '한 바퀴: 🟠매크로 하나 → 🟣마이크로 전부 → 🖼️ 렌더',
+      showLoop: true,
       code: [
         '// 🟠 매크로 task 실행 (예: 버튼 클릭 콜백)',
         'Promise.resolve().then(() => { /* 화면 수정 */ })  // 🟣 마이크로 등록',

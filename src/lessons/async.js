@@ -96,7 +96,7 @@
 
     root.querySelector('[data-m="mem"]').append(EventLoopViz({
       title: '이벤트 루프 — 콜스택이 비어야 대기 큐에서 꺼낸다',
-      singleQueue: true, // intro라 큐를 '하나'로(마이크로/매크로 구분은 다음 강의)
+      singleQueue: true, showLoop: true, // intro라 큐를 '하나'로(마이크로/매크로 구분은 다음 강의)
       code: [
         'print("A")                       // 동기 — 지금',
         'setTimeout(() => print("B"), 0)  // 이 콜백을 대기 큐로',
@@ -126,7 +126,7 @@
 
     root.querySelector('[data-m="promise-elv"]').append(EventLoopViz({
       title: 'then 콜백은 대기 큐로 — 동기가 먼저',
-      singleQueue: true,
+      singleQueue: true, showLoop: true,
       code: [
         'let p = Promise.resolve(10)                     // 이미 10으로 준비된 약속',
         'p.then((value) => print("값 도착: " + value))   // 콜백을 대기 큐로',
@@ -158,7 +158,7 @@
 
     root.querySelector('[data-m="await-elv"]').append(EventLoopViz({
       title: 'await마다 멈춤(양보) → 밖이 먼저 → 멈춘 자리부터 재개',
-      singleQueue: true, queueLabel: '⏳ 대기 큐 <small style="font-weight:500">(멈춘 함수의 "이어서"가 기다림)</small>',
+      singleQueue: true, showLoop: true, queueLabel: '⏳ 대기 큐 <small style="font-weight:500">(멈춘 함수의 "이어서"가 기다림)</small>',
       code: [
         'function wait(v) { return Promise.resolve(v) }   // v로 이미 준비된 약속을 돌려줌',
         'async function run() {',

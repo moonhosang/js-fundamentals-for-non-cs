@@ -94,6 +94,7 @@
 
     root.querySelector('[data-m="elv"]').append(EventLoopViz({
       title: 'try/catch는 콜백이 돌기 전에 pop되어 사라진다',
+      showLoop: true,
       code: [
         'try {',
         '  setTimeout(() => { null.x }, 0)   // 🟠 매크로로 등록만',
