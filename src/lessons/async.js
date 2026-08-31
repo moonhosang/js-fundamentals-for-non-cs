@@ -49,11 +49,15 @@
 
       <h3 class="section-title">③ Promise — "나중에 올 값"의 그릇 · <code>.then</code></h3>
       <span class="learn-tag">📎 Promise = 아직 없는 값의 약속. .then(콜백)으로 "값 오면 이거 해줘"를 건다(콜백 지옥의 대안)</span>
-      <div class="card"><div class="file-label">🔬 Promise · then</div><div data-m="promise"></div></div>
+      <div class="card"><div class="file-label">🔬 Promise · then (직접 실행)</div><div data-m="promise"></div></div>
+      <span class="learn-tag">📎 ▶ 다음 단계 — <code>.then</code> 콜백은 <b>대기 큐로</b> 예약되고, <b>동기 코드가 먼저</b> 실행된 뒤에야 큐에서 꺼내진다</span>
+      <div data-m="promise-elv"></div>
 
       <h3 class="section-title">④ <code>async / await</code> — 비동기를 동기처럼 읽기</h3>
       <span class="learn-tag">📎 await = "이 값 올 때까지 이 함수만 기다림" — .then 사슬을 위→아래 평범한 코드처럼. 에러는 try/catch로</span>
-      <div class="card"><div class="file-label">🔬 async 함수 안에서 await</div><div data-m="await"></div></div>
+      <div class="card"><div class="file-label">🔬 async 함수 안에서 await (직접 실행)</div><div data-m="await"></div></div>
+      <span class="learn-tag">📎 ▶ 다음 단계 — <code>await</code>마다 함수가 <b>멈추고(양보) → 밖이 먼저 → 멈춘 자리부터 재개</b>. 두 번의 await를 각각 눈으로</span>
+      <div data-m="await-elv"></div>
       <div data-m="qz-await"></div>
 
       <div class="concept">
@@ -117,6 +121,24 @@
       'print("먼저 찍힘")            // 이게 then보다 먼저 (then은 큐로)',
     ].join('\n') }))
 
+    root.querySelector('[data-m="promise-elv"]').append(EventLoopViz({
+      title: 'then 콜백은 대기 큐로 — 동기가 먼저',
+      singleQueue: true,
+      code: [
+        'let p = Promise.resolve(10)                     // 이미 10으로 준비된 약속',
+        'p.then((value) => print("값 도착: " + value))   // 콜백을 대기 큐로',
+        'print("먼저 찍힘")                              // 동기',
+        '// 콜스택 빔 → 대기 큐에서 then 콜백 실행',
+      ],
+      steps: [
+        { line: 0, phase: 'sync', stack: ['main'], macro: [], out: [], note: '<code>p = Promise.resolve(10)</code> — p는 값이 아니라 <b>"10을 줄" 약속(Promise 객체)</b>. 이미 준비됐다.' },
+        { line: 1, phase: 'sync', stack: ['main'], macro: ['(value) => print("값 도착")'], out: [], note: '<code>.then(콜백)</code> — "값 오면 실행할" 콜백을 <b>대기 큐에 예약</b>한다. p가 <b>이미 준비됐어도 지금 실행하지 않는다</b>.' },
+        { line: 2, phase: 'sync', stack: ['main'], macro: ['(value) => print("값 도착")'], out: ['먼저 찍힘'], note: '동기 <code>print("먼저 찍힘")</code>이 <b>먼저</b> 실행 → 출력. then 콜백은 큐에서 대기.' },
+        { line: 3, phase: 'idle', stack: [], macro: ['(value) => print("값 도착")'], out: ['먼저 찍힘'], note: '동기 끝 → <b>콜스택 빔</b> → 이제 대기 큐에서 then 콜백을 꺼낼 차례.' },
+        { line: 3, phase: 'run', stack: [{ label: 'then 콜백', from: 'macro' }], macro: [], out: ['먼저 찍힘', '값 도착: 10'], note: 'then 콜백을 콜스택에 올려 실행 → "값 도착: 10". <b>그래서 then은 동기보다 늦다</b> — 값이 이미 있어도 큐를 거친다.' },
+      ],
+    }))
+
     root.querySelector('[data-m="await"]').append(Runner({ showBox: false, code: [
       'function wait(v) { return Promise.resolve(v) }',
       '',
@@ -130,6 +152,32 @@
       'run()',
       'print("run()은 기다리지 않고 넘어감")   // await는 run만 멈춤',
     ].join('\n') }))
+
+    root.querySelector('[data-m="await-elv"]').append(EventLoopViz({
+      title: 'await마다 멈춤(양보) → 밖이 먼저 → 멈춘 자리부터 재개',
+      singleQueue: true, queueLabel: '⏳ 대기 큐 <small style="font-weight:500">(멈춘 함수의 "이어서"가 기다림)</small>',
+      code: [
+        'async function run() {',
+        '  print("시작")',
+        '  let a = await wait(1)   // ① 여기서 멈춤(양보)',
+        '  let b = await wait(2)   // ② 또 멈춤(양보)',
+        '  print("합계: " + (a + b))',
+        '}',
+        'run()',
+        'print("run()은 기다리지 않고 넘어감")',
+      ],
+      steps: [
+        { line: 6, phase: 'sync', stack: ['main', 'run()'], macro: [], out: [], note: '<code>run()</code> 호출 → run 프레임이 콜스택에 올라간다(main 위).' },
+        { line: 1, phase: 'sync', stack: ['main', 'run()'], macro: [], out: ['시작'], note: 'run() 본문 시작 → <code>print("시작")</code> 동기 실행 → 출력 <b>시작</b>.' },
+        { line: 2, phase: 'idle', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작'], note: '<b>① <code>await wait(1)</code> 만남</b> → run()은 <b>여기서 멈추고</b>(프레임이 스택에서 <b>내려감 = 제어 양보</b>), <b>await 뒤 나머지를 대기 큐에 예약</b>. a엔 1이 올 예정.' },
+        { line: 7, phase: 'sync', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '제어가 밖(main)으로 돌아와 <b>밖의 동기 코드가 먼저</b> 실행 → 출력. <b>run()은 안 기다린다</b> — 멈춘 채 큐에서 대기.' },
+        { line: 7, phase: 'idle', stack: [], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'main도 끝 → <b>콜스택 빔</b> → 대기 큐에서 run()의 "이어서"를 꺼낼 차례.' },
+        { line: 3, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'run()이 <b>멈춘 자리부터 재개</b> → <code>a</code>에 1 확정. 곧 <b>② <code>await wait(2)</code></b>를 만난다.' },
+        { line: 3, phase: 'idle', stack: [], macro: ['run() 이어서 · b=2 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '<b>두 번째 await</b> → <b>또 멈추고 양보</b>, 남은 부분을 다시 대기 큐로. (같은 일이 반복 — await 하나당 한 번씩)' },
+        { line: 4, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '다시 재개 → <code>b</code>에 2 확정 → <code>a+b=3</code> → 출력 <b>합계: 3</b>.' },
+        { line: 5, phase: 'idle', stack: [], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '끝. <b>핵심: <code>await</code>마다 함수가 멈추고(양보) → 밖이 먼저 돌고 → 멈춘 자리부터 재개.</b> 그래서 "run()은 안 기다리고" 밖이 먼저 찍혔다.' },
+      ],
+    }))
 
     root.querySelector('[data-m="qz-await"]').append(Quiz({
       q: '<code>await</code>는 무엇을 멈추나?',
