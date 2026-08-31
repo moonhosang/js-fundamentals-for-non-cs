@@ -60,6 +60,8 @@
       <div data-m="await-elv"></div>
       <span class="learn-tag">📎 ⚖️ 대비 — 위(그냥 <code>run()</code>)와 아래(<code>await run()</code>)의 <b>유일한 차이는 <code>await</code> 한 단어</b>. 붙이면 <b>부른 쪽이 기다린다</b></span>
       <div class="card"><div class="file-label">🔬 <code>await run()</code> — 부른 쪽(main)이 run()을 기다린다 (직접 실행)</div><div data-m="await-vs"></div></div>
+      <span class="learn-tag">📎 ▶ 다음 단계 — 같은 걸 애니로: <code>await run()</code>이라 main이 run()을 <b>끝까지 기다렸다가</b> 재개(main·run 둘 다 멈췄다 순서대로 재개)</span>
+      <div data-m="await-vs-elv"></div>
       <div class="card" style="border-color:var(--brand)">
         <div class="file-label">⚖️ 이 둘의 차이 = <code>await</code> 하나</div>
         <p class="section-desc" style="margin:0">같은 <code>run()</code>인데 <b>부른 쪽에 <code>await</code>를 붙였냐</b>로 흐름이 정반대다:
@@ -208,6 +210,34 @@
       '// 순서: "run: 시작" → "run: 끝" → "main: ... 끝난 뒤에야" (기다렸다 실행)',
       '// (await 없이 run()만 했다면 "main: ..."이 run 끝나기 전에 먼저 나왔다)',
     ].join('\n') }))
+
+    root.querySelector('[data-m="await-vs-elv"]').append(EventLoopViz({
+      title: 'await run() — main이 run() 끝까지 기다렸다가 재개',
+      singleQueue: true, showLoop: true, queueLabel: '⏳ 대기 큐 <small style="font-weight:500">(멈춘 함수의 "이어서"가 기다림)</small>',
+      code: [
+        'function wait(v) { return Promise.resolve(v) }',
+        'async function run() {',
+        '  print("run: 시작")',
+        '  await wait(1)',
+        '  print("run: 끝")',
+        '}',
+        'async function main() {',
+        '  await run()   // run()이 끝날 때까지 기다림',
+        '  print("main: run() 끝난 뒤에야")',
+        '}',
+        'main()',
+      ],
+      steps: [
+        { line: 10, phase: 'sync', stack: ['main()'], macro: [], out: [], note: '<code>main()</code> 호출 → main 프레임이 콜스택에 올라간다.' },
+        { line: 7, phase: 'sync', stack: ['main()', 'run()'], macro: [], out: [], note: 'main이 <code>await run()</code> 만남 → 먼저 <b>run()을 호출</b>(run 프레임 push, main 위). run 본문이 돌기 시작.' },
+        { line: 2, phase: 'sync', stack: ['main()', 'run()'], macro: [], out: ['run: 시작'], note: 'run() 실행 → <code>print("run: 시작")</code> 동기 출력.' },
+        { line: 3, phase: 'idle', stack: [], macro: ['run() 이어서 · "run: 끝"부터'], out: ['run: 시작'], note: 'run이 <code>await wait(1)</code>에서 <b>멈춤</b>(run 프레임 내려감). 게다가 main도 <b>run()을 await 중</b>이라 <b>같이 멈춘다</b>(main 프레임도 내려감) → <b>둘 다 멈춰 콜스택이 빈다.</b> run의 나머지를 대기 큐로.' },
+        { line: 4, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['run: 시작', 'run: 끝'], note: '콜스택이 비었으니 루프가 run의 "이어서"를 꺼내 <b>재개</b> → <code>print("run: 끝")</code> 출력. 이로써 <b>run()이 끝나고 그 약속이 풀린다</b>.' },
+        { line: 8, phase: 'idle', stack: [], macro: ['main() 이어서 · run 끝난 뒤부터'], out: ['run: 시작', 'run: 끝'], note: 'run이 끝나 약속이 풀리자 → <b>run을 기다리던 main의 "이어서"가 이제 대기 큐로</b>. (main이 여태 멈춰 있던 이유 = run이 끝나길 기다린 것.)' },
+        { line: 8, phase: 'run', stack: [{ label: 'main() 재개', from: 'macro' }], macro: [], out: ['run: 시작', 'run: 끝', 'main: run() 끝난 뒤에야'], note: '루프가 main의 "이어서"를 <b>재개</b> → <code>print("main: run() 끝난 뒤에야")</code> 출력. <b>main이 run()을 끝까지 기다렸다가</b> 이 줄을 실행했다.' },
+        { line: 8, phase: 'idle', stack: [], macro: [], out: ['run: 시작', 'run: 끝', 'main: run() 끝난 뒤에야'], note: '끝. <b>핵심: <code>await run()</code>이라 main이 run() 끝날 때까지 기다렸다</b> → "main: …"이 맨 나중. (<code>await</code> 없이 <code>run()</code>만 했다면 run 끝나기 전에 "main: …"이 먼저 나왔다 — 바로 위 애니와 대비.)' },
+      ],
+    }))
 
     root.querySelector('[data-m="await-desugar"]').append(DesugarViz({
       title: 'await = .then · try/catch = .catch (같은 동작, 위→아래로 읽기)',
