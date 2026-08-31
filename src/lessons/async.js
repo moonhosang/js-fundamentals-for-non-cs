@@ -173,11 +173,11 @@
       steps: [
         { line: 7, phase: 'sync', stack: ['main', 'run()'], macro: [], out: [], note: '<code>run()</code> 호출 → run 프레임이 콜스택에 올라간다(main 위). (<code>wait</code>은 값을 즉시 주는 약속 함수 — 맨 윗줄에 정의.)' },
         { line: 2, phase: 'sync', stack: ['main', 'run()'], macro: [], out: ['시작'], note: 'run() 본문 시작 → <code>print("시작")</code> 동기 실행 → 출력 <b>시작</b>.' },
-        { line: 3, phase: 'idle', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작'], note: '<b>① <code>await wait(1)</code> 만남</b> → run()은 <b>여기서 멈추고</b>(프레임이 스택에서 <b>내려감 = 제어 양보</b>), <b>await 뒤 나머지를 대기 큐에 예약</b>. a엔 1이 올 예정.' },
+        { line: 3, phase: 'idle', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작'], note: '<b>① <code>await wait(1)</code> 만남.</b> 먼저 <code>wait(1)</code>이 <b>즉시 "1을 줄 약속"을 돌려주고 끝난다</b>(wait는 큐에 안 감!). 그다음 <code>await</code>가 그 약속을 기다리며 <b>run()을 멈춘다</b>(프레임 내려감=양보) → <b>run()의 나머지</b>(await 뒤)를 대기 큐에 예약. <b>그래서 큐 칩이 "wait"가 아니라 "run() 이어서"</b> — 멈추는 건 await를 쓴 함수(run)다.' },
         { line: 8, phase: 'sync', stack: ['main'], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '제어가 밖(main)으로 돌아와 <b>밖의 동기 코드가 먼저</b> 실행 → 출력. <b>run()은 안 기다린다</b> — 멈춘 채 큐에서 대기.' },
         { line: 8, phase: 'idle', stack: [], macro: ['run() 이어서 · a=1 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'main도 끝 → <b>콜스택 빔</b> → 대기 큐에서 run()의 "이어서"를 꺼낼 차례.' },
         { line: 4, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: 'run()이 <b>멈춘 자리부터 재개</b> → <code>a</code>에 1 확정. 곧 <b>② <code>await wait(2)</code></b>를 만난다.' },
-        { line: 4, phase: 'idle', stack: [], macro: ['run() 이어서 · b=2 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '<b>두 번째 await</b> → <b>또 멈추고 양보</b>, 남은 부분을 다시 대기 큐로. (같은 일이 반복 — await 하나당 한 번씩)' },
+        { line: 4, phase: 'idle', stack: [], macro: ['run() 이어서 · b=2 받고 계속'], out: ['시작', 'run()은 기다리지 않고 넘어감'], note: '<b>② <code>await wait(2)</code></b>도 똑같다: <code>wait(2)</code>는 "2를 줄 약속"만 주고 <b>끝</b>(큐에 안 감), <code>await</code>가 <b>run()을</b> 또 멈춰 <b>run()의 나머지</b>를 대기 큐로. <b>멈추고 재개되는 건 언제나 await를 쓴 함수(run)</b>지 wait가 아니다. (await 하나당 한 번씩 반복)' },
         { line: 5, phase: 'run', stack: [{ label: 'run() 재개', from: 'macro' }], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '다시 재개 → <code>b</code>에 2 확정 → <code>a+b=3</code> → 출력 <b>합계: 3</b>.' },
         { line: 6, phase: 'idle', stack: [], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '끝. <b>핵심: <code>await</code>마다 함수가 멈추고(양보) → 밖이 먼저 돌고 → 멈춘 자리부터 재개.</b> 그래서 "run()은 안 기다리고" 밖이 먼저 찍혔다.' },
       ],
