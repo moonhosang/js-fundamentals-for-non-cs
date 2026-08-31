@@ -1,6 +1,6 @@
 # 🧱 재사용 위젯 레퍼런스
 
-모두 전역 팩토리다. `container.append(위젯(config))` 로 쓴다. 전역 `index.css`를 쓰려고 (shadow DOM 없는) 팩토리 함수로 만들었다 — 단 `<memory-model>`만 캡슐화 이점이 커서 커스텀 엘리먼트(shadow DOM, 테마 토큰은 CSS 변수로 관통).
+모두 전역 팩토리다. `container.append(위젯(config))` 로 쓴다. 전역 `index.css`를 쓰려고 (shadow DOM 없는) 팩토리 함수로 만들었다 — 단 **단계 시뮬레이터류**(`<memory-model>` · `<event-loop-viz>` · `<promise-viz>` · `<desugar-viz>`)만 캡슐화 이점이 커서 커스텀 엘리먼트(shadow DOM, 테마 토큰은 CSS 변수 `var(--brand …)` 로 관통).
 
 ---
 
@@ -78,6 +78,30 @@
 `src/lib/drill.js` · `Drill({ pattern, problems, stepped?, hideHead?, onSolved? }) → div`
 `____` 빈칸을 채워 실행 → `print` 출력을 정답과 비교(✅/❌). 동일 유형 반복용.
 - ⚠️ 채점이 **출력 문자열 일치**라 배열·객체로 가면 취약 → 그땐 예측형/반환값 비교로 갈아탈 것(백로그).
+
+---
+
+## 🔁 EventLoopViz — 이벤트 루프 큐 드레인 애니 (비동기 심화 핵심 자산)
+`src/lib/event-loop-viz.js` · `EventLoopViz(config) → <event-loop-viz>` (shadow DOM)
+
+**📜코드 · 📚콜스택 · 🟣마이크로 큐 · 🟠매크로 큐 · 🖨️출력** 5구역. 콜백이 큐→콜스택→출력으로 **이동하는 걸 단계 애니**로. MemoryModel이 '값이 어디 사나'라면 이건 '콜백이 언제 도나'(시간 축). 씀: `microtask`(1·4·3·2 드레인) · `asyncerr`(try/catch가 콜백 전에 pop).
+- `code:[...]` · `steps:[{ line, phase, stack, micro, macro, out, note }]`.
+- `phase`: `'sync'|'drain-micro'|'drain-macro'|'idle'` — 국면 배지 + 활성 구역 하이라이트.
+- `stack` 항목: `'main'`(문자열) 또는 `{label, from:'micro'|'macro'}` — `from`이면 그 큐 색으로 **날아드는(fly-in) 애니**. `micro`/`macro`: 콜백 라벨 배열(앞=다음 차례, `다음 ▶` 표시). `out`: 누적 출력(마지막 칩만 pop).
+- ▶ 다음 단계 / **▶▶ 자동재생**(1.15s 간격) / ◀ 이전 / ↺.
+
+## ⏱ PromiseViz — Promise 조합기 타임라인 (all/race/allSettled/any)
+`src/lib/promise-viz.js` · `PromiseViz({ title, mode, tasks }) → <promise-viz>` (shadow DOM)
+
+여러 Promise가 가로 막대로 **동시에** 차오르고, **모드**에 따라 게이트(묶음 결과)가 **언제 확정되나**(결정선)를 ▶재생으로. **모드 토글**(all·allSettled·race·any)로 *같은 작업*을 갈아 끼워 대비. 씀: `promiseall`.
+- `mode`: `'all'|'allSettled'|'race'|'any'`. `tasks:[{ name, ms(끝나는 시각), ok:bool, value|reason }]`.
+- 막대 채우기 = CSS width transition(`ms`), 완료 마커·게이트 확정 = `setTimeout(ms)`. (헤드리스 virtual-time에선 트랜지션 중간이 안 잡힘 — 실브라우저에서 부드럽게 채워짐.)
+
+## 🔻 DesugarViz — async/await → Promise.then '풀기' 애니
+`src/lib/desugar-viz.js` · `DesugarViz({ title, asyncCode, steps }) → <desugar-viz>` (shadow DOM)
+
+좌(✍️ async/await) ↔ 우(🔻 .then 사다리)를 나란히 두고, `await` 하나가 **'함수를 자르는 가위'**가 되어 아래 전부를 `.then` 콜백으로 미는 걸 **한 겹씩** 드러낸다. payoff: await 뒷부분 = .then 콜백 = 🟣마이크로. 씀: `microtask`.
+- `asyncCode:[...]`(좌·고정) · `steps:[{ aline(좌 하이라이트|null), then:[...누적 우측 줄...], hot:[방금 강조할 우측 인덱스…], note }]`.
 
 ---
 

@@ -63,11 +63,12 @@
       </div>
 
       <div class="card" style="opacity:.9">
-        <div class="file-label">🧭 이 강의는 '순서 예측' 중심 (값-드릴 없음)</div>
-        <p class="section-desc" style="margin:0">비동기는 "값 하나 맞히기"보다 <b>"어떤 순서로 도나"</b>가 핵심이라, 위 <b>예측 Quiz + 실행 Runner</b>로 익힌다. 더 깊은 주제(마이크로태스크 우선순위·Promise.all·에러 전파)는 <button class="inline-goto" data-goto="errors">🛟 에러 처리</button>와 이어서 후속 파트로.</p>
+        <div class="file-label">🧭 이 강의는 '순서 예측' 중심 (값-드릴 없음) · 다음은 심화 3강</div>
+        <p class="section-desc" style="margin:0">비동기는 "값 하나 맞히기"보다 <b>"어떤 순서로 도나"</b>가 핵심이라, 위 <b>예측 Quiz + 실행 Runner</b>로 익힌다. 여기서 <b>"대기 큐"로 뭉뚱그린 것</b>·<code>await</code>·에러는 전용 애니메이션으로 더 깊이 파는 심화 3강이 이어진다 —
+        <button class="inline-goto" data-goto="microtask">마이크로 vs 매크로 큐</button> · <button class="inline-goto" data-goto="promiseall">Promise.all·race</button> · <button class="inline-goto" data-goto="asyncerr">비동기 에러 전파</button>.</p>
       </div>
 
-      <div class="practice-cta"><span>비동기 에러는 try/catch로 —</span><button class="chip on" data-goto="errors">🛟 에러 처리 →</button></div>
+      <div class="practice-cta"><span>왜 순서가 또 뒤집히나 —</span><button class="chip on" data-goto="microtask">⏳ 마이크로 vs 매크로 큐 →</button></div>
     `
 
     root.querySelector('[data-m="order"]').append(Runner({ showBox: false, code: [
