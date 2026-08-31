@@ -163,7 +163,7 @@
       '  let b = await wait(2)',
       '  print("합계: " + (a + b))   // "합계: 3"',
       '}',
-      'run()',
+      'run()   // ⚠️ await 없음! run을 안 기다리고 다음 줄로 (밑의 await run()과 대비)',
       'print("run()은 기다리지 않고 넘어감")   // await는 run만 멈춤',
     ].join('\n') }))
 
@@ -178,7 +178,7 @@
         '  let b = await wait(2)   // ② 또 멈춤(양보)',
         '  print("합계: " + (a + b))',
         '}',
-        'run()',
+        'run()   // ⚠️ await 없음! (밑의 await run()과 대비)',
         'print("run()은 기다리지 않고 넘어감")',
       ],
       steps: [
