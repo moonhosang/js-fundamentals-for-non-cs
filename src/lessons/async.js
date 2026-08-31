@@ -58,6 +58,15 @@
       <div class="card"><div class="file-label">🔬 async 함수 안에서 await (직접 실행)</div><div data-m="await"></div></div>
       <span class="learn-tag">📎 ▶ 다음 단계 — <code>await</code>마다 함수가 <b>멈추고(양보) → 밖이 먼저 → 멈춘 자리부터 재개</b>. 두 번의 await를 각각 눈으로</span>
       <div data-m="await-elv"></div>
+      <span class="learn-tag">📎 ⚖️ 대비 — 위(그냥 <code>run()</code>)와 아래(<code>await run()</code>)의 <b>유일한 차이는 <code>await</code> 한 단어</b>. 붙이면 <b>부른 쪽이 기다린다</b></span>
+      <div class="card"><div class="file-label">🔬 <code>await run()</code> — 부른 쪽(main)이 run()을 기다린다 (직접 실행)</div><div data-m="await-vs"></div></div>
+      <div class="card" style="border-color:var(--brand)">
+        <div class="file-label">⚖️ 이 둘의 차이 = <code>await</code> 하나</div>
+        <p class="section-desc" style="margin:0">같은 <code>run()</code>인데 <b>부른 쪽에 <code>await</code>를 붙였냐</b>로 흐름이 정반대다:
+        <br>• <code>run()</code> <b>(위 애니 · await 없음)</b> → 부른 쪽이 <b>안 기다리고</b> 다음 줄로 → <b>"run()은 기다리지 않고 넘어감"이 먼저</b> 찍힘.
+        <br>• <code>await run()</code> <b>(이 예시 · await 있음)</b> → 부른 쪽이 <b>run()이 끝날 때까지 기다렸다가</b> 다음 줄 → <b>"...끝난 뒤에야"가 나중</b>.
+        <br><b>즉 <code>await</code>는 "부른 쪽을 기다리게 하느냐"를 정한다.</b> 코드는 한 글자 차이, 실행 흐름은 반대. (단, <code>await</code>는 <code>async</code> 함수 안에서만 쓸 수 있어 <code>main</code>도 async로 감쌌다.)</p>
+      </div>
       <span class="learn-tag">📎 🔻 다음 — 왼쪽 <code>async/await</code>와 오른쪽 <code>.then</code>은 <b>완전히 같은 동작</b>. <code>await</code>=<code>.then</code>, <code>try/catch</code>=<code>.catch</code>를 한 겹씩</span>
       <p class="section-desc" style="margin-top:0"><code>getUser()</code>는 <b>서버에서 사용자를 받아오는 함수</b>(Promise를 돌려줌)라고 보면 된다.</p>
       <div data-m="await-desugar"></div>
@@ -182,6 +191,23 @@
         { line: 6, phase: 'idle', stack: [], macro: [], out: ['시작', 'run()은 기다리지 않고 넘어감', '합계: 3'], note: '끝. <b>핵심: <code>await</code>마다 함수가 멈추고(양보) → 밖이 먼저 돌고 → 멈춘 자리부터 재개.</b> 그래서 "run()은 안 기다리고" 밖이 먼저 찍혔다.' },
       ],
     }))
+
+    root.querySelector('[data-m="await-vs"]').append(Runner({ showBox: false, code: [
+      'function wait(v) { return Promise.resolve(v) }',
+      'async function run() {',
+      '  print("run: 시작")',
+      '  await wait(1)',
+      '  print("run: 끝")',
+      '}',
+      '',
+      'async function main() {',
+      '  await run()          // ← run() 앞에 await! run()이 다 끝날 때까지 기다림',
+      '  print("main: run() 끝난 뒤에야 이 줄")   // run이 끝나야 이 줄',
+      '}',
+      'main()',
+      '// 순서: "run: 시작" → "run: 끝" → "main: ... 끝난 뒤에야" (기다렸다 실행)',
+      '// (await 없이 run()만 했다면 "main: ..."이 run 끝나기 전에 먼저 나왔다)',
+    ].join('\n') }))
 
     root.querySelector('[data-m="await-desugar"]').append(DesugarViz({
       title: 'await = .then · try/catch = .catch (같은 동작, 위→아래로 읽기)',
