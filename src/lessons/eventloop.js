@@ -40,9 +40,11 @@
               <div style="border:2px solid #6366f1;border-radius:10px;padding:10px;background:var(--brand-soft)">
                 <div style="font-weight:800;color:#6366f1">📦 프로세스</div>
                 <div class="section-desc" style="margin:4px 0 8px">실행 <b>중인</b> 프로그램. <b>자기만의 메모리 공간</b>(우리가 배운 <b>스택+힙</b>)을 통째로 가진다. 크롬 탭 하나 = 프로세스 하나쯤.</div>
-                <div style="border:2px solid #0891b2;border-radius:8px;padding:8px;background:var(--panel)">
-                  <div style="font-weight:800;color:#0e7490">🧵 스레드 (일꾼)</div>
-                  <div class="section-desc" style="margin:4px 0 0">코드를 <b>실제로 한 줄씩 실행</b>하는 손. <b>콜스택이 스레드마다 하나</b>(5강 콜스택 = 이 스레드의 실행 기록). 일꾼이 여럿이면 멀티스레드.</div>
+                <div style="position:relative;margin:0 12px 12px 0">
+                  <div style="border:2px solid #0891b2;border-radius:8px;padding:8px;background:var(--panel);position:relative;z-index:2;box-shadow:6px 6px 0 0 var(--panel),6px 6px 0 2px #67e8f9,12px 12px 0 0 var(--panel),12px 12px 0 2px #a5f3fc">
+                  <div style="font-weight:800;color:#0e7490">🧵 스레드 (일꾼) <span style="font-weight:600;font-size:12px;color:#0891b2">— 겹친 카드 = 일꾼이 여럿(멀티스레드)</span></div>
+                  <div class="section-desc" style="margin:4px 0 0">코드를 <b>실제로 한 줄씩 실행</b>하는 손. <b>콜스택이 스레드마다 하나</b>(5강 콜스택 = 이 스레드의 실행 기록). <b>뒤에 겹쳐 보이는 게 그 여러 명</b> — 일꾼이 여럿이면 멀티스레드.</div>
+                  </div>
                 </div>
               </div>
             </div>
