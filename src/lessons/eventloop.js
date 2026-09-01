@@ -87,7 +87,16 @@
           <tr><td><b>🧵 싱글 스레드 (JS의 선택)</b><span>일꾼 하나 → <b>진짜 동시</b>는 못 함 → 느린 일은 <b>위임</b> 필요(이벤트 루프). <b>대신</b> 두 일꾼이 같은 값을 동시에 건드려 꼬이는 <b>데이터 레이스가 원천 봉쇄</b> — 단순·안전.</span></td></tr>
           <tr><td><b>🧵🧵 멀티 스레드</b><span>일꾼 여럿 → <b>진짜 병렬</b>로 빠름. <b>대신</b> 둘이 같은 메모리를 동시에 고치면 값이 깨져(<b>레이스</b>), 이를 막는 <b>락(lock)</b>이 복잡·버그 온상.</span></td></tr>
         </tbody></table>
-        <p class="section-desc" style="margin:8px 0 0">JS는 <b>진짜 병렬을 포기하고 단순함(레이스 없음)</b>을 택했다. 그 대가로 "안 멈추기"를 <b>이벤트 루프</b>가 책임진다. <b>"왜 이렇게 만들었나"의 마지막 바닥이 이 거래다.</b></p>
+        <p class="section-desc" style="margin:8px 0 0">JS는 <b>기본 실행을 한 스레드로</b> 두고 <b>단순함(레이스 없음)</b>을 택했다. 그 대가로 "안 멈추기"를 <b>이벤트 루프</b>가 책임진다. (진짜 병렬이 정말 필요하면? → 바로 아래 🔬 카드) <b>"왜 이렇게 만들었나"의 마지막 바닥이 이 거래다.</b></p>
+      </div>
+      <div class="card">
+        <div class="file-label">🔬 한 겹 더 — 왜 멀티는 레이스가 나고, JS는 안 나나 (작업 '한 덩어리'와 끊기는 지점)</div>
+        <p class="section-desc" style="margin:0 0 8px"><b>멀티스레드가 위험한 진짜 이유:</b> OS가 스레드를 <b>아무 명령어 사이에서나</b> 끊고 다른 스레드로 넘긴다(<b>preemptive</b> 스케줄링). 그래서 내 계산 <b>한 줄이 끝나기도 전에</b> 남이 끼어든다. 예를 들어 통장 잔고 더하기 한 줄도 사실 <b>3동작</b>이다:</p>
+        <pre class="err-code" style="color:inherit;background:transparent;margin:0 0 8px">잔고 = 잔고 + 1000   // ① 잔고 읽기 → ② +1000 → ③ 다시 쓰기</pre>
+        <p class="section-desc" style="margin:0 0 8px">두 창구 직원(스레드)이 <b>같은 통장</b>을 동시에 처리하면: A가 ①읽고(0) <b>…여기서 끊김…</b> B도 ①읽고(0)→③쓰기(1000), 다시 A가 ③쓰기(1000) → <b>B의 갱신이 덮여 사라진다.</b> 2000이어야 하는데 1000 (<b>lost update</b>). 이게 레이스.</p>
+        <p class="section-desc" style="margin:0 0 8px"><b>JS 싱글스레드는?</b> 한 <b>작업 덩어리(태스크)를 끝까지</b> 다 돈 뒤에만 다음으로 넘어간다(<b>run-to-completion</b>). 내 함수가 도는 중엔 <b>아무도 못 끼어들어</b> 위 사고가 원천봉쇄 — 이게 싱글스레드의 진짜 혜택 <b>원자성(atomicity)</b>이다. <b>끊기는 지점이 '덩어리 사이'에만</b> 있는 셈.</p>
+        <p class="section-desc" style="margin:0 0 8px">🧵 관통 원리: <b>레이스 = 「공유된 가변 상태」 × 「아무 데서나 끊기」</b> — 둘 다 있어야 터진다. JS는 <b>싱글스레드로 '끊기'를 없애고</b>, 진짜 병렬이 필요하면 <b>Web Worker</b>로 JS를 별도 스레드에서 돌리되 <b>메모리를 공유 안 하고 메시지(<code>postMessage</code>)로만</b> 주고받아 <b>'공유'를 없앤다</b> → 락 없이도 레이스 불가. 즉 <b>진짜 병렬을 포기한 게 아니라, 안전한 방식으로 따로 뺀 것.</b> (Web Worker는 이 커리큘럼 범위 밖 — 존재만 알아두기)</p>
+        <p class="section-desc" style="margin:0;padding:8px 10px;background:var(--brand-soft,#eef2ff);border-radius:8px;font-size:13px"><b>⚠️ 용어 주의:</b> 이 "한 번에·끝까지 처리되는 작업 덩어리"를 <b>트랜잭션</b>이라 부르기도 한다. <b>단, DB의 트랜잭션과는 다른 맥락</b>이다 — DB 트랜잭션은 계좌이체처럼 <b>여러 작업을 묶어 "전부 성공 아니면 전부 취소"(commit/rollback·ACID)</b>를 보장하는 것. 여기선 그냥 <b>"스레드가 한 번에 처리하는 일 뭉치"</b> 정도의 뜻이다. (검색용 용어: critical section, preemptive vs cooperative 스케줄링)</p>
       </div>
       <div class="card" style="opacity:.92">
         <div class="file-label">🖥️ 참고 — 이건 '브라우저' 기준 (Node.js는 조금 다르다)</div>
