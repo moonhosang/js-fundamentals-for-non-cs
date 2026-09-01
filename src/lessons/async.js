@@ -72,6 +72,19 @@
       <span class="learn-tag">📎 🔻 다음 — 왼쪽 <code>async/await</code>와 오른쪽 <code>.then</code>은 <b>완전히 같은 동작</b>. <code>await</code>=<code>.then</code>, <code>try/catch</code>=<code>.catch</code>를 한 겹씩</span>
       <p class="section-desc" style="margin-top:0"><code>getUser()</code>는 <b>서버에서 사용자를 받아오는 함수</b>(Promise를 돌려줌)라고 보면 된다.</p>
       <div data-m="await-desugar"></div>
+      <span class="learn-tag">📎 🔻 한 번 더 — <b>await 두 개</b>를 <b>try/catch 하나</b>로 감싸면? <code>await</code>당 <code>.then</code> 한 겹(→ 중첩), 그리고 <code>.catch</code> <b>하나</b>가 <b>둘 다</b> 받아낸다</span>
+      <div data-m="await-desugar2"></div>
+      <span class="learn-tag">📎 🔻 마지막 — <b>각 <code>await</code>마다 <code>try/catch</code></b>를 따로 두면? 사슬이 <b>평평</b>해지고 <code>.catch</code>가 <b>단계마다</b> — 하나 실패해도 <b>잡고 계속</b>(Ex2의 fail-fast와 대비)</span>
+      <div data-m="await-desugar3"></div>
+      <div style="border:2px solid #7c3aed;border-left-width:6px;border-radius:10px;padding:12px 14px;background:rgba(124,58,237,.06);margin:14px 0">
+        <div style="font-weight:800;color:#7c3aed;margin-bottom:6px">🔑 결론 — <code>async/await</code>는 새 문법이 아니라 <u>Promise의 껍데기</u></div>
+        <div class="section-desc" style="margin:0">
+          위 세 애니 <b>오른쪽 열("엔진이 보는 실체")이 진짜 모습</b>이다. 우리가 쓰는 왼쪽은 그걸 <b>위→아래로 읽는 편의</b>일 뿐 —
+          <br>• <code>await</code> 벗기면 → <code>.then</code> &nbsp;·&nbsp; <code>try/catch</code> 벗기면 → <code>.catch</code>
+          <br>• <b><code>async</code> 함수는 <u>언제나 <code>Promise</code>를 돌려준다</u></b> — <code>return 3</code>도 <code>Promise</code>로 감싸지고, 던진 에러는 <b>rejected <code>Promise</code></b>가 된다.
+          <br><span style="color:#6b7280">⚠️ 단, <b>"모든 비동기 = Promise"는 아니다</b> — <code>setTimeout</code>·이벤트·옛 콜백은 <code>Promise</code> 없이도 비동기. <code>Promise</code>는 그 <b>'나중 값'을 담는 표준 그릇</b>이고, <code>async/await</code>는 그 <code>Promise</code> <b>위에</b> 얹은 문법이다(<code>async/await → Promise → 마이크로태스크 → 이벤트 루프</code>).</span>
+        </div>
+      </div>
       <div data-m="qz-await"></div>
 
       <div class="concept">
@@ -258,6 +271,59 @@
         { aline: 4, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)', '    })', '    .catch((e) => {'], hot: [5], note: '<b><code>try/catch</code></b> → <b><code>.catch(e => …)</code></b>. 에러 처리가 사슬 <b>끝의 <code>.catch</code></b>로 간다.' },
         { aline: 5, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)', '    })', '    .catch((e) => {', '      print("실패: " + e.message)', '    })', '}'], hot: [6], note: '<code>catch</code> 블록 내용이 <code>.catch</code> 콜백 안으로 → 사슬 마무리.' },
         { aline: null, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      print("이름: " + user.name)', '    })', '    .catch((e) => {', '      print("실패: " + e.message)', '    })', '}'], hot: [1, 5], note: '정리 — 왼쪽(<code>await</code>·<code>try/catch</code>)과 오른쪽(<code>.then</code>·<code>.catch</code>)은 <b>완전히 같은 동작</b>. <code>async/await</code>은 이 사슬을 <b>위→아래 평범한 코드처럼</b> 읽게 해줄 뿐 — 그게 편한 이유다.' },
+      ],
+    }))
+
+    root.querySelector('[data-m="await-desugar2"]').append(DesugarViz({
+      title: 'await 두 개 + try/catch 하나 (같은 규칙을 두 번)',
+      asyncCode: [
+        'async function load() {',
+        '  try {',
+        '    const user = await getUser()          // 값 ①',
+        '    const more = await getUserMoreInfo()  // 값 ②',
+        '    return { ...user, ...more }',
+        '  } catch (e) {',
+        '    print("실패: " + e.message)',
+        '  }',
+        '}',
+      ],
+      steps: [
+        { aline: 0, then: ['function load() {'], hot: [0], note: '앞 예시와 <b>똑같은 규칙</b> — 이번엔 <code>await</code>가 <b>두 개</b>. 하나씩 풀어보자.' },
+        { aline: 2, then: ['function load() {', '  return getUser()', '    .then((user) => {'], hot: [1, 2], note: '<b>첫 번째</b> <code>await getUser()</code> → <code>getUser().then(user => …)</code>. 여기까진 앞 예시와 판박이.' },
+        { aline: 3, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      return getUserMoreInfo()', '        .then((more) => {'], hot: [3, 4], note: '<b>두 번째</b> <code>await</code>도 <b>또 한 겹</b> <code>.then</code> — 게다가 <b>안쪽으로 중첩</b>된다(<code>user</code>를 계속 쓰려면 그 콜백 <b>안에서</b> 다음 <code>.then</code>). <b>await 하나 = <code>.then</code> 한 겹</b>이라, await이 늘수록 콜백이 깊어진다.' },
+        { aline: 4, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      return getUserMoreInfo()', '        .then((more) => {', '          return { ...user, ...more }', '        })', '    })'], hot: [5], note: '두 값을 합치는 정상 흐름은 <b>가장 안쪽</b> <code>.then</code> 안으로 — <code>user</code>·<code>more</code> 둘 다 이 자리에서만 함께 보인다.' },
+        { aline: 5, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      return getUserMoreInfo()', '        .then((more) => {', '          return { ...user, ...more }', '        })', '    })', '    .catch((e) => {'], hot: [8], note: '<b>여기가 핵심</b> — <code>try/catch</code> <b>하나</b>가 <code>await</code> <b>둘</b>을 감쌌으니, <code>.catch</code>도 <b>사슬 맨 끝에 딱 하나</b>. <code>getUser</code>가 깨지든 <code>getUserMoreInfo</code>가 깨지든 <b>전부 이 하나로</b> 굴러온다(중첩 콜백을 뚫고).' },
+        { aline: 6, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      return getUserMoreInfo()', '        .then((more) => {', '          return { ...user, ...more }', '        })', '    })', '    .catch((e) => {', '      print("실패: " + e.message)', '    })', '}'], hot: [9], note: '<code>catch</code> 블록 내용이 그 하나뿐인 <code>.catch</code> 콜백 안으로 → 마무리.' },
+        { aline: null, then: ['function load() {', '  return getUser()', '    .then((user) => {', '      return getUserMoreInfo()', '        .then((more) => {', '          return { ...user, ...more }', '        })', '    })', '    .catch((e) => {', '      print("실패: " + e.message)', '    })', '}'], hot: [4, 8], note: '정리 — <b>await 하나당 <code>.then</code> 한 겹</b>(두 개면 <b>중첩</b>), <b>try/catch 하나</b>는 <b>끝의 <code>.catch</code> 하나</b>로 <b>모든 await</b>를 덮는다. 오른쪽 계단이 이렇게 깊어질 걸 왼쪽처럼 <b>위→아래 평평하게</b> 읽는 것 — <b>await이 많아질수록</b> <code>async/await</code>의 값어치가 커지는 이유다.' },
+      ],
+    }))
+
+    root.querySelector('[data-m="await-desugar3"]').append(DesugarViz({
+      title: 'await마다 try/catch 하나 (실패해도 잡고 계속)',
+      asyncCode: [
+        'async function load() {',
+        '  let user, more',
+        '  try {',
+        '    user = await getUser()          // 값 ①',
+        '  } catch (e) {',
+        '    print("실패: " + e.message)',
+        '  }',
+        '  try {',
+        '    more = await getUserMoreInfo()  // 값 ②',
+        '  } catch (e) {',
+        '    print("실패: " + e.message)',
+        '  }',
+        '  return { ...user, ...more }',
+        '}',
+      ],
+      steps: [
+        { aline: 1, then: ['function load() {', '  let user, more'], hot: [1], note: '이번엔 값을 <b>바깥 <code>let</code>에 미리 선언</b>. 각 <code>try/catch</code>가 따로라, 값이 그 블록 밖에서도 <b>살아남아야</b> 마지막 <code>return</code>에서 쓴다.' },
+        { aline: 3, then: ['function load() {', '  let user, more', '  return getUser()', '    .then((u) => { user = u })'], hot: [2, 3], note: '첫 <code>await getUser()</code> → <code>.then</code>. 단 값을 콜백 안에서 쓰지 않고 <b>바깥 <code>user</code>에 담아만</b> 둔다.' },
+        { aline: 4, then: ['function load() {', '  let user, more', '  return getUser()', '    .then((u) => { user = u })', '    .catch((e) => { print("실패: " + e.message) })'], hot: [4], note: '<b>여기가 Ex2와 갈리는 지점</b> — <code>try/catch</code>가 이 await만 감쌌으니 <code>.catch</code>가 <b>사슬 중간</b>에 붙는다. 그리고 <code>.catch</code>는 <b>에러를 잡고 나면 사슬을 정상으로 되돌린다</b> → <b>다음 <code>.then</code>이 계속 실행</b>(안 멈춤).' },
+        { aline: 8, then: ['function load() {', '  let user, more', '  return getUser()', '    .then((u) => { user = u })', '    .catch((e) => { print("실패: " + e.message) })', '    .then(() => getUserMoreInfo())', '    .then((m) => { more = m })'], hot: [5, 6], note: '둘째 <code>await</code>는 <b>중첩이 아니라 다음 칸</b>에 <b>평평하게</b> 이어진다(값을 안 물려주니까). <code>more</code>도 바깥에 담아둠. — Ex2의 <b>중첩 사다리</b>와 정반대.' },
+        { aline: 9, then: ['function load() {', '  let user, more', '  return getUser()', '    .then((u) => { user = u })', '    .catch((e) => { print("실패: " + e.message) })', '    .then(() => getUserMoreInfo())', '    .then((m) => { more = m })', '    .catch((e) => { print("실패: " + e.message) })'], hot: [7], note: '둘째 <code>try/catch</code> → 또 하나의 <b>중간 <code>.catch</code></b>. 얘도 잡고 계속.' },
+        { aline: 12, then: ['function load() {', '  let user, more', '  return getUser()', '    .then((u) => { user = u })', '    .catch((e) => { print("실패: " + e.message) })', '    .then(() => getUserMoreInfo())', '    .then((m) => { more = m })', '    .catch((e) => { print("실패: " + e.message) })', '    .then(() => ({ ...user, ...more }))', '}'], hot: [8], note: '마지막에 <code>user</code>·<code>more</code>를 합쳐 반환. <b>⚠️ 함정</b>: 앞에서 하나가 실패해 잡혔다면 그 값은 <code>undefined</code>인 채 — <code>{...undefined}</code>는 <b>에러 없이 그냥 빈 것</b>이라 <b>반쪽 객체가 조용히 반환</b>된다. "잡고 계속"의 대가.' },
+        { aline: null, then: ['function load() {', '  let user, more', '  return getUser()', '    .then((u) => { user = u })', '    .catch((e) => { print("실패: " + e.message) })', '    .then(() => getUserMoreInfo())', '    .then((m) => { more = m })', '    .catch((e) => { print("실패: " + e.message) })', '    .then(() => ({ ...user, ...more }))', '}'], hot: [4, 7], note: '정리 — <b>Ex2</b>(바깥 <code>try/catch</code> 하나): <b>중첩</b> 사슬 + <b>맨 끝 <code>.catch</code> 하나</b> → 하나 깨지면 <b>즉시 끝</b>(나머지 건너뜀, <b>fail-fast</b>). <b>Ex3</b>(await마다 <code>try/catch</code>): <b>평평</b>한 사슬 + <b>단계마다 <code>.catch</code></b> → 깨져도 <b>잡고 계속</b>(되는 것만 모음). <b><code>try/catch</code>를 어디 두느냐가 실패 시 동작을 바꾼다.</b>' },
       ],
     }))
 
